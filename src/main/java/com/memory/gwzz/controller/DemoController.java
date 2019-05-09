@@ -1,7 +1,7 @@
 package com.memory.gwzz.controller;
 
-import com.memory.common.utils.Result;
-import com.memory.common.utils.ResultUtil;
+import com.memory.common.controller.BaseController;
+import com.memory.common.utils.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
@@ -17,12 +17,13 @@ import java.io.FileNotFoundException;
  * @Description:
  */
 @RestController
-public class DemoController {
+public class DemoController extends BaseController {
 
     private final static Logger logger = LoggerFactory.getLogger(DemoController.class);
 
     @RequestMapping("test")
-    public Result test() {
+    public Message test() {
+        msg = Message.success();
         try {
             logger.error("这是ERROR");
             System.out.println("=====================");
@@ -32,6 +33,7 @@ public class DemoController {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        return ResultUtil.success(null);
+        msg.setMsg("访问成功");
+        return msg;
     }
 }
