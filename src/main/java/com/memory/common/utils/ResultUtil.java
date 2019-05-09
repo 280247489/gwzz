@@ -6,23 +6,31 @@ package com.memory.common.utils;
  */
 public class ResultUtil {
 
-    public static Result success(Object object) {
-        Result result = new Result(SUCCESS, "success", object);
+    public static Result success(Integer code, String msg, Object object) {
+        Result result = new Result();
+        result.setState("success");
+        result.setCode(code);
+        result.setMsg(msg);
+        result.setData(object);
         return result;
     }
 
     public static Result success() {
-        Result result = new Result(SUCCESS, "success", null);
-        return result;
+        return ResultUtil.success(SUCCESS, "success", null);
     }
 
-    public static Result error(Integer code, String msg) {
-        Result result = new Result(code, msg, null);
+    public static Result error(String msg, Object object) {
+        Result result = new Result();
+        result.setState("error");
+        result.setCode(ERROR);
+        result.setMsg(msg);
+        result.setData(object);
         return result;
     }
 
     public static final int SUCCESS = 0;
     public static final int ERROR = -1;
+
     public static final int ERROR_REQ = 100;
     public static final int ERROR_KEY = 101;
     public static final int ERROR_SIGN = 102;

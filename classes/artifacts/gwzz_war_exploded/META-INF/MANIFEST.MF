@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: gwzz
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Administrator
+Implementation-Vendor-Id: com.memory
+Created-By: IntelliJ IDEA
+Build-Jdk: 1.8.0_131
+Main-Class: ${start-class}
+

@@ -1,6 +1,7 @@
 package com.memory.common.interceptor;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -17,12 +18,12 @@ public class DemoMvcConfigurer implements WebMvcConfigurer {
                              //.excludePathPatterns("/*/**"); //拦截全部 /*/**
 
         WebMvcConfigurer.super.addInterceptors(interceptorRegistry);
-    }
+}
 
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/*/**").allowedOrigins("http://domain.com", "http://domain2.com")
-//                .allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS")
-//                .allowCredentials(false).maxAge(3600);
-//    }
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/*/**").allowedOrigins("*")
+                .allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS")
+                .allowCredentials(false).maxAge(3600);
+    }
 }
