@@ -1,5 +1,7 @@
 package com.memory.common.utils;
 
+import org.springframework.util.DigestUtils;
+
 import java.util.UUID;
 
 /**
@@ -15,4 +17,9 @@ public class Utils {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
+
+    /**
+     *md5加密
+     */
+    public static String md5Password(String str){ return  DigestUtils.md5DigestAsHex(str.getBytes()); }
 }

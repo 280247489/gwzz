@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @Date: 2018/11/20 0020 10:48
  * @Description:
  */
-@Component
+//@Component
 public class RabbitMQUtil {
     private static final Logger logger = LoggerFactory.getLogger(RabbitMQUtil.class);
     private final static String EX_CHANGE_SINGLE = "ex_change_single";
