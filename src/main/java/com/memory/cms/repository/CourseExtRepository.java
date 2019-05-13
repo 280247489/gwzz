@@ -10,10 +10,11 @@ import java.util.List;
  * @date 2019/5/9 9:31
  */
 
-public interface CourseExtRepository extends JpaRepository<CourseExt,Integer> {
+public interface CourseExtRepository extends JpaRepository<CourseExt,String> {
 
-    List<CourseExt> queryCourseExtByArticleId(Integer articleId);
+    List<CourseExt> queryCourseExtByCourseId(String courseId);
 
-    void deleteCourseExtByArticleId(Integer articleId);
+    void deleteCourseExtByCourseId(String courseId);
+
 
 }

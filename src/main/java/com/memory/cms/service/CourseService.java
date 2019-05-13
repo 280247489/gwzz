@@ -1,6 +1,5 @@
 package com.memory.cms.service;
 
-import com.memory.cms.entity.Article;
 import com.memory.cms.entity.Course;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,17 +16,17 @@ public interface CourseService {
 
     List<Course> getCourseList();
 
-    Course getCourseById(int id);
+    Course getCourseById(String id);
 
     Course add(Course course);
 
     Course update(Course course);
 
-    void delete(int id);
+    void delete(String id);
 
-    int updateCourseOnlineById(int online, int id);
+    int updateCourseOnlineById(int online, String id);
 
-    Page<Painter> queryCourseByQue(Pageable pageable, String article_title, String article_update_id, Integer article_online, String sort_status, String type_id);
+    Page<Painter> queryCourseByQue(Pageable pageable, String course_title, String course_update_id, Integer course_online, String sort_status, String type_id);
 
 
 }

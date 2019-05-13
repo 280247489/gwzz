@@ -1,203 +1,238 @@
 package com.memory.cms.entity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/5/9 13:09
+ * @date 2019/5/11 15:16
  */
 
 @Entity
 public class Course {
-    private int id;
-    private String typeId;
-    private String articleTitle;
-    private String articleLogo;
-    private String articleContent;
-    private String articleAudioUrl;
-    private String articleVideoUrl;
-    private String articleLabel;
-    private String articleKeyWords;
-    private int articleOnline;
-    private int articleTotalView;
-    private int articleTotalShare;
-    private int articleTotalLike;
-    private Date articleCreateTime;
-    private String articleCreateId;
-    private Date articleUpdateTime;
-    private String articleUpdateId;
+    private String id;
+    private String courseTypeId;
+    private String courseTitle;
+    private String courseLogo;
+    private String courseContent;
+    private String courseAudioUrl;
+    private String courseVideoUrl;
+    private String courseLabel;
+    private String courseKeyWords;
+    private int courseOnline;
+    private int courseTotalView;
+    private int courseTotalShare;
+    private int courseTotalLike;
+    private Date courseCreateTime;
+    private String courseCreateId;
+    private Date courseUpdateTime;
+    private String courseUpdateId;
+    private int courseRecommend;
+    private String courseDescribe;
+    private int courseLiveStatus;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     @Basic
-    @Column(name = "type_id")
-    public String getTypeId() {
-        return typeId;
+    @Column(name = "course_type_id")
+    public String getCourseTypeId() {
+        return courseTypeId;
     }
 
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
-    }
-
-    @Basic
-    @Column(name = "article_title")
-    public String getArticleTitle() {
-        return articleTitle;
-    }
-
-    public void setArticleTitle(String articleTitle) {
-        this.articleTitle = articleTitle;
+    public void setCourseTypeId(String courseTypeId) {
+        this.courseTypeId = courseTypeId;
     }
 
     @Basic
-    @Column(name = "article_logo")
-    public String getArticleLogo() {
-        return articleLogo;
+    @Column(name = "course_title")
+    public String getCourseTitle() {
+        return courseTitle;
     }
 
-    public void setArticleLogo(String articleLogo) {
-        this.articleLogo = articleLogo;
-    }
-
-    @Basic
-    @Column(name = "article_content")
-    public String getArticleContent() {
-        return articleContent;
-    }
-
-    public void setArticleContent(String articleContent) {
-        this.articleContent = articleContent;
+    public void setCourseTitle(String courseTitle) {
+        this.courseTitle = courseTitle;
     }
 
     @Basic
-    @Column(name = "article_audio_url")
-    public String getArticleAudioUrl() {
-        return articleAudioUrl;
+    @Column(name = "course_logo")
+    public String getCourseLogo() {
+        return courseLogo;
     }
 
-    public void setArticleAudioUrl(String articleAudioUrl) {
-        this.articleAudioUrl = articleAudioUrl;
-    }
-
-    @Basic
-    @Column(name = "article_video_url")
-    public String getArticleVideoUrl() {
-        return articleVideoUrl;
-    }
-
-    public void setArticleVideoUrl(String articleVideoUrl) {
-        this.articleVideoUrl = articleVideoUrl;
+    public void setCourseLogo(String courseLogo) {
+        this.courseLogo = courseLogo;
     }
 
     @Basic
-    @Column(name = "article_label")
-    public String getArticleLabel() {
-        return articleLabel;
+    @Column(name = "course_content")
+    public String getCourseContent() {
+        return courseContent;
     }
 
-    public void setArticleLabel(String articleLabel) {
-        this.articleLabel = articleLabel;
-    }
-
-    @Basic
-    @Column(name = "article_key_words")
-    public String getArticleKeyWords() {
-        return articleKeyWords;
-    }
-
-    public void setArticleKeyWords(String articleKeyWords) {
-        this.articleKeyWords = articleKeyWords;
+    public void setCourseContent(String courseContent) {
+        this.courseContent = courseContent;
     }
 
     @Basic
-    @Column(name = "article_online")
-    public int getArticleOnline() {
-        return articleOnline;
+    @Column(name = "course_audio_url")
+    public String getCourseAudioUrl() {
+        return courseAudioUrl;
     }
 
-    public void setArticleOnline(int articleOnline) {
-        this.articleOnline = articleOnline;
-    }
-
-    @Basic
-    @Column(name = "article_total_view")
-    public int getArticleTotalView() {
-        return articleTotalView;
-    }
-
-    public void setArticleTotalView(int articleTotalView) {
-        this.articleTotalView = articleTotalView;
+    public void setCourseAudioUrl(String courseAudioUrl) {
+        this.courseAudioUrl = courseAudioUrl;
     }
 
     @Basic
-    @Column(name = "article_total_share")
-    public int getArticleTotalShare() {
-        return articleTotalShare;
+    @Column(name = "course_video_url")
+    public String getCourseVideoUrl() {
+        return courseVideoUrl;
     }
 
-    public void setArticleTotalShare(int articleTotalShare) {
-        this.articleTotalShare = articleTotalShare;
-    }
-
-    @Basic
-    @Column(name = "article_total_like")
-    public int getArticleTotalLike() {
-        return articleTotalLike;
-    }
-
-    public void setArticleTotalLike(int articleTotalLike) {
-        this.articleTotalLike = articleTotalLike;
+    public void setCourseVideoUrl(String courseVideoUrl) {
+        this.courseVideoUrl = courseVideoUrl;
     }
 
     @Basic
-    @Column(name = "article_create_time")
-    public Date getArticleCreateTime() {
-        return articleCreateTime;
+    @Column(name = "course_label")
+    public String getCourseLabel() {
+        return courseLabel;
     }
 
-    public void setArticleCreateTime(Date articleCreateTime) {
-        this.articleCreateTime = articleCreateTime;
-    }
-
-    @Basic
-    @Column(name = "article_create_id")
-    public String getArticleCreateId() {
-        return articleCreateId;
-    }
-
-    public void setArticleCreateId(String articleCreateId) {
-        this.articleCreateId = articleCreateId;
+    public void setCourseLabel(String courseLabel) {
+        this.courseLabel = courseLabel;
     }
 
     @Basic
-    @Column(name = "article_update_time")
-    public Date getArticleUpdateTime() {
-        return articleUpdateTime;
+    @Column(name = "course_key_words")
+    public String getCourseKeyWords() {
+        return courseKeyWords;
     }
 
-    public void setArticleUpdateTime(Date articleUpdateTime) {
-        this.articleUpdateTime = articleUpdateTime;
+    public void setCourseKeyWords(String courseKeyWords) {
+        this.courseKeyWords = courseKeyWords;
     }
 
     @Basic
-    @Column(name = "article_update_id")
-    public String getArticleUpdateId() {
-        return articleUpdateId;
+    @Column(name = "course_online")
+    public int getCourseOnline() {
+        return courseOnline;
     }
 
-    public void setArticleUpdateId(String articleUpdateId) {
-        this.articleUpdateId = articleUpdateId;
+    public void setCourseOnline(int courseOnline) {
+        this.courseOnline = courseOnline;
+    }
+
+    @Basic
+    @Column(name = "course_total_view")
+    public int getCourseTotalView() {
+        return courseTotalView;
+    }
+
+    public void setCourseTotalView(int courseTotalView) {
+        this.courseTotalView = courseTotalView;
+    }
+
+    @Basic
+    @Column(name = "course_total_share")
+    public int getCourseTotalShare() {
+        return courseTotalShare;
+    }
+
+    public void setCourseTotalShare(int courseTotalShare) {
+        this.courseTotalShare = courseTotalShare;
+    }
+
+    @Basic
+    @Column(name = "course_total_like")
+    public int getCourseTotalLike() {
+        return courseTotalLike;
+    }
+
+    public void setCourseTotalLike(int courseTotalLike) {
+        this.courseTotalLike = courseTotalLike;
+    }
+
+    @Basic
+    @Column(name = "course_create_time")
+    public Date getCourseCreateTime() {
+        return courseCreateTime;
+    }
+
+    public void setCourseCreateTime(Date courseCreateTime) {
+        this.courseCreateTime = courseCreateTime;
+    }
+
+    @Basic
+    @Column(name = "course_create_id")
+    public String getCourseCreateId() {
+        return courseCreateId;
+    }
+
+    public void setCourseCreateId(String courseCreateId) {
+        this.courseCreateId = courseCreateId;
+    }
+
+    @Basic
+    @Column(name = "course_update_time")
+    public Date getCourseUpdateTime() {
+        return courseUpdateTime;
+    }
+
+    public void setCourseUpdateTime(Date courseUpdateTime) {
+        this.courseUpdateTime = courseUpdateTime;
+    }
+
+    @Basic
+    @Column(name = "course_update_id")
+    public String getCourseUpdateId() {
+        return courseUpdateId;
+    }
+
+    public void setCourseUpdateId(String courseUpdateId) {
+        this.courseUpdateId = courseUpdateId;
+    }
+
+    @Basic
+    @Column(name = "course_recommend")
+    public int getCourseRecommend() {
+        return courseRecommend;
+    }
+
+    public void setCourseRecommend(int courseRecommend) {
+        this.courseRecommend = courseRecommend;
+    }
+
+    @Basic
+    @Column(name = "course_describe")
+    public String getCourseDescribe() {
+        return courseDescribe;
+    }
+
+    public void setCourseDescribe(String courseDescribe) {
+        this.courseDescribe = courseDescribe;
+    }
+
+    @Basic
+    @Column(name = "course_live_status")
+    public int getCourseLiveStatus() {
+        return courseLiveStatus;
+    }
+
+    public void setCourseLiveStatus(int courseLiveStatus) {
+        this.courseLiveStatus = courseLiveStatus;
     }
 
     @Override
@@ -205,27 +240,30 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return id == course.id &&
-                articleOnline == course.articleOnline &&
-                articleTotalView == course.articleTotalView &&
-                articleTotalShare == course.articleTotalShare &&
-                articleTotalLike == course.articleTotalLike &&
-                Objects.equals(typeId, course.typeId) &&
-                Objects.equals(articleTitle, course.articleTitle) &&
-                Objects.equals(articleLogo, course.articleLogo) &&
-                Objects.equals(articleContent, course.articleContent) &&
-                Objects.equals(articleAudioUrl, course.articleAudioUrl) &&
-                Objects.equals(articleVideoUrl, course.articleVideoUrl) &&
-                Objects.equals(articleLabel, course.articleLabel) &&
-                Objects.equals(articleKeyWords, course.articleKeyWords) &&
-                Objects.equals(articleCreateTime, course.articleCreateTime) &&
-                Objects.equals(articleCreateId, course.articleCreateId) &&
-                Objects.equals(articleUpdateTime, course.articleUpdateTime) &&
-                Objects.equals(articleUpdateId, course.articleUpdateId);
+        return courseOnline == course.courseOnline &&
+                courseTotalView == course.courseTotalView &&
+                courseTotalShare == course.courseTotalShare &&
+                courseTotalLike == course.courseTotalLike &&
+                courseRecommend == course.courseRecommend &&
+                courseLiveStatus == course.courseLiveStatus &&
+                Objects.equals(id, course.id) &&
+                Objects.equals(courseTypeId, course.courseTypeId) &&
+                Objects.equals(courseTitle, course.courseTitle) &&
+                Objects.equals(courseLogo, course.courseLogo) &&
+                Objects.equals(courseContent, course.courseContent) &&
+                Objects.equals(courseAudioUrl, course.courseAudioUrl) &&
+                Objects.equals(courseVideoUrl, course.courseVideoUrl) &&
+                Objects.equals(courseLabel, course.courseLabel) &&
+                Objects.equals(courseKeyWords, course.courseKeyWords) &&
+                Objects.equals(courseCreateTime, course.courseCreateTime) &&
+                Objects.equals(courseCreateId, course.courseCreateId) &&
+                Objects.equals(courseUpdateTime, course.courseUpdateTime) &&
+                Objects.equals(courseUpdateId, course.courseUpdateId) &&
+                Objects.equals(courseDescribe, course.courseDescribe);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, typeId, articleTitle, articleLogo, articleContent, articleAudioUrl, articleVideoUrl, articleLabel, articleKeyWords, articleOnline, articleTotalView, articleTotalShare, articleTotalLike, articleCreateTime, articleCreateId, articleUpdateTime, articleUpdateId);
+        return Objects.hash(id, courseTypeId, courseTitle, courseLogo, courseContent, courseAudioUrl, courseVideoUrl, courseLabel, courseKeyWords, courseOnline, courseTotalView, courseTotalShare, courseTotalLike, courseCreateTime, courseCreateId, courseUpdateTime, courseUpdateId, courseRecommend, courseDescribe, courseLiveStatus);
     }
 }

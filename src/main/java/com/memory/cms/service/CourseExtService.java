@@ -1,7 +1,6 @@
 package com.memory.cms.service;
 
 import com.memory.cms.entity.CourseExt;
-import com.memory.cms.entity.CourseExt;
 
 import java.util.List;
 
@@ -12,16 +11,20 @@ import java.util.List;
 
 public interface CourseExtService {
 
-    CourseExt getCourseExtById(Integer id);
+    CourseExt getCourseExtById(String id);
 
     CourseExt save(CourseExt ext);
 
     CourseExt update(CourseExt ext);
 
-    void deleteCourseExtByArticleId(Integer article_id);
+    void deleteCourseExtByCourseId(String course_id);
 
-    void delete(Integer id);
+    void delete(String id);
 
-    List<CourseExt> queryCourseExtListByArticleId(Integer article_id);
+    List<CourseExt> queryCourseExtListByCourseId(String course_id);
+
+    List<CourseExt>  saveAll(List<CourseExt> list);
+
+    List<CourseExt> deleteAndSave(List<CourseExt> removeList,List<CourseExt> updateList );
 
 }

@@ -6,6 +6,7 @@ import com.memory.cms.service.CourseExtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class CourseExtServiceImpl implements CourseExtService {
     private CourseExtRepository repository;
 
     @Override
-    public CourseExt getCourseExtById(Integer id) {
+    public CourseExt getCourseExtById(String id) {
         if(repository.findById(id).hashCode() != 0){
             return repository.findById(id).get();
         }else {
@@ -40,18 +41,37 @@ public class CourseExtServiceImpl implements CourseExtService {
     }
 
     @Override
-    public void deleteCourseExtByArticleId(Integer article_id) {
-        repository.deleteCourseExtByArticleId(article_id);
+    public void deleteCourseExtByCourseId(String article_id) {
+        repository.deleteCourseExtByCourseId(article_id);
     }
 
     @Override
-    public List<CourseExt> queryCourseExtListByArticleId(Integer article_id) {
-        return repository.queryCourseExtByArticleId(article_id);
+    public List<CourseExt> queryCourseExtListByCourseId(String article_id) {
+        return repository.queryCourseExtByCourseId(article_id);
     }
 
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<CourseExt> saveAll(List<CourseExt> list) {
+
+     return   repository.saveAll(list);
+    }
+
+    @Override
+    @Transactional
+    public  List<CourseExt> deleteAndSave(List<CourseExt> removeList, List<CourseExt> updateList) {
+        List<CourseExt> list = null;
+        try{
+            repository.deleteAll(removeList);
+            list = repository.saveAll(updateList);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return list;
     }
 }

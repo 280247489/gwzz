@@ -35,7 +35,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course getCourseById(int id) {
+    public Course getCourseById(String id) {
         if(repository.findById(id).hashCode() != 0){
             return repository.findById(id).get();
         }else{
@@ -57,7 +57,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
 
          repository.deleteById(id);
     }
@@ -65,33 +65,33 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public int updateCourseOnlineById(int online,int id) {
+    public int updateCourseOnlineById(int online,String id) {
 
         return repository.updateCourseOnlineById(online,id);
     }
 
 
     @Override
-    public Page<Painter> queryCourseByQue(Pageable pageable,String article_title,String article_update_id,Integer article_online,String sort_status,String type_id) {
+    public Page<Painter> queryCourseByQue(Pageable pageable,String course_title,String course_update_id,Integer course_online,String sort_status,String course_type_id) {
         Specification specification =new Specification<Painter>() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder cb) {
                 List<Predicate> list = new ArrayList<>();
 
-                if(!"".equals(article_title)){
-                    list.add(cb.like(root.get("articleTitle"),"%" + article_title + "%"));
+                if(!"".equals(course_title)){
+                    list.add(cb.like(root.get("courseTitle"),"%" + course_title + "%"));
                 }
 
-                if(!"".equals(article_update_id)){
-                    list.add(cb.equal(root.get("articleUpdateId"),article_update_id));
+                if(!"".equals(course_update_id)){
+                    list.add(cb.equal(root.get("courseUpdateId"),course_update_id));
                 }
 
-                if(article_online != null){
-                    list.add(cb.equal(root.get("articleOnline"),article_online));
+                if(course_online != null){
+                    list.add(cb.equal(root.get("courseOnline"),course_online));
                 }
 
-                if(!"".equals(type_id)){
-                    list.add(cb.equal(root.get("typeId"),type_id));
+                if(!"".equals(course_type_id)){
+                    list.add(cb.equal(root.get("courseTypeId"),course_type_id));
                 }
 
                 Predicate[] p = new Predicate[list.size()];
@@ -99,10 +99,10 @@ public class CourseServiceImpl implements CourseService {
 
                if(sort_status != null && !"".equals(sort_status) && sort_status.equals("asc")){
 
-                    query.orderBy(cb.asc(root.get("articleUpdateTime")));
+                    query.orderBy(cb.asc(root.get("courseUpdateTime")));
                 }else{
                    //默认根据更新时间倒叙排列
-                    query.orderBy(cb.desc(root.get("articleUpdateTime")));
+                    query.orderBy(cb.desc(root.get("courseUpdateTime")));
                 }
                 return query.getRestriction();
             }

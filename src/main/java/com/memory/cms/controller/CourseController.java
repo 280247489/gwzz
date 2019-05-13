@@ -1,14 +1,14 @@
 package com.memory.cms.controller;
 import com.memory.cms.entity.Course;
-import com.memory.common.utils.PageResult;
-import com.memory.common.utils.Result;
-import com.memory.common.utils.ResultUtil;
+import com.memory.cms.service.CourseService;
+import com.memory.common.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -18,11 +18,13 @@ import java.util.Date;
  * @date 2019/5/8 11:19
  */
 @RestController
-//@RequestMapping(value = "/course")
+@RequestMapping(value = "course")
 public class CourseController {
 
+    private static final String fileUrl = "G:/upload";
+
     @Autowired
-    private com.memory.cms.service.CourseService courseService;
+    private CourseService courseService;
 
 
 
@@ -33,8 +35,8 @@ public class CourseController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/course_online"/*, method = RequestMethod.POST*/)
-    public Result setArticleOnline(@RequestParam("online") Integer online, @RequestParam("id") Integer id){
+    @RequestMapping(value = "online"/*, method = RequestMethod.POST*/)
+    public Result setCourseOnline(@RequestParam("online") Integer online, @RequestParam("id") String id){
         Result result =new Result();
         try{
 
@@ -64,21 +66,21 @@ public class CourseController {
      * 获取课程列表（分页）
      * @param page
      * @param size
-     * @param article_title
-     * @param article_update_id
-     * @param article_online
+     * @param course_title
+     * @param course_update_id
+     * @param course_online
      * @param sort_status
      * @return
      */
-    @RequestMapping(value = "/course_list"/*, method = RequestMethod.POST*/)
+    @RequestMapping(value = "list"/*, method = RequestMethod.POST*/)
     public Result queryCourseList(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
-                                   @RequestParam("article_title") String article_title, @RequestParam("article_update_id") String article_update_id,
-                                   @RequestParam("article_online") Integer article_online, @RequestParam("sort_status") String sort_status,@RequestParam("type_id") String type_id){
+                                   @RequestParam("course_title") String course_title, @RequestParam("course_update_id") String course_update_id,
+                                   @RequestParam("course_online") Integer course_online, @RequestParam("sort_status") String sort_status,@RequestParam("course_type_id") String course_type_id){
         Result result = new Result();
         PageResult pageResult = new PageResult();
         try{
             Pageable pageable = PageRequest.of(page, size);
-            org.springframework.data.domain.Page pageer= courseService.queryCourseByQue(pageable,article_title,article_update_id,article_online,sort_status,type_id);
+            org.springframework.data.domain.Page pageer= courseService.queryCourseByQue(pageable,course_title,course_update_id,course_online,sort_status,course_type_id);
 
             pageResult.setPageNumber(pageable.getPageNumber() + 1);
             pageResult.setOffset(pageable.getOffset());
@@ -101,8 +103,8 @@ public class CourseController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/course_detail"/*, method = RequestMethod.POST*/)
-    public Result getCourseDetail(@RequestParam("id") Integer id){
+    @RequestMapping(value = "detail"/*, method = RequestMethod.POST*/)
+    public Result getCourseDetail(@RequestParam("id") String id){
         Result result = new Result();
         try {
             if(id == null){
@@ -122,33 +124,74 @@ public class CourseController {
         return result;
     }
 
-    @RequestMapping(value = "/course_add"/*, method = RequestMethod.POST*/)
-    public Result addCourse(@RequestParam("type_id") String type_id,@RequestParam("article_title") String article_title,
-                             @RequestParam("article_logo") String article_logo, @RequestParam("article_content") String article_content,
-                             @RequestParam("article_audio_url") String article_audio_url,@RequestParam("article_video_url") String article_video_url,
-                             @RequestParam("article_label") String article_label,@RequestParam("article_key_words") String article_key_words,
-                             @RequestParam("article_online") Integer article_online, @RequestParam("article_create_id") String article_create_id,
-                             @RequestParam("article_update_id") String article_update_id){
+    @RequestMapping(value = "add"/*, method = RequestMethod.POST*/)
+    public Result addCourse(@RequestParam("titleFile") MultipartFile titleFile,@RequestParam("radioFile") MultipartFile radioFile ,@RequestParam("course_type_id") String course_type_id, @RequestParam("course_title") String course_title,
+                            @RequestParam("course_recommend") Integer course_recommend, @RequestParam("course_content") String course_content,
+                            @RequestParam("course_describe") String course_describe,/* @RequestParam("course_live_status") Integer course_live_status,*/
+                            @RequestParam("course_label") String course_label, @RequestParam("course_key_words") String course_key_words,
+                            @RequestParam("course_online") Integer course_online, @RequestParam("course_create_id") String course_create_id,
+                            @RequestParam("course_update_id") String course_update_id/*,@RequestMapping("")*/){
            Result result = new Result();
             try {
 
-                Course course = init(type_id,article_title,
-                        article_logo,article_content,
-                        article_audio_url,article_video_url,
-                        article_label,article_key_words,
-                        article_online,article_create_id,
-                        article_update_id
+                String course_logo = "";
+                String course_video_url = "";
+                String course_audio_url = "";
+
+                String id = Utils.generateUUID();
+                String prefix = "";
+                String suffix = "";
+                String dayStr = DateUtils.getDate("yyyyMMdd");
+                String hoursStr = DateUtils.getDate("HHmmss");
+
+                String fileUploadedPath = "",fileName="";
+
+
+                if(!titleFile.isEmpty()){
+                    prefix = "title";
+                    //图片默认转成png格式
+                    suffix = ".png";
+                    fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
+
+                    fileUploadedPath = fileUrl + "/" + id;
+                    //上传标题图
+                    FileUtils.upload(titleFile,fileUploadedPath,fileName);
+                    course_logo = fileUploadedPath + "/" +fileName;
+
+                }
+
+                if(!radioFile.isEmpty()){
+                    prefix = "radio";
+                    suffix = ".mp3";
+                    fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
+
+                    fileUploadedPath = fileUrl + "/" + id;
+                    //上传MP3音频
+                    FileUtils.upload(radioFile,fileUploadedPath,fileName);
+
+                    course_audio_url = fileUploadedPath + "/" +fileName;
+                }
+
+
+                String uuid = Utils.generateUUID();
+
+                Course course = init(course_type_id,course_title,
+                        course_logo,course_content,
+                        course_audio_url,course_video_url,
+                        course_label,course_key_words,
+                        course_online,course_create_id,
+                        course_update_id,uuid,course_recommend,course_describe,null,true
                         );
 
                 course = courseService.add(course);
 
                 if(course != null){
                     result.setCode(0);
-                    result.setMsg("添加文章成功");
+                    result.setMsg("添加课程成功");
                     result.setData(course);
                 }else {
                     result.setCode(1);
-                    result.setMsg("添加文章失败");
+                    result.setMsg("添加课程失败");
                     result.setData("");
                 }
 
@@ -159,33 +202,70 @@ public class CourseController {
 
         return result;
     }
-    @RequestMapping(value = "/course_update"/*, method = RequestMethod.POST*/)
-    public Result updateCourse(@RequestParam("type_id") String type_id,@RequestParam("article_title") String article_title,
-                            @RequestParam("article_logo") String article_logo, @RequestParam("article_content") String article_content,
-                            @RequestParam("article_audio_url") String article_audio_url,@RequestParam("article_video_url") String article_video_url,
-                            @RequestParam("article_label") String article_label,@RequestParam("article_key_words") String article_key_words,
-                            @RequestParam("article_online") Integer article_online, @RequestParam("article_create_id") String article_create_id,
-                            @RequestParam("article_update_id") String article_update_id){
+    @RequestMapping(value = "update"/*, method = RequestMethod.POST*/)
+    public Result updateCourse(@RequestParam(value = "titleFile" ,required = false) MultipartFile titleFile,@RequestParam(value = "radioFile" ,required = false) MultipartFile radioFile,@RequestParam("id") String id,@RequestParam("course_type_id") String course_type_id,@RequestParam("course_title") String course_title,
+                            @RequestParam(value = "course_logo",required = false) String course_logo, @RequestParam("course_content") String course_content,
+                            @RequestParam("course_describe") String course_describe,/* @RequestParam("course_live_status") Integer course_live_status,*/
+                            @RequestParam(value = "course_audio_url" ,required = false) String course_audio_url,/* @RequestParam("course_video_url") String course_video_url,*/
+                            @RequestParam("course_label") String course_label,@RequestParam("course_key_words") String course_key_words,
+                            @RequestParam("course_online") Integer course_online, @RequestParam("course_create_id") String course_create_id,
+                            @RequestParam("course_update_id") String course_update_id, @RequestParam("course_recommend") Integer course_recommend,@RequestParam("course_create_time") String course_create_time){
         Result result = new Result();
         try {
+            //String course_audio_url="";
+            String course_video_url="";
+            String prefix = "";
+            String suffix = "";
+            String dayStr = DateUtils.getDate("yyyyMMdd");
+            String hoursStr = DateUtils.getDate("HHmmss");
+            String fileUploadedPath = "";
+            String fileName="";
 
-            Course course = init(type_id,article_title,
-                    article_logo,article_content,
-                    article_audio_url,article_video_url,
-                    article_label,article_key_words,
-                    article_online,article_create_id,
-                    article_update_id
+
+            if(titleFile != null && !titleFile.isEmpty()){
+                prefix = "title";
+                //图片默认转成png格式
+                suffix = ".png";
+                fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
+
+                fileUploadedPath = fileUrl + "/" + id;
+                //上传标题图
+                FileUtils.upload(titleFile,fileUploadedPath,fileName);
+                course_logo = fileUploadedPath + "/" +fileName;
+
+            }
+
+            if(radioFile != null && !radioFile.isEmpty()){
+                prefix = "radio";
+                suffix = ".mp3";
+                fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
+
+                fileUploadedPath = fileUrl + "/" + id;
+                //上传MP3音频
+                FileUtils.upload(radioFile,fileUploadedPath,fileName);
+
+                course_audio_url = fileUploadedPath + "/" +fileName;
+            }
+
+
+
+            Course course = init(course_type_id,course_title,
+                    course_logo,course_content,
+                    course_audio_url,course_video_url,
+                    course_label,course_key_words,
+                    course_online,course_create_id,
+                    course_update_id,id,course_recommend,course_describe,course_create_time,false
             );
 
             course = courseService.update(course);
 
             if(course != null){
                 result.setCode(0);
-                result.setMsg("更新文章成功");
+                result.setMsg("更新课程成功");
                 result.setData(course);
             }else {
                 result.setCode(1);
-                result.setMsg("更新文章失败");
+                result.setMsg("更新课程失败");
                 result.setData("");
             }
 
@@ -199,30 +279,47 @@ public class CourseController {
 
 
 
-    private  Course init(String type_id,String article_title,
-                              String article_logo,String article_content,
-                              String article_audio_url,String article_video_url,
-                              String article_label,String article_key_words,
-                              Integer article_online,String article_create_id,
-                              String article_update_id){
+    private Course init(String course_type_id, String course_title,
+                        String course_logo, String course_content,
+                        String course_audio_url, String course_video_url,
+                        String course_label, String course_key_words,
+                        Integer course_online, String course_create_id,
+                        String course_update_id, String id, Integer course_recommend, String course_describe, String course_create_time,Boolean isSave){
 
                 Course course = new Course();
-                course.setTypeId(type_id);
-                course.setArticleTitle(article_title);
-                course.setArticleLogo(article_logo);
-                course.setArticleContent(article_content);
-                course.setArticleAudioUrl(article_audio_url);
-                course.setArticleVideoUrl(article_video_url);
-                course.setArticleLabel(article_label);
-                course.setArticleKeyWords(article_key_words);
-                course.setArticleOnline(article_online);
-                course.setArticleTotalView(0);
-                course.setArticleTotalShare(0);
-                course.setArticleTotalLike(0);
-                course.setArticleCreateTime(new Date());
-                course.setArticleCreateId(article_create_id);
-                course.setArticleUpdateTime(new  Date());
-                course.setArticleUpdateId(article_update_id);
+                if(id != null){
+                    course.setId(id);
+                }
+
+                course.setCourseTypeId(course_type_id);
+                course.setCourseTitle(course_title);
+                course.setCourseLogo(course_logo);
+                course.setCourseContent(course_content);
+            /*    if(course_audio_url != null && !"".equals(course_audio_url)){
+                    course.setCourseAudioUrl(course_audio_url);
+                }*/
+                course.setCourseAudioUrl(course_audio_url);
+                course.setCourseVideoUrl(course_video_url);
+                course.setCourseLabel(course_label);
+                course.setCourseKeyWords(course_key_words);
+                course.setCourseOnline(course_online);
+                course.setCourseTotalView(0);
+                course.setCourseTotalShare(0);
+                course.setCourseTotalLike(0);
+                course.setCourseRecommend(course_recommend);
+                course.setCourseDescribe(course_describe);
+                course.setCourseCreateId(course_create_id);
+                if(isSave){
+
+                    course.setCourseCreateTime(new Date());
+                    //直播状态默认0，未直播
+                    course.setCourseLiveStatus(0);
+                }else{
+                    course.setCourseCreateTime(DateUtils.strToDate(course_create_time));
+                }
+
+                course.setCourseUpdateTime(new  Date());
+                course.setCourseUpdateId(course_update_id);
 
         return course;
     }
