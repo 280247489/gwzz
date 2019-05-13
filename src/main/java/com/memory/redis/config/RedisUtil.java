@@ -454,7 +454,7 @@ public class RedisUtil {
      *
      * @param key   键
      * @param start 开始
-     * @param end   结束 0 到 -1代表所有值
+     * @param end   结束 到0  -1代表所有值
      * @return
      */
     public List<Object> lGet(String key, long start, long end) {
