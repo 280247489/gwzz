@@ -3,7 +3,7 @@ import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
 import cn.afterturn.easypoi.handler.inter.IExcelDataHandler;
-import com.memory.cms.entity.CourseExtExcel;
+import com.memory.entity.jpa.CourseExtExcel;
 import com.memory.excel.entity.ExcelResult;
 import com.memory.excel.handler.CourseExtExcelHandler;
 import org.slf4j.Logger;

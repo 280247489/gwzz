@@ -1,6 +1,6 @@
 package com.memory.excel.handler;
 
-import com.memory.cms.entity.CourseExtExcel;
+import com.memory.entity.jpa.CourseExtExcel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
