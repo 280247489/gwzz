@@ -1,6 +1,6 @@
 package com.memory.gwzz.service;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName CourseExtWebService
@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface CourseExtWebService {
 //    List<Object> setCourseExt (List<CourseExt> list);
-    List<Object> getCourseExt (String courseId);
+    Map<String,Object> getCourseExtMap(String courseId);
+    Object getCourseExt (String courseId);
     boolean delCourseExt (String courseId);
 }

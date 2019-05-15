@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * @ClassName CourseExtController
@@ -28,12 +31,23 @@ public class CourseExtWebController extends BaseController {
 
     @Autowired
     private CourseExtWebService courseExtWebService;
-
-    @RequestMapping(value = "list",method = RequestMethod.GET)
+//    method = RequestMethod.GET
+    @RequestMapping(value = "list")
     public Message list(@RequestParam String courseId){
         msg = Message.success();
         msg.setRecode(0);
         msg.setData(courseExtWebService.getCourseExt(courseId));
+        return msg;
+    }
+
+
+
+    @RequestMapping(value = "aaa",method = RequestMethod.GET)
+    public Message aaa(@RequestParam String courseId){
+        redisUtil.hmset(CacheConstantConfig.COURSERXT+":"+courseId,courseExtWebService.getCourseExtMap(courseId));
+        msg = Message.success();
+        msg.setRecode(0);
+        msg.setData(redisUtil.hmget(CacheConstantConfig.COURSERXT+":"+courseId));
         return msg;
     }
 
