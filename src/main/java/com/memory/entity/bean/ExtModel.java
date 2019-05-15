@@ -1,4 +1,4 @@
-package com.memory.entity.jpa;
+package com.memory.entity.bean;
 
 import com.memory.entity.bean.Ext;
 

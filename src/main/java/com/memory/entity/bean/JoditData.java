@@ -1,5 +1,6 @@
 package com.memory.entity.bean;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -11,11 +12,11 @@ public class JoditData {
 
     private String baseurl;
 
-    private String [] message;
+    private ArrayList<String> message = new ArrayList<String>();
 
-    private String [] files;
+    private ArrayList<String> files = new ArrayList<String>();
 
-    private Boolean [] isImages;
+    private ArrayList<Boolean> isImages = new ArrayList<Boolean>();
 
     private Integer code;
 
@@ -27,27 +28,27 @@ public class JoditData {
         this.baseurl = baseurl;
     }
 
-    public String[] getMessage() {
+    public ArrayList<String> getMessage() {
         return message;
     }
 
-    public void setMessage(String[] message) {
+    public void setMessage(ArrayList<String> message) {
         this.message = message;
     }
 
-    public String[] getFiles() {
+    public ArrayList<String> getFiles() {
         return files;
     }
 
-    public void setFiles(String[] files) {
+    public void setFiles(ArrayList<String> files) {
         this.files = files;
     }
 
-    public Boolean[] getIsImages() {
+    public ArrayList<Boolean> getIsImages() {
         return isImages;
     }
 
-    public void setIsImages(Boolean[] isImages) {
+    public void setIsImages(ArrayList<Boolean> isImages) {
         this.isImages = isImages;
     }
 
@@ -59,26 +60,16 @@ public class JoditData {
         this.code = code;
     }
 
-
     public JoditData() {
     }
 
-    public JoditData(String baseurl, String[] message, String[] files, Boolean[] isImages, Integer code) {
+    public JoditData(String baseurl, ArrayList<String> message, ArrayList<String> files, ArrayList<Boolean> isImages, Integer code) {
         this.baseurl = baseurl;
         this.message = message;
         this.files = files;
         this.isImages = isImages;
         this.code = code;
     }
-
-    @Override
-    public String toString() {
-        return "JoditData{" +
-                "baseurl='" + baseurl + '\'' +
-                ", message=" + Arrays.toString(message) +
-                ", files=" + Arrays.toString(files) +
-                ", isImages=" + Arrays.toString(isImages) +
-                ", code=" + code +
-                '}';
-    }
 }
+
+

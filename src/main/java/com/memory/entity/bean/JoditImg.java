@@ -25,6 +25,29 @@ public class JoditImg {
         this.data = data;
     }
 
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public JoditData getData() {
+        return data;
+    }
+
+    public void setData(JoditData data) {
+        this.data = data;
+    }
 
     @Override
     public String toString() {

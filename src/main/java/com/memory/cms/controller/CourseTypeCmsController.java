@@ -1,7 +1,7 @@
 package com.memory.cms.controller;
 import com.memory.cms.service.CourseTypeCmsService;
 import com.memory.common.utils.*;
-import com.memory.entity.jpa.CourseTypes;
+import com.memory.entity.jpa.CourseType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +29,8 @@ public class CourseTypeCmsController {
     public Result getCourseTypes(){
         Result result = new Result();
         try {
-            Sort sort = new Sort(Sort.Direction.DESC,"type_create_time");
-            List<CourseTypes> list = courseTypeService.queryCourseTypeList(sort);
+            //Sort sort = new Sort(Sort.Direction.DESC,"type_create_time");
+            List<CourseType> list = courseTypeService.queryCourseTypeList(1);
             result = ResultUtil.success(list);
 
         }catch (Exception e){
@@ -45,8 +45,7 @@ public class CourseTypeCmsController {
     public Result queryCourseTypeList(){
         Result result = new Result();
         try{
-            Sort sort = new Sort(Sort.Direction.DESC,"type_create_time");
-            List<CourseTypes> list = courseTypeService.queryCourseTypeList(sort);
+            List<CourseType> list = courseTypeService.queryCourseTypeList();
             result = ResultUtil.success(list);
 
         }catch (Exception e){
@@ -90,14 +89,14 @@ public class CourseTypeCmsController {
 
             }
 
-            CourseTypes courseType = new CourseTypes();
+            CourseType courseType = new CourseType();
             courseType.setId(uuid);
             courseType.setImg(imgUrl);
             courseType.setIsUse(isUse);
             courseType.setSum(0);
             courseType.setTypeCreateTime(new Date());
             courseType.setTypeName(typeName);
-            CourseTypes courseTypeSave = courseTypeService.add(courseType);
+            CourseType courseTypeSave = courseTypeService.add(courseType);
             result = ResultUtil.success(courseTypeSave);
         }catch (Exception e){
             e.printStackTrace();

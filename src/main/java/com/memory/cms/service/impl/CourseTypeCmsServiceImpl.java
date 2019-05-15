@@ -2,7 +2,7 @@ package com.memory.cms.service.impl;
 
 import com.memory.cms.repository.CourseTypeCmsRepository;
 import com.memory.cms.service.CourseTypeCmsService;
-import com.memory.entity.jpa.CourseTypes;
+import com.memory.entity.jpa.CourseType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,12 @@ public class CourseTypeCmsServiceImpl implements CourseTypeCmsService {
     private CourseTypeCmsRepository repository;
 
     @Override
-    public List<CourseTypes> queryCourseTypeList(Sort sort) {
-            return repository.findAll(sort);
+    public List<CourseType> queryCourseTypeList() {
+            return repository.queryAllCourseTypeListByTypeCreateTimeDesc();
     }
 
     @Override
-    public CourseTypes add(CourseTypes courseType) {
+    public CourseType add(CourseType courseType) {
         return repository.save(courseType);
     }
 
@@ -33,5 +33,10 @@ public class CourseTypeCmsServiceImpl implements CourseTypeCmsService {
     @Override
     public void delete(String id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<CourseType> queryCourseTypeList(Integer isUse) {
+        return repository.queryCourseTypeList(isUse);
     }
 }
