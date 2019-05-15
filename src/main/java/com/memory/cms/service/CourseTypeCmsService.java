@@ -1,5 +1,8 @@
 package com.memory.cms.service;
 
+import com.memory.entity.jpa.CourseTypes;
+import org.springframework.data.domain.Sort;
+
 import java.util.List;
 
 /**
@@ -9,11 +12,11 @@ import java.util.List;
 
 public interface CourseTypeCmsService {
 
-    List<CourseType>  queryCourseTypeList();
+    List<CourseTypes>  queryCourseTypeList(Sort sort);
 
-    CourseType add(CourseType courseType);
+    CourseTypes add(CourseTypes courseType);
 
-    void delete(Integer id);
+    void delete(String id);
 
 
 }

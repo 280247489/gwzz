@@ -2,7 +2,9 @@ package com.memory.cms.service.impl;
 
 import com.memory.cms.repository.CourseTypeCmsRepository;
 import com.memory.cms.service.CourseTypeCmsService;
+import com.memory.entity.jpa.CourseTypes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,18 +20,18 @@ public class CourseTypeCmsServiceImpl implements CourseTypeCmsService {
     private CourseTypeCmsRepository repository;
 
     @Override
-    public List<CourseType> queryCourseTypeList() {
-            return repository.findAll();
+    public List<CourseTypes> queryCourseTypeList(Sort sort) {
+            return repository.findAll(sort);
     }
 
     @Override
-    public CourseType add(CourseType courseType) {
+    public CourseTypes add(CourseTypes courseType) {
         return repository.save(courseType);
     }
 
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         repository.deleteById(id);
     }
 }

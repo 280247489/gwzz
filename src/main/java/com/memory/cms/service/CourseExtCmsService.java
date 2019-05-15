@@ -21,7 +21,7 @@ public interface CourseExtCmsService {
 
     void delete(String id);
 
-    List<CourseExt> queryCourseExtListByCourseId(String course_id);
+    List<CourseExt> queryCourseExtByCourseId(String course_id);
 
     List<CourseExt>  saveAll(List<CourseExt> list);
 

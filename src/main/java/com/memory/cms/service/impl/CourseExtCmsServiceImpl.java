@@ -46,8 +46,9 @@ public class CourseExtCmsServiceImpl implements CourseExtCmsService {
     }
 
     @Override
-    public List<CourseExt> queryCourseExtListByCourseId(String article_id) {
-        return repository.queryCourseExtByCourseId(article_id);
+    public List<CourseExt> queryCourseExtByCourseId(String course_id) {
+        return repository.queryCourseExtByCourseIdOrderByCourseExtSortAsc(course_id);
+        //return repository.queryCourseExtList(article_id);
     }
 
 

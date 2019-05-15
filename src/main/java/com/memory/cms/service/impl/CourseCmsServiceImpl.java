@@ -112,5 +112,9 @@ public class CourseCmsServiceImpl implements CourseCmsService {
     }
 
 
+    @Override
+    public int updateCourseLiveStatus(int course_live_status,String id) {
+        return  repository.updateCourseLiveStatus(course_live_status,id);
+    }
 }
 

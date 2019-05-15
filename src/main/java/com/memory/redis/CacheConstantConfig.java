@@ -9,4 +9,7 @@ public class CacheConstantConfig {
     //APP数据Hash
     public static final String SYSAPPDATA = "sysAppData";
 
+    //课程拓展数据
+    public static final String COURSERXT = "courseExt";
+
 }

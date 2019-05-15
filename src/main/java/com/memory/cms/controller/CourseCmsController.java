@@ -25,6 +25,8 @@ public class CourseCmsController {
 
     private static final String fileUrl = "G:/upload";
 
+    //private static final String fileShowUrl = ""
+
     @Autowired
     private CourseCmsService courseService;
 
@@ -63,6 +65,27 @@ public class CourseCmsController {
 
         return result;
     }
+
+    @RequestMapping(value = "liveStatus"/*, method = RequestMethod.POST*/)
+    public Result setCourseLiveStatus(@RequestParam("status") Integer course_live_status,String id){
+        Result result =new Result();
+        try {
+
+           int count =  courseService.updateCourseLiveStatus(course_live_status,id);
+           if(count > 0 ){
+               Course course = courseService.getCourseById(id);
+               result = ResultUtil.success(course);
+           }else{
+               result = ResultUtil.error(0,"更新失败");
+           }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  result;
+    }
+
 
     /**
      * 获取课程列表（分页）
@@ -158,7 +181,8 @@ public class CourseCmsController {
                     fileUploadedPath = fileUrl + "/" + id;
                     //上传标题图
                     FileUtils.upload(titleFile,fileUploadedPath,fileName);
-                    course_logo = fileUploadedPath + "/" +fileName;
+                  //  course_logo = fileUploadedPath + "/" +fileName;
+                    course_logo = id + "/" +fileName;
 
                 }
 
@@ -171,7 +195,8 @@ public class CourseCmsController {
                     //上传MP3音频
                     FileUtils.upload(radioFile,fileUploadedPath,fileName);
 
-                    course_audio_url = fileUploadedPath + "/" +fileName;
+                   // course_audio_url = fileUploadedPath + "/" +fileName;
+                    course_audio_url = id + "/" +fileName;
                 }
 
 
@@ -214,7 +239,9 @@ public class CourseCmsController {
                             @RequestParam(value = "course_audio_url" ,required = false) String course_audio_url,/* @RequestParam("course_video_url") String course_video_url,*/
                             @RequestParam("course_label") String course_label,@RequestParam("course_key_words") String course_key_words,
                             @RequestParam("course_online") Integer course_online, @RequestParam("course_create_id") String course_create_id,
-                            @RequestParam("course_update_id") String course_update_id, @RequestParam("course_recommend") Integer course_recommend,@RequestParam("course_create_time") String course_create_time){
+                            @RequestParam("course_update_id") String course_update_id, @RequestParam("course_audio_times") String course_audio_times,
+                               @RequestParam("course_recommend") Integer course_recommend){
+
         Result result = new Result();
         try {
             //String course_audio_url="";
@@ -236,7 +263,8 @@ public class CourseCmsController {
                 fileUploadedPath = fileUrl + "/" + id;
                 //上传标题图
                 FileUtils.upload(titleFile,fileUploadedPath,fileName);
-                course_logo = fileUploadedPath + "/" +fileName;
+               // course_logo = fileUploadedPath + "/" +fileName;
+                course_logo = id + "/" +fileName;
 
             }
 
@@ -249,18 +277,42 @@ public class CourseCmsController {
                 //上传MP3音频
                 FileUtils.upload(radioFile,fileUploadedPath,fileName);
 
-                course_audio_url = fileUploadedPath + "/" +fileName;
+                //course_audio_url = fileUploadedPath + "/" +fileName;
+                course_audio_url = id + "/" +fileName;
+            }
+
+            Course course = courseService.getCourseById(id);
+
+            if(course == null){
+                result = ResultUtil.error(1,"课程检查不到，请刷新后再进行编辑！");
+            }else{
+                course.setCourseTypeId(course_type_id);
+                course.setCourseTitle(course_title);
+                course.setCourseLogo(course_logo);
+                course.setCourseContent(course_content);
+                course.setCourseAudioUrl(course_audio_url);
+                course.setCourseLabel(course_label);
+                course.setCourseKeyWords(course_key_words);
+
+                course.setCourseUpdateId(course_update_id);
+                course.setCourseDescribe(course_describe);
+                course.setCourseUpdateTime(new Date());
+                course.setCourseOnline(course_online);
+                course.setCourseRecommend(course_recommend);
+                //course.setCourseAudioTimes(course_audio_times);
+
+
             }
 
 
 
-            Course course = init(course_type_id,course_title,
+       /*     Course course = init(course_type_id,course_title,
                     course_logo,course_content,
                     course_audio_url,course_video_url,
                     course_label,course_key_words,
                     course_online,course_create_id,
                     course_update_id,id,course_recommend,course_describe,course_create_time,false
-            );
+            );*/
 
             course = courseService.update(course);
 

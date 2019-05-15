@@ -1,5 +1,6 @@
 package com.memory.cms.repository;
 
+import com.memory.entity.jpa.CourseTypes;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -7,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @date 2019/5/9 16:18
  */
 
-public interface CourseTypeCmsRepository extends JpaRepository<CourseType,Integer> {
+public interface CourseTypeCmsRepository extends JpaRepository<CourseTypes,String> {
 }

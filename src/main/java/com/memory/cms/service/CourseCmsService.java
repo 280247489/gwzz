@@ -28,5 +28,6 @@ public interface CourseCmsService {
 
     Page<Painter> queryCourseByQue(Pageable pageable, String course_title, String course_update_id, Integer course_online, String sort_status, String type_id);
 
+    int updateCourseLiveStatus(int course_live_status,String id);
 
 }
