@@ -34,7 +34,7 @@ public class FileController {
     private static final String resourcesUrl = "http://192.168.1.118:8081/upload";
 
 
-    @RequestMapping(value = "/file/upload")
+//    @RequestMapping(value = "/file/upload",)
     public Result upload(@RequestParam("file") MultipartFile file,@RequestParam("type") String type) {
         Result result = new Result();
         Map<String,Object> map = new HashMap<>();
@@ -75,7 +75,7 @@ public class FileController {
         return result;
     }
 
-    @PostMapping("/file/batch")
+    //@PostMapping("/file/batch")
     public Result handleFileUpload(HttpServletRequest request,@RequestParam("type") String type) {
         Result result = new Result();
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
@@ -127,7 +127,7 @@ public class FileController {
         return result;
     }
 
-    @GetMapping("/download")
+   // @GetMapping("/download")
     public String downloadFile(HttpServletRequest request, HttpServletResponse response) {
         String fileName = "dalaoyang.jpeg";// 文件名
         if (fileName != null) {

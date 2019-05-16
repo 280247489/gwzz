@@ -5,6 +5,7 @@ import com.memory.entity.jpa.CourseType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +26,7 @@ public class CourseTypeCmsController {
     @Autowired
     private CourseTypeCmsService courseTypeService;
 
-    @RequestMapping(value = "options"/*, method = RequestMethod.POST*/)
+    @RequestMapping(value = "options", method = RequestMethod.POST)
     public Result getCourseTypes(){
         Result result = new Result();
         try {
@@ -41,7 +42,7 @@ public class CourseTypeCmsController {
         return result;
     }
 
-    @RequestMapping(value = "list"/*, method = RequestMethod.POST*/)
+    @RequestMapping(value = "list", method = RequestMethod.POST)
     public Result queryCourseTypeList(){
         Result result = new Result();
         try{
@@ -62,7 +63,7 @@ public class CourseTypeCmsController {
      * @param typeFile
      * @return
      */
-    @RequestMapping(value = "add"/*, method = RequestMethod.POST*/)
+    @RequestMapping(value = "add", method = RequestMethod.POST)
     public  Result add(@RequestParam(value = "imgUrl" ,required = false) String imgUrl, Integer isUse, String typeName, @RequestParam(value = "typeFile" ,required = false) MultipartFile typeFile){
         Result result = new Result();
         try{

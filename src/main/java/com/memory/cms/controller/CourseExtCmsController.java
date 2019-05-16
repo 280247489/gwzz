@@ -12,10 +12,7 @@ import com.memory.cms.service.CourseExtCmsService;
 import com.memory.common.utils.*;
 import com.memory.redis.CacheConstantConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
@@ -49,7 +46,7 @@ public class CourseExtCmsController {
 
 
 
-    @RequestMapping(value ="add")
+    @RequestMapping(value ="add", method = RequestMethod.POST)
     @ResponseBody
     public Result /*List<Ext> */ add( ExtModel extModel){
         Result result = new Result();
@@ -83,7 +80,6 @@ public class CourseExtCmsController {
                 courseExt.setCourseExtType(ext.getType());
                 courseExt.setCourseExtSort(i+1);
                 if(ext.getName() ==null || "".equals(ext.getName())){
-                    System.out.println("11111111111111111111111111111111111111111111111111111111111" );
                 }
 
                 //文字
@@ -185,7 +181,7 @@ public class CourseExtCmsController {
 
 
 
-    @RequestMapping(value ="update")
+    @RequestMapping(value ="update", method = RequestMethod.POST)
     @ResponseBody
     public Result /*List<Ext> */ update( ExtModel extModel){
         Result result = new Result();
@@ -308,7 +304,6 @@ public class CourseExtCmsController {
                // courseRedisCmsService.setCourseCms(key,mapper);
             }
 
-
             //List<CourseExt> extListSave = courseExtCmsService.saveAll(list);
             result = ResultUtil.success(extListSave);
 
@@ -320,7 +315,7 @@ public class CourseExtCmsController {
 
 
 
-    @RequestMapping(value="list")
+    @RequestMapping(value="list", method = RequestMethod.POST)
     public Result queryCourseExtListByCourseId(@RequestParam("courseId") String courseId){
         Result result = new Result();
         try {
