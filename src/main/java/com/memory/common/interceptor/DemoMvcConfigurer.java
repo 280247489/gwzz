@@ -24,6 +24,6 @@ public class DemoMvcConfigurer implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/*/**").allowedOrigins("*")
                 .allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS")
-                .allowCredentials(false).maxAge(3600);
+                .allowCredentials(true).maxAge(3600);
     }
 }
