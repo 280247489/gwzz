@@ -1,5 +1,6 @@
 package com.memory.cms.controller;
 import com.alibaba.fastjson.JSON;
+import com.memory.common.yml.MyFileConfig;
 import com.memory.entity.jpa.Course;
 import com.memory.cms.service.CourseCmsService;
 import com.memory.common.utils.*;
@@ -23,7 +24,7 @@ import java.util.Date;
 @RequestMapping(value = "course")
 public class CourseCmsController {
 
-    private static final String fileUrl = "G:/upload";
+    //private static final String fileUrl = "G:/upload";
 
     //private static final String fileShowUrl = ""
 
@@ -31,6 +32,8 @@ public class CourseCmsController {
     private CourseCmsService courseService;
 
 
+    @Autowired
+    private MyFileConfig config;
 
 
     /**
@@ -159,11 +162,12 @@ public class CourseCmsController {
            Result result = new Result();
             try {
 
+                String fileUrl = config.getUpload_local_path();
                 String course_logo = "";
                 String course_video_url = "";
                 String course_audio_url = "";
 
-                String id = Utils.generateUUID();
+                String id = Utils.getShortUUTimeStamp();
                 String prefix = "";
                 String suffix = "";
                 String dayStr = DateUtils.getDate("yyyyMMdd");
@@ -200,7 +204,7 @@ public class CourseCmsController {
                 }
 
 
-                String uuid = Utils.generateUUID();
+                String uuid = Utils.getShortUUTimeStamp();
 
                 Course course = init(course_type_id,course_title,
                         course_logo,course_content,
@@ -244,6 +248,7 @@ public class CourseCmsController {
 
         Result result = new Result();
         try {
+            String fileUrl = config.getUpload_local_path();
             //String course_audio_url="";
             String course_video_url="";
             String prefix = "";

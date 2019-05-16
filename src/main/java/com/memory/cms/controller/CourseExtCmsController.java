@@ -3,6 +3,7 @@ package com.memory.cms.controller;
 import com.alibaba.fastjson.JSON;
 import com.memory.cms.redis.service.CourseRedisCmsService;
 import com.memory.cms.service.CourseCmsService;
+import com.memory.common.yml.MyFileConfig;
 import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.CourseExt;
 import com.memory.entity.bean.Ext;
@@ -39,7 +40,11 @@ public class CourseExtCmsController {
     @Autowired
     private CourseRedisCmsService courseRedisCmsService;
 
-    private static final String fileUrl = "G:/upload";
+   // private static final String fileUrl = "G:/upload";
+
+    @Autowired
+    private MyFileConfig config;
+
 
 
 
@@ -52,6 +57,7 @@ public class CourseExtCmsController {
         CourseExt courseExt = null;
         try{
 
+            String fileUrl= config.getUpload_local_path();
             List<Ext> extList = extModel.getExtList();
           //  System.out.println("json ======================================" + JSON.toJSONString(extList) );
             String course_audio_url="";
@@ -186,7 +192,7 @@ public class CourseExtCmsController {
         List<CourseExt> list = new ArrayList<CourseExt>();
         CourseExt courseExt = null;
         try{
-
+           String fileUrl= config.getUpload_local_path();
             List<Ext> extList = extModel.getExtList();
            // System.out.println("json =====================================" + JSON.toJSONString(extList) );
             String course_audio_url="";

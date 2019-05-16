@@ -50,7 +50,7 @@ public class FileController {
             // 获取文件的后缀名
             String suffixName = fileName.substring(fileName.lastIndexOf("."));
 
-            fileName = Utils.generateUUID()  + suffixName;
+            fileName = Utils.getShortUUTimeStamp()  + suffixName;
             log.info("文件的后缀名为：" + suffixName);
             // 设置文件存储路径
           //  String filePath = "G:/upload/";
@@ -92,7 +92,7 @@ public class FileController {
                     String fileName =  file.getOriginalFilename();
                     System.out.println("第 " +i+" 个文件，名称：" + fileName);
                     String suffixName = fileName.substring(fileName.lastIndexOf("."));
-                    fileName = Utils.generateUUID()  + suffixName;
+                    fileName = Utils.getShortUUTimeStamp()  + suffixName;
                     String path = loadPath + "/" + type + "/"  + uploadDateTime + "/" + fileName;
                     byte[] bytes = file.getBytes();
                     File dest = new File(path);

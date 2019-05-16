@@ -8,5 +8,5 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
   profiles:
-    active: c3p0, redis, solr
+    active: c3p0, redis, solr, file
 #debug: true

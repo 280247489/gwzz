@@ -1,0 +1,5 @@
+file:
+  upload_local_path: G:/upload
+  jodit:
+    path: G:/upload/jodit
+    base_url: http://192.168.1.119:8091/file/jodit/

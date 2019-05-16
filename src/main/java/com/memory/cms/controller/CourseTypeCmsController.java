@@ -73,7 +73,7 @@ public class CourseTypeCmsController {
             String hoursStr = DateUtils.getDate("HHmmss");
             String fileUploadedPath = "";
             String fileName="";
-            String uuid = Utils.generateUUID();
+            String uuid = Utils.getShortUUTimeStamp();
 
 
             if(typeFile != null && !typeFile.isEmpty()){

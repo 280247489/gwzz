@@ -83,7 +83,7 @@ public class FileUtils {
                 try {
                     String fileName =  file.getOriginalFilename();
                     String suffixName = fileName.substring(fileName.lastIndexOf("."));
-                    fileName = Utils.generateUUID()  + suffixName;
+                    fileName = Utils.getShortUUTimeStamp()  + suffixName;
                     String paths = fileUploadedPath + "/" + fileName;
                     byte[] bytes = file.getBytes();
                     stream = new BufferedOutputStream(new FileOutputStream(

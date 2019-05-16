@@ -1,9 +1,6 @@
 package com.memory.common.yml;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,19 +10,13 @@ import java.util.Map;
  */
 
 @Component
-@ConfigurationProperties(prefix = "filesdfsdfs")
+@ConfigurationProperties(prefix = "file")
 public class MyFileConfig {
 
-  /*
-      file:
-          upload_local_path:  G:/upload
-          jodit:
-            path: G:/upload/jodit
-            base_url: http://192.168.1.119:8091/file/jodit/
-   */
-    @Value("${}")
+
     private String upload_local_path;
-    private Map<String,String> jodits = new HashMap<String,String>();
+    private Map<String,String> jodit =new HashMap<String,String>();
+
 
     public String getUpload_local_path() {
         return upload_local_path;
@@ -35,11 +26,11 @@ public class MyFileConfig {
         this.upload_local_path = upload_local_path;
     }
 
-    public Map<String, String> getJodits() {
-        return jodits;
+    public Map<String, String> getJodit() {
+        return jodit;
     }
 
-    public void setJodits(Map<String, String> jodits) {
-        this.jodits = jodits;
+    public void setJodit(Map<String, String> jodit) {
+        this.jodit = jodit;
     }
 }
