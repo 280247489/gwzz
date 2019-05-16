@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "sysAdmin")
+@RequestMapping(value = "sysAdmin/cms")
 public class SysAdminCmsController {
 
     @Autowired

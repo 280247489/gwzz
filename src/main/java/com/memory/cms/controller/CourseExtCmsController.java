@@ -23,7 +23,7 @@ import java.util.*;
  * @date 2019/5/11 14:18
  */
 @RestController
-@RequestMapping(value = "courseExt")
+@RequestMapping(value = "courseExt/cms")
 public class CourseExtCmsController {
 
     @Autowired

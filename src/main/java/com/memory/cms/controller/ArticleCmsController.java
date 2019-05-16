@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2019/5/8 11:19
  */
 @RestController
+@RequestMapping(value = "article/cms")
 public class ArticleCmsController {
 
     @Autowired

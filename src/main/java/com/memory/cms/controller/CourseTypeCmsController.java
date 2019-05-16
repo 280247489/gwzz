@@ -18,7 +18,7 @@ import java.util.List;
  * @date 2019/5/9 16:31
  */
 @RestController
-@RequestMapping(value = "courseType")
+@RequestMapping(value = "courseType/cms")
 public class CourseTypeCmsController {
 
     private static final String fileUrl = "G:/upload";

@@ -15,7 +15,7 @@ import java.util.List;
  * @date 2019/5/9 16:31
  */
 @RestController
-@RequestMapping(value = "articleType")
+@RequestMapping(value = "articleType/cms")
 public class ArticleTypeCmsController {
 
     @Autowired
