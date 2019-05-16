@@ -1,7 +1,11 @@
 package com.memory.redis.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -454,7 +458,7 @@ public class RedisUtil {
      *
      * @param key   键
      * @param start 开始
-     * @param end   结束 到0  -1代表所有值
+     * @param end   结束 0 到 -1代表所有值
      * @return
      */
     public List<Object> lGet(String key, long start, long end) {
@@ -606,4 +610,24 @@ public class RedisUtil {
             return 0;
         }
     }
+
+    public  Boolean delAndHashSet(String key,Map<String,Object> value){
+        boolean  flag = false;
+        try{
+
+            redisTemplate.setEnableTransactionSupport(true);
+            redisTemplate.multi();
+            redisTemplate.delete(key);
+            redisTemplate.opsForHash().putAll(key, value);
+            redisTemplate.exec();
+            flag = true;
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  flag;
+    }
+
+
+
 }

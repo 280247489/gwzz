@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date 2019/5/10 14:55
  */
 @RestController
-@RequestMapping(value = "courseExt")
+@RequestMapping(value = "courseExt/web")
 public class CourseExtWebController extends BaseController {
 
 

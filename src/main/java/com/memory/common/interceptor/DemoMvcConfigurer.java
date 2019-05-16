@@ -18,7 +18,7 @@ public class DemoMvcConfigurer implements WebMvcConfigurer {
                              //.excludePathPatterns("/*/**"); //拦截全部 /*/**
 
         WebMvcConfigurer.super.addInterceptors(interceptorRegistry);
-}
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

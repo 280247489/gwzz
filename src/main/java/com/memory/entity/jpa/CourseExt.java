@@ -5,11 +5,10 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * @ClassName CourseExt
- * @Descriotion TODO
- * @Author Ganxiqing
- * @Date 2019/5/14 10:37
+ * @author INS6+
+ * @date 2019/5/11 15:16
  */
+
 @Entity
 @Table(name = "course_ext", schema = "gwzz_db", catalog = "")
 public class CourseExt {
