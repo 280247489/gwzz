@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+
+    <style>
+        .bg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-image: url(./images/mask.png);
+            background-size: 100% auto;
+            background-position: 0 100%;
+            background-repeat: no-repeat;
+            z-index: 22
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" media="all" href="./css/style.css">
+    <link rel="stylesheet" type="text/css" media="all" href="./css/audio.css">
+    <link rel="Shortcut Icon" href="./images/favicon.ico" />
+    <script src="./js/jquery.min.js" type="text/javascript"></script>
+    <script src="./js/audio.js" type="text/javascript"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            function browserRedirect() {
+                var sUserAgent = navigator.userAgent.toLowerCase();
+                var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+                var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+                var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+                var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+                var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+                var bIsAndroid = sUserAgent.match(/android/i) == "android";
+                var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+                var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+                if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM)) {
+                    //window.location.href = B页面;
+                    console.log('不是手机端');
+                    //alert('aa');
+                }
+            }
+            browserRedirect();
+            var u = navigator.userAgent;
+            var device = "";
+            if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+                device = 'http://android.myapp.com/myapp/detail.htm?apkName=com.zjst.houai&ADTAG=mobile'
+            } else if (u.indexOf('iPhone') > -1) {
+                device = 'https://itunes.apple.com/cn/app/zhong-jing-sheng-tian/id1288452365?mt=8'
+            } else if (u.indexOf('Windows Phone') > -1) {
+                device = 'javascript:alert("不支持的系统！")';
+            } else {
+                device = 'javascript:alert("不支持的系统！")';
+            }
+            $('.dl a').attr('href', device);
+        });
+    </script>
+    <title>直播分享</title>
+</head>
+
+<body>
+    <div class="mask">
+        <div class="bd"></div>
+    </div>
+    <div class="bg"></div>
+    <div class="header">
+        <div class="block">
+            <h3>&nbsp;</h3>
+        </div>
+        <div class="dl">
+            <a href="http://down.houaihome.com/download/"></a>
+        </div>
+    </div>
+    <div class="content">
+
+
+    </div>
+    <!-- <div class="sidebar">
+        <span id="view_user_count">查看用户数</span>
+        <span id="view_praise_count">查看点赞数</span>
+        <span id="add_praise">点赞</span>
+    </div> -->
+    <div class="bottom"></div>
+    <div class="popupbox" id="popuprel">
+        <img class="popupimg" src="">
+    </div>
+    <div id="fade"></div>
+    <script src="./js/default.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+
+        });
+    </script>
+</body>
+
+</html>

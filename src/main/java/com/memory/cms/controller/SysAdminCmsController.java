@@ -5,6 +5,8 @@ import com.memory.cms.service.SysAdminCmsService;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.common.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,9 @@ import java.util.Map;
 @CrossOrigin
 @RequestMapping(value = "sysAdmin/cms")
 public class SysAdminCmsController {
+
+    private static final Logger log = LoggerFactory.getLogger(CourseTypeCmsController.class);
+
 
     @Autowired
     private SysAdminCmsService sysAdminService;
@@ -74,6 +79,7 @@ public class SysAdminCmsController {
 
         }catch (Exception e){
             e.printStackTrace();
+            log.error("sysAdmin/cms/login  err =",e.getMessage());
         }
         return result;
     };
@@ -94,6 +100,7 @@ public class SysAdminCmsController {
             result = ResultUtil.success(list);
         }catch (Exception e){
             e.printStackTrace();
+            log.error("sysAdmin/cms/options  err =",e.getMessage());
         }
         return result;
     }

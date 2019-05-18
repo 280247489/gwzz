@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -192,6 +193,26 @@ public class RedisUtil {
         }
         return redisTemplate.opsForValue().increment(key, delta);
     }
+
+
+    /**
+     * 自增可设置失效时长
+     * @param key       key
+     * @param liveTime  失效时间
+     * @param delta     自增变量
+     * @return
+     */
+    public long incr(String key, long liveTime,long delta) {
+        RedisAtomicLong entityIdCounter = new RedisAtomicLong(key, redisTemplate.getConnectionFactory(),delta);
+        Long increment = entityIdCounter.getAndIncrement();
+
+        if ((null == increment || increment.longValue() == 0) && liveTime > 0) {//初始设置过期时间
+            entityIdCounter.expire(liveTime, TimeUnit.SECONDS);
+        }
+
+        return increment;
+    }
+
 
     /**
      * 递减
@@ -611,7 +632,7 @@ public class RedisUtil {
         }
     }
 
-    public  Boolean delAndHashSet(String key,Map<String,Object> value){
+    public  Boolean delAndHashSet(String key,Map<Object,Object> value){
         boolean  flag = false;
         try{
 
@@ -626,6 +647,23 @@ public class RedisUtil {
             e.printStackTrace();
         }
         return  flag;
+    }
+
+    public  Map<Object,Object> setHashAndIncr(String keyHash,String keySum,Map<Object,Object> value){
+        Map<Object,Object>  map = null;
+        try{
+            redisTemplate.setEnableTransactionSupport(true);
+            redisTemplate.multi();
+            redisTemplate.opsForHash().putAll(keyHash,value);
+            redisTemplate.opsForValue().increment(keySum, 1);
+            redisTemplate.exec();
+            map = value;
+
+            //flag = true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  map;
     }
 
 

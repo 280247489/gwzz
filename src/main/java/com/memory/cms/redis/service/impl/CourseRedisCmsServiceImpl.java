@@ -1,6 +1,7 @@
 package com.memory.cms.redis.service.impl;
 
 import com.memory.cms.redis.service.CourseRedisCmsService;
+import com.memory.redis.CacheConstantConfig;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,15 +18,21 @@ public class CourseRedisCmsServiceImpl  implements CourseRedisCmsService {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Override
-    public  Map<Object, Object>  setCourseCms(String key, Map<String,Object> value) {
-        redisUtil.hmset(key,value);
 
-        return   redisUtil.hmget(key);
+
+    @Override
+    public Boolean delAndHashSet(String courseId, Map<Object,Object> value) {
+
+        String keyHash = CacheConstantConfig.COURSERXT + ":hash:"+courseId;
+        return redisUtil.delAndHashSet(keyHash,value);
     }
 
     @Override
-    public Boolean delAndHashSet(String key, Map<String,Object> value) {
-        return redisUtil.delAndHashSet(key,value);
+    public Map<Object,Object> setHashAndIncr(String keyHash,String keySum,Map<Object,Object> value) {
+
+       // String keyHash = CacheConstantConfig.COURSERXT + ":hash:" +courseId;
+     //   String keySum  = CacheConstantConfig.COURSERXT +":sum:" + courseId;
+        return  redisUtil.setHashAndIncr(keyHash,keySum,value);
+
     }
 }

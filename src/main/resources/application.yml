@@ -9,4 +9,10 @@ spring:
     time-zone: GMT+8
   profiles:
     active: c3p0, redis, solr, file
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
+
+
 #debug: true

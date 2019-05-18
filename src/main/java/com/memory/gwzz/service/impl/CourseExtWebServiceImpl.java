@@ -21,14 +21,18 @@ public class CourseExtWebServiceImpl implements CourseExtWebService {
 
     @Override
     public Object getCourseExt (String courseId){
-        return redisUtil.hmget(CacheConstantConfig.COURSERXT+":"+courseId);
+        String keyHash =CacheConstantConfig.COURSERXT + ":hash:" +courseId;
+        String keySum =CacheConstantConfig.COURSERXT + ":sum:"+courseId;
+        redisUtil.incr(keySum,1);
+        return redisUtil.hmget(keyHash);
 
     }
     @Override
     public boolean delCourseExt (String courseId){
         boolean flag = false;
         try {
-            redisUtil.del(CacheConstantConfig.COURSERXT+":"+courseId);
+            String keyHash =CacheConstantConfig.COURSERXT + ":hash" + ":"+courseId;
+            redisUtil.del(keyHash);
             flag = true;
         }catch (Exception e){
             throw e;

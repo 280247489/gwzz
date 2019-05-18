@@ -11,11 +11,14 @@ import com.memory.entity.bean.ExtModel;
 import com.memory.cms.service.CourseExtCmsService;
 import com.memory.common.utils.*;
 import com.memory.redis.CacheConstantConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -25,6 +28,9 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "courseExt/cms")
 public class CourseExtCmsController {
+
+    private static final Logger log = LoggerFactory.getLogger(CourseExtCmsController.class);
+
 
     @Autowired
     private CourseExtCmsService courseExtCmsService;
@@ -48,7 +54,7 @@ public class CourseExtCmsController {
 
     @RequestMapping(value ="add", method = RequestMethod.POST)
     @ResponseBody
-    public Result /*List<Ext> */ add( ExtModel extModel){
+    public Result add( ExtModel extModel){
         Result result = new Result();
         List<CourseExt> list = new ArrayList<CourseExt>();
         CourseExt courseExt = null;
@@ -159,14 +165,19 @@ public class CourseExtCmsController {
 
             String courseId = extList.get(0).getCourseId();
             Course course = courseCmsService.getCourseById(courseId);
-            Map<String, java.lang.Object> mapper = new HashMap<>();
+            Map<java.lang.Object, java.lang.Object> mapper = new HashMap<>();
             mapper.put("course",course.getCourseTitle());
             mapper.put("courseExt",JSON.toJSONString(extListSave));
-            String key = CacheConstantConfig.COURSERXT + ":" + courseId;
+         //   String key = CacheConstantConfig.COURSERXT + ":" + courseId;
+            //String keyHash = "courseExt:hash:aaa";
+            //String keySum = "courseExt:sum:aaa";
+
 
 
             if(extListSave!=null){
-                Map<java.lang.Object, java.lang.Object> map2 = courseRedisCmsService.setCourseCms(key,mapper);
+                String keyHash = CacheConstantConfig.COURSERXT + ":hash:" +courseId;
+                String keySum  = CacheConstantConfig.COURSERXT +":sum:" + courseId;
+                Map<java.lang.Object, java.lang.Object> map2 = courseRedisCmsService.setHashAndIncr(keyHash,keySum,mapper);
                 System.out.println(JSON.toJSONString(map2));
                 //courseExtService.setCourseExt(extListSave);
             }
@@ -175,6 +186,7 @@ public class CourseExtCmsController {
 
         }catch (Exception e){
             e.printStackTrace();
+            log.error("courseExt/cms/add  err =",e.getMessage());
         }
         return result;
     }
@@ -290,25 +302,22 @@ public class CourseExtCmsController {
 
             if(extListSave != null){
 
-                Map<String, java.lang.Object> mapper = new HashMap<>();
+                Map<java.lang.Object, java.lang.Object> mapper = new HashMap<>();
        ;
 
                 String courseId = extList.get(0).getCourseId();
-                String key = CacheConstantConfig.COURSERXT + ":" + courseId;
                 Course course = courseCmsService.getCourseById(courseId);
                 mapper.put("course",course.getCourseTitle());
                 mapper.put("courseExt",extListSave);
                 //从Redis中删除,并重新添加
-                courseRedisCmsService.delAndHashSet(key,mapper);
-              //  courseRedisCmsService.deleteCourseCms(key);
-               // courseRedisCmsService.setCourseCms(key,mapper);
+                courseRedisCmsService.delAndHashSet(courseId,mapper);
             }
 
-            //List<CourseExt> extListSave = courseExtCmsService.saveAll(list);
             result = ResultUtil.success(extListSave);
 
         }catch (Exception e){
             e.printStackTrace();
+            log.error("courseExt/cms/update  err =",e.getMessage());
         }
         return result;
     }
@@ -324,10 +333,21 @@ public class CourseExtCmsController {
 
         }catch (Exception e){
             e.printStackTrace();
+            log.error("courseExt/cms/list  err =",e.getMessage());
         }
 
         return result;
     }
+
+
+    public static void main(String[] args) {
+        AtomicInteger atc  = new AtomicInteger(1);
+        System.out.println(atc.incrementAndGet());
+
+
+    }
+
+
 
 
 

@@ -1,7 +1,10 @@
 package com.memory.cms.controller;
 import com.memory.cms.service.CourseTypeCmsService;
 import com.memory.common.utils.*;
+import com.memory.common.yml.MyFileConfig;
 import com.memory.entity.jpa.CourseType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,10 +24,16 @@ import java.util.List;
 @RequestMapping(value = "courseType/cms")
 public class CourseTypeCmsController {
 
-    private static final String fileUrl = "G:/upload";
+    private static final Logger log = LoggerFactory.getLogger(CourseTypeCmsController.class);
+
+
+  //  private static final String fileUrl = "G:/upload";
 
     @Autowired
     private CourseTypeCmsService courseTypeService;
+
+    @Autowired
+    private MyFileConfig config;
 
     @RequestMapping(value = "options", method = RequestMethod.POST)
     public Result getCourseTypes(){
@@ -37,6 +46,7 @@ public class CourseTypeCmsController {
         }catch (Exception e){
             e.printStackTrace();
             result = ResultUtil.error(-1,"系统异常");
+            log.error("courseType/cms/options  err =",e.getMessage());
         }
 
         return result;
@@ -51,6 +61,7 @@ public class CourseTypeCmsController {
 
         }catch (Exception e){
             e.printStackTrace();
+            log.error("courseType/cms/list  err =",e.getMessage());
         }
         return result;
     }
@@ -75,7 +86,7 @@ public class CourseTypeCmsController {
             String fileUploadedPath = "";
             String fileName="";
             String uuid = Utils.getShortUUTimeStamp();
-
+            String fileUrl = config.getUpload_local_path();
 
             if(typeFile != null && !typeFile.isEmpty()){
                 prefix = "type";
@@ -101,6 +112,7 @@ public class CourseTypeCmsController {
             result = ResultUtil.success(courseTypeSave);
         }catch (Exception e){
             e.printStackTrace();
+            log.error("courseType/cms/add  err =",e.getMessage());
         }
         return result;
     }
