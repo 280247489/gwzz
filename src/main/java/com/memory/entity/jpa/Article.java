@@ -1,17 +1,20 @@
 package com.memory.entity.jpa;
 
-import javax.persistence.*;
-import java.sql.Timestamp;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.Date;
 import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/5/8 10:50
+ * @date 2019/5/22 16:38
  */
 
 @Entity
 public class Article {
-    private int id;
+    private String id;
     private String typeId;
     private String articleTitle;
     private String articleLogo;
@@ -24,19 +27,20 @@ public class Article {
     private int articleTotalView;
     private int articleTotalShare;
     private int articleTotalLike;
-    private Timestamp articleCreateTime;
+    private Date articleCreateTime;
     private String articleCreateId;
-    private Timestamp articleUpdateTime;
+    private Date articleUpdateTime;
     private String articleUpdateId;
+    private int articleRecommend;
+    private String articleDescribe;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -162,11 +166,11 @@ public class Article {
 
     @Basic
     @Column(name = "article_create_time")
-    public Timestamp getArticleCreateTime() {
+    public Date getArticleCreateTime() {
         return articleCreateTime;
     }
 
-    public void setArticleCreateTime(Timestamp articleCreateTime) {
+    public void setArticleCreateTime(Date articleCreateTime) {
         this.articleCreateTime = articleCreateTime;
     }
 
@@ -182,11 +186,11 @@ public class Article {
 
     @Basic
     @Column(name = "article_update_time")
-    public Timestamp getArticleUpdateTime() {
+    public Date getArticleUpdateTime() {
         return articleUpdateTime;
     }
 
-    public void setArticleUpdateTime(Timestamp articleUpdateTime) {
+    public void setArticleUpdateTime(Date articleUpdateTime) {
         this.articleUpdateTime = articleUpdateTime;
     }
 
@@ -200,16 +204,37 @@ public class Article {
         this.articleUpdateId = articleUpdateId;
     }
 
+    @Basic
+    @Column(name = "article_recommend")
+    public int getArticleRecommend() {
+        return articleRecommend;
+    }
+
+    public void setArticleRecommend(int articleRecommend) {
+        this.articleRecommend = articleRecommend;
+    }
+
+    @Basic
+    @Column(name = "article_describe")
+    public String getArticleDescribe() {
+        return articleDescribe;
+    }
+
+    public void setArticleDescribe(String articleDescribe) {
+        this.articleDescribe = articleDescribe;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return id == article.id &&
-                articleOnline == article.articleOnline &&
+        return articleOnline == article.articleOnline &&
                 articleTotalView == article.articleTotalView &&
                 articleTotalShare == article.articleTotalShare &&
                 articleTotalLike == article.articleTotalLike &&
+                articleRecommend == article.articleRecommend &&
+                Objects.equals(id, article.id) &&
                 Objects.equals(typeId, article.typeId) &&
                 Objects.equals(articleTitle, article.articleTitle) &&
                 Objects.equals(articleLogo, article.articleLogo) &&
@@ -221,11 +246,12 @@ public class Article {
                 Objects.equals(articleCreateTime, article.articleCreateTime) &&
                 Objects.equals(articleCreateId, article.articleCreateId) &&
                 Objects.equals(articleUpdateTime, article.articleUpdateTime) &&
-                Objects.equals(articleUpdateId, article.articleUpdateId);
+                Objects.equals(articleUpdateId, article.articleUpdateId) &&
+                Objects.equals(articleDescribe, article.articleDescribe);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, typeId, articleTitle, articleLogo, articleContent, articleAudioUrl, articleVideoUrl, articleLabel, articleKeyWords, articleOnline, articleTotalView, articleTotalShare, articleTotalLike, articleCreateTime, articleCreateId, articleUpdateTime, articleUpdateId);
+        return Objects.hash(id, typeId, articleTitle, articleLogo, articleContent, articleAudioUrl, articleVideoUrl, articleLabel, articleKeyWords, articleOnline, articleTotalView, articleTotalShare, articleTotalLike, articleCreateTime, articleCreateId, articleUpdateTime, articleUpdateId, articleRecommend, articleDescribe);
     }
 }

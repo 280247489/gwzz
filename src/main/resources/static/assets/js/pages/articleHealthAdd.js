@@ -188,7 +188,7 @@ jQuery(document).ready(function () {
                         _type = '图片';
                         _content = n.courseExtImgUrl;
                     }
-                    li += '<li data-order="" class="excelcontent"><div><input type="hidden" class="courseId" value="" name=""><input type="text" class="speaker form-control" value="' + n.courseExtNickname + '" name="name"></div><div class="l_d" data-type="' + n.courseExtType + '">' + _type + '<div class="hide"><input type="hidden" value="" name=""></div></div><div class="l_d" data-type="' + n.courseExtType + '">' + prew + '<div class="hide"><input type="hidden" value="' + _content + '" name=""></div></div><div><a class="delete" href="javascript:void(0);">删除</a><input class="audio_times" type="hidden" value="0" name="times"></div></li>';
+                    li += '<li data-order="" class="excelcontent"><div><input type="hidden" class="courseId" value="" name=""><input type="text" class="speaker form-control" value="' + n.courseExtNickname + '" name="name"></div><div class="l_d" data-type="' + n.courseExtType + '">' + _type + '<div class="hide"><input type="hidden" value="" name=""></div></div><div class="l_d" data-type="' + n.courseExtType + '">' + prew + '<div class="hide"><input type="hidden" value="' + _content + '" name=""></div></div><div><button type="button" class="delete btn btn-primary" href="javascript:void(0);">删除</button><input class="audio_times" type="hidden" value="0" name="times"></div></li>';
                 });
                 $('.load_table').html(li);
             })
@@ -227,14 +227,14 @@ jQuery(document).ready(function () {
                             var _img = titleFile;
                         } else if (course_logo !== '') {
                             var _img = course_logo;
-                        }else {
+                        } else {
                             var _img = '没图片';
                         }
                         if (radioFile !== '') {
                             var _ado = radioFile;
                         } else if (course_audio_url !== '') {
                             var _ado = course_audio_url;
-                        }else {
+                        } else {
                             var _ado = '没音频';
                         }
                         var suffix_img = _img.substr(_img.lastIndexOf("."));
@@ -315,7 +315,6 @@ jQuery(document).ready(function () {
                 } else if (this_type == '2') {
                     var _audio = $(this).find('audio').get(0);
                     time = Math.round(_audio.duration);
-                    console.log(time);
                     $(this).find('.audio_times').attr('name', 'extList[' + this_no + '].times').val(time);
                     if ($(this).find('div:nth-child(3) input').attr('type') == 'file') {
                         tm = 'audioFile';
@@ -353,6 +352,10 @@ jQuery(document).ready(function () {
                         timeout: 50000,
                         beforeSend: function () {
                             console.log('1');
+
+
+
+                            return false;
                         },
                         success: function (data) {
                             alert('提交成功');
@@ -542,7 +545,7 @@ jQuery(document).ready(function () {
     });
     $('.zhibo_msg_add').click(function () {
         $('.new_msg_word').val('');
-        var li = '<li data-order="" class="excelcontent"><div><input type="hidden" class="courseId" value="" name=""><input type="text" class="speaker form-control" value="李老师" name="name"></div><div class="sec l_d"><input type="hidden" value="1" name="" /></div><div class="l_d" data-type="1"><p></p><div class="hide"><input class="new_file" type="" value="" name=""></div></div><div><a class="delete" href="javascript:void(0);">删除</a><input class="audio_times" type="hidden" value="0" name="times"></div></li>';
+        var li = '<li data-order="" class="excelcontent"><div><input type="hidden" class="courseId" value="" name=""><input type="text" class="speaker form-control" value="李老师" name="name"></div><div class="sec l_d"><input type="hidden" value="1" name="" /></div><div class="l_d" data-type="1"><p></p><div class="hide"><input class="new_file" type="hidden" value="" name=""></div></div><div><button type="button" class="delete btn btn-primary" href="javascript:void(0);">删除</button><input class="audio_times" type="hidden" value="0" name="times"></div></li>';
         $('.no_msg').remove();
         $(".load_table").append(li);
         $('.new_msg_type:eq(0)').trigger('click');
@@ -582,9 +585,11 @@ jQuery(document).ready(function () {
         $(".load_table li:last-child .speaker").val($(this).val());
     });
 
+    $('.new_msg_file_url').focus(function () {
+        $('.load_table li:last-child').find('div:nth-child(3) input').attr('type','hidden');
+    });
     $('.new_msg_file_url').change(function () {
         if ($('.new_file').val() !== '') {
-
         } else {
             $('.new_file').val($(this).val());
             var _type = $('.new_msg_type:checked').val();
@@ -606,8 +611,10 @@ jQuery(document).ready(function () {
         $('.new_file').parent().parent().find('audio').remove();
         $('.new_file').parent().parent().find('img').remove();
         $('.new_file').parent().parent().find('p').remove();
-        $('.new_file').parent().parent().append('<p>' + $(this).val() + '</p>');
-        $('.load_table li:last-child').find('div:nth-child(3) input').val($(this).val());
+        var wd = $('.new_msg_word').val().split("\n").join("<br />");
+        $('.new_file').parent().parent().append('<p>' + wd + '</p>');
+
+        $('.load_table li:last-child').find('div:nth-child(3) .hide input').val(wd);
     });
     $('.new_msg_add').click(function () {
         $('.sec').removeClass('sec');
@@ -619,4 +626,12 @@ jQuery(document).ready(function () {
             $(this).parent().parent().remove();
         }
     });
+    $('.alert_url').click(function () {
+        if ($('#courseId').val() !== '' || $('#courseId').val() !== undefined) {
+            alert('http://manager.houaihome.com/demo2/index.html?id=' + $('#courseId').val());
+        } else {
+            alert('文章ID空!');
+        }
+    });
+
 });

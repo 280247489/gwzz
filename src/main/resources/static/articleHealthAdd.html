@@ -251,10 +251,14 @@
                                                     <button type="button"
                                                         class="btn btn-theme03 zhibo_msg_add">+</button>
                                                 </div>
-                                                <div class="col-md-4 col-lg-4">&nbsp;</div>
-                                                <div class="col-md-2 col-lg-2 text-right">
+                                                <div class="col-md-2 col-lg-2">&nbsp;</div>
+                                                <div class="col-md-2 col-lg-2">
                                                     <button type="button" data-value="0"
                                                         class="btn btn-theme03 course_status">点击发布直播</button>
+                                                </div>
+                                                <div class="col-md-2 col-lg-2 text-right">
+                                                    <button type="button" data-value="0"
+                                                        class="btn btn-theme03 alert_url">生成链接</button>
                                                 </div>
                                             </div>
                                             <div class="col-md-12 col-lg-12 zhibo_msg">
@@ -326,7 +330,7 @@
                     <div class="form-group new_msg_word_box">
                         <label class="col-sm-3 col-md-3 control-label">内容：</label>
                         <div class="col-md-9 col-lg-9">
-                            <textarea class="new_msg_word form-control" name="new_msg_word"></textarea>
+                            <textarea class="new_msg_word form-control" wrap="hard" name="new_msg_word"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -372,7 +376,7 @@
                 timeout: 100
             },
             uploader: {
-                url: 'http://192.168.1.119:8081/jodit/uploadImg'
+                url: 'http://manager.houaihome.com/jodit/uploadImg'
             },
             // filebrowser: {
             //     // buttons: ['list', 'tiles', 'sort'],
@@ -381,7 +385,7 @@
             //     }
             // },
             commandToHotkeys: {
-                'openreplacedialog': 'ctrl+p'
+                'openreplacedialog': 'ctrl+f'
             }
             // buttons: ['symbol'],
             // disablePlugins: 'hotkeys,mobile'
@@ -457,7 +461,7 @@
                         }
                     }
                     $(".excelcontent").eq(j).append(
-                        "<div><a class='delete' href='javascript:void(0);'>删除</a><input class='audio_times' type='hidden' value='0' name='times' /></div>"
+                        "<div><button type='button' class='delete btn btn-primary' href='javascript:void(0);'>删除</button><input class='audio_times' type='hidden' value='0' name='times' /></div>"
                     );
                 }
             };

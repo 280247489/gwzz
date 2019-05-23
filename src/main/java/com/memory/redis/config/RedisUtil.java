@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisUtil {
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate ;
 
     /**
      * 缓存时间，单位S:秒, M:分, H:小时, D:天

@@ -1,11 +1,11 @@
 jQuery(document).ready(function () {
-    var web_shezhen = 'http://192.168.1.119:8081';
-    var server_shezhen = 'http://192.168.1.119:8081';
-    var api_back = 'http://192.168.1.119:8081';
+    var web_shezhen = 'http://yaoyue.houaihome.com';
+    var server_shezhen = 'http://image.houaihome.com';
+    var api_back = 'http://manager.houaihome.com';
     var api_login = api_back +'/sysAdmin/cms/login';
     var api_admin = api_back +'/sysAdmin/cms/options';
     var api_type = api_back +'/courseType/cms/list';
-    var server_course = 'http://192.168.1.119:8081';
+    var server_course = 'http://image.houaihome.com/cms/';
     var lk = 0;
     var user = sessionStorage.getItem('user');
     sessionStorage.setItem("API_shezhen", web_shezhen);

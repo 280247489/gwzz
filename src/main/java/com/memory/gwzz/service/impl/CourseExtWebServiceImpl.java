@@ -19,6 +19,7 @@ public class CourseExtWebServiceImpl implements CourseExtWebService {
     private RedisUtil redisUtil;
 
 
+
     @Override
     public Object getCourseExt (String courseId){
         String keyHash =CacheConstantConfig.COURSERXT + ":hash:" +courseId;

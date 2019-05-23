@@ -1,29 +1,31 @@
 package com.memory.entity.jpa;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/5/9 16:16
+ * @date 2019/5/22 16:38
  */
 
 @Entity
 @Table(name = "article_type", schema = "gwzz_db", catalog = "")
 public class ArticleType {
-    private int id;
+    private String id;
     private String typeName;
-    private Timestamp typeCreateTime;
+    private Date typeCreateTime;
+    private String img;
+    private int sum;
+    private int isUse;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -39,12 +41,42 @@ public class ArticleType {
 
     @Basic
     @Column(name = "type_create_time")
-    public Timestamp getTypeCreateTime() {
+    public Date getTypeCreateTime() {
         return typeCreateTime;
     }
 
-    public void setTypeCreateTime(Timestamp typeCreateTime) {
+    public void setTypeCreateTime(Date typeCreateTime) {
         this.typeCreateTime = typeCreateTime;
+    }
+
+    @Basic
+    @Column(name = "img")
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    @Basic
+    @Column(name = "sum")
+    public int getSum() {
+        return sum;
+    }
+
+    public void setSum(int sum) {
+        this.sum = sum;
+    }
+
+    @Basic
+    @Column(name = "is_use")
+    public int getIsUse() {
+        return isUse;
+    }
+
+    public void setIsUse(int isUse) {
+        this.isUse = isUse;
     }
 
     @Override
@@ -53,12 +85,15 @@ public class ArticleType {
         if (o == null || getClass() != o.getClass()) return false;
         ArticleType that = (ArticleType) o;
         return id == that.id &&
+                sum == that.sum &&
+                isUse == that.isUse &&
                 Objects.equals(typeName, that.typeName) &&
-                Objects.equals(typeCreateTime, that.typeCreateTime);
+                Objects.equals(typeCreateTime, that.typeCreateTime) &&
+                Objects.equals(img, that.img);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, typeName, typeCreateTime);
+        return Objects.hash(id, typeName, typeCreateTime, img, sum, isUse);
     }
 }

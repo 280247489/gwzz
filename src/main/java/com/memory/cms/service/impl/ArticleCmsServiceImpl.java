@@ -1,8 +1,8 @@
 package com.memory.cms.service.impl;
 
-import com.memory.entity.jpa.Article;
 import com.memory.cms.repository.ArticleCmsRepository;
 import com.memory.cms.service.ArticleCmsService;
+import com.memory.entity.jpa.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,11 +31,11 @@ public class ArticleCmsServiceImpl implements ArticleCmsService {
 
     @Override
     public List<Article> getArticleList() {
-        return null;
+        return repository.findAll();
     }
 
     @Override
-    public Article getArticleById(int id) {
+    public Article getArticleById(String id) {
         if(repository.findById(id).hashCode() != 0){
             return repository.findById(id).get();
         }else{
@@ -45,17 +45,17 @@ public class ArticleCmsServiceImpl implements ArticleCmsService {
     }
 
     @Override
-    public Article add(Article Article) {
-        return null;
+    public Article add(Article article) {
+        return repository.save(article);
     }
 
     @Override
-    public Article update(Article Article) {
-        return null;
+    public Article update(Article article) {
+        return repository.save(article);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String id) {
 
     }
 
@@ -66,7 +66,7 @@ public class ArticleCmsServiceImpl implements ArticleCmsService {
 
     @Override
     @Transactional
-    public int updateArticleOnlineById(int online,int id) {
+    public int updateArticleOnlineById(int online,String id) {
 
         return repository.updateArticleOnlineById(online,id);
     }

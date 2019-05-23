@@ -167,7 +167,7 @@ public class CourseExtCmsController {
             Course course = courseCmsService.getCourseById(courseId);
             Map<java.lang.Object, java.lang.Object> mapper = new HashMap<>();
             mapper.put("course",course.getCourseTitle());
-            mapper.put("courseExt",JSON.toJSONString(extListSave));
+            mapper.put("courseExt",extListSave);
          //   String key = CacheConstantConfig.COURSERXT + ":" + courseId;
             //String keyHash = "courseExt:hash:aaa";
             //String keySum = "courseExt:sum:aaa";

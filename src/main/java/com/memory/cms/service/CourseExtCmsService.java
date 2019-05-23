@@ -27,4 +27,7 @@ public interface CourseExtCmsService {
 
     List<CourseExt> deleteAndSave(List<CourseExt> removeList,List<CourseExt> updateList );
 
+    List<com.memory.entity.bean.CourseExt> queryCourseExtList(String courseId);
+
+
 }
