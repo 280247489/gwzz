@@ -6,6 +6,9 @@ import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @ClassName CourseExtWebServiceImpl
  * @Descriotion TODO
@@ -36,4 +39,16 @@ public class CourseExtWebServiceImpl implements CourseExtWebService {
         return flag;
 
     }
+
+    public void main(String[] args) {
+        long c =0L;
+        Map<String,Object> map = new HashMap<>();
+        map.put("a","aaaaa");
+        map.put("b","bbbbb");
+//        map.put(redisUtil.incr("c",c));
+
+//        redisUtil.hmset()
+        return;
+    }
+
 }

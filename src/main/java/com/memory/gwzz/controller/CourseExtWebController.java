@@ -29,7 +29,7 @@ public class CourseExtWebController extends BaseController {
     private CourseExtWebService courseExtWebService;
 
     /**
-     * URL：192.168.1.185：8081/gwzz/courseExt/list
+     * URL：192.168.1.185：8081/gwzz/courseExt/web/list
      * @param courseId 课程ID
      * @return
      */
