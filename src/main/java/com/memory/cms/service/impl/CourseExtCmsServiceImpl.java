@@ -75,4 +75,9 @@ public class CourseExtCmsServiceImpl implements CourseExtCmsService {
         }
         return list;
     }
+
+    @Override
+    public List<com.memory.entity.bean.CourseExt> queryCourseExtList(String courseId) {
+        return  repository.queryCourseExtList(courseId);
+    }
 }

@@ -17,10 +17,11 @@ public interface CourseExtCmsRepository extends JpaRepository<CourseExt,String> 
 
    // List<CourseExt> queryCourseExtBy
 
+
     //  @Query("update Course a set a.courseOnline  = ?1 where a.id =?2 ")
-    @Query("select  c.id,c.courseId,c.courseExtNickname,c.courseExtLogo,c.courseExtType,c.courseExtWords,c.courseExtImgUrl,c.courseExtAudio,c.courseExtAudioTimes,c.courseExtSort,c.courseExtCreateTime" +
+    @Query("select  new com.memory.entity.bean.CourseExt(c.id,c.courseId,c.courseExtNickname,c.courseExtLogo,c.courseExtType,c.courseExtWords,c.courseExtImgUrl,c.courseExtAudio,c.courseExtAudioTimes,c.courseExtSort,c.courseExtCreateTime) " +
             " from CourseExt c  where  c.courseId =?1 ORDER BY  c.courseExtSort ASC")
-    List<CourseExt> queryCourseExtList(String courseId);
+    List<com.memory.entity.bean.CourseExt> queryCourseExtList(String courseId);
 
     void deleteCourseExtByCourseId(String courseId);
 

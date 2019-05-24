@@ -22,6 +22,10 @@ import java.util.Enumeration;
 @WebFilter(urlPatterns = "/*")
 public class DemoFilter implements Filter {
     private final static Logger logger = LoggerFactory.getLogger(DemoFilter.class);
+
+
+  //  private static Integer count =0;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 //        System.out.println("DemoFilter-init");
@@ -47,6 +51,9 @@ public class DemoFilter implements Filter {
                 "\n→ " + req.getQueryString() +
                 "\n-------------------end-----------");
         logger.info("↓↓↓"+stringBuffer.toString());
+      //  count++;
+   //     System.out.println("count ============================================================="+count);
+
         filterChain.doFilter(req, res);
     }
 

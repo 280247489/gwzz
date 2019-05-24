@@ -1,5 +1,8 @@
 file:
-  upload_local_path: G:/upload
+  upload_local_path: G:/upload/course
+  upload_local_article_path: G:/upload/article
   jodit:
-    path: G:/upload/jodit
-    base_url: http://192.168.1.119:8091/file/jodit/
+    path: G:/upload/jodit/course
+    base_url: http://192.168.1.119:8091/file/jodit/course
+    path_article: G:/upload/jodit/article
+    base_url_article: http://192.168.1.119:8091/file/jodit/article

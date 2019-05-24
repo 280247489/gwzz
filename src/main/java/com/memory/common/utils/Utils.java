@@ -1,7 +1,9 @@
 package com.memory.common.utils;
 
+import org.springframework.core.io.UrlResource;
 import org.springframework.util.DigestUtils;
 
+import java.net.MalformedURLException;
 import java.util.UUID;
 
 /**
@@ -49,6 +51,17 @@ public class Utils {
 
     public static void main(String[] args) {
         System.out.println(getShortUUTimeStamp());
+    }
+
+
+    /**
+     * 检测网络资源是否可访问
+     * @param url
+     * @return
+     * @throws MalformedURLException
+     */
+    public static Boolean isHttpAccess(String url) throws MalformedURLException {
+      return   new UrlResource(url).exists();
     }
 
 }

@@ -10,6 +10,7 @@
     </parent>
     <groupId>com.memory</groupId>
     <artifactId>gwzz</artifactId>
+    <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>gwzz</name>
     <description>Demo project for Spring Boot</description>
@@ -64,19 +65,31 @@
         </dependency>
        <!-- easyPoi end-->
 
+       <!-- fastjson start-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.4</version>
         </dependency>
+        <!-- fastjson end-->
+
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+
 
     </dependencies>
 
     <build>
         <!-- 打包名称 -->
         <finalName>gwzz</finalName>
+
         <plugins>
             <plugin>
+
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
@@ -113,6 +126,7 @@
             <properties>
                 <profiles.active>pro</profiles.active>
             </properties>
+
         </profile>
     </profiles>
 

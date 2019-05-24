@@ -13,8 +13,20 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "file")
 public class MyFileConfig {
 
+    /**
+     * file:
+     *   upload_local_path: G:/upload/course
+     *   upload_local_article_path: G:/upload/article
+     *   jodit:
+     *     path: G:/upload/jodit/course
+     *     base_url: http://192.168.1.119:8091/file/jodit/course
+     *     path_article: G:/upload/jodit/article
+     *     base_url_article: http://192.168.1.119:8091/file/jodit/article
+     */
+
 
     private String upload_local_path;
+    private String upload_local_article_path;
     private Map<String,String> jodit =new HashMap<String,String>();
 
 
@@ -32,5 +44,13 @@ public class MyFileConfig {
 
     public void setJodit(Map<String, String> jodit) {
         this.jodit = jodit;
+    }
+
+    public String getUpload_local_article_path() {
+        return upload_local_article_path;
+    }
+
+    public void setUpload_local_article_path(String upload_local_article_path) {
+        this.upload_local_article_path = upload_local_article_path;
     }
 }

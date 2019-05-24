@@ -16,17 +16,17 @@ public interface ArticleCmsService {
 
     List<Article> getArticleList();
 
-    Article getArticleById(int id);
+    Article getArticleById(String id);
 
     Article add(Article Article);
 
     Article update(Article Article);
 
-    void delete(int id);
+    void delete(String id);
 
     Article queryArticleByLoginName(String loginName);
 
-    int updateArticleOnlineById(int online,int id);
+    int updateArticleOnlineById(int online,String id);
 
     Page<Painter> queryArticleByQue(Pageable pageable,String article_title,String article_update_id,Integer article_online,String sort_status,String type_id);
 

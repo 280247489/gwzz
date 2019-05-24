@@ -1,8 +1,8 @@
 package com.memory.cms.service.impl;
 
-import com.memory.entity.jpa.ArticleType;
 import com.memory.cms.repository.ArticleTypeCmsRepository;
 import com.memory.cms.service.ArticleTypeCmsService;
+import com.memory.entity.jpa.ArticleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class ArticleTypeCmsServiceImpl implements ArticleTypeCmsService {
 
     @Override
     public List<ArticleType> queryArticleTypeList() {
-        return repository.findAll();
+        return repository.queryAllArticleTypeListByTypeCreateTimeDesc();
     }
 
     @Override
@@ -28,8 +28,14 @@ public class ArticleTypeCmsServiceImpl implements ArticleTypeCmsService {
         return repository.save(articleType);
     }
 
+
     @Override
-    public void delete(Integer id) {
-        repository.deleteById(id);
+    public void delete(String id) {
+
+    }
+
+    @Override
+    public List<ArticleType> queryArticleTypeList(Integer isUse) {
+        return repository.queryArticleTypeTypeList(isUse);
     }
 }

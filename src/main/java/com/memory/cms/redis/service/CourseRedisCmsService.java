@@ -11,9 +11,10 @@ import java.util.Map;
 
 public interface CourseRedisCmsService {
 
-    Map<Object, Object> setCourseCms(String key,Map<String,Object> value);
 
-    Boolean delAndHashSet(String key,Map<String,Object> value);
+    Boolean delAndHashSet(String courseId,Map<Object,Object> value);
+
+    Map<Object,Object> setHashAndIncr(String keyHash,String keySum,Map<Object,Object> value);
 
 
 

@@ -11,11 +11,11 @@ import org.springframework.data.jpa.repository.Query;
  * @date 2019/5/8 10:53
  */
 
-public interface ArticleCmsRepository extends JpaRepository<Article,Integer>, JpaSpecificationExecutor {
+public interface ArticleCmsRepository extends JpaRepository<Article,String>, JpaSpecificationExecutor {
 
     @Modifying
     @Query("update Article a set a.articleOnline  = ?1 where a.id =?2 ")
-    int  updateArticleOnlineById(int articleOnline,int id);
+    int  updateArticleOnlineById(int articleOnline,String id);
 
 
 }

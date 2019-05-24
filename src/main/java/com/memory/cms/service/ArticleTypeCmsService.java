@@ -15,7 +15,12 @@ public interface ArticleTypeCmsService {
 
     ArticleType add(ArticleType articleType);
 
-    void delete(Integer id);
+
+
+    void delete(String id);
+
+    List<ArticleType> queryArticleTypeList(Integer isUse);
+
 
 
 }

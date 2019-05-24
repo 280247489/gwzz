@@ -4,12 +4,20 @@ import com.memory.common.yml.MyFileConfig;
 import com.memory.entity.jpa.Course;
 import com.memory.cms.service.CourseCmsService;
 import com.memory.common.utils.*;
+import com.memory.file.controller.FileController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Date;
 
 /**
@@ -18,12 +26,15 @@ import java.util.Date;
  * @date 2019/5/8 11:19
  */
 @RestController
-@RequestMapping(value = "course")
+@RequestMapping(value = "course/cms")
 public class CourseCmsController {
 
     //private static final String fileUrl = "G:/upload";
 
     //private static final String fileShowUrl = ""
+
+    private static final Logger log = LoggerFactory.getLogger(CourseCmsController.class);
+
 
     @Autowired
     private CourseCmsService courseService;
@@ -60,6 +71,7 @@ public class CourseCmsController {
 
         }catch (Exception e){
             e.printStackTrace();
+            log.error("course/cms/online  err =",e.getMessage());
             result = ResultUtil.error(-1,"系统异常");
         }
 
@@ -82,6 +94,7 @@ public class CourseCmsController {
 
         }catch (Exception e){
             e.printStackTrace();
+            log.error("course/cms/liveStatus  err =",e.getMessage());
         }
         return  result;
     }
@@ -119,6 +132,7 @@ public class CourseCmsController {
         }catch (Exception e){
             e.printStackTrace();
             result = ResultUtil.error(-1,"系统异常");
+            log.error("course/cms/list  err =",e.getMessage());
         }
         return result;
     }
@@ -145,6 +159,7 @@ public class CourseCmsController {
         }catch (Exception e){
             e.printStackTrace();
             result = ResultUtil.error(-1,"系统异常");
+            log.error("course/cms/detail  err =",e.getMessage());
         }
         return result;
     }
@@ -226,6 +241,7 @@ public class CourseCmsController {
             }catch (Exception e ){
                 e.printStackTrace();
                 result = ResultUtil.error(-1,"系统异常");
+                log.error("course/cms/add  err =",e.getMessage());
             }
 
         return result;
@@ -331,6 +347,7 @@ public class CourseCmsController {
         }catch (Exception e ){
             e.printStackTrace();
             result = ResultUtil.error(-1,"系统异常");
+            log.error("course/cms/update  err =",e.getMessage());
         }
 
         return result;
@@ -377,14 +394,29 @@ public class CourseCmsController {
                 }
 
                 course.setCourseUpdateTime(new  Date());
-                course.setCourseUpdateId(course_update_id);
+                course.setCourseUpdateId(course_create_id);
 
         return course;
     }
 
 
+    public static String isImagesTrue(String posturl) throws IOException {
+        URL url = new URL(posturl);
+        HttpURLConnection urlcon = (HttpURLConnection) url.openConnection();
+        urlcon.setRequestMethod("POST");
+        urlcon.setRequestProperty("Content-type",
+                "application/x-www-form-urlencoded");
+        if (urlcon.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            System.out.println(HttpURLConnection.HTTP_OK + posturl
+                    + ":posted ok!");
+            return "200";
+        } else {
+            System.out.println(urlcon.getResponseCode() + posturl
+                    + ":Bad post...");
+            return "404";
+        }
+    }
 
 
+    }
 
-
-}
