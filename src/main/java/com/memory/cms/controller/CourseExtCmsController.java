@@ -341,9 +341,10 @@ public class CourseExtCmsController {
 
 
     public static void main(String[] args) {
-        AtomicInteger atc  = new AtomicInteger(1);
-        System.out.println(atc.incrementAndGet());
 
+
+
+        System.out.println(Utils.getShortUUTimeStamp());
 
     }
 
