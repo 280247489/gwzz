@@ -2,8 +2,8 @@ package com.memory.gwzz.service.impl;
 
 import com.memory.common.utils.Utils;
 import com.memory.entity.jpa.ArticleComment;
-import com.memory.gwzz.repository.ArticleCommentWebRepository;
-import com.memory.gwzz.service.ArticleCommentWebService;
+import com.memory.gwzz.repository.ArticleCommentMobileRepository;
+import com.memory.gwzz.service.ArticleCommentMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +13,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @ClassName ArticleCommentWebServiceImpl
+ * @ClassName ArticleCommentMobileServiceImpl
  * @Descriotion TODO
  * @Author Ganxiqing
  * @Date 2019/5/24 16:35
  */
-@Service("articleCommentWebService")
-public class ArticleCommentWebServiceImpl implements ArticleCommentWebService {
+@Service("articleCommentMobileService")
+public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileService {
 
     @Autowired
-    private ArticleCommentWebRepository articleCommentWebRepository;
+    private ArticleCommentMobileRepository articleCommentMobileRepository;
 
 
 
@@ -46,7 +46,7 @@ public class ArticleCommentWebServiceImpl implements ArticleCommentWebService {
         articleComment.setCommentContent(commentContent);
         articleComment.setCommentCreateTime(new Date());
         articleComment.setCommentTotalLike(0);
-        articleCommentWebRepository.save(articleComment);
+        articleCommentMobileRepository.save(articleComment);
 
         returnMap.put("articleComment",articleComment);
 

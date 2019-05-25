@@ -1,19 +1,19 @@
 package com.memory.gwzz.service.impl;
 
-import com.memory.gwzz.service.CourseExtWebService;
+import com.memory.gwzz.service.CourseExtMobileService;
 import com.memory.redis.CacheConstantConfig;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @ClassName CourseExtWebServiceImpl
+ * @ClassName CourseExtMobileServiceImpl
  * @Descriotion TODO
  * @Author Ganxiqing
  * @Date 2019/5/10 14:45
  */
-@Service("courseExtService")
-public class CourseExtWebServiceImpl implements CourseExtWebService {
+@Service("courseExtMobileService")
+public class CourseExtMobileServiceImpl implements CourseExtMobileService {
 
     @Autowired
     private RedisUtil redisUtil;

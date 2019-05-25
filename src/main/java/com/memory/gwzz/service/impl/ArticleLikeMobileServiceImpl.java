@@ -5,8 +5,8 @@ import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.ArticleLike;
 import com.memory.entity.jpa.User;
-import com.memory.gwzz.repository.ArticleLikeWebRepository;
-import com.memory.gwzz.service.ArticleLikeWebService;
+import com.memory.gwzz.repository.ArticleLikeMobileRepository;
+import com.memory.gwzz.service.ArticleLikeMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,19 +14,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 
 /**
- * @ClassName ArticleLikeWebServiceImpl
+ * @ClassName ArticleLikeMobileServiceImpl
  * @Descriotion TODO
  * @Author Ganxiqing
  * @Date 2019/5/25 10:13
  */
-@Service("articleLikeWebService")
-public class ArticleLikeWebServiceImpl implements ArticleLikeWebService {
+@Service("articleLikeMobileService")
+public class ArticleLikeMobileServiceImpl implements ArticleLikeMobileService {
 
     @Autowired
     private DaoUtils daoUtils;
 
     @Autowired
-    private ArticleLikeWebRepository articleLikeWebRepository;
+    private ArticleLikeMobileRepository articleLikeMobileRepository;
 
 
     @Transactional
@@ -64,6 +64,6 @@ public class ArticleLikeWebServiceImpl implements ArticleLikeWebService {
     }
 
     public ArticleLike getByAidUid(String aid, String uid){
-        return articleLikeWebRepository.findByArticleIdAndUserId(aid,uid);
+        return articleLikeMobileRepository.findByArticleIdAndUserId(aid,uid);
     }
 }

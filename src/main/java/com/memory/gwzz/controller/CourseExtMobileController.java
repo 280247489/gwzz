@@ -1,10 +1,8 @@
 package com.memory.gwzz.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
-import com.memory.entity.bean.CourseResult;
-import com.memory.gwzz.service.CourseExtWebService;
+import com.memory.gwzz.service.CourseExtMobileService;
 import com.memory.redis.CacheConstantConfig;
 import com.memory.redis.RedisAPI;
 import com.memory.redis.RedisUtil;
@@ -14,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import redis.clients.jedis.JedisPool;
-
-import java.util.Map;
 
 
 /**
@@ -26,12 +21,12 @@ import java.util.Map;
  * @Date 2019/5/10 14:55
  */
 @RestController
-@RequestMapping(value = "courseExt/web")
-public class CourseExtWebController extends BaseController {
+@RequestMapping(value = "courseExt/Mobile")
+public class CourseExtMobileController extends BaseController {
 
 
     @Autowired
-    private CourseExtWebService courseExtWebService;
+    private CourseExtMobileService courseExtWebService;
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate ;
