@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -181,5 +182,40 @@ public class DaoUtils {
         public void setPageIndex(int pageIndex) {
             this.pageIndex = pageIndex;
         }
+    }
+
+    /**
+     * 根据Id获取对象
+     * @param className
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public Object getById(String className, String id){
+        StringBuffer sb = new StringBuffer(" from "+className+" where id=:id");
+        Map<String, Object> getByIdMap=new HashMap<String, Object>();
+        getByIdMap.put("id", id);
+        Object obj = this.findObjectHQL(sb.toString(), getByIdMap);
+        return obj;
+    }
+
+    /**
+     * 添加一个对象()
+     * @param obj
+     * @return
+     */
+    public Object save(Object obj){
+        em.merge(obj);
+        return obj;
+    }
+
+    /**
+     * 删除一个对象
+     * @param obj
+     * @return
+     */
+    public Object del(Object obj){
+        em.detach(obj);
+        return obj;
     }
 }
