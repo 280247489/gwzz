@@ -96,7 +96,7 @@ public class ArticleTypeCmsController {
                 fileUploadedPath = fileUrl + "/" + uuid;
                 //上传标题图
                 FileUtils.upload(typeFile,fileUploadedPath,fileName);
-                imgUrl = fileUploadedPath + "/" +fileName;
+                imgUrl =  "article/"  +fileUploadedPath + "/" +fileName;
 
             }
 

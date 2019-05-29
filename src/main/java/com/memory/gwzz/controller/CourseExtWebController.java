@@ -1,22 +1,22 @@
 package com.memory.gwzz.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.memory.cms.service.CourseMemoryService;
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
-import com.memory.entity.bean.CourseResult;
 import com.memory.gwzz.service.CourseExtWebService;
-import com.memory.redis.CacheConstantConfig;
-import com.memory.redis.RedisAPI;
-import com.memory.redis.RedisUtil;
+import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import redis.clients.jedis.JedisPool;
 
+import java.util.HashMap;
 import java.util.Map;
+
+import static com.memory.redis.CacheConstantConfig.*;
 
 
 /**
@@ -34,7 +34,11 @@ public class CourseExtWebController extends BaseController {
     private CourseExtWebService courseExtWebService;
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate ;
+    private CourseMemoryService courseMemoryService;
+
+
+    @Autowired
+    private RedisUtil redisUtil;
 
 
 
@@ -45,38 +49,50 @@ public class CourseExtWebController extends BaseController {
      * @return
      */
     @RequestMapping(value = "list",method = RequestMethod.POST)
-    public Message list(@RequestParam String courseId){
-       // JedisPool pool = RedisUtil.getDialStatsPool();
+    public Message list(@RequestParam String courseId,@RequestParam String openId){
         try {
             msg = Message.success();
             msg.setRecode(0);
-            String keyHash = CacheConstantConfig.COURSERXT + ":hash:" +courseId;
-            String keySum =CacheConstantConfig.COURSERXT + ":sum:"+courseId;
-            RedisAPI redisAPI = new RedisAPI( RedisUtil.getDialStatsPool());
 
-           // redisAPI.incr(keySum);
-           //  redisTemplate.opsForValue().increment(keySum, 1);
-            //  msg.setData(  redisTemplate.opsForHash().entries(keyHash));
-           // redisTemplate.opsForValue().increment(keySum, 1);
-          //  Map<Object, Object> returnMap = redisTemplate.opsForHash().entries(keyHash);
+            msg.setData(courseId);
+         //  msg.setData(JSON.parseObject(JSON.toJSONString(courseExtWebService.getCourseExt(courseId)),HashMap.class) );
+       //   msg.setData(JSON.parse(courseExtWebService.getCourseExt(courseId).toString()));
 
-            msg.setData(courseExtWebService.getCourseExt(courseId));
-          //  msg.setData(returnMap);
-          // JSON.toJSONString(redisAPI.hgetAll(keyHash)), CourseResult.class)
-       //   msg.setData( redisAPI.hgetAll(keyHash));
+            String keyHash = SHARECOURSECONTENT + courseId;
+            if( COURSEMAP.containsKey(keyHash)){
+                courseExtWebService.setCourseExtView(courseId,openId);
+                msg.setData(courseMemoryService.getCourseExtById(courseId));
+                System.out.println("内存===============================");
+            }else {
+
+                System.out.println("redis===============================");
+
+                Object obj =  redisUtil.hget(keyHash,COURSEEXT);
+                if(obj != null){
+                    courseExtWebService.setCourseExtView(courseId,openId);
+
+                    Map<String,Object> map = new HashMap<>();
+                  //  String keyHash = SHARECOURSECONTENT + courseId;
+                    System.out.println("keyHash ===========" +keyHash);
+                    map.put(COURSE,  redisUtil.hget(keyHash,COURSE));
+                    map.put(COURSEEXT, JSON.parse( obj.toString()));
+
+                    msg.setData(  map);
+                }else{
+                    msg.setData("");
+                }
+            }
 
         }catch (Exception e){
             e.printStackTrace();
-        }finally {
-           //  RedisUtil.close(pool.getResource());
         }
-
-        //RedisUtil.returnBrokenResource(pool.getResource());
-        // pool.close();
-        // pool.returnResource(pool.getResource());
 
         return msg;
     }
+
+
+
+
 
 
 }

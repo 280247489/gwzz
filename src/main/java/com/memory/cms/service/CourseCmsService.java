@@ -30,4 +30,6 @@ public interface CourseCmsService {
 
     int updateCourseLiveStatus(int course_live_status,String id);
 
+    List<com.memory.entity.bean.Course> queryCourseOptions();
+
 }

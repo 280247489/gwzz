@@ -4,9 +4,14 @@ jQuery(document).ready(function () {
     var api_back = 'http://manager.houaihome.com';
     var api_login = api_back +'/sysAdmin/cms/login';
     var api_admin = api_back +'/sysAdmin/cms/options';
+    var api_type_course = api_back +'/courseType/cms/list';
+    var api_type_article = api_back +'/articleType/cms/list';
     var api_type = api_back +'/courseType/cms/list';
     var server_course = 'http://image.houaihome.com/cms/';
+
     var lk = 0;
+
+
     var user = sessionStorage.getItem('user');
     sessionStorage.setItem("API_shezhen", web_shezhen);
     sessionStorage.setItem("server_shezhen", server_shezhen);
@@ -58,10 +63,16 @@ jQuery(document).ready(function () {
                                 sessionStorage.setItem('user_list', JSON.stringify(data.data));
                             }
                         });
-                        $.post(api_type, '', function (data) {
+                        $.post(api_type_course, '', function (data) {
                             var this_code = data.code;
                             if(this_code == 0){
                                 sessionStorage.setItem('course_type', JSON.stringify(data.data));
+                            }
+                        });
+                        $.post(api_type_article, '', function (data) {
+                            var this_code = data.code;
+                            if(this_code == 0){
+                                sessionStorage.setItem('article_type', JSON.stringify(data.data));
                             }
                         });
                         var user = data.data;

@@ -132,6 +132,10 @@ public class CourseExt {
         return Objects.hash(id, courseId, courseExtNickname, courseExtLogo, courseExtType, courseExtWords, courseExtImgUrl, courseExtAudio, courseExtAudioTimes, courseExtSort, courseExtCreateTime);
     }
 
+    public CourseExt(){
+
+    };
+
     public CourseExt(String id, String courseId, String courseExtNickname, String courseExtLogo, int courseExtType, String courseExtWords, String courseExtImgUrl, String courseExtAudio, int courseExtAudioTimes, int courseExtSort, Date courseExtCreateTime) {
         this.id = id;
         this.courseId = courseId;

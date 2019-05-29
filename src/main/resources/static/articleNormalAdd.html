@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="sain">
+    <meta name="keyword" content="">
+
+    <title>听会儿中医管理系统</title>
+    <script type="text/javascript" src="assets/js/jquery.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/ico.css" rel="stylesheet" />
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/style-responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/jodit/build/jodit.min.css" />
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5shiv.js"></script>
+      <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <section id="container">
+        <header class="header black-bg">
+            <div class="sidebar-toggle-box">
+                <div class="bars icon-align-justify tooltips" data-placement="right"
+                    data-original-title="Toggle Navigation"></div>
+            </div>
+            <a href="index.html" class="logo"><i class="icon-hou"></i><i class="icon-ai"></i><span>听会儿中医管理系统</span></a>
+            <div class="nav notify-row" id="top_menu">
+                <ul class="nav top-menu">
+                    <li class="">
+                        <a href="index.html#">
+                            <i class="icon-tasks"></i>
+                            <span class="badge bg-theme">4</span>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a class="logout" id="logout" href="javascript:void(0);">
+                            <i class="icon-power-off"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <aside>
+            <div id="sidebar" class="nav-collapse ">
+                <ul class="sidebar-menu" id="nav-accordion">
+                    <p class="centered"><a href="javascript:;"><img src="assets/img/ui-sam.jpg" class="img-circle"
+                                width="60"></a></p>
+                    <h5 class="centered curr_admin_name">-</h5>
+                    <li class="mt">
+                        <a href="index.html">
+                            <i class="icon-dashboard"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a class="active" href="javascript:;">
+                            <i class="icon-hou"></i>
+                            <span>专辑管理</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="articleHealth.html">课程管理</a></li>
+                            <li><a href="articleHealthAdd.html">课程添加</a></li>
+                            <li><a href="courseMemory.html">课程缓存</a></li>
+                            <li><a href="articleNormal.html">文章管理</a></li>
+                            <li class="active"><a href="articleNormalAdd.html">文章添加</a></li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;"><i class="icon-desktop"></i>
+                            <span>评论管理</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="javascript:;">课程评论</a></li>
+                            <li><a href="javascript:;">文章评论</a></li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;"><i class="icon-desktop"></i>
+                            <span>舌诊管理</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="symptom.html">症状列表</a></li>
+                            <li><a href="symptomAdd.html?action=add">添加症状</a></li>
+                            <li><a href="slave.html">标准图片</a></li>
+                            <li><a href="slaveAdd.html?action=add">标图添加</a></li>
+                            <li><a href="szUsers.html">用户列表</a></li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="icon-ai"></i>
+                            <span>美丽腰约</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="javascript:;">开发中</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+        <section id="main-content">
+            <section class="wrapper site-min-height">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="row mt">
+                            <div class="col-md-12 col-lg-12">
+                                <div class="content-panel">
+                                    <h4><i class="fa fa-angle-right"></i> >文章添加</h4>
+                                    <hr>
+                                    <form id="articleHealthAdd" enctype="multipart/form-data"
+                                        class="form-horizontal style-form">
+                                        <input type="hidden" name="article_create_id" class="course_create_id"
+                                            value="" />
+                                        <input type="hidden" name="article_update_id" class="course_update_id"
+                                            value="" />
+                                        <input type="hidden" name="id" class="edit_id" value="" />
+                                        <div class="col-md-8 col-lg-8">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 col-md-2 control-label"><span
+                                                        class="text-danger">* </span>文章标题：</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control course_title"
+                                                        name="article_title">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 col-md-2 control-label"><span
+                                                        class="text-danger">* </span>文章描述：</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control  course_describe"
+                                                        name="article_describe">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 col-md-2 control-label">关键字：</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control course_key_words"
+                                                        name="article_key_words">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 col-md-2 control-label">标 签：</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control course_label"
+                                                        name="article_label">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 col-md-2 control-label">
+                                                    <span class="text-danger">* </span>文章分类：
+                                                </label>
+                                                <div class="col-sm-3 col-md-3">
+                                                    <select class="course_type_id form-control" name="type_id">
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2 col-md-2"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 col-md-2 control-label">
+                                                    <span class="text-danger">* </span>是否上线：
+                                                </label>
+                                                <div class="col-sm-4">
+                                                    <div class="switch has-switch switch-online" data-value="0">
+                                                        <div class="switch-off switch-animate">
+                                                            <input type="hidden" value="0" name="article_online"
+                                                                class="course_online">
+                                                            <span class="switch-left">上线</span>
+                                                            <label>&nbsp;</label>
+                                                            <span class="switch-right">下线</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <label class="col-sm-2 col-md-2 control-label">是否推荐：</label>
+                                                <div class="col-sm-4">
+                                                    <div class="switch has-switch switch-recommend" data-value="0">
+                                                        <div class="switch-off switch-animate">
+                                                            <input type="hidden" value="0" name="article_recommend"
+                                                                class="course_recommend">
+                                                            <span class="switch-left">是</span>
+                                                            <label>&nbsp;</label>
+                                                            <span class="switch-right">否</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-lg-4">
+                                            <div class="form-group article_logo">
+                                                <div class="col-md-12 col-lg-12">
+                                                    <span class="text-danger">* </span>封面图片：
+                                                </div>
+                                                <div class="col-md-12 col-lg-12">
+                                                    <a href="javascript:void(0);" class="article_logo_img">
+                                                        <img src="./assets/img/add.png" />
+                                                    </a>
+                                                    <div class="hide">
+                                                        <input type="file" class="titleFile" name="titleFile">
+                                                        <input type="hidden" class="course_logo" name="article_logo">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-lg-12">
+                                                <textarea id="editor" class="course_content"
+                                                    name="article_content"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group text-right clear">
+                                            <div class="col-md-12 col-lg-12">
+                                                <button type="button" class="btn btn-theme article_submit">发布文章</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+
+        <footer class="site-footer">
+            <div class="text-center">
+                123
+                <a href="#" class="go-top">
+                    <i class="icon-angle-up"></i>
+                </a>
+            </div>
+        </footer>
+    </section>
+    <script type="text/javascript" src="assets/js/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="assets/js/jquery.ui.touch-punch.min.js"></script>
+    <script type="text/javascript" src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
+    <script type="text/javascript" src="assets/js/jquery.scrollTo.min.js"></script>
+    <script type="text/javascript" src="assets/js/common-scripts.js"></script>
+    <script type="text/javascript" src="assets/js/sessionStorage.js"></script>
+    <script type="text/javascript" src="assets/js/default.js"></script>
+    <script type="text/javascript" src="assets/js/pages/articleNormalAdd.js"></script>
+    <script type="text/javascript" src="assets/jodit/build/jodit.min.js"></script>
+
+
+    <script>
+        var editor = new Jodit('#editor', {
+            textIcons: false,
+            iframe: false,
+            iframeStyle: '*,.jodit_wysiwyg {color:red;}',
+            height: 300,
+            defaultMode: Jodit.MODE_WYSIWYG,
+            observer: {
+                timeout: 100
+            },
+            uploader: {
+                url: 'http://manager.houaihome.com/jodit/uploadImg'
+            },
+            // filebrowser: {
+            //     // buttons: ['list', 'tiles', 'sort'],
+            //     ajax: {
+            //         url: 'http://192.168.1.119:8081/gwzz/jodit/uploadImg'
+            //     }
+            // },
+            commandToHotkeys: {
+                'openreplacedialog': 'ctrl+p'
+            }
+            // buttons: ['symbol'],
+            // disablePlugins: 'hotkeys,mobile'
+        });
+    </script>
+
+</body>
+
+</html>

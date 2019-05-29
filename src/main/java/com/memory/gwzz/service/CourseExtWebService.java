@@ -1,5 +1,8 @@
 package com.memory.gwzz.service;
 
+import com.memory.entity.jpa.CourseExt;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,6 +13,10 @@ import java.util.Map;
  */
 public interface CourseExtWebService {
 
-    Object getCourseExt (String courseId);
+    Map<String,Object> getCourseExt (String courseId);
     boolean delCourseExt (String courseId);
+
+    List<CourseExt> getCourseExtByDB(String courseId);
+
+    void setCourseExtView(String courseId,String openId);
 }

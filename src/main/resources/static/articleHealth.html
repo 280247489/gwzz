@@ -8,7 +8,7 @@
     <meta name="author" content="sain">
     <meta name="keyword" content="">
 
-    <title>养生文章</title>
+    <title>听会儿中医管理系统</title>
     <script type="text/javascript" src="assets/js/jquery.js"></script>
     <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
     <link href="assets/css/bootstrap.css" rel="stylesheet">
@@ -29,7 +29,7 @@
                 <div class="bars icon-align-justify tooltips" data-placement="right"
                     data-original-title="Toggle Navigation"></div>
             </div>
-            <a href="index.html" class="logo"><i class="icon-hou"></i><i class="icon-ai"></i><span>舌诊后台</span></a>
+            <a href="index.html" class="logo"><i class="icon-hou"></i><i class="icon-ai"></i><span>听会儿中医管理系统</span></a>
             <div class="nav notify-row" id="top_menu">
                 <ul class="nav top-menu">
                     <li class="">
@@ -49,9 +49,9 @@
         <aside>
             <div id="sidebar" class="nav-collapse ">
                 <ul class="sidebar-menu" id="nav-accordion">
-                    <p class="centered"><a href="profile.html"><img src="assets/img/ui-sam.jpg" class="img-circle"
+                    <p class="centered"><a href="javascript:;"><img src="assets/img/ui-sam.jpg" class="img-circle"
                                 width="60"></a></p>
-                    <h5 class="centered">干！喜庆</h5>
+                    <h5 class="centered curr_admin_name">-</h5>
                     <li class="mt">
                         <a href="index.html">
                             <i class="icon-dashboard"></i>
@@ -64,11 +64,20 @@
                             <span>专辑管理</span>
                         </a>
                         <ul class="sub">
-                                <li class="active"><a href="articleHealth.html">养生文章</a></li>
-                                <li><a href="articleHealthAdd.html">文章添加</a></li>
-                                <li><a href="articleHealth.html">-----</a></li>
-                                <li><a href="articleHealth.html">-----</a></li>
-                                <li><a href="articleHealth.html">-----</a></li>
+                            <li class="active"><a href="articleHealth.html">课程管理</a></li>
+                            <li><a href="articleHealthAdd.html">课程添加</a></li>
+                            <li><a href="courseMemory.html">课程缓存</a></li>
+                            <li><a href="articleNormal.html">文章管理</a></li>
+                            <li><a href="articleNormalAdd.html">文章添加</a></li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;"><i class="icon-desktop"></i>
+                            <span>评论管理</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="javascript:;">课程评论</a></li>
+                            <li><a href="javascript:;">文章评论</a></li>
                         </ul>
                     </li>
                     <li class="sub-menu">
@@ -89,8 +98,7 @@
                             <span>美丽腰约</span>
                         </a>
                         <ul class="sub">
-                            <li><a href="yaoyue.html">用户列表</a></li>
-                            <li><a href="yaoyue.html">???????</a></li>
+                            <li><a href="javascript:;">开发中</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -106,8 +114,8 @@
                                     <h4><i class="fa fa-angle-right"></i> >课程列表</h4>
                                     <hr>
                                     <table class="table table-striped table-advance table-hover articleHealth_list">
-                                            <div class="articleHealth_search">
-                                                    <form class="form-horizontal style-form">
+                                        <div class="articleHealth_search">
+                                            <form class="form-horizontal style-form">
                                                 <div class="col-md-2 col-lg-2 form-group">
                                                     <input type="text" class="form-control"
                                                         id="articleHealth_search_title" placeholder="标题" />
@@ -135,12 +143,12 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-md-2 col-lg-2 form-group">
-                                                        <button type="button"
+                                                    <button type="button"
                                                         class="btn btn-theme03 articleHealth_search_submit">搜索</button>
                                                 </div>
                                                 <div class="col-md-2 col-lg-2 form-group"></div>
                                             </form>
-                                            </div>
+                                        </div>
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -180,9 +188,9 @@
     <script type="text/javascript" src="assets/js/jquery.ui.touch-punch.min.js"></script>
     <script type="text/javascript" src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
     <script type="text/javascript" src="assets/js/jquery.scrollTo.min.js"></script>
-    <script type="text/javascript" src="assets/js/jquery.nicescroll.js"></script>
     <script type="text/javascript" src="assets/js/common-scripts.js"></script>
     <script type="text/javascript" src="assets/js/sessionStorage.js"></script>
+    <script type="text/javascript" src="assets/js/default.js"></script>
     <script type="text/javascript" src="assets/js/pages/articleHealth.js"></script>
     <script type="text/javascript" src="assets/js/page.js"></script>
     <script>

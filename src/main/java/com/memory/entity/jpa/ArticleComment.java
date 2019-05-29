@@ -6,7 +6,7 @@ import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/5/23 16:54
+ * @date 2019/5/27 9:39
  */
 
 @Entity
@@ -24,6 +24,8 @@ public class ArticleComment {
     private String commentContent;
     private Date commentCreateTime;
     private int commentTotalLike;
+
+
 
     @Id
     @Column(name = "id")
@@ -142,6 +144,24 @@ public class ArticleComment {
     }
 
     public void setCommentTotalLike(int commentTotalLike) {
+        this.commentTotalLike = commentTotalLike;
+    }
+
+    public ArticleComment() {
+    }
+
+    public ArticleComment(String id, String articleId, String userId, String userLogo, String userName, int commentType, String commentRootId, String commentParentId, String commentParentUserName, String commentContent, Date commentCreateTime, int commentTotalLike) {
+        this.id = id;
+        this.articleId = articleId;
+        this.userId = userId;
+        this.userLogo = userLogo;
+        this.userName = userName;
+        this.commentType = commentType;
+        this.commentRootId = commentRootId;
+        this.commentParentId = commentParentId;
+        this.commentParentUserName = commentParentUserName;
+        this.commentContent = commentContent;
+        this.commentCreateTime = commentCreateTime;
         this.commentTotalLike = commentTotalLike;
     }
 

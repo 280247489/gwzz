@@ -166,7 +166,7 @@ public class ArticleCmsController {
                 fileUploadedPath = fileUrl + "/" + id;
                 //上传标题图
                 FileUtils.upload(titleFile, fileUploadedPath, fileName);
-                article_logo = id + "/" + fileName;
+                article_logo = "/article/" +  id + "/" + fileName;
 
             }
 
@@ -233,7 +233,7 @@ public class ArticleCmsController {
                 fileUploadedPath = fileUrl + "/" + id;
                 //上传标题图
                 FileUtils.upload(titleFile, fileUploadedPath, fileName);
-                article_logo = id + "/" + fileName;
+                article_logo = "article/"  +id + "/" + fileName;
 
             }
 

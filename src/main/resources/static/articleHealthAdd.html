@@ -8,7 +8,7 @@
     <meta name="author" content="sain">
     <meta name="keyword" content="">
 
-    <title>养生文章</title>
+    <title>听会儿中医管理系统</title>
     <script type="text/javascript" src="assets/js/jquery.js"></script>
     <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
     <link href="assets/css/bootstrap.css" rel="stylesheet">
@@ -30,7 +30,7 @@
                 <div class="bars icon-align-justify tooltips" data-placement="right"
                     data-original-title="Toggle Navigation"></div>
             </div>
-            <a href="index.html" class="logo"><i class="icon-hou"></i><i class="icon-ai"></i><span>舌诊后台</span></a>
+            <a href="index.html" class="logo"><i class="icon-hou"></i><i class="icon-ai"></i><span>听会儿中医管理系统</span></a>
             <div class="nav notify-row" id="top_menu">
                 <ul class="nav top-menu">
                     <li class="">
@@ -50,9 +50,9 @@
         <aside>
             <div id="sidebar" class="nav-collapse ">
                 <ul class="sidebar-menu" id="nav-accordion">
-                    <p class="centered"><a href="profile.html"><img src="assets/img/ui-sam.jpg" class="img-circle"
+                    <p class="centered"><a href="javascript:;"><img src="assets/img/ui-sam.jpg" class="img-circle"
                                 width="60"></a></p>
-                    <h5 class="centered">干！喜庆</h5>
+                    <h5 class="centered curr_admin_name">-</h5>
                     <li class="mt">
                         <a href="index.html">
                             <i class="icon-dashboard"></i>
@@ -65,11 +65,20 @@
                             <span>专辑管理</span>
                         </a>
                         <ul class="sub">
-                            <li><a href="articleHealth.html">养生文章</a></li>
-                            <li class="active"><a href="articleHealthAdd.html">文章添加</a></li>
-                            <li><a href="articleHealth.html">-----</a></li>
-                            <li><a href="articleHealth.html">-----</a></li>
-                            <li><a href="articleHealth.html">-----</a></li>
+                            <li><a href="articleHealth.html">课程管理</a></li>
+                            <li class="active"><a href="articleHealthAdd.html">课程添加</a></li>
+                            <li><a href="courseMemory.html">课程缓存</a></li>
+                            <li><a href="articleNormal.html">文章管理</a></li>
+                            <li><a href="articleNormalAdd.html">文章添加</a></li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;"><i class="icon-desktop"></i>
+                            <span>评论管理</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="javascript:;">课程评论</a></li>
+                            <li><a href="javascript:;">文章评论</a></li>
                         </ul>
                     </li>
                     <li class="sub-menu">
@@ -90,8 +99,7 @@
                             <span>美丽腰约</span>
                         </a>
                         <ul class="sub">
-                            <li><a href="yaoyue.html">用户列表</a></li>
-                            <li><a href="yaoyue.html">???????</a></li>
+                            <li><a href="javascript:;">开发中</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -232,8 +240,8 @@
                                             </div>
                                         </div>
                                     </form>
-                                    <form id="zhibo_msg_list" enctype="multipart/form-data" data-type='url_Ext_add' data-article-id=""
-                                        class="form-horizontal style-form">
+                                    <form id="zhibo_msg_list" enctype="multipart/form-data" data-type='url_Ext_add'
+                                        data-article-id="" class="form-horizontal style-form">
                                         <input type="hidden" name="courseId" id="courseId" value="" />
                                         <div class="form-group clear">
                                             <div class="col-md-12 col-lg-12">
@@ -245,7 +253,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2 col-lg-2">
-                                                    <button type="button" class="btn btn-theme03">模版下载</button>
+                                                    <a class="btn btn-theme03 template_download"
+                                                        href="./assets/file/template.xls" target="_blank">模版下载</a>
                                                 </div>
                                                 <div class="col-md-2 col-lg-2">
                                                     <button type="button"
@@ -359,6 +368,7 @@
     <script type="text/javascript" src="assets/js/jquery.scrollTo.min.js"></script>
     <script type="text/javascript" src="assets/js/common-scripts.js"></script>
     <script type="text/javascript" src="assets/js/sessionStorage.js"></script>
+    <script type="text/javascript" src="assets/js/default.js"></script>
     <script type="text/javascript" src="assets/js/pages/articleHealthAdd.js"></script>
     <script type="text/javascript" src="assets/js/xlsx.core.min.js"></script>
     <script type="text/javascript" src="assets/js/jquery-sortable.js"></script>
@@ -385,7 +395,7 @@
             //     }
             // },
             commandToHotkeys: {
-                'openreplacedialog': 'ctrl+f'
+                'openreplacedialog': 'ctrl+p'
             }
             // buttons: ['symbol'],
             // disablePlugins: 'hotkeys,mobile'
@@ -424,12 +434,12 @@
                         break;
                     }
                 }
-                $(".load_table").html("");
+                //$(".load_table").html("");
+                var li = "";
                 for (var j = 0; j < persons.length; j++) {
                     var arr = persons[j];
-                    $(".load_table").append(
-                        "<li data-order='' class='excelcontent'><div><input type='hidden' class='courseId' value='' name=''><select name='name'><option class='speaker' value='李老师'>李老师</option><option value='曦老师'>曦老师</option></select></div></li>"
-                    );
+
+                    var _tmp = '';
                     var ii = 0;
                     for (var i in arr) {
                         ii++
@@ -438,32 +448,21 @@
                             var this_type = '1';
                             var point = this_val.lastIndexOf(".");
                             var type = this_val.substr(point);
-                            if (type == ".jpg" || type == ".gif" || type == ".JPG" || type == ".GIF" ||
-                                type ==
-                                ".PNG" || type == ".png") {
+                            if (type == ".jpg" || type == ".gif" || type == ".JPG" || type == ".GIF" || type == ".PNG" || type == ".png") {
                                 this_val = '<img class="img_in_table" src="' + arr[i] + '" />';
                                 this_type = '3';
                             }
-                            if (type == ".mp3" || type == ".MP3" || type == ".wav" || type == ".WAV" ||
-                                type ==
-                                ".WMA" || type == ".wma") {
-                                this_val = '<audio src="' + arr[i] +
-                                    '" class="audio_36" controls="controls">浏览器不支持audio标签</audio>';
+                            if (type == ".mp3" || type == ".MP3" || type == ".wav" || type == ".WAV" || type == ".WMA" || type == ".wma") {
+                                this_val = '<audio src="' + arr[i] + '" class="audio_36" controls="controls">浏览器不支持audio标签</audio>';
                                 this_type = '2';
                             }
-                            $(".excelcontent").eq(j).append("<div class='l_d' data-type='" + this_type +
-                                "'>" +
-                                this_val +
-                                "<div class='hide'><input type='hidden' value='" + arr[i] +
-                                "' name='' /></div></div>");
-                        }else{
+                            _tmp += "<div class='l_d' data-type='" + this_type +"'>" + this_val + "<div class='hide'><input type='hidden' value='" + arr[i] +"' name='' /></div></div>"
 
                         }
                     }
-                    $(".excelcontent").eq(j).append(
-                        "<div><button type='button' class='delete btn btn-primary' href='javascript:void(0);'>删除</button><input class='audio_times' type='hidden' value='0' name='times' /></div>"
-                    );
+                    li += "<li data-order='' class='excelcontent'><div><input type='hidden' class='courseId' value='' name=''><select name='name'><option class='speaker' value='李老师'>李老师</option><option value='曦老师'>曦老师</option></select></div>"+_tmp+"<div><button type='button' class='delete btn btn-primary' href='javascript:void(0);'>删除</button><input class='audio_times' type='hidden' value='0' name='times' /></div></li>";
                 }
+                    $(".load_table").append(li);
             };
             fileReader.readAsBinaryString(files[0]);
         });

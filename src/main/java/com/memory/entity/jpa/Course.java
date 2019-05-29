@@ -235,6 +235,40 @@ public class Course {
         this.courseLiveStatus = courseLiveStatus;
     }
 
+
+    public Course(String id, String courseTypeId, String courseTitle, String courseLogo, String courseContent, String courseAudioUrl, String courseVideoUrl, String courseLabel, String courseKeyWords, int courseOnline, int courseTotalView, int courseTotalShare, int courseTotalLike, Date courseCreateTime, String courseCreateId, Date courseUpdateTime, String courseUpdateId, int courseRecommend, String courseDescribe, int courseLiveStatus) {
+        this.id = id;
+        this.courseTypeId = courseTypeId;
+        this.courseTitle = courseTitle;
+        this.courseLogo = courseLogo;
+        this.courseContent = courseContent;
+        this.courseAudioUrl = courseAudioUrl;
+        this.courseVideoUrl = courseVideoUrl;
+        this.courseLabel = courseLabel;
+        this.courseKeyWords = courseKeyWords;
+        this.courseOnline = courseOnline;
+        this.courseTotalView = courseTotalView;
+        this.courseTotalShare = courseTotalShare;
+        this.courseTotalLike = courseTotalLike;
+        this.courseCreateTime = courseCreateTime;
+        this.courseCreateId = courseCreateId;
+        this.courseUpdateTime = courseUpdateTime;
+        this.courseUpdateId = courseUpdateId;
+        this.courseRecommend = courseRecommend;
+        this.courseDescribe = courseDescribe;
+        this.courseLiveStatus = courseLiveStatus;
+    }
+
+    public Course() {
+    }
+
+
+    public Course(String id, String courseTitle, int courseOnline) {
+        this.id = id;
+        this.courseTitle = courseTitle;
+        this.courseOnline = courseOnline;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

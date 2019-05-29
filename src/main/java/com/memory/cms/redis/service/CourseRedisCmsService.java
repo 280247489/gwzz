@@ -14,7 +14,11 @@ public interface CourseRedisCmsService {
 
     Boolean delAndHashSet(String courseId,Map<Object,Object> value);
 
-    Map<Object,Object> setHashAndIncr(String keyHash,String keySum,Map<Object,Object> value);
+    Map<Object,Object> setHashAndIncr(String courseId,Map<Object,Object> value);
+
+
+
+
 
 
 

@@ -32,7 +32,6 @@ jQuery(document).ready(function () {
     var id = $_GET['id'];
     var course_type_select = '<option value="">--课程分类--</option>';
     var course_type = sessionStorage.getItem('course_type');
-    var url_which;
     course_type = JSON.parse(course_type);
 
 
@@ -156,6 +155,7 @@ jQuery(document).ready(function () {
             }
             var li = '';
             $.post(url_Ext, arr_Ext, function (data) {
+                console.log(data);
                 var content = data.data;
                 if (content[0] == undefined || content[0] == '') {
                     $('#zhibo_msg_list').attr('data-type', 'url_Ext_add');
@@ -289,16 +289,6 @@ jQuery(document).ready(function () {
             if ($('#courseId').val() == '' || $('#courseId').val() == undefined) {
                 return false;
             }
-
-
-
-            // console.log($('.load_table li').length);
-            // if($('.load_table li').length > 0){
-
-            // }
-
-
-
             $('.load_table li').each(function () {
                 var tm = '0';
                 var time = 0;
@@ -352,10 +342,6 @@ jQuery(document).ready(function () {
                         timeout: 50000,
                         beforeSend: function () {
                             console.log('1');
-
-
-
-                            return false;
                         },
                         success: function (data) {
                             alert('提交成功');
@@ -495,14 +481,6 @@ jQuery(document).ready(function () {
         });
 
     }
-    // $.each(user_list, function (i, n) {
-    //     creater += '<option value="' + n.id + '">' + n.name + '</option>';
-    // });
-    // $('#articleHealth_search_creater').html(creater);
-
-    function suffix(str) {
-
-    }
     $('#excel_file').click(function () {
         $('#excel-file').trigger('click');
     });
@@ -628,7 +606,7 @@ jQuery(document).ready(function () {
     });
     $('.alert_url').click(function () {
         if ($('#courseId').val() !== '' || $('#courseId').val() !== undefined) {
-            alert('http://manager.houaihome.com/demo2/index.html?id=' + $('#courseId').val());
+            alert('http://hdqd.houaihome.com/zhibo/index.php?id=' + $('#courseId').val());
         } else {
             alert('文章ID空!');
         }

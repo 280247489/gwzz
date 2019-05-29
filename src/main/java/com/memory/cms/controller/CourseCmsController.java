@@ -1,14 +1,12 @@
 package com.memory.cms.controller;
-import com.alibaba.fastjson.JSON;
+import com.memory.cms.service.CourseMemoryService;
 import com.memory.common.yml.MyFileConfig;
 import com.memory.entity.jpa.Course;
 import com.memory.cms.service.CourseCmsService;
 import com.memory.common.utils.*;
-import com.memory.file.controller.FileController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Date;
 
 /**
@@ -43,6 +40,9 @@ public class CourseCmsController {
     @Autowired
     private MyFileConfig config;
 
+    @Autowired
+    private CourseMemoryService courseMemoryService;
+
 
     /**
      * 变更上线下线状态
@@ -61,6 +61,7 @@ public class CourseCmsController {
                 String str ="上线";
                 if(online == 0){
                     str = "下线";
+                    courseMemoryService.clear(id);
                 }
                 result.setCode(0);
                 result.setMsg("变更"+str+"状态成功！");
@@ -322,7 +323,9 @@ public class CourseCmsController {
 
             }
 
-
+            if(course_online ==0){
+                courseMemoryService.clear(id);
+            }
 
        /*     Course course = init(course_type_id,course_title,
                     course_logo,course_content,
@@ -415,6 +418,18 @@ public class CourseCmsController {
                     + ":Bad post...");
             return "404";
         }
+    }
+
+    @RequestMapping(value = "options", method = RequestMethod.POST)
+    public Result queryCourseOptions(){
+        Result result = new Result();
+        try {
+            result = ResultUtil.success(courseService.queryCourseOptions());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
 

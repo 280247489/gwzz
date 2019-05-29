@@ -1,5 +1,7 @@
 package com.memory.redis.config;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
@@ -639,7 +641,8 @@ public class RedisUtil {
             redisTemplate.setEnableTransactionSupport(true);
             redisTemplate.multi();
             redisTemplate.delete(key);
-            redisTemplate.opsForHash().putAll(key, value);
+           // redisTemplate.opsForHash().putAll(key, value);
+            redisTemplate.opsForValue().set(key,  JSON.toJSONString(value));
             redisTemplate.exec();
             flag = true;
 
@@ -652,9 +655,11 @@ public class RedisUtil {
     public  Map<Object,Object> setHashAndIncr(String keyHash,String keySum,Map<Object,Object> value){
         Map<Object,Object>  map = null;
         try{
+           // JSONObject jsonObject=JSONObject.fromObject(value);
             redisTemplate.setEnableTransactionSupport(true);
             redisTemplate.multi();
-            redisTemplate.opsForHash().putAll(keyHash,value);
+            redisTemplate.opsForValue().set(keyHash, JSON.toJSONString(value));
+         //   redisTemplate.opsForValue().set(keyHash, value);
             redisTemplate.opsForValue().increment(keySum, 1);
             redisTemplate.exec();
             map = value;

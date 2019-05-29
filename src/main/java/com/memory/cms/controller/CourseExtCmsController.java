@@ -3,6 +3,7 @@ package com.memory.cms.controller;
 import com.alibaba.fastjson.JSON;
 import com.memory.cms.redis.service.CourseRedisCmsService;
 import com.memory.cms.service.CourseCmsService;
+import com.memory.cms.service.CourseMemoryService;
 import com.memory.common.yml.MyFileConfig;
 import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.CourseExt;
@@ -10,7 +11,7 @@ import com.memory.entity.bean.Ext;
 import com.memory.entity.bean.ExtModel;
 import com.memory.cms.service.CourseExtCmsService;
 import com.memory.common.utils.*;
-import com.memory.redis.CacheConstantConfig;
+import com.memory.redis.config.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.memory.redis.CacheConstantConfig.SHARECOURSECONTENT;
 
 
 /**
@@ -35,18 +37,20 @@ public class CourseExtCmsController {
     @Autowired
     private CourseExtCmsService courseExtCmsService;
 
-    //@Autowired
-    //private CourseExtService courseExtService;
     @Autowired
     private CourseCmsService courseCmsService;
 
     @Autowired
     private CourseRedisCmsService courseRedisCmsService;
 
-   // private static final String fileUrl = "G:/upload";
-
     @Autowired
     private MyFileConfig config;
+
+    @Autowired
+    private CourseMemoryService courseMemoryService;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
 
 
@@ -62,9 +66,7 @@ public class CourseExtCmsController {
 
             String fileUrl= config.getUpload_local_path();
             List<Ext> extList = extModel.getExtList();
-          //  System.out.println("json ======================================" + JSON.toJSONString(extList) );
             String course_audio_url="";
-            String course_video_url="";
             String  course_img_url = "";
             String prefix = "";
             String suffix = "";
@@ -74,7 +76,6 @@ public class CourseExtCmsController {
             String fileName="";
 
             for(int i = 0; i<extList.size();i++){
-                //String uuid = Utils.generateUUID();
 
                 courseExt = new CourseExt();
                 Ext ext = extList.get(i);
@@ -87,7 +88,6 @@ public class CourseExtCmsController {
                 courseExt.setCourseExtSort(i+1);
                 if(ext.getName() ==null || "".equals(ext.getName())){
                 }
-
                 //文字
                 if(type == 1){
 
@@ -120,8 +120,6 @@ public class CourseExtCmsController {
 
 
                     }else {
-                        ///upload/courseid/1_yyyyMMdd_HHmmss.mp3
-                        ///http://baidu.com.mp3
                         courseExt.setCourseExtAudio(ext.getAudioUrl());
                     }
 
@@ -133,7 +131,6 @@ public class CourseExtCmsController {
                 }else if(type ==3){
                     //传的是文件流，进行上传
                     if(ext.getImgFile() != null){
-                     //   System.out.println("json now ext ======================================" + JSON.toJSONString(ext) );
                         MultipartFile imgFiles = ext.getImgFile();
                         if(!imgFiles.isEmpty()){
                             prefix = i+1+"";
@@ -165,21 +162,18 @@ public class CourseExtCmsController {
 
             String courseId = extList.get(0).getCourseId();
             Course course = courseCmsService.getCourseById(courseId);
-            Map<java.lang.Object, java.lang.Object> mapper = new HashMap<>();
-            mapper.put("course",course.getCourseTitle());
-            mapper.put("courseExt",extListSave);
-         //   String key = CacheConstantConfig.COURSERXT + ":" + courseId;
-            //String keyHash = "courseExt:hash:aaa";
-            //String keySum = "courseExt:sum:aaa";
-
-
 
             if(extListSave!=null){
-                String keyHash = CacheConstantConfig.COURSERXT + ":hash:" +courseId;
-                String keySum  = CacheConstantConfig.COURSERXT +":sum:" + courseId;
-                Map<java.lang.Object, java.lang.Object> map2 = courseRedisCmsService.setHashAndIncr(keyHash,keySum,mapper);
-                System.out.println(JSON.toJSONString(map2));
-                //courseExtService.setCourseExt(extListSave);
+
+                String keyHash =SHARECOURSECONTENT +courseId;
+                redisUtil.hset(keyHash,"course",course.getCourseTitle());
+                redisUtil.hset(keyHash,"courseExt",JSON.toJSONString(overMethod(extListSave)));
+
+                //Map<java.lang.Object, java.lang.Object> map2 = courseRedisCmsService.setHashAndIncr(courseId,mapper);
+
+                courseMemoryService.addMemory(courseId);
+
+               // System.out.println(JSON.toJSONString(map2));
             }
 
             result = ResultUtil.success(extListSave);
@@ -202,9 +196,7 @@ public class CourseExtCmsController {
         try{
            String fileUrl= config.getUpload_local_path();
             List<Ext> extList = extModel.getExtList();
-           // System.out.println("json =====================================" + JSON.toJSONString(extList) );
             String course_audio_url="";
-            String course_video_url="";
             String  course_img_url = "";
             String prefix = "";
             String suffix = "";
@@ -214,7 +206,6 @@ public class CourseExtCmsController {
             String fileName="";
 
             for(int i = 0; i<extList.size();i++){
-                //String uuid = Utils.generateUUID();
 
                 courseExt = new CourseExt();
                 Ext ext = extList.get(i);
@@ -255,8 +246,6 @@ public class CourseExtCmsController {
 
 
                     }else {
-                        ///upload/courseid/1_yyyyMMdd_HHmmss.mp3
-                        ///http://baidu.com.mp3
                         courseExt.setCourseExtAudio(ext.getAudioUrl());
                     }
 
@@ -268,7 +257,6 @@ public class CourseExtCmsController {
                 }else if(type ==3){
                     //传的是文件流，进行上传
                     if(ext.getImgFile() != null){
-                        //   System.out.println("json now ext ======================================" + JSON.toJSONString(ext) );
                         MultipartFile imgFiles = ext.getImgFile();
                         if(!imgFiles.isEmpty()){
                             prefix = i+1+"";
@@ -278,7 +266,6 @@ public class CourseExtCmsController {
                             fileUploadedPath = fileUrl + "/" + courseUUid;
                             //上传图片
                             FileUtils.upload(imgFiles,fileUploadedPath,fileName);
-                           // course_img_url = fileUploadedPath + "/" +fileName;
                             course_img_url = courseUUid + "/" +fileName;
                             courseExt.setCourseExtImgUrl(course_img_url);
                         }
@@ -302,15 +289,18 @@ public class CourseExtCmsController {
 
             if(extListSave != null){
 
-                Map<java.lang.Object, java.lang.Object> mapper = new HashMap<>();
-       ;
 
                 String courseId = extList.get(0).getCourseId();
                 Course course = courseCmsService.getCourseById(courseId);
-                mapper.put("course",course.getCourseTitle());
-                mapper.put("courseExt",extListSave);
+
+                String keyHash =SHARECOURSECONTENT +courseId;
+                redisUtil.hset(keyHash,"course",course.getCourseTitle());
+                redisUtil.hset(keyHash,"courseExt",JSON.toJSONString(overMethod(extListSave)));
+
                 //从Redis中删除,并重新添加
-                courseRedisCmsService.delAndHashSet(courseId,mapper);
+          //      courseRedisCmsService.delAndHashSet(courseId,mapper);
+
+                courseMemoryService.addMemory(courseId);
             }
 
             result = ResultUtil.success(extListSave);
@@ -349,6 +339,29 @@ public class CourseExtCmsController {
     }
 
 
+
+    public List<Map<String,Object>> overMethod(List<CourseExt> extListSave){
+
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+
+        for (int i = 0; i < extListSave.size(); i++) {
+            CourseExt courseExt1 = extListSave.get(i);
+            Map<String, Object> mapObj = new HashMap<>();
+            mapObj.put("courseExtNickname", courseExt1.getCourseExtNickname());
+            mapObj.put("courseExtSort", courseExt1.getCourseExtSort());
+            mapObj.put("courseExtType", courseExt1.getCourseExtType());
+            if(courseExt1.getCourseExtType()==1){
+                mapObj.put("courseExtWords", courseExt1.getCourseExtWords());
+            }else if(courseExt1.getCourseExtType()==2){
+                mapObj.put("courseExtAudio", courseExt1.getCourseExtAudio());
+                mapObj.put("courseExtAudioTimes", courseExt1.getCourseExtAudioTimes());
+            }else if(courseExt1.getCourseExtType()==3){
+                mapObj.put("courseExtImgUrl", courseExt1.getCourseExtImgUrl());
+            }
+            resultList.add(mapObj);
+        }
+        return  resultList;
+    }
 
 
 

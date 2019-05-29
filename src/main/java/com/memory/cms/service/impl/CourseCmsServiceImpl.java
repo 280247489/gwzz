@@ -116,5 +116,10 @@ public class CourseCmsServiceImpl implements CourseCmsService {
     public int updateCourseLiveStatus(int course_live_status,String id) {
         return  repository.updateCourseLiveStatus(course_live_status,id);
     }
+
+    @Override
+    public List<com.memory.entity.bean.Course> queryCourseOptions() {
+        return repository.queryCourseOptions();
+    }
 }
 

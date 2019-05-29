@@ -1,27 +1,16 @@
 package com.memory.gwzz.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.memory.cms.redis.service.CourseRedisCmsService;
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
 import com.memory.common.yml.MyRedisConfig;
 import com.memory.gwzz.service.CourseExtWebService;
-import com.memory.redis.CacheConstantConfig;
-import com.memory.redis.RedisAPI;
 import com.memory.redis.config.RedisUtil;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @Auther: cui.Memory
@@ -56,8 +45,6 @@ public class DemoController extends BaseController {
             i++;
             String courseId = "xrLlwgWI1558084748010";
             courseId ="9nx5w0A71558003844754";
-            String keyHash = CacheConstantConfig.COURSERXT + ":hash:" +courseId;
-            String keySum =CacheConstantConfig.COURSERXT + ":sum:"+courseId;
            // RedisAPI redisAPI = new RedisAPI(com.memory.redis.RedisUtil.getDialStatsPool());
 
             //  redisTemplate.opsForValue().increment(keySum, 1);

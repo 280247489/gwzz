@@ -56,7 +56,7 @@
     // The css selector of the containers
     containerSelector: "ol, ul",
     // Distance the mouse has to travel to start dragging
-    distance: 0,
+    distance: 60,
     // Time in milliseconds after mousedown until dragging should start.
     // This option can be used to prevent unwanted drags when clicking on an element.
     delay: 0,

@@ -1,0 +1,8 @@
+.idea/
+node_modules/
+yarn-error.log
+/test.html
+/index.html
+
+/vendor/
+/build/jodit.js

@@ -2556,6 +2556,7 @@ ol.list_mobile li.placeholder:before {
     border: 1px solid #bbb;
     
 }
+
 .exceltitle{
     background:#48bcb4;
     font-size:14px;
@@ -2678,13 +2679,14 @@ ol.list_mobile li.placeholder:before {
     line-height:22px;
     text-align: center;
 }
-.single_msg{
+.single_msg,.memory_add{
     width:100%;
     height:100%;
     position: fixed;
     top:0;
     left:0;
     z-index:990;
+    display:none;
 }
 .mask{
     width:100%;
@@ -2697,10 +2699,7 @@ ol.list_mobile li.placeholder:before {
     top:0;
     left: 0;
 }
-.single_msg{
-    display:none;
-}
-.single_msg_content{
+.single_msg_content,.course_memory_add_choose{
     z-index:992;
     width:500px;
     height:400px;
@@ -2710,9 +2709,13 @@ ol.list_mobile li.placeholder:before {
     left:50%;
     margin-left: -250px;
     margin-top:-200px;
-}
-.single_msg_content{
     padding:50px 50px 20px;
+}
+.course_memory_add_choose{
+    height:300px;
+}
+.new_memory_title{
+    margin:20px 0;
 }
 .new_msg_word{
     resize:none;
