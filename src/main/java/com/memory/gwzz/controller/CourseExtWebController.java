@@ -48,7 +48,7 @@ public class CourseExtWebController extends BaseController {
      * @param courseId 课程ID
      * @return
      */
-    @RequestMapping(value = "list",method = RequestMethod.POST)
+    @RequestMapping(value = "list"/*,method = RequestMethod.POST*/)
     public Message list(@RequestParam String courseId,@RequestParam String openId){
         try {
             msg = Message.success();

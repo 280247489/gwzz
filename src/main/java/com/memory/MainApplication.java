@@ -44,18 +44,6 @@ public class MainApplication extends SpringBootServletInitializer {
 
     }
 
-    /**
-     * jedis 方式初始化redis连接池
-     */
-    public void inti_redis(){
-        System.out.println("init this ... redis connecting ...");
-        System.out.println(JSON.toJSONString(myRedisConfig));
-        //redis初始化
-        RedisUtil.initDialStatsPool(myRedisConfig.getHost(),myRedisConfig.getPort(),
-                ("").equals(myRedisConfig.getPassword())?null:myRedisConfig.getPassword(),myRedisConfig.getTimeout(),myRedisConfig.getDatabase());
-
-    }
-
 
     /**
      * 重启服务，内存加载并发缓存课程

@@ -44,6 +44,17 @@ public class DemoAsyncTask {
 
         return new AsyncResult<>(true);
     }
+
+
+    @Async
+    public Future<Boolean> doTask_fileDownload(String url,String fileName,String path) throws Exception{
+        long start = System.currentTimeMillis();
+        Thread.sleep(1000);
+        long end = System.currentTimeMillis();
+        System.out.println("doTask_one: " + (end - start) + "毫秒");
+        return new AsyncResult<>(true);
+    }
+
     /*//执行异步任务方法
     @Autowired
     private DemoAsyncTask asyncTask;

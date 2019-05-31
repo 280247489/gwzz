@@ -1,6 +1,8 @@
 package com.memory.common.filter;
 
+import com.alibaba.fastjson.JSON;
 import com.memory.common.utils.StringUtil;
+import com.memory.common.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -43,13 +45,14 @@ public class DemoFilter implements Filter {
             String parameter = parameterNames.nextElement();
             req.setAttribute(parameter, StringUtil.getHtmlIncodeByString(req.getParameter(parameter)));
         }
+        //StringBuffer httpServletRequest = Utils.getResult();
         //请求类型，请求地址，请IP
         StringBuffer stringBuffer = new StringBuffer("" +
-                "\n--------begin--------------------" +
-                "\n→ Request : " + req.getMethod() + " | " + req.getRemoteAddr() +
-                "\n→ " + req.getRequestURL() +
-                "\n→ " + req.getQueryString() +
-                "\n-------------------end-----------");
+                "  --------begin--------------------" +
+                "  → Request : " + req.getMethod() + " | " + req.getRemoteAddr() +
+                "  → URL : " + req.getRequestURL() +
+                "  → Params :" + JSON.toJSONString(req.getParameterMap()) +
+                "  -------------------end-----------");
         logger.info("↓↓↓"+stringBuffer.toString());
       //  count++;
    //     System.out.println("count ============================================================="+count);

@@ -32,12 +32,12 @@ public class ArticleCommentCmsServiceImpl implements ArticleCommentCmsService {
 
 
     @Override
-    public int queryArticleCommentByQueHqlCount(String key_words, String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id) {
+    public int queryArticleCommentByQueHqlCount(String key_words, String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id,String id) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("SELECT count(*) " +
                 "FROM ArticleComment  ac , Article a ,User us " +
                 "WHERE ac.articleId = a.id  and ac.userId = us.id ");
-        Map<String,Object> whereClause = getWhereClause(key_words, phone_number, article_name, user_name, comment_type, query_start_time, query_end_time, sort_role,comment_root_id);
+        Map<String,Object> whereClause = getWhereClause(key_words, phone_number, article_name, user_name, comment_type, query_start_time, query_end_time, sort_role,comment_root_id,id);
         stringBuffer.append(whereClause.get("where"));
         Map<String,Object> map = (  Map<String,Object>) whereClause.get("param");
 
@@ -45,18 +45,18 @@ public class ArticleCommentCmsServiceImpl implements ArticleCommentCmsService {
     }
 
     @Override
-    public List<ArticleComment> queryArticleCommentByQueHql(int pageIndex,int limit,String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id) {
+    public List<ArticleComment> queryArticleCommentByQueHql(int pageIndex,int limit,String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id,String id) {
         List<ArticleComment>  list =new ArrayList<ArticleComment>();
         StringBuffer stringBuffer = new StringBuffer();
         //    private String commentParentId;
         //    private String commentParentUserName;
-        stringBuffer.append("SELECT new com.memory.entity.bean.ArticleComment(ac.id, ac.userName, us.userTel, a.articleTitle, ac.commentContent,ac.commentRootId , ac.commentTotalLike, (select count(*) from ArticleComment WHERE commentRootId = ac.commentRootId) as commentSum," +
+        stringBuffer.append("SELECT new com.memory.entity.bean.ArticleComment(ac.id, ac.userName, us.userTel, a.articleTitle, ac.commentContent,ac.commentRootId , ac.commentTotalLike, (select count(*) from ArticleComment WHERE commentRootId = ac.commentRootId AND commentRootId != id ) as commentSum," +
                 "ac.commentCreateTime,ac.commentType,ac.commentParentId,ac.commentParentUserName) " +
                                 "FROM ArticleComment  ac , Article a ,User us " +
                                 "WHERE ac.articleId = a.id  and ac.userId = us.id ");
 
         DaoUtils.Page page = daoUtils.getPage(pageIndex, limit);
-        Map<String,Object> whereClause = getWhereClause(key_words, phone_number, article_name, user_name, comment_type, query_start_time, query_end_time, sort_role,comment_root_id);
+        Map<String,Object> whereClause = getWhereClause(key_words, phone_number, article_name, user_name, comment_type, query_start_time, query_end_time, sort_role,comment_root_id,id);
 
         stringBuffer.append(whereClause.get("where"));
         Map<String,Object> map = (  Map<String,Object>) whereClause.get("param");
@@ -80,7 +80,7 @@ public class ArticleCommentCmsServiceImpl implements ArticleCommentCmsService {
      * @param sort_role
      * @return
      */
-    public Map<String,Object> getWhereClause(String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id){
+    public Map<String,Object> getWhereClause(String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id,String id){
         Map<String,Object> returnMap = new HashMap<String, Object>();
         StringBuffer stringBuffer = new StringBuffer();
         Map<String,Object> paramMap = new HashMap<String, Object>();
@@ -143,6 +143,13 @@ public class ArticleCommentCmsServiceImpl implements ArticleCommentCmsService {
                 }
 
             }
+
+            if(!"".equals(id)){
+                stringBuffer.append(" AND ac.id = :id  ");
+                paramMap.put("id", id);
+            }
+
+
 
             //排序规则  0 时间倒叙 1 时间正序 2 评论点赞数量倒叙 3评论点赞数量正序
             if(sort_role != null){

@@ -34,12 +34,12 @@ public class ArticleCommentCmsController {
                        @RequestParam("article_name") String article_name,@RequestParam("user_name") String user_name,
                        @RequestParam("comment_type") Integer comment_type,@RequestParam("query_start_time") String query_start_time,
                        @RequestParam("query_end_time") String query_end_time, @RequestParam("sort_role") Integer sort_role,
-                                           @RequestParam("comment_root_id") String comment_root_id){
+                                           @RequestParam("comment_root_id") String comment_root_id, @RequestParam("id") String id){
 
         int pageIndex = page+1;
         int limit = size;
-        List<ArticleComment> list = articleCommentCmsService.queryArticleCommentByQueHql( pageIndex, limit, key_words, phone_number,  article_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id);
-        int totalElements = articleCommentCmsService.queryArticleCommentByQueHqlCount(  key_words, phone_number,  article_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id);
+        List<ArticleComment> list = articleCommentCmsService.queryArticleCommentByQueHql( pageIndex, limit, key_words, phone_number,  article_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id,id);
+        int totalElements = articleCommentCmsService.queryArticleCommentByQueHqlCount(  key_words, phone_number,  article_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id,id);
         int totalPages = totalElements/size;
         if(totalElements%size != 0){
             totalPages+=1;
@@ -59,7 +59,7 @@ public class ArticleCommentCmsController {
 
 
     @RequestMapping(value = "add")
-    public  Result addAdminComment(@RequestParam String user_id,@RequestParam String article_id,@RequestParam String user_logo,@RequestParam String user_name,@RequestParam String comment_root_id,@RequestParam String comment_parent_id,@RequestParam String comment_parent_user_name,@RequestParam String comment_content  ){
+    public  Result addAdminComment(@RequestParam("user_id") String user_id,@RequestParam("article_id") String article_id,@RequestParam("user_logo") String user_logo,@RequestParam("user_name") String user_name,@RequestParam("comment_root_id") String comment_root_id,@RequestParam("comment_parent_id") String comment_parent_id,@RequestParam("comment_parent_user_name") String comment_parent_user_name,@RequestParam("comment_content") String comment_content  ){
         Result result = new Result();
         try{
             com.memory.entity.jpa.ArticleComment articleComment = new com.memory.entity.jpa.ArticleComment();
@@ -75,7 +75,8 @@ public class ArticleCommentCmsController {
             articleComment.setCommentContent(comment_content);
             articleComment.setCommentCreateTime(new Date());
             articleComment.setCommentTotalLike(0);
-            articleCommentCmsService.addArticleComment(articleComment);
+            com.memory.entity.jpa.ArticleComment articleComment1 =   articleCommentCmsService.addArticleComment(articleComment);
+            result = ResultUtil.success(articleComment1);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -114,6 +115,7 @@ public class ArticleCommentCmsController {
 
             }
             articleCommentCmsService.deleteAll(removeList);
+            result = ResultUtil.success("删除成功");
 
         }catch (Exception e){
             e.printStackTrace();

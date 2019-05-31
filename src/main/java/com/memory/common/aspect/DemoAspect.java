@@ -1,5 +1,6 @@
 package com.memory.common.aspect;
 
+import com.memory.common.utils.Utils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -50,7 +51,7 @@ public class DemoAspect {
         logger.info(stringBuffer.toString());
         logger.info("response = {}", data);*/
     }
-    @Pointcut("execution(public * com.memory.xhm.controller.*.*(..))")
+    @Pointcut("execution(public * com.memory.cms.controller.*.*(..))")
     public void request_log(){
     }
 }

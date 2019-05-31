@@ -68,7 +68,7 @@ public class CourseExtWebServiceImpl implements CourseExtWebService {
     public void setCourseExtView(String courseId,String openId) {
         String key = SHARECOURSEVIEW + courseId;
         String keyIncr = SHARECOURSEVIEWOPENID + courseId;
-        redisUtil.hincr(key,openId,1);
-        redisUtil.incr(keyIncr,1);
+        redisUtil.hincr(keyIncr,openId,1);
+        redisUtil.incr(key,1);
     }
 }
