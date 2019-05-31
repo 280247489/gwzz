@@ -54,23 +54,36 @@ public class CourseCommentCmsController {
     }
 
 
-
-
-
+    /**
+     *
+     * @param user_id
+     * @param user_logo
+     * @param user_name
+     * @param comment_parent_id
+     * @param comment_content
+     * @return
+     */
     @RequestMapping(value = "add")
-    public  Result addAdminComment(@RequestParam("user_id") String user_id,@RequestParam("course_id") String course_id,@RequestParam("user_logo") String user_logo,@RequestParam("user_name") String user_name,@RequestParam("comment_root_id") String comment_root_id,@RequestParam("comment_parent_id") String comment_parent_id,@RequestParam("comment_parent_user_name") String comment_parent_user_name,@RequestParam("comment_content") String comment_content  ){
+    public  Result addAdminComment(@RequestParam("user_id") String user_id,@RequestParam("user_logo") String user_logo,@RequestParam("user_name") String user_name,@RequestParam("comment_parent_id") String comment_parent_id,@RequestParam("comment_content") String comment_content  ){
         Result result = new Result();
         try{
+            com.memory.entity.jpa.CourseComment parentCourseComment = courseCommentCmsService.queryCourseCommentById(comment_parent_id);
             com.memory.entity.jpa.CourseComment courseComment = new    com.memory.entity.jpa.CourseComment();
             courseComment.setId(Utils.getShortUUTimeStamp());
             courseComment.setUserId(user_id);
             courseComment.setUserLogo(user_logo);
             courseComment.setUserName(user_name);
-            courseComment.setCourseId(course_id);
+            courseComment.setCourseId(parentCourseComment.getCourseId());
             courseComment.setCommentType(1);
-            courseComment.setCommentRootId(comment_root_id);
+            courseComment.setCommentRootId(parentCourseComment.getCommentRootId());
             courseComment.setCommentParentId(comment_parent_id);
-            courseComment.setCommentParentUserName(comment_parent_user_name);
+            if(parentCourseComment.getCommentType() == 1){
+                courseComment.setCommentParentUserName("回复@"+parentCourseComment.getUserName());
+            }else{
+                courseComment.setCommentParentUserName("");
+            }
+
+            courseComment.setCommentParentUserName(parentCourseComment.getCommentParentUserName());
             courseComment.setCommentContent(comment_content);
             courseComment.setCommentCreateTime(new Date());
             courseComment.setCommentTotalLike(0);

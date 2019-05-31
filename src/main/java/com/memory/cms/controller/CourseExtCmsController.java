@@ -69,12 +69,7 @@ public class CourseExtCmsController {
             String course_audio_url="";
             String  course_img_url = "";
             String prefix = "";
-            String suffix = "";
-            String dayStr = DateUtils.getDate("yyyyMMdd");
-            String hoursStr = DateUtils.getDate("HHmmss");
             String fileUploadedPath = "";
-            String fileName="";
-
             for(int i = 0; i<extList.size();i++){
 
                 courseExt = new CourseExt();
@@ -105,14 +100,16 @@ public class CourseExtCmsController {
                         if(!audioFile.isEmpty()){
                             prefix = i+1+"";
                             //语音
-                            suffix = ".mp3";
-                            fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
+                        /*    //获取上传文件后缀
+                            String fileNameReal =  audioFile.getOriginalFilename();
+                            suffix = fileNameReal.substring(fileNameReal.lastIndexOf("."));
+                            fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
+*/
+                            String fileName = FileUtils.getCourseExtRadioFileName(prefix,audioFile);
                             fileUploadedPath = fileUrl + "/" + courseUUid;
                             //上传语音
                             FileUtils.upload(audioFile,fileUploadedPath,fileName);
-
-                           //course_audio_url = fileUploadedPath + "/" +fileName;
                             course_audio_url = courseUUid + "/" +fileName;
 
                             courseExt.setCourseExtAudio(course_audio_url);
@@ -135,13 +132,10 @@ public class CourseExtCmsController {
                         if(!imgFiles.isEmpty()){
                             prefix = i+1+"";
                             //图片默认转成png
-                            suffix = ".png";
-                            fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
+                            String fileName = FileUtils.getCourseExtImgFileName(prefix,imgFiles);
                             fileUploadedPath = fileUrl + "/" + courseUUid;
                             //上传图片
                             FileUtils.upload(imgFiles,fileUploadedPath,fileName);
-
-                            //course_img_url = fileUploadedPath + "/" +fileName;
                             course_img_url = courseUUid + "/" +fileName;
                             courseExt.setCourseExtImgUrl(course_img_url);
                         }
@@ -169,12 +163,38 @@ public class CourseExtCmsController {
                 redisUtil.hset(keyHash,"course",course.getCourseTitle());
                 redisUtil.hset(keyHash,"courseExt",JSON.toJSONString(overMethod(extListSave)));
 
-                //Map<java.lang.Object, java.lang.Object> map2 = courseRedisCmsService.setHashAndIncr(courseId,mapper);
-
                 courseMemoryService.addMemory(courseId);
 
-               // System.out.println(JSON.toJSONString(map2));
             }
+
+            for (CourseExt ext : extListSave) {
+                 int courseType = ext.getCourseExtType();
+                 int sort = ext.getCourseExtSort();
+
+                 //语音
+                 if(courseType == 2){
+
+                     String radioUrl = ext.getCourseExtAudio();
+                     if(radioUrl.indexOf("http") > -1){
+                        //String urlStr,String fileName,String savePath
+                       //  FileUtils.downLoadFromUrl(radioUrl,);
+                     }
+
+                 }
+
+                 //图片
+                 if(courseType == 3){
+
+                     String imgUrl = ext.getCourseExtImgUrl();
+                     if(imgUrl.indexOf("http") >  -1){
+
+                     }
+
+                 }
+
+            }
+
+
 
             result = ResultUtil.success(extListSave);
 
@@ -185,6 +205,14 @@ public class CourseExtCmsController {
         return result;
     }
 
+
+    public static void main(String[] args) {
+
+        String fileNameReal = "neow.wav";
+      String  suffix = fileNameReal.substring(fileNameReal.lastIndexOf("."));
+        System.out.println(suffix);
+
+    }
 
 
     @RequestMapping(value ="update", method = RequestMethod.POST)
@@ -330,13 +358,6 @@ public class CourseExtCmsController {
     }
 
 
-    public static void main(String[] args) {
-
-
-
-        System.out.println(Utils.getShortUUTimeStamp());
-
-    }
 
 
 
@@ -362,6 +383,8 @@ public class CourseExtCmsController {
         }
         return  resultList;
     }
+
+
 
 
 

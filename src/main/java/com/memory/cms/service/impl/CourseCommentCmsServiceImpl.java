@@ -142,10 +142,12 @@ public class CourseCommentCmsServiceImpl implements CourseCommentCmsService {
 
         }
 
+
         if(!"".equals(id)){
-            stringBuffer.append(" AND ac.id = :id  ");
+            stringBuffer.append(" AND ac.commentParentId = :id  ");
             paramMap.put("id", id);
         }
+
 
 
         //排序规则  0 时间倒叙 1 时间正序 2 评论点赞数量倒叙 3评论点赞数量正序

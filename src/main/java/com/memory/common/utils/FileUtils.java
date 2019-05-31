@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,33 +37,13 @@ public class FileUtils {
 
     public static String upload(MultipartFile file, String fileUploadedPath,String fileName) {
         try {
-       /*     if (file.isEmpty()) {
-                result = ResultUtil.error(1,"文件为空");
-                result.setMsg("文件为空");
-            }*/
-            // 获取文件名
-         //   String fileName = file.getOriginalFilename();
             log.info("上传的文件名为：" + fileName);
-            // 获取文件的后缀名
-           // String suffixName = fileName.substring(fileName.lastIndexOf("."));
-
-            //fileName = Utils.generateUUID()  + suffixName;
-            //log.info("文件的后缀名为：" + suffixName);
-            // 设置文件存储路径
-            //  String filePath = "G:/upload/";
-          //  String path = loadPath + "/" + type + "/"  + uploadDateTime + "/" + fileName;
             File dest = new File(fileUploadedPath + "/" + fileName);
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();// 新建文件夹
             }
             file.transferTo(dest);// 文件写入
-
-            //map.put("text","上传成功");
-            //map.put("filePath",resourcesUrl + "/" + type  + "/" + uploadDateTime + "/" + fileName);
-
-            //result = ResultUtil.success(map);
-            //result.setMsg("文件为空");
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -78,7 +60,6 @@ public class FileUtils {
         List<Object> record = new ArrayList<>();
         for (int i = 0; i < files.size(); ++i) {
             file = files.get(i);
-            //  String filePath = "G:/upload/";
             if (!file.isEmpty()) {
                 try {
                     String fileName =  file.getOriginalFilename();
@@ -116,7 +97,6 @@ public class FileUtils {
         if (fileName != null) {
             //设置文件路径
             File file = new File("/Users/dalaoyang/Documents/dalaoyang.jpeg");
-            //File file = new File(realPath , fileName);
             if (file.exists()) {
                 response.setContentType("application/force-download");// 设置强制下载不打开
                 response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
@@ -155,5 +135,101 @@ public class FileUtils {
         }
         return "下载失败";
     }
+
+
+    /**
+     * 从网络Url中下载文件
+     * @param urlStr
+     * @param fileName
+     * @param savePath
+     * @throws IOException
+     */
+    public static void  downLoadFromUrl(String urlStr,String fileName,String savePath) {
+
+        try {
+            URL url = new URL(urlStr);
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            //设置超时间为3秒
+            conn.setConnectTimeout(3*1000);
+            //防止屏蔽程序抓取而返回403错误
+            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+
+            //得到输入流
+            InputStream inputStream = conn.getInputStream();
+            //获取自己数组
+            byte[] getData = readInputStream(inputStream);
+
+            //文件保存位置
+            File saveDir = new File(savePath);
+            if(!saveDir.exists()){
+                saveDir.mkdir();
+            }
+            File file = new File(saveDir+File.separator+fileName);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(getData);
+            if(fos!=null){
+                fos.close();
+            }
+            if(inputStream!=null){
+                inputStream.close();
+            }
+
+            log.info("Url:【"+urlStr+"】下载成功.存储文件【"+ savePath+"/"+fileName+"】");
+            System.out.println("Url:【"+urlStr+"】下载成功.存储文件【"+ savePath+"/"+fileName+"】");
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("Url:【"+urlStr+"】下载失败",e.getMessage());
+        }
+
+    }
+
+    /**
+     * 从输入流中获取字节数组
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    public static  byte[] readInputStream(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
+    }
+
+
+    /**
+     * 获取音频文件名称
+     * @param prefix
+     * @param audioFile
+     * @return
+     */
+    public static String getCourseExtRadioFileName(String prefix, MultipartFile audioFile){
+        String fileNameReal =  audioFile.getOriginalFilename();
+        String suffix = fileNameReal.substring(fileNameReal.lastIndexOf("."));
+        String dayStr = DateUtils.getDate("yyyyMMdd");
+        String hoursStr = DateUtils.getDate("HHmmss");
+        return   prefix + "_" + dayStr + "_" + hoursStr + suffix;
+    }
+
+
+    /**
+     * 获取图片文件名称
+     * @param prefix
+     * @param imgFile
+     * @return
+     */
+    public static String getCourseExtImgFileName(String prefix, MultipartFile imgFile){
+        //String fileNameReal =  imgFile.getOriginalFilename();
+        //String suffix = fileNameReal.substring(fileNameReal.lastIndexOf("."));
+        String suffix = ".png";
+        String dayStr = DateUtils.getDate("yyyyMMdd");
+        String hoursStr = DateUtils.getDate("HHmmss");
+        return   prefix + "_" + dayStr + "_" + hoursStr + suffix;
+    }
+
 
 }

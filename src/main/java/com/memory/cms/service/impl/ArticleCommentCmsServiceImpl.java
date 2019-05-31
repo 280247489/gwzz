@@ -145,7 +145,7 @@ public class ArticleCommentCmsServiceImpl implements ArticleCommentCmsService {
             }
 
             if(!"".equals(id)){
-                stringBuffer.append(" AND ac.id = :id  ");
+                stringBuffer.append(" AND ac.commentParentId = :id  ");
                 paramMap.put("id", id);
             }
 

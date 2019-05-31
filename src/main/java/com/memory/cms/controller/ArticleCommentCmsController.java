@@ -54,24 +54,35 @@ public class ArticleCommentCmsController {
         return ResultUtil.success(pageResult);
     }
 
-
-
-
-
+    /**
+     *
+     * @param user_id
+     * @param user_logo
+     * @param user_name
+     * @param comment_parent_id
+     * @param comment_content
+     * @return
+     */
     @RequestMapping(value = "add")
-    public  Result addAdminComment(@RequestParam("user_id") String user_id,@RequestParam("article_id") String article_id,@RequestParam("user_logo") String user_logo,@RequestParam("user_name") String user_name,@RequestParam("comment_root_id") String comment_root_id,@RequestParam("comment_parent_id") String comment_parent_id,@RequestParam("comment_parent_user_name") String comment_parent_user_name,@RequestParam("comment_content") String comment_content  ){
+    public  Result addAdminComment(@RequestParam("user_id") String user_id,@RequestParam("user_logo") String user_logo,@RequestParam("user_name") String user_name,@RequestParam("comment_parent_id") String comment_parent_id,@RequestParam("comment_content") String comment_content  ){
         Result result = new Result();
         try{
-            com.memory.entity.jpa.ArticleComment articleComment = new com.memory.entity.jpa.ArticleComment();
+            com.memory.entity.jpa.ArticleComment parentArticleComment =  articleCommentCmsService.getArticleCommentById(comment_parent_id);
+            com.memory.entity.jpa.ArticleComment articleComment  = new com.memory.entity.jpa.ArticleComment();
             articleComment.setId(Utils.getShortUUTimeStamp());
             articleComment.setUserId(user_id);
             articleComment.setUserLogo(user_logo);
             articleComment.setUserName(user_name);
-            articleComment.setArticleId(article_id);
+            articleComment.setArticleId(parentArticleComment.getArticleId());
             articleComment.setCommentType(1);
-            articleComment.setCommentRootId(comment_root_id);
+            articleComment.setCommentRootId(parentArticleComment.getCommentRootId());
             articleComment.setCommentParentId(comment_parent_id);
-            articleComment.setCommentParentUserName(comment_parent_user_name);
+            if(parentArticleComment.getCommentType() == 1){
+                articleComment.setCommentParentUserName("回复@" + parentArticleComment.getUserName());
+            }else{
+                articleComment.setCommentParentUserName("");
+            }
+
             articleComment.setCommentContent(comment_content);
             articleComment.setCommentCreateTime(new Date());
             articleComment.setCommentTotalLike(0);
@@ -82,6 +93,9 @@ public class ArticleCommentCmsController {
         }
         return result;
     }
+
+
+
 
 
     @RequestMapping(value = "remove")
