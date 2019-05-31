@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date 2019/5/10 14:55
  */
 @RestController
-@RequestMapping(value = "courseExt/Mobile")
+@RequestMapping(value = "courseExt/mobile")
 public class CourseExtMobileController extends BaseController {
 
 
@@ -35,7 +35,7 @@ public class CourseExtMobileController extends BaseController {
 
 
     /**
-     * URL：192.168.1.185：8081/gwzz/courseExt/list
+     * URL：192.168.1.185：8081/gwzz/courseExt/mobile/list
      * @param courseId 课程ID
      * @return
      */

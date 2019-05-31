@@ -80,6 +80,19 @@
             <version>2.9.0</version>
         </dependency>
 
+        <!--jiguang start-->
+        <dependency>
+            <groupId>cn.jpush.api</groupId>
+            <artifactId>jsms-client</artifactId>
+            <version>1.2.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.jpush.api</groupId>
+            <artifactId>jiguang-common</artifactId>
+            <version>1.0.8</version>
+        </dependency>
+        <!--jiguang end-->
 
     </dependencies>
 

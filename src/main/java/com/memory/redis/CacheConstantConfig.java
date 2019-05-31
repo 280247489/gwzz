@@ -12,4 +12,10 @@ public class CacheConstantConfig {
     //课程拓展数据
     public static final String COURSERXT = "courseExt";
 
+    //用户获取验证码数据
+    public static final String USER_SMS_SUM = "userSMSSum";
+
+    //用户登录状态
+    public static final String USER_LOGO = "userLogo";
+
 }

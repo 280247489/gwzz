@@ -14,5 +14,6 @@ spring:
       max-file-size: 100MB
       max-request-size: 1000MB
 
-
+APPKEY: 03c3145a36f490cb28b3feef
+MASTERSECRET: f68fc210a844b0acd31f0e6a
 #debug: true

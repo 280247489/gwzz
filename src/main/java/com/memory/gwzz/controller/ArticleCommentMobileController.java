@@ -19,17 +19,17 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date 2019/5/24 16:39
  */
 @RestController
-@RequestMapping(value = "articleComment/Mobile")
+@RequestMapping(value = "articleComment/mobile")
 public class ArticleCommentMobileController extends BaseController {
 
-    private final static Logger logger = LoggerFactory.getLogger(CourseExtMobileController.class);
+    private final static Logger logger = LoggerFactory.getLogger(ArticleCommentMobileController.class);
 
     @Autowired
     private ArticleCommentMobileService articleCommentMobileService;
 
     /**
      * 添加文章评论接口
-     *  URL：192.168.1.185：8081/gwzz/articleComment/Mobile/add
+     *  URL：192.168.1.185：8081/gwzz/articleComment/mobile/add
      * @param articleId 文章ID
      * @param userId 用户ID
      * @param userLogo 评论人头像

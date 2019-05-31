@@ -1,8 +1,8 @@
 package com.memory.cms.service.impl;
 
-import com.memory.entity.jpa.UserInfos;
 import com.memory.cms.repository.UserCmsRepository;
 import com.memory.cms.service.UserCmsService;
+import com.memory.entity.jpa.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,21 +19,21 @@ public class UserCmsServiceImpl implements UserCmsService {
     private UserCmsRepository userRepository;
 
     @Override
-    public List<UserInfos> getUserList() {
-/*        List<UserInfos> userInfosList = new ArrayList<UserInfos>();
-        userInfosList = userRepository.findAll();*/
+    public List<User> getUserList() {
+/*        List<User> UserList = new ArrayList<User>();
+        UserList = userRepository.findAll();*/
         return  userRepository.findAll();
     }
 
     @Override
-    public UserInfos getUserById(String id) {
+    public User getUserById(String id) {
 
         return  userRepository.findById(id).get();
     }
 
     @Override
-    public UserInfos updateUser(UserInfos userInfos) {
-        return  userRepository.save(userInfos);
+    public User updateUser(User User) {
+        return  userRepository.save(User);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class UserCmsServiceImpl implements UserCmsService {
     }
 
     @Override
-    public UserInfos addUserInfo(UserInfos userInfos) {
+    public User addUserInfo(User User) {
         return null;
     }
 

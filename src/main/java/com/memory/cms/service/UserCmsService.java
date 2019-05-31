@@ -1,6 +1,6 @@
 package com.memory.cms.service;
 
-import com.memory.entity.jpa.UserInfos;
+import com.memory.entity.jpa.User;
 
 import java.util.List;
 
@@ -11,15 +11,15 @@ import java.util.List;
 
 public interface UserCmsService {
 
-    List<UserInfos> getUserList();
+    List<User> getUserList();
 
-    UserInfos getUserById(String id);
+    User getUserById(String id);
 
-    UserInfos updateUser(UserInfos userInfos);
+    User updateUser(User User);
 
     void deleteUser(String id);
 
-    UserInfos addUserInfo(UserInfos userInfos);
+    User addUserInfo(User User);
 
 
 
