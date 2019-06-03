@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.memory.cms.redis.service.CourseRedisCmsService;
 import com.memory.cms.service.CourseCmsService;
 import com.memory.cms.service.CourseMemoryService;
+import com.memory.common.async.DemoAsyncTask;
 import com.memory.common.yml.MyFileConfig;
 import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.CourseExt;
@@ -52,6 +53,9 @@ public class CourseExtCmsController {
     @Autowired
     private RedisUtil redisUtil;
 
+    @Autowired
+    private DemoAsyncTask task;
+
 
 
 
@@ -59,280 +63,57 @@ public class CourseExtCmsController {
     @RequestMapping(value ="add", method = RequestMethod.POST)
     @ResponseBody
     public Result add( ExtModel extModel){
+
         Result result = new Result();
         List<CourseExt> list = new ArrayList<CourseExt>();
-        CourseExt courseExt = null;
         try{
 
-            String fileUrl= config.getUpload_local_path();
-            List<Ext> extList = extModel.getExtList();
-            String course_audio_url="";
-            String  course_img_url = "";
-            String prefix = "";
-            String fileUploadedPath = "";
-            for(int i = 0; i<extList.size();i++){
+            List<Ext> extList = dealCourseExtData(extModel, list);
 
-                courseExt = new CourseExt();
-                Ext ext = extList.get(i);
-                String courseUUid = ext.getCourseId();
-                int type = ext.getType();
-                courseExt.setId(courseUUid+"_"+(i+1));
-                courseExt.setCourseId(ext.getCourseId());
-                courseExt.setCourseExtNickname(ext.getName());
-                courseExt.setCourseExtType(ext.getType());
-                courseExt.setCourseExtSort(i+1);
-                if(ext.getName() ==null || "".equals(ext.getName())){
-                }
-                //文字
-                if(type == 1){
-
-                    courseExt.setCourseExtWords(ext.getWords());
-                    courseExt.setCourseExtLogo("");
-                    courseExt.setCourseExtImgUrl("");
-                    courseExt.setCourseExtAudio("");
-
-                //语音
-                }else if(type ==2){
-                    courseExt.setCourseExtAudioTimes(ext.getTimes());
-                    //传的是文件流，进行上传
-                    if(ext.getAudioFile() != null){
-                        MultipartFile audioFile = ext.getAudioFile();
-                        if(!audioFile.isEmpty()){
-                            prefix = i+1+"";
-                            //语音
-
-                        /*    //获取上传文件后缀
-                            String fileNameReal =  audioFile.getOriginalFilename();
-                            suffix = fileNameReal.substring(fileNameReal.lastIndexOf("."));
-                            fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
-*/
-                            String fileName = FileUtils.getCourseExtRadioFileName(prefix,audioFile);
-                            fileUploadedPath = fileUrl + "/" + courseUUid;
-                            //上传语音
-                            FileUtils.upload(audioFile,fileUploadedPath,fileName);
-                            course_audio_url = courseUUid + "/" +fileName;
-
-                            courseExt.setCourseExtAudio(course_audio_url);
-                        }
-
-
-                    }else {
-                        courseExt.setCourseExtAudio(ext.getAudioUrl());
-                    }
-
-                    courseExt.setCourseExtLogo("");
-                    courseExt.setCourseExtWords("");
-                    courseExt.setCourseExtImgUrl("");
-
-                //图片
-                }else if(type ==3){
-                    //传的是文件流，进行上传
-                    if(ext.getImgFile() != null){
-                        MultipartFile imgFiles = ext.getImgFile();
-                        if(!imgFiles.isEmpty()){
-                            prefix = i+1+"";
-                            //图片默认转成png
-                            String fileName = FileUtils.getCourseExtImgFileName(prefix,imgFiles);
-                            fileUploadedPath = fileUrl + "/" + courseUUid;
-                            //上传图片
-                            FileUtils.upload(imgFiles,fileUploadedPath,fileName);
-                            course_img_url = courseUUid + "/" +fileName;
-                            courseExt.setCourseExtImgUrl(course_img_url);
-                        }
-                    }else {
-                        courseExt.setCourseExtImgUrl(ext.getImgUrl());
-                    }
-
-                    courseExt.setCourseExtLogo("");
-                    courseExt.setCourseExtWords("");
-                    courseExt.setCourseExtAudio("");
-                }
-
-                courseExt.setCourseExtCreateTime(new Date());
-               list.add(courseExt);
-            }
+            //保存数据到数据表中
             List<CourseExt> extListSave = courseExtCmsService.saveAll(list);
-
-
-            String courseId = extList.get(0).getCourseId();
-            Course course = courseCmsService.getCourseById(courseId);
-
             if(extListSave!=null){
 
-                String keyHash =SHARECOURSECONTENT +courseId;
-                redisUtil.hset(keyHash,"course",course.getCourseTitle());
-                redisUtil.hset(keyHash,"courseExt",JSON.toJSONString(overMethod(extListSave)));
+                //存储到redis 临时
+                addCourseExt2Redis(extList, extListSave);
 
-                courseMemoryService.addMemory(courseId);
-
+                //异步同步网络资源到服务器
+               //asyncDownloadFromXiaoZhuShou(extListSave);
             }
-
-            for (CourseExt ext : extListSave) {
-                 int courseType = ext.getCourseExtType();
-                 int sort = ext.getCourseExtSort();
-
-                 //语音
-                 if(courseType == 2){
-
-                     String radioUrl = ext.getCourseExtAudio();
-                     if(radioUrl.indexOf("http") > -1){
-                        //String urlStr,String fileName,String savePath
-                       //  FileUtils.downLoadFromUrl(radioUrl,);
-                     }
-
-                 }
-
-                 //图片
-                 if(courseType == 3){
-
-                     String imgUrl = ext.getCourseExtImgUrl();
-                     if(imgUrl.indexOf("http") >  -1){
-
-                     }
-
-                 }
-
-            }
-
-
-
             result = ResultUtil.success(extListSave);
 
         }catch (Exception e){
             e.printStackTrace();
             log.error("courseExt/cms/add  err =",e.getMessage());
         }
+        System.out.println("add=======================================");
         return result;
     }
 
 
-    public static void main(String[] args) {
-
-        String fileNameReal = "neow.wav";
-      String  suffix = fileNameReal.substring(fileNameReal.lastIndexOf("."));
-        System.out.println(suffix);
-
-    }
 
 
     @RequestMapping(value ="update", method = RequestMethod.POST)
     @ResponseBody
-    public Result /*List<Ext> */ update( ExtModel extModel){
+    public Result  update( ExtModel extModel){
         Result result = new Result();
         List<CourseExt> list = new ArrayList<CourseExt>();
-        CourseExt courseExt = null;
         try{
-           String fileUrl= config.getUpload_local_path();
-            List<Ext> extList = extModel.getExtList();
-            String course_audio_url="";
-            String  course_img_url = "";
-            String prefix = "";
-            String suffix = "";
-            String dayStr = DateUtils.getDate("yyyyMMdd");
-            String hoursStr = DateUtils.getDate("HHmmss");
-            String fileUploadedPath = "";
-            String fileName="";
-
-            for(int i = 0; i<extList.size();i++){
-
-                courseExt = new CourseExt();
-                Ext ext = extList.get(i);
-                String courseUUid = ext.getCourseId();
-                int type = ext.getType();
-                courseExt.setId(courseUUid+"_"+(i+1));
-                courseExt.setCourseId(ext.getCourseId());
-                courseExt.setCourseExtNickname(ext.getName());
-                courseExt.setCourseExtType(ext.getType());
-                courseExt.setCourseExtSort(i+1);
-                //文字
-                if(type == 1){
-
-                    courseExt.setCourseExtWords(ext.getWords());
-                    courseExt.setCourseExtLogo("");
-                    courseExt.setCourseExtImgUrl("");
-                    courseExt.setCourseExtAudio("");
-
-                    //语音
-                }else if(type ==2){
-                    courseExt.setCourseExtAudioTimes(ext.getTimes());
-                    //传的是文件流，进行上传
-                    if(ext.getAudioFile() != null){
-                        MultipartFile audioFile = ext.getAudioFile();
-                        if(!audioFile.isEmpty()){
-                            prefix = i+1+"";
-                            //语音
-                            suffix = ".mp3";
-                            fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
-
-                            fileUploadedPath = fileUrl + "/" + courseUUid;
-                            //上传语音
-                            FileUtils.upload(audioFile,fileUploadedPath,fileName);
-                           // course_audio_url = fileUploadedPath + "/" +fileName;
-                            course_audio_url = courseUUid + "/" +fileName;
-                            courseExt.setCourseExtAudio(course_audio_url);
-                        }
-
-
-                    }else {
-                        courseExt.setCourseExtAudio(ext.getAudioUrl());
-                    }
-
-                    courseExt.setCourseExtLogo("");
-                    courseExt.setCourseExtWords("");
-                    courseExt.setCourseExtImgUrl("");
-
-                    //图片
-                }else if(type ==3){
-                    //传的是文件流，进行上传
-                    if(ext.getImgFile() != null){
-                        MultipartFile imgFiles = ext.getImgFile();
-                        if(!imgFiles.isEmpty()){
-                            prefix = i+1+"";
-                            //图片默认转成png
-                            suffix = ".png";
-                            fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
-                            fileUploadedPath = fileUrl + "/" + courseUUid;
-                            //上传图片
-                            FileUtils.upload(imgFiles,fileUploadedPath,fileName);
-                            course_img_url = courseUUid + "/" +fileName;
-                            courseExt.setCourseExtImgUrl(course_img_url);
-                        }
-                    }else {
-                        courseExt.setCourseExtImgUrl(ext.getImgUrl());
-                    }
-
-                    courseExt.setCourseExtLogo("");
-                    courseExt.setCourseExtWords("");
-                    courseExt.setCourseExtAudio("");
-                }
-
-                courseExt.setCourseExtCreateTime(new Date());
-                list.add(courseExt);
-            }
+            List<Ext> extList = dealCourseExtData(extModel, list);
 
             List<CourseExt> removeList = courseExtCmsService.queryCourseExtByCourseId(list.get(0).getCourseId());
             //删除原数据并保存新数据(事物方法)
             List<CourseExt> extListSave =  courseExtCmsService.deleteAndSave(removeList,list);
-
-
             if(extListSave != null){
 
+                //存储到redis 临时
+                addCourseExt2Redis(extList, extListSave);
 
-                String courseId = extList.get(0).getCourseId();
-                Course course = courseCmsService.getCourseById(courseId);
-
-                String keyHash =SHARECOURSECONTENT +courseId;
-                redisUtil.hset(keyHash,"course",course.getCourseTitle());
-                redisUtil.hset(keyHash,"courseExt",JSON.toJSONString(overMethod(extListSave)));
-
-                //从Redis中删除,并重新添加
-          //      courseRedisCmsService.delAndHashSet(courseId,mapper);
-
-                courseMemoryService.addMemory(courseId);
+                //异步同步网络资源到服务器
+                //asyncDownloadFromXiaoZhuShou(extListSave);
             }
-
             result = ResultUtil.success(extListSave);
-
+            System.out.println("update ===========================================");
         }catch (Exception e){
             e.printStackTrace();
             log.error("courseExt/cms/update  err =",e.getMessage());
@@ -356,6 +137,155 @@ public class CourseExtCmsController {
 
         return result;
     }
+
+
+
+    private List<Ext> dealCourseExtData(ExtModel extModel, List<CourseExt> list) {
+        CourseExt courseExt;
+
+        List<Ext> extList = extModel.getExtList();
+        String course_ext_logo ="";
+        String course_ext_words="";
+        String course_ext_img_url="";
+        String course_ext_audio="";
+        for(int i = 0; i<extList.size();i++){
+            courseExt = new CourseExt();
+            Ext ext = extList.get(i);
+            String courseUUid = ext.getCourseId();
+            int type = ext.getType();
+
+            initCourseExt(courseExt, i, ext, courseUUid);
+            //文字
+            if(type == 1){
+                course_ext_words = ext.getWords();
+            //语音
+            }else if(type ==2){
+                courseExt.setCourseExtAudioTimes(ext.getTimes());
+                //传的是文件流，进行上传
+                if(ext.getAudioFile() != null){
+
+                    //上传音频文件
+                    course_ext_audio =  uploadAudio( i, ext, courseUUid);
+                }else {
+                    course_ext_audio =  ext.getAudioUrl();
+                }
+            //图片
+            }else if(type ==3){
+                //传的是文件流，进行上传
+                if(ext.getImgFile() != null){
+
+                    //上传图片文件
+                    course_ext_img_url =  uploadCourseExtImg( i, ext, courseUUid);
+                }else {
+                    course_ext_img_url = ext.getImgUrl();
+                }
+            }
+            courseExt.setCourseExtWords(course_ext_words);
+            courseExt.setCourseExtLogo(course_ext_logo);
+            courseExt.setCourseExtImgUrl(course_ext_img_url);
+            courseExt.setCourseExtAudio(course_ext_audio);
+            courseExt.setCourseExtCreateTime(new Date());
+            list.add(courseExt);
+        }
+        return extList;
+    }
+
+    private void initCourseExt(CourseExt courseExt, int i, Ext ext, String courseUUid) {
+        courseExt.setId(courseUUid + "_" + (i + 1));
+        courseExt.setCourseId(ext.getCourseId());
+        courseExt.setCourseExtNickname(ext.getName());
+        courseExt.setCourseExtType(ext.getType());
+        courseExt.setCourseExtSort(i + 1);
+    }
+
+    private void addCourseExt2Redis(List<Ext> extList, List<CourseExt> extListSave) {
+        String courseId = extList.get(0).getCourseId();
+        Course course = courseCmsService.getCourseById(courseId);
+        String keyHash = SHARECOURSECONTENT + courseId;
+        redisUtil.hset(keyHash, "course", course.getCourseTitle());
+        redisUtil.hset(keyHash, "courseExt", JSON.toJSONString(overMethod(extListSave)));
+
+        courseMemoryService.addMemory(courseId);
+    }
+
+    private String uploadCourseExtImg( int i, Ext ext, String courseUUid) {
+        String fileUrl= config.getUpload_local_path();
+        String course_img_url = "";
+        String prefix;
+        MultipartFile imgFiles = ext.getImgFile();
+        if(!imgFiles.isEmpty()){
+            prefix = i+1+"";
+            //图片默认转成png
+            String fileName = FileUtils.getCourseExtImgFileName(prefix);
+            //上传图片
+            course_img_url =  FileUtils.upload(imgFiles,fileUrl,fileName,courseUUid);
+
+        }
+        return course_img_url;
+    }
+
+    private String uploadAudio( int i, Ext ext, String courseUUid) {
+        String fileUrl= config.getUpload_local_path();
+        String course_audio_url = "";
+        String prefix;
+        //String fileUploadedPath;
+        MultipartFile audioFile = ext.getAudioFile();
+        if(!audioFile.isEmpty()){
+            prefix = i+1+"";
+            //语音
+
+            String fileName = FileUtils.getCourseExtRadioFileName(prefix,audioFile);
+            //上传语音
+            course_audio_url =   FileUtils.upload(audioFile,fileUrl,fileName,courseUUid);
+        }
+        return course_audio_url;
+    }
+
+    private void asyncDownloadFromXiaoZhuShou(List<CourseExt> extListSave) throws Exception {
+        for (CourseExt ext : extListSave) {
+             int courseType = ext.getCourseExtType();
+             int sort = ext.getCourseExtSort();
+             String courseId = ext.getCourseId();
+             String fileName ="";
+             String showPath = "";
+             //语音
+             if(courseType == 2){
+                 //网络音频资源下载路径
+                 String radioUrl = ext.getCourseExtAudio();
+                 if(radioUrl.indexOf("http") > -1){
+                     String realFileName = ext.getCourseExtAudio();
+                     realFileName = realFileName.substring(realFileName.lastIndexOf("/")+1);
+                     fileName = FileUtils.getCourseExtRadioFileName(sort+"",realFileName);
+                    //String urlStr,String fileName,String savePath
+                     String savePath  = config.getUpload_local_path_xiaozhushou() + "/" + courseId;
+                     //异步线程任务下载
+                     task.doTask_fileDownload(radioUrl,fileName,savePath);
+                     showPath = courseId + "/" + fileName;
+                     //同步数据表
+                     courseExtCmsService.setCourseExtStaticPathByCourseIdAndCourseExtSort(courseId,sort+"",null,showPath);
+                 }
+             }
+
+             //图片
+             if(courseType == 3){
+                 //网络图片资源下载路径
+                 String imgUrl = ext.getCourseExtImgUrl();
+                 if(imgUrl.indexOf("http") >  -1){
+                     fileName = FileUtils.getCourseExtImgFileName(sort+"");
+                     String savePath  = config.getUpload_local_path_xiaozhushou() + "/" + ext.getCourseId();
+                     //异步线程任务下载
+                     task.doTask_fileDownload(imgUrl,fileName,savePath);
+                     showPath = courseId + "/" + fileName;
+                     //同步数据表
+                     courseExtCmsService.setCourseExtStaticPathByCourseIdAndCourseExtSort(courseId,sort+"",showPath,null);
+                 }
+
+             }
+
+        }
+    }
+
+
 
 
 
@@ -383,6 +313,7 @@ public class CourseExtCmsController {
         }
         return  resultList;
     }
+
 
 
 

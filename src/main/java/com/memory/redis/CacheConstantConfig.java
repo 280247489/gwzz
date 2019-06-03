@@ -1,5 +1,8 @@
 package com.memory.redis;
 
+import com.memory.common.yml.MyFileConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +12,11 @@ import java.util.Map;
  * @Description:
  */
 public class CacheConstantConfig {
+
+
+    @Autowired
+    private static MyFileConfig config;
+
     //APP数据Hash
     public static final String SYSAPPDATA = "sysAppData";
 
@@ -38,6 +46,7 @@ public class CacheConstantConfig {
 
     //课程直播内存信息
     public static Map<String,Object> COURSEMAP = new HashMap<String,Object>();
+
 
 
 

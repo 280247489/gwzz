@@ -1,5 +1,7 @@
 package com.memory.cms.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.CourseExt;
 import com.memory.cms.repository.CourseExtCmsRepository;
 import com.memory.cms.service.CourseExtCmsService;
@@ -7,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author INS6+
@@ -15,6 +19,11 @@ import java.util.List;
  */
 @Service
 public class CourseExtCmsServiceImpl implements CourseExtCmsService {
+
+    @Autowired
+    private DaoUtils daoUtils;
+
+
 
     @Autowired
     private CourseExtCmsRepository repository;
@@ -48,7 +57,6 @@ public class CourseExtCmsServiceImpl implements CourseExtCmsService {
     @Override
     public List<CourseExt> queryCourseExtByCourseId(String course_id) {
         return repository.queryCourseExtByCourseIdOrderByCourseExtSortAsc(course_id);
-        //return repository.queryCourseExtList(article_id);
     }
 
 
@@ -79,5 +87,32 @@ public class CourseExtCmsServiceImpl implements CourseExtCmsService {
     @Override
     public List<com.memory.entity.bean.CourseExt> queryCourseExtList(String courseId) {
         return  repository.queryCourseExtList(courseId);
+    }
+
+    @Override
+    @Transactional
+    public int setCourseExtStaticPathByCourseIdAndCourseExtSort(String course_id, String sort,String img_url,String audio_url) {
+
+        StringBuffer stringBuffer = new StringBuffer();
+        Map<String,Object> params = new HashMap<String,Object>();
+        stringBuffer.append("UPDATE CourseExt c  ");
+
+        if(img_url != null){
+            stringBuffer.append("  SET c.courseExtImgUrl = :courseExtImgUrl");
+            params.put("courseExtImgUrl",img_url);
+        }else{
+            stringBuffer.append("  SET c.courseExtAudio = :courseExtAudio");
+            params.put("courseExtAudio",audio_url);
+        }
+            stringBuffer.append(" WHERE c.courseId = :courseId AND c.courseExtSort = :courseExtSort ");
+            params.put("courseId",course_id);
+            //params.put("courseExtSort",sort);
+            params.put("courseExtSort",Integer.valueOf(sort));
+
+            System.out.println("hql = " + stringBuffer);
+            System.out.println("map = " + JSON.toJSONString(params));
+
+          return   daoUtils.excuteHQL(stringBuffer.toString(),params);
+
     }
 }

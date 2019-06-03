@@ -1,6 +1,7 @@
 package com.memory.gwzz.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.memory.cms.service.CourseCmsService;
 import com.memory.cms.service.CourseMemoryService;
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
@@ -40,6 +41,8 @@ public class CourseExtWebController extends BaseController {
     @Autowired
     private RedisUtil redisUtil;
 
+    @Autowired
+    private CourseCmsService courseCmsService;
 
 
 

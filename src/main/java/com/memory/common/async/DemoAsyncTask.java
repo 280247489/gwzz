@@ -1,5 +1,6 @@
 package com.memory.common.async;
 
+import com.memory.common.utils.FileUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
@@ -49,7 +50,7 @@ public class DemoAsyncTask {
     @Async
     public Future<Boolean> doTask_fileDownload(String url,String fileName,String path) throws Exception{
         long start = System.currentTimeMillis();
-        Thread.sleep(1000);
+        FileUtils.downLoadFromUrl(url,fileName,path);
         long end = System.currentTimeMillis();
         System.out.println("doTask_one: " + (end - start) + "毫秒");
         return new AsyncResult<>(true);

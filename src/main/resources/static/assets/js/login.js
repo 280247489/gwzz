@@ -1,14 +1,12 @@
 jQuery(document).ready(function () {
     var web_shezhen = 'http://yaoyue.houaihome.com';
     var server_shezhen = 'http://image.houaihome.com';
-    var api_back = 'http://manager.houaihome.com';
+    var api_back = 'http://192.168.1.200:8081';
     var api_login = api_back +'/sysAdmin/cms/login';
     var api_admin = api_back +'/sysAdmin/cms/options';
     var api_type_course = api_back +'/courseType/cms/list';
     var api_type_article = api_back +'/articleType/cms/list';
-    var api_type = api_back +'/courseType/cms/list';
-    var server_course = 'http://image.houaihome.com/cms/';
-
+    var server_course = 'http://192.168.1.200:8091/file/';
     var lk = 0;
 
 

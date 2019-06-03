@@ -27,6 +27,7 @@ public class MyFileConfig {
 
     private String upload_local_path;
     private String upload_local_article_path;
+    private String upload_local_path_xiaozhushou;
     private Map<String,String> jodit =new HashMap<String,String>();
 
 
@@ -52,5 +53,13 @@ public class MyFileConfig {
 
     public void setUpload_local_article_path(String upload_local_article_path) {
         this.upload_local_article_path = upload_local_article_path;
+    }
+
+    public String getUpload_local_path_xiaozhushou() {
+        return upload_local_path_xiaozhushou;
+    }
+
+    public void setUpload_local_path_xiaozhushou(String upload_local_path_xiaozhushou) {
+        this.upload_local_path_xiaozhushou = upload_local_path_xiaozhushou;
     }
 }

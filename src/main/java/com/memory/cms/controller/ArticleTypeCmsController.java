@@ -92,11 +92,11 @@ public class ArticleTypeCmsController {
                 //图片默认转成png格式
                 suffix = ".png";
                 fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
-
-                fileUploadedPath = fileUrl + "/" + uuid;
+                uuid = "article/" +uuid;
+               // fileUploadedPath = fileUrl + "/" + uuid;
                 //上传标题图
-                FileUtils.upload(typeFile,fileUploadedPath,fileName);
-                imgUrl =  "article/"  +fileUploadedPath + "/" +fileName;
+                imgUrl=  FileUtils.upload(typeFile,fileUrl,fileName,uuid);
+               // imgUrl =  "article/"  +fileUploadedPath + "/" +fileName;
 
             }
 

@@ -163,10 +163,11 @@ public class ArticleCmsController {
                 suffix = ".png";
                 fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
-                fileUploadedPath = fileUrl + "/" + id;
+                id = "/article/" +  id;
+              //  fileUploadedPath = fileUrl + "/" + id;
                 //上传标题图
-                FileUtils.upload(titleFile, fileUploadedPath, fileName);
-                article_logo = "/article/" +  id + "/" + fileName;
+                article_logo =  FileUtils.upload(titleFile, fileUrl, fileName,id);
+              //  article_logo = "/article/" +  id + "/" + fileName;
 
             }
 
@@ -220,7 +221,7 @@ public class ArticleCmsController {
             String suffix = "";
             String dayStr = DateUtils.getDate("yyyyMMdd");
             String hoursStr = DateUtils.getDate("HHmmss");
-            String fileUploadedPath = "";
+            //String fileUploadedPath = "";
             String fileName = "";
 
 
@@ -230,10 +231,12 @@ public class ArticleCmsController {
                 suffix = ".png";
                 fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
-                fileUploadedPath = fileUrl + "/" + id;
+             //   fileUploadedPath = fileUrl + "/" + id;
+
+                id = "article/"  + id;
                 //上传标题图
-                FileUtils.upload(titleFile, fileUploadedPath, fileName);
-                article_logo = "article/"  +id + "/" + fileName;
+                article_logo = FileUtils.upload(titleFile, fileUrl, fileName,id);
+              //  article_logo = "article/"  +id + "/" + fileName;
 
             }
 

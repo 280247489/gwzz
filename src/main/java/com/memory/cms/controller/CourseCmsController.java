@@ -65,6 +65,7 @@ public class CourseCmsController {
                 }
                 result.setCode(0);
                 result.setMsg("变更"+str+"状态成功！");
+                result.setData(online);
             }else{
                 result.setCode(0);
                 result.setMsg("非法请求.当前课程不存在！");
@@ -195,11 +196,11 @@ public class CourseCmsController {
                     suffix = ".png";
                     fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
-                    fileUploadedPath = fileUrl + "/" + id;
+                   // fileUploadedPath = fileUrl + "/" + id;
                     //上传标题图
-                    FileUtils.upload(titleFile,fileUploadedPath,fileName);
+                    course_logo=  FileUtils.upload(titleFile,fileUrl,fileName,id);
                   //  course_logo = fileUploadedPath + "/" +fileName;
-                    course_logo = id + "/" +fileName;
+                    //course_logo = id + "/" +fileName;
 
                 }
 
@@ -208,12 +209,12 @@ public class CourseCmsController {
                     suffix = ".mp3";
                     fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
-                    fileUploadedPath = fileUrl + "/" + id;
+                   // fileUploadedPath = fileUrl + "/" + id;
                     //上传MP3音频
-                    FileUtils.upload(radioFile,fileUploadedPath,fileName);
+                    course_audio_url =  FileUtils.upload(radioFile,fileUrl,fileName,id);
 
                    // course_audio_url = fileUploadedPath + "/" +fileName;
-                    course_audio_url = id + "/" +fileName;
+                    //course_audio_url = id + "/" +fileName;
                 }
 
 
@@ -279,11 +280,11 @@ public class CourseCmsController {
                 suffix = ".png";
                 fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
-                fileUploadedPath = fileUrl + "/" + id;
+             //   fileUploadedPath = fileUrl + "/" + id;
                 //上传标题图
-                FileUtils.upload(titleFile,fileUploadedPath,fileName);
+                course_logo=  FileUtils.upload(titleFile,fileUrl,fileName,id);
                // course_logo = fileUploadedPath + "/" +fileName;
-                course_logo = id + "/" +fileName;
+               // course_logo = id + "/" +fileName;
 
             }
 
@@ -292,12 +293,12 @@ public class CourseCmsController {
                 suffix = ".mp3";
                 fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
-                fileUploadedPath = fileUrl + "/" + id;
+               // fileUploadedPath = fileUrl + "/" + id;
                 //上传MP3音频
-                FileUtils.upload(radioFile,fileUploadedPath,fileName);
+                course_audio_url= FileUtils.upload(radioFile,fileUrl,fileName,id);
 
                 //course_audio_url = fileUploadedPath + "/" +fileName;
-                course_audio_url = id + "/" +fileName;
+               // course_audio_url = id + "/" +fileName;
             }
 
             Course course = courseService.getCourseById(id);

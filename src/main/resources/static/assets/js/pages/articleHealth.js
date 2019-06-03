@@ -17,6 +17,7 @@ jQuery(document).ready(function () {
     var api_back = sessionStorage.getItem('api_back');
     var server_course = sessionStorage.getItem('server_course');
     var url = api_back + '/course/cms/list';
+    var url_online = api_back + '/course/cms/online';
     var lk = 0;
     var creater = '<option value="">--更新人--</option>';
     var user_list = sessionStorage.getItem('user_list');
@@ -78,11 +79,11 @@ jQuery(document).ready(function () {
                             this_img_url = server_course + n.courseLogo;
                         }
                         if (n.courseOnline == 1) {
-                            is_online = '<span class="text-success">已上线</span>';
+                            is_online = '<span data-type="'+ n.courseOnline +'" class="btn btn-info btn-sm is_online">上线</span>';
                         } else {
-                            is_online = '<span class=".text-warning">已下线</span>';
+                            is_online = '<span data-type="'+ n.courseOnline +'" class="btn btn-default btn-sm is_online">下线</span>';
                         }
-                        tr += '<tr data-id="' + n.id + '"><td>' + this_no + '</td><td><img class="article_thumb" src="' + this_img_url + '" alt="' + n.courseTitle + '" /></td><td>' + n.courseTitle + '</td><td>' + c_name + '</td><td>' + n.courseCreateTime + '</td><td>' + u_name + '</td><td>' + n.courseUpdateTime + '</td><td class="articleHealth_count"><span>浏览：' + n.courseTotalView + '</span><span>点赞：' + n.courseTotalLike + '</span><span>分享：' + n.courseTotalShare + '</span></td><td>' + is_online + '</td><td><a data-id="' + n.id + '" class="articleHealth_edit" href="javascript:void(0);"><i class="icon-pencil-square"></i></a></td></tr>';
+                        tr += '<tr data-id="' + n.id + '"><td>' + this_no + '</td><td><img class="article_thumb" src="' + this_img_url + '" alt="' + n.courseTitle + '" /></td><td>' + n.courseTitle + '</td><td>' + c_name + '</td><td>' + n.courseCreateTime + '</td><td>' + u_name + '</td><td>' + n.courseUpdateTime + '</td><td class="articleHealth_count"><span>浏览：' + n.courseTotalView + '</span><span>点赞：' + n.courseTotalLike + '</span><span>分享：' + n.courseTotalShare + '</span></td><td>' + is_online + '</td><td><a data-id="' + n.id + '" class="articleHealth_edit" href="javascript:void(0);"><i class="icon-pencil-square"></i></a>&nbsp;&nbsp;<a data-id="' + n.id + '" class="alert_url" href="javascript:void(0);"><i class="icon-qrcode"></i></a></td></tr>';
                     });
                 }
                 $('.articleHealth_list tbody').html(tr);
@@ -134,9 +135,11 @@ jQuery(document).ready(function () {
             return false;
         } else {
             lk = 1;
+            $('.articleHealth_search_submit').removeClass('btn-info').addClass('btn-default');
             setTimeout(function () {
                 lk = 0;
-            }, 3000);
+                $('.articleHealth_search_submit').removeClass('btn-default').addClass('btn-info');
+            }, 2000);
             $.post(url, arr_search, function (data) {
                 function this_page_search(data, page) {
                     var tr_search = '';
@@ -168,11 +171,11 @@ jQuery(document).ready(function () {
                                     this_img_url = server_course + n.courseLogo;
                                 }
                                 if (n.courseOnline == 1) {
-                                    is_online = '<span class="text-success">已上线</span>';
+                                    is_online = '<span data-type="'+ n.courseOnline +'" class="btn btn-info btn-sm is_online">上线</span>';
                                 } else {
-                                    is_online = '<span class=".text-warning">已下线</span>';
+                                    is_online = '<span data-type="'+ n.courseOnline +'" class="btn btn-default btn-sm is_online">下线</span>';
                                 }
-                                tr_search += '<tr data-id="' + n.id + '"><td>' + this_no + '</td><td><img class="article_thumb" src="' + this_img_url + '" alt="' + n.courseTitle + '" /></td><td>' + n.courseTitle + '</td><td>' + c_name + '</td><td>' + n.courseCreateTime + '</td><td>' + u_name + '</td><td>' + n.courseUpdateTime + '</td><td class="articleHealth_count"><span>浏览：' + n.courseTotalView + '</span><span>点赞：' + n.courseTotalLike + '</span><span>分享：' + n.courseTotalShare + '</span></td><td>' + is_online + '</td><td><a data-id="' + n.id + '" class="articleHealth_edit" href="javascript:void(0);"><i class="icon-pencil-square"></i></a></td></tr>';
+                                tr_search += '<tr data-id="' + n.id + '"><td>' + this_no + '</td><td><img class="article_thumb" src="' + this_img_url + '" alt="' + n.courseTitle + '" /></td><td>' + n.courseTitle + '</td><td>' + c_name + '</td><td>' + n.courseCreateTime + '</td><td>' + u_name + '</td><td>' + n.courseUpdateTime + '</td><td class="articleHealth_count"><span>浏览：' + n.courseTotalView + '</span><span>点赞：' + n.courseTotalLike + '</span><span>分享：' + n.courseTotalShare + '</span></td><td>' + is_online + '</td><td><a data-id="' + n.id + '" class="articleHealth_edit" href="javascript:void(0);"><i class="icon-pencil-square"></i></a>&nbsp;&nbsp;<a data-id="' + n.id + '" class="alert_url" href="javascript:void(0);"><i class="icon-qrcode"></i></a></td></tr>';
                             });
                         }
                         $('.articleHealth_list tbody').html(tr_search);
@@ -208,11 +211,37 @@ jQuery(document).ready(function () {
         }
     });
 
+    $('.articleHealth_list').on('click', '.is_online', function () {
+        var status_curr = $(this).attr('data-type');
+        var span = $(this);
+        var status = '0';
+        if (status_curr == '1') {
+            status = '0';
+        } else {
+            status = '1';
+        }
+        var arr_status = {
+            id:  $(this).parent().parent().attr('data-id'),
+            online: status
+        }
+        $.post(url_online, arr_status, function (data) {
+            if (data.code == '0') {
+                span.attr('data-type', data.data);
+                if (data.data == '0') {
+                    span.html('下线');
+                    span.addClass('btn-default').removeClass('btn-info');
+                } else if (data.data == '1') {
+                    span.html('上线');
+                    span.addClass('btn-info').removeClass('btn-default');
+                }
+            } else {}
+        });
+    });
 
+    $('.articleHealth_list').on('click', '.alert_url', function () {
+        alert('http://hdqd.houaihome.com/zhibo/index.php?id=' + $(this).attr('data-id'));
 
-
-
-
+    });
     $('.articleHealth_list').on('click', '.articleHealth_edit', function () {
         var id = $(this).attr('data-id');
         window.location.href = "./articleHealthAdd.html?action=edit&id=" + id;

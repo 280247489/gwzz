@@ -94,10 +94,10 @@ public class CourseTypeCmsController {
                 suffix = ".png";
                 fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
-                fileUploadedPath = fileUrl + "/" + uuid;
+               // fileUploadedPath = fileUrl + "/" + uuid;
                 //上传标题图
-                FileUtils.upload(typeFile,fileUploadedPath,fileName);
-                imgUrl = fileUploadedPath + "/" +fileName;
+                imgUrl=  FileUtils.upload(typeFile,fileUrl,fileName,uuid);
+                //imgUrl = fileUploadedPath + "/" +fileName;
 
             }
 

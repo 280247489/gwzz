@@ -2520,7 +2520,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 
-.articleHealth_count span {
+.articleHealth_count span,.comment_count span {
     width: 100%;
     height: 33%;
     display: block;
@@ -2647,11 +2647,42 @@ ol.list_mobile li.placeholder:before {
 }
 
 .load_table li:nth-child(even) {
-    background: #F4F4F4;
+    background: #e8e8e8;
 }
-
+.load_table input{
+    display:inline-block;
+    vertical-align: middle;
+    border:none;
+    box-shadow:none;
+    background:none;
+}
+.load_table audio{
+    margin-top:7px;
+    float: left;
+    margin-left:20%;
+}
+.load_table img{
+    float: left;
+    margin-left:40%;
+    box-shadow: 0 0 1px #eee;
+}
+.url_change{
+    width:36px;
+    height:36px;
+    display:inline-block;
+    line-height:36px;
+    text-align:center;
+    float: right;
+    margin:7px 10% 0 0;
+    font-size:18px;
+}
 .img_in_table {
     max-height: 50px;
+}
+.l_d p{
+    text-align:left;
+    padding:8px;
+    margin: 0;
 }
 .form-group.article_logo{
     text-align: center;
@@ -2671,15 +2702,25 @@ ol.list_mobile li.placeholder:before {
     max-height:180px;
     vertical-align:middle;
 }
-.articleHealth_edit{
+.articleHealth_edit,.alert_url{
     width:22px;
     height:22px;
     display:block;
     font-size:20px;
     line-height:22px;
     text-align: center;
+    float: left;
 }
-.single_msg,.memory_add{
+.courseMemoryRemove{
+    width:22px;
+    height:22px;
+    display:block;
+    font-size:20px;
+    line-height:22px;
+    text-align: center;
+    margin: 0 auto;
+}
+.single_msg,.memory_add,.single_edit{
     width:100%;
     height:100%;
     position: fixed;
@@ -2699,7 +2740,7 @@ ol.list_mobile li.placeholder:before {
     top:0;
     left: 0;
 }
-.single_msg_content,.course_memory_add_choose{
+.single_msg_content,.course_memory_add_choose,.single_edit_content{
     z-index:992;
     width:500px;
     height:400px;
@@ -2710,6 +2751,9 @@ ol.list_mobile li.placeholder:before {
     margin-left: -250px;
     margin-top:-200px;
     padding:50px 50px 20px;
+}
+.single_edit_content{
+    height:270px;
 }
 .course_memory_add_choose{
     height:300px;
@@ -2725,4 +2769,8 @@ ol.list_mobile li.placeholder:before {
 }
 .new_msg_file_box{
     display:none;
+}
+.comment_article_list .commentContent{
+    width:500px;
+    word-break: break-all;
 }

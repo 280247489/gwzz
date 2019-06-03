@@ -8,7 +8,7 @@
     <meta name="author" content="sain">
     <meta name="keyword" content="">
 
-    <title>听会儿中医管理系统</title>
+    <title>直播管理</title>
     <script type="text/javascript" src="assets/js/jquery.js"></script>
     <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
     <link href="assets/css/bootstrap.css" rel="stylesheet">
@@ -30,15 +30,9 @@
                 <div class="bars icon-align-justify tooltips" data-placement="right"
                     data-original-title="Toggle Navigation"></div>
             </div>
-            <a href="index.html" class="logo"><i class="icon-hou"></i><i class="icon-ai"></i><span>听会儿中医管理系统</span></a>
+            <a href="index.html" class="logo"><i class="icon-hou"></i><i class="icon-ai"></i><span>直播管理</span></a>
             <div class="nav notify-row" id="top_menu">
                 <ul class="nav top-menu">
-                    <li class="">
-                        <a href="index.html#">
-                            <i class="icon-tasks"></i>
-                            <span class="badge bg-theme">4</span>
-                        </a>
-                    </li>
                     <li class="dropdown">
                         <a class="logout" id="logout" href="javascript:void(0);">
                             <i class="icon-power-off"></i>
@@ -50,7 +44,7 @@
         <aside>
             <div id="sidebar" class="nav-collapse ">
                 <ul class="sidebar-menu" id="nav-accordion">
-                    <p class="centered"><a href="javascript:;"><img src="assets/img/ui-sam.jpg" class="img-circle"
+                    <p class="centered"><a href="javascript:;"><img src="assets/img/avatar.jpg" class="img-circle"
                                 width="60"></a></p>
                     <h5 class="centered curr_admin_name">-</h5>
                     <li class="mt">
@@ -68,38 +62,6 @@
                             <li><a href="articleHealth.html">课程管理</a></li>
                             <li class="active"><a href="articleHealthAdd.html">课程添加</a></li>
                             <li><a href="courseMemory.html">课程缓存</a></li>
-                            <li><a href="articleNormal.html">文章管理</a></li>
-                            <li><a href="articleNormalAdd.html">文章添加</a></li>
-                        </ul>
-                    </li>
-                    <li class="sub-menu">
-                        <a href="javascript:;"><i class="icon-desktop"></i>
-                            <span>评论管理</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a href="javascript:;">课程评论</a></li>
-                            <li><a href="javascript:;">文章评论</a></li>
-                        </ul>
-                    </li>
-                    <li class="sub-menu">
-                        <a href="javascript:;"><i class="icon-desktop"></i>
-                            <span>舌诊管理</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a href="symptom.html">症状列表</a></li>
-                            <li><a href="symptomAdd.html?action=add">添加症状</a></li>
-                            <li><a href="slave.html">标准图片</a></li>
-                            <li><a href="slaveAdd.html?action=add">标图添加</a></li>
-                            <li><a href="szUsers.html">用户列表</a></li>
-                        </ul>
-                    </li>
-                    <li class="sub-menu">
-                        <a href="javascript:;">
-                            <i class="icon-ai"></i>
-                            <span>美丽腰约</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a href="javascript:;">开发中</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -162,7 +124,7 @@
                                                 </div>
                                                 <div class="col-sm-2 col-md-2"></div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group hide">
                                                 <label class="col-sm-2 col-md-2 control-label">
                                                     <span class="text-danger">* </span>是否上线：
                                                 </label>
@@ -185,7 +147,7 @@
                                                                 class="course_recommend">
                                                             <span class="switch-left">是</span>
                                                             <label>&nbsp;</label>
-                                                            <span class="switch-right">否</span>
+                                                            <span class="switch-right">否</span>;
                                                         </div>
                                                     </div>
                                                 </div>
@@ -262,12 +224,12 @@
                                                 </div>
                                                 <div class="col-md-2 col-lg-2">&nbsp;</div>
                                                 <div class="col-md-2 col-lg-2">
-                                                    <button type="button" data-value="0"
-                                                        class="btn btn-theme03 course_status">点击发布直播</button>
+                                                    <!-- <button type="button" data-value="0"
+                                                        class="btn btn-theme03 course_status">点击发布直播</button> -->
                                                 </div>
                                                 <div class="col-md-2 col-lg-2 text-right">
                                                     <button type="button" data-value="0"
-                                                        class="btn btn-theme03 alert_url">生成链接</button>
+                                                        class="btn btn-theme03 list_clear">清空列表</button>
                                                 </div>
                                             </div>
                                             <div class="col-md-12 col-lg-12 zhibo_msg">
@@ -296,6 +258,7 @@
                 </div>
             </section>
         </section>
+        
         <div class="single_msg">
             <div class="mask"></div>
             <div class="single_msg_content">
@@ -353,9 +316,41 @@
             </div>
         </div>
 
+
+
+
+
+        <div class="single_edit">
+            <div class="mask"></div>
+            <div class="single_edit_content">
+                <form id="single_edit_form" enctype="multipart/form-data" data-article-id="1"
+                    class="form-horizontal style-form">
+                    <div class="form-group new_edit_file_box">
+                        <label class="col-sm-3 col-md-3 control-label">文件：</label>
+                        <div class="col-md-9 col-lg-9">
+                            <button type="button" class="btn btn-theme03 edit_msg_file"><i class="icon-cloud-upload"></i>
+                                上传文件</button>
+                        </div>
+                    </div>
+                    <div class="form-group new_edit_file_box">
+                        <label class="col-sm-3 col-md-3 control-label">链接：</label>
+                        <div class="col-md-9 col-lg-9">
+                            <input type="text" class="edit_msg_file_url form-control" name="new_msg_file_url">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12 col-lg-12 text-right">
+                            <button type="button"
+                                class="btn btn-theme03 edit_msg_submit">修改</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="button" class="btn btn-default edit_msg_cancel">取消</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <footer class="site-footer">
             <div class="text-center">
-                123
                 <a href="#" class="go-top">
                     <i class="icon-angle-up"></i>
                 </a>
@@ -388,17 +383,9 @@
             uploader: {
                 url: 'http://manager.houaihome.com/jodit/uploadImg'
             },
-            // filebrowser: {
-            //     // buttons: ['list', 'tiles', 'sort'],
-            //     ajax: {
-            //         url: 'http://192.168.1.119:8081/gwzz/jodit/uploadImg'
-            //     }
-            // },
             commandToHotkeys: {
                 'openreplacedialog': 'ctrl+p'
             }
-            // buttons: ['symbol'],
-            // disablePlugins: 'hotkeys,mobile'
         });
 
         $('#excel-file').change(function (e) {
@@ -443,26 +430,37 @@
                     var ii = 0;
                     for (var i in arr) {
                         ii++
-                        if (ii <= 2) {
+                        if(ii == 1){
+                            _tmp += '<div><input type="hidden" class="courseId" value="" name=""><input type="text" class="speaker form-control" value="'+ arr[i] +'" name="name"></div>';
+                        }
+                        if(ii == 2){
+                            _tmp += '<div>' + arr[i] + '</div>';
+                        }
+                        if(ii == 3){
                             var this_val = arr[i];
                             var this_type = '1';
                             var point = this_val.lastIndexOf(".");
                             var type = this_val.substr(point);
-                            if (type == ".jpg" || type == ".gif" || type == ".JPG" || type == ".GIF" || type == ".PNG" || type == ".png") {
-                                this_val = '<img class="img_in_table" src="' + arr[i] + '" />';
+                            console.log(type);
+                            if (type == ".jpg" || type == ".gif" || type == ".JPG" || type == ".GIF" ||
+                                type == ".PNG" || type == ".png") {
+                                this_val = '<img class="img_in_table" src="' + arr[i] + '" /><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
                                 this_type = '3';
-                            }
-                            if (type == ".mp3" || type == ".MP3" || type == ".wav" || type == ".WAV" || type == ".WMA" || type == ".wma") {
-                                this_val = '<audio src="' + arr[i] + '" class="audio_36" controls="controls">浏览器不支持audio标签</audio>';
+                            }else if (type == ".mp3" || type == ".MP3" || type == ".wav" || type == ".WAV" ||
+                                type == ".WMA" || type == ".wma") {
+                                this_val = '<audio src="' + arr[i] +
+                                    '" class="audio_36" controls="controls">浏览器不支持audio标签</audio><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
                                 this_type = '2';
+                            }else{
+                                this_val = '<p>'+ arr[i] +'</p>';
                             }
-                            _tmp += "<div class='l_d' data-type='" + this_type +"'>" + this_val + "<div class='hide'><input type='hidden' value='" + arr[i] +"' name='' /></div></div>"
-
+                            _tmp += "<div class='l_d' data-type='" + this_type + "'>" + this_val + "<div class='hide'><input class='this_value' type='hidden' value='" + arr[i] +"' name='' /><input class='this_type' type='hidden' value='' name='' /></div></div>";
                         }
                     }
-                    li += "<li data-order='' class='excelcontent'><div><input type='hidden' class='courseId' value='' name=''><select name='name'><option class='speaker' value='李老师'>李老师</option><option value='曦老师'>曦老师</option></select></div>"+_tmp+"<div><button type='button' class='delete btn btn-primary' href='javascript:void(0);'>删除</button><input class='audio_times' type='hidden' value='0' name='times' /></div></li>";
+                    li +=
+                        "<li data-order='' class='excelcontent'>" +_tmp +"<div><button type='button' class='delete btn btn-primary' href='javascript:void(0);'>删除</button><input class='audio_times' type='hidden' value='0' name='times' /></div></li>";
                 }
-                    $(".load_table").append(li);
+                $(".load_table").append(li);
             };
             fileReader.readAsBinaryString(files[0]);
         });

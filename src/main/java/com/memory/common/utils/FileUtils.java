@@ -37,8 +37,11 @@ public class FileUtils {
 
     public static String upload(MultipartFile file, String fileUploadedPath,String fileName) {
         try {
+
             log.info("上传的文件名为：" + fileName);
             File dest = new File(fileUploadedPath + "/" + fileName);
+            System.out.println("上传路径==" +fileUploadedPath);
+            System.out.println("上傳路徑檢測= " +dest.getParentFile() );
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();// 新建文件夹
@@ -50,6 +53,29 @@ public class FileUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    public static String upload(MultipartFile file, String fileUploadedPath,String fileName,String UUID) {
+        String returnFileName = "";
+        try {
+
+            log.info("上传的文件名为：" + fileName);
+            fileUploadedPath = fileUploadedPath +"/" +UUID;
+            File dest = new File(fileUploadedPath + "/" + fileName);
+            System.out.println("上传路径==" +fileUploadedPath);
+            // 检测是否存在目录
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();// 新建文件夹
+            }
+            file.transferTo(dest);// 文件写入
+            returnFileName = UUID + "/" + fileName;
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnFileName;
     }
 
     public static List<Object> handleFileUpload(HttpServletRequest request, String fileUploadedPath) {
@@ -159,12 +185,17 @@ public class FileUtils {
             //获取自己数组
             byte[] getData = readInputStream(inputStream);
 
-            //文件保存位置
-            File saveDir = new File(savePath);
-            if(!saveDir.exists()){
-                saveDir.mkdir();
+            System.out.println("文件保存路径====" + savePath);
+            System.out.println("文件名称=====" + fileName);
+
+            File file = new File(savePath+"/"+fileName);
+            System.out.println("文件判斷路徑 == " + file.getParentFile());
+
+            if(!file.getParentFile().exists()){
+                //注意.mkdirs() 和 .mkdir() 的区别,后者只会创建一个层级的文件夹
+                file.getParentFile().mkdirs();
             }
-            File file = new File(saveDir+File.separator+fileName);
+
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(getData);
             if(fos!=null){
@@ -217,12 +248,25 @@ public class FileUtils {
 
 
     /**
-     * 获取图片文件名称
+     * 获取音频文件名称
      * @param prefix
-     * @param imgFile
+     * @param realFileName
      * @return
      */
-    public static String getCourseExtImgFileName(String prefix, MultipartFile imgFile){
+    public static String getCourseExtRadioFileName(String prefix, String realFileName){
+        String suffix = realFileName.substring(realFileName.lastIndexOf("."));
+        String dayStr = DateUtils.getDate("yyyyMMdd");
+        String hoursStr = DateUtils.getDate("HHmmss");
+        return   prefix + "_" + dayStr + "_" + hoursStr + suffix;
+    }
+
+
+    /**
+     * 获取图片文件名称
+     * @param prefix
+     * @return
+     */
+    public static String getCourseExtImgFileName(String prefix){
         //String fileNameReal =  imgFile.getOriginalFilename();
         //String suffix = fileNameReal.substring(fileNameReal.lastIndexOf("."));
         String suffix = ".png";
@@ -230,6 +274,7 @@ public class FileUtils {
         String hoursStr = DateUtils.getDate("HHmmss");
         return   prefix + "_" + dayStr + "_" + hoursStr + suffix;
     }
+
 
 
 }

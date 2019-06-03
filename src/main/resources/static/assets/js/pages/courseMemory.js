@@ -9,39 +9,49 @@ var creater = '<option value="">--更新人--</option>';
 var user_list = sessionStorage.getItem('user_list');
 user_list = JSON.parse(user_list);
 
-// $.post(url_options, '', function (data) {
-//     //console.log(data);
-//     if(data.code == '0'){
-//         sessionStorage.setItem('course_options', JSON.stringify(data.data));
-//     }else{
-//         alert('列表错误');
-//     }
-// });
 to_page();
-var course_options = sessionStorage.getItem('course_options');
-if (course_options == '' || course_options == null || course_options == undefined) {
-    $.post(url_options, '', function (data) {
-        //console.log(data);
+$.ajax({
+    url: url_options,
+    type: 'POST',
+    data: '',
+    async: false,
+    cache: false,
+    contentType: false,
+    processData: false,
+    dataType: "json",
+    timeout: 50000,
+    beforeSend: function () {},
+    success: function (data) {
         if (data.code == '0') {
             sessionStorage.setItem('course_options', JSON.stringify(data.data));
         }
-    });
-    course_options = sessionStorage.getItem('course_options');
-}
-course_options = JSON.parse(course_options);
-//console.log(course_options);
-if (course_options == '' || course_options == null || course_options == undefined) {
-    alert('获取不到列表');
-} else {
-    //////////////sdfsdfsdfsdf
-}
+    },
+    complete: function (data) {
+        setTimeout(function(){},100);
+        course_options = sessionStorage.getItem('course_options');
+        course_options = JSON.parse(course_options);
+        if (course_options == '' || course_options == null || course_options == undefined) {
+            alert('获取不到列表');
+        } else {
+            var _option = '<option value="">请选择</option>';
+            $.each(course_options, function (k, v) {
+                _option += '<option data-value=' + v.courseTitle + ' value="' + v.id + '">' + v.courseTitle + '</option>';
+            });
+            $('.new_memory_title').html(_option);
+        }
+
+    },
+    error: function (data) {
+        console.log(data);
+    }
+}, "json");
 
 
 function to_page() {
     $.post(url_findAll, '', function (data) {
         var this_no;
-        var this_title = '';
         var tr;
+        var this_title;
         //console.log(data);
         if (data.code == '0') {
             var content = data.data;
@@ -50,14 +60,11 @@ function to_page() {
             } else {
                 $.each(content, function (i, n) {
                     this_no = i + 1;
-                    $.each(course_options, function (k, v) {
-                        // console.log(n.courseId)
-                        // console.log(v.id);
-                        // console.log('-');
-                        if (v.id == n.courseId) {
-                            this_title = v.courseTitle;
-                        }
-                    });
+                    if(n.titleName == null || n.titleName == 'null'){
+                        this_title = '未获取到标题';
+                    }else{
+                        this_title = n.titleName
+                    }
                     tr += '<tr data-id="' + n.courseId + '"><td>' + this_no + '</td><td>' + this_title + '</td><td><a data-id="' + n.courseId + '" href="javascript:void(0);" class="courseMemoryRemove"><i class="icon-trash"></i></a></td></tr>';
                 });
             }
@@ -72,9 +79,9 @@ $('.new_memory_cancel').click(function () {
     $('.memory_add').hide();
 });
 $('.memory_title_search').click(function () {
-    var option = '';
     var key_words = $('.memory_course_title ').val();
     var reg = new RegExp(key_words);
+    var option = '';
     if (key_words !== '') {
         $.each(course_options, function (k, v) {
             if (reg.test(v.courseTitle)) {

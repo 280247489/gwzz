@@ -2,6 +2,7 @@ package com.memory.cms.service;
 
 import com.memory.entity.jpa.CourseExt;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -28,6 +29,9 @@ public interface CourseExtCmsService {
     List<CourseExt> deleteAndSave(List<CourseExt> removeList,List<CourseExt> updateList );
 
     List<com.memory.entity.bean.CourseExt> queryCourseExtList(String courseId);
+
+    int setCourseExtStaticPathByCourseIdAndCourseExtSort(String course_id,String sort,String img_url,String audio_url);
+
 
 
 }
