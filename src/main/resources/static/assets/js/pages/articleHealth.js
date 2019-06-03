@@ -80,10 +80,12 @@ jQuery(document).ready(function () {
                         }
                         if (n.courseOnline == 1) {
                             is_online = '<span data-type="'+ n.courseOnline +'" class="btn btn-info btn-sm is_online">上线</span>';
+                            is_show = 'is_show';
                         } else {
                             is_online = '<span data-type="'+ n.courseOnline +'" class="btn btn-default btn-sm is_online">下线</span>';
+                            is_show = 'is_hide';
                         }
-                        tr += '<tr data-id="' + n.id + '"><td>' + this_no + '</td><td><img class="article_thumb" src="' + this_img_url + '" alt="' + n.courseTitle + '" /></td><td>' + n.courseTitle + '</td><td>' + c_name + '</td><td>' + n.courseCreateTime + '</td><td>' + u_name + '</td><td>' + n.courseUpdateTime + '</td><td class="articleHealth_count"><span>浏览：' + n.courseTotalView + '</span><span>点赞：' + n.courseTotalLike + '</span><span>分享：' + n.courseTotalShare + '</span></td><td>' + is_online + '</td><td><a data-id="' + n.id + '" class="articleHealth_edit" href="javascript:void(0);"><i class="icon-pencil-square"></i></a>&nbsp;&nbsp;<a data-id="' + n.id + '" class="alert_url" href="javascript:void(0);"><i class="icon-qrcode"></i></a></td></tr>';
+                        tr += '<tr data-id="' + n.id + '"><td>' + this_no + '</td><td><img class="article_thumb" src="' + this_img_url + '" alt="' + n.courseTitle + '" /></td><td>' + n.courseTitle + '</td><td>' + c_name + '</td><td>' + n.courseCreateTime + '</td><td>' + u_name + '</td><td>' + n.courseUpdateTime + '</td><td class="articleHealth_count"><span>浏览：' + n.courseTotalView + '</span><span>点赞：' + n.courseTotalLike + '</span><span>分享：' + n.courseTotalShare + '</span></td><td>' + is_online + '</td><td><a data-id="' + n.id + '" class="articleHealth_edit" href="javascript:void(0);"><i class="icon-pencil-square"></i></a>&nbsp;&nbsp;<a data-id="' + n.id + '" class="alert_url '+ is_show +'" href="javascript:void(0);"><i class="icon-qrcode"></i></a></td></tr>';
                     });
                 }
                 $('.articleHealth_list tbody').html(tr);
@@ -214,6 +216,7 @@ jQuery(document).ready(function () {
     $('.articleHealth_list').on('click', '.is_online', function () {
         var status_curr = $(this).attr('data-type');
         var span = $(this);
+        var _code = $(this).parent().parent().find('.alert_url');
         var status = '0';
         if (status_curr == '1') {
             status = '0';
@@ -230,9 +233,11 @@ jQuery(document).ready(function () {
                 if (data.data == '0') {
                     span.html('下线');
                     span.addClass('btn-default').removeClass('btn-info');
+                    _code.fadeOut();
                 } else if (data.data == '1') {
                     span.html('上线');
                     span.addClass('btn-info').removeClass('btn-default');
+                    _code.fadeIn();
                 }
             } else {}
         });

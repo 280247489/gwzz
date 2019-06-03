@@ -6,7 +6,10 @@ jQuery(document).ready(function () {
     var api_admin = api_back +'/sysAdmin/cms/options';
     var api_type_course = api_back +'/courseType/cms/list';
     var api_type_article = api_back +'/articleType/cms/list';
-    var server_course = 'http://192.168.1.200:8091/file/';
+    var server_course = 'http://192.168.1.200:8081/yy/cms/';
+    var url_editer = api_back + '/jodit/uploadImg';
+    var api_type = api_back +'/courseType/cms/list';
+
     var lk = 0;
 
 
@@ -15,6 +18,7 @@ jQuery(document).ready(function () {
     sessionStorage.setItem("server_shezhen", server_shezhen);
     sessionStorage.setItem("api_back", api_back);
     sessionStorage.setItem("server_course", server_course);
+    sessionStorage.setItem("url_editer", url_editer);
     if (user !== null) {
         window.location.href = "./index.html";
         return false;

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.swing.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,5 +32,7 @@ public interface CourseCmsService {
     int updateCourseLiveStatus(int course_live_status,String id);
 
     List<com.memory.entity.bean.Course> queryCourseOptions();
+
+    int  updateCourseUpdateTimeById(Date update_time, String id);
 
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,6 +32,13 @@ public interface CourseCmsRepository extends JpaRepository<Course,String>, JpaSp
     @Query(value = "select  new com.memory.entity.bean.Course(c.id,c.courseTitle,c.courseOnline ) " +
             "from Course c  where  c.courseOnline = 1 ORDER BY  c.courseCreateTime desc")
     List<com.memory.entity.bean.Course> queryCourseOptions();
+
+
+    @Modifying
+    @Transactional
+    @Query("update Course a set a.courseUpdateTime  = ?1 where a.id =?2 ")
+    int  updateCourseUpdateTimeById(Date update_time, String id);
+
 
 
 }

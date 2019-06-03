@@ -632,7 +632,7 @@ jQuery(document).ready(function () {
             setTimeout(function () {
                 _lock = 0;
             }, 1000);
-            this_li.find('.l_d .new').trigger('click');
+            this_li.find('.l_d .new').attr('type','file').trigger('click');
             $('.edit_msg_file_url').val('');
 
         }

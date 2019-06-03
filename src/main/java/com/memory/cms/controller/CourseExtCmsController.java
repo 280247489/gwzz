@@ -75,7 +75,11 @@ public class CourseExtCmsController {
             if(extListSave!=null){
 
                 //存储到redis 临时
-                addCourseExt2Redis(extList, extListSave);
+                String courseId = extList.get(0).getCourseId();
+                String keyHash = SHARECOURSECONTENT + courseId;
+                redisUtil.hset(keyHash, "course", "notExist");
+                redisUtil.hset(keyHash, "courseExt", JSON.toJSONString("notExist"));
+                //addCourseExt2Redis(extList, extListSave,false);
 
                 //异步同步网络资源到服务器
                //asyncDownloadFromXiaoZhuShou(extListSave);
@@ -107,10 +111,13 @@ public class CourseExtCmsController {
             if(extListSave != null){
 
                 //存储到redis 临时
-                addCourseExt2Redis(extList, extListSave);
+                addCourseExt2Redis(extList, extListSave,true);
 
                 //异步同步网络资源到服务器
                 //asyncDownloadFromXiaoZhuShou(extListSave);
+                String courseId = extModel.getExtList().get(0).getCourseId();
+                //更新课程表更新时间
+                courseCmsService.updateCourseUpdateTimeById(DateUtils.strToDate(DateUtils.getCurrentDate()),courseId);
             }
             result = ResultUtil.success(extListSave);
             System.out.println("update ===========================================");
@@ -198,14 +205,22 @@ public class CourseExtCmsController {
         courseExt.setCourseExtSort(i + 1);
     }
 
-    private void addCourseExt2Redis(List<Ext> extList, List<CourseExt> extListSave) {
+    private void addCourseExt2Redis(List<Ext> extList, List<CourseExt> extListSave,boolean isAddMemory) {
         String courseId = extList.get(0).getCourseId();
         Course course = courseCmsService.getCourseById(courseId);
         String keyHash = SHARECOURSECONTENT + courseId;
         redisUtil.hset(keyHash, "course", course.getCourseTitle());
         redisUtil.hset(keyHash, "courseExt", JSON.toJSONString(overMethod(extListSave)));
 
-        courseMemoryService.addMemory(courseId);
+        if(isAddMemory){
+            Object obj = courseMemoryService.getCourseExtById(courseId);
+            //内存中存在则更新内存信息(上架状态再同步)
+            if(obj != null){
+                courseMemoryService.addMemory(courseId);
+            }
+
+        }
+
     }
 
     private String uploadCourseExtImg( int i, Ext ext, String courseUUid) {

@@ -16,6 +16,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -120,6 +121,11 @@ public class CourseCmsServiceImpl implements CourseCmsService {
     @Override
     public List<com.memory.entity.bean.Course> queryCourseOptions() {
         return repository.queryCourseOptions();
+    }
+
+    @Override
+    public int updateCourseUpdateTimeById(Date update_time, String id) {
+        return repository.updateCourseUpdateTimeById(update_time,id);
     }
 }
 

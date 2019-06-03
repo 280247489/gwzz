@@ -371,6 +371,7 @@
 
 
     <script>
+        var url_editer = sessionStorage.getItem('url_editer');
         var editor = new Jodit('#editor', {
             textIcons: false,
             iframe: false,
@@ -381,7 +382,7 @@
                 timeout: 100
             },
             uploader: {
-                url: 'http://manager.houaihome.com/jodit/uploadImg'
+                url: url_editer
             },
             commandToHotkeys: {
                 'openreplacedialog': 'ctrl+p'

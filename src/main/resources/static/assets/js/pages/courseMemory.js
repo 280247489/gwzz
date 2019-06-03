@@ -31,7 +31,7 @@ $.ajax({
         course_options = sessionStorage.getItem('course_options');
         course_options = JSON.parse(course_options);
         if (course_options == '' || course_options == null || course_options == undefined) {
-            alert('获取不到列表');
+            // alert('获取不到列表');
         } else {
             var _option = '<option value="">请选择</option>';
             $.each(course_options, function (k, v) {

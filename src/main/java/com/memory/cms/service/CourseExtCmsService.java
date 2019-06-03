@@ -32,6 +32,8 @@ public interface CourseExtCmsService {
 
     int setCourseExtStaticPathByCourseIdAndCourseExtSort(String course_id,String sort,String img_url,String audio_url);
 
+    void updateCourseExtDb2Redis(String courseId,String course_title);
+
 
 
 }

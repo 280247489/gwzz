@@ -1,9 +1,12 @@
 package com.memory.cms.controller;
+import com.alibaba.fastjson.JSON;
+import com.memory.cms.service.CourseExtCmsService;
 import com.memory.cms.service.CourseMemoryService;
 import com.memory.common.yml.MyFileConfig;
 import com.memory.entity.jpa.Course;
 import com.memory.cms.service.CourseCmsService;
 import com.memory.common.utils.*;
+import com.memory.redis.config.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
+
+import static com.memory.redis.CacheConstantConfig.SHARECOURSECONTENT;
 
 /**
  * @author INS6+
@@ -43,6 +48,13 @@ public class CourseCmsController {
     @Autowired
     private CourseMemoryService courseMemoryService;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
+
+    @Autowired
+    private CourseExtCmsService courseExtCmsService;
+
 
     /**
      * 变更上线下线状态
@@ -62,6 +74,16 @@ public class CourseCmsController {
                 if(online == 0){
                     str = "下线";
                     courseMemoryService.clear(id);
+
+                    //将redis中的数据赋值为notExist状态.
+                    String keyHash = SHARECOURSECONTENT + id;
+                    redisUtil.hset(keyHash, "course", "notExist");
+                    redisUtil.hset(keyHash, "courseExt", JSON.toJSONString("notExist"));
+
+                }else{
+                    //上线状态，同步db2redis
+                    courseExtCmsService.updateCourseExtDb2Redis(id,course.getCourseTitle());
+
                 }
                 result.setCode(0);
                 result.setMsg("变更"+str+"状态成功！");

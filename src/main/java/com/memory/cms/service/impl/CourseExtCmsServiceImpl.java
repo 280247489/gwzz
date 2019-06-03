@@ -5,13 +5,18 @@ import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.CourseExt;
 import com.memory.cms.repository.CourseExtCmsRepository;
 import com.memory.cms.service.CourseExtCmsService;
+import com.memory.redis.config.RedisUtil;
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.memory.redis.CacheConstantConfig.SHARECOURSECONTENT;
 
 /**
  * @author INS6+
@@ -27,6 +32,9 @@ public class CourseExtCmsServiceImpl implements CourseExtCmsService {
 
     @Autowired
     private CourseExtCmsRepository repository;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public CourseExt getCourseExtById(String id) {
@@ -115,4 +123,40 @@ public class CourseExtCmsServiceImpl implements CourseExtCmsService {
           return   daoUtils.excuteHQL(stringBuffer.toString(),params);
 
     }
+
+    @Override
+    public void updateCourseExtDb2Redis(String courseId,String course_title){
+        String keyHash = SHARECOURSECONTENT + courseId;
+        //查询数据库db
+        List<CourseExt> list = queryCourseExtByCourseId(courseId);
+        //添加到redis中
+        redisUtil.hset(keyHash, "course", course_title);
+        redisUtil.hset(keyHash, "courseExt", JSON.toJSONString(overMethod(list)));
+    }
+
+
+    public List<Map<String,Object>> overMethod(List<CourseExt> extListSave){
+
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+
+        for (int i = 0; i < extListSave.size(); i++) {
+            CourseExt courseExt1 = extListSave.get(i);
+            Map<String, Object> mapObj = new HashMap<>();
+            mapObj.put("courseExtNickname", courseExt1.getCourseExtNickname());
+            mapObj.put("courseExtSort", courseExt1.getCourseExtSort());
+            mapObj.put("courseExtType", courseExt1.getCourseExtType());
+            if(courseExt1.getCourseExtType()==1){
+                mapObj.put("courseExtWords", courseExt1.getCourseExtWords());
+            }else if(courseExt1.getCourseExtType()==2){
+                mapObj.put("courseExtAudio", courseExt1.getCourseExtAudio());
+                mapObj.put("courseExtAudioTimes", courseExt1.getCourseExtAudioTimes());
+            }else if(courseExt1.getCourseExtType()==3){
+                mapObj.put("courseExtImgUrl", courseExt1.getCourseExtImgUrl());
+            }
+            resultList.add(mapObj);
+        }
+        return  resultList;
+    }
+
+
 }
