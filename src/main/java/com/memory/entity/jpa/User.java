@@ -11,7 +11,7 @@ import java.util.Objects;
  * @ClassName User
  * @Descriotion TODO
  * @Author Ganxiqing
- * @Date 2019/5/25 9:57
+ * @Date 2019/6/3 16:20
  */
 @Entity
 public class User {
@@ -20,8 +20,9 @@ public class User {
     private String userUnionId;
     private String userOpenId;
     private String userTel;
-    private String userName;
+    private String userNickName;
     private String userLogo;
+    private String userName;
     private String userSex;
     private String userBirthday;
     private String userProvince;
@@ -36,17 +37,18 @@ public class User {
     public User() {
     }
 
-    public User(String id, String password, String userUnionId, String userOpenId, String userTel, String userName,
-                String userLogo, String userSex, String userBirthday, String userProvince, String userCity,
-                String userArea, String userAddress, Date userCreateTime, int userForbidden, int userNologin,
-                int userCancel) {
+    public User(String id, String password, String userUnionId, String userOpenId, String userTel, String userNickName,
+                String userLogo, String userName, String userSex, String userBirthday, String userProvince,
+                String userCity, String userArea, String userAddress, Date userCreateTime,
+                int userForbidden, int userNologin, int userCancel) {
         this.id = id;
         this.password = password;
         this.userUnionId = userUnionId;
         this.userOpenId = userOpenId;
         this.userTel = userTel;
-        this.userName = userName;
+        this.userNickName = userNickName;
         this.userLogo = userLogo;
+        this.userName = userName;
         this.userSex = userSex;
         this.userBirthday = userBirthday;
         this.userProvince = userProvince;
@@ -110,13 +112,13 @@ public class User {
     }
 
     @Basic
-    @Column(name = "user_name")
-    public String getUserName() {
-        return userName;
+    @Column(name = "user_nick_name")
+    public String getUserNickName() {
+        return userNickName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserNickName(String userNickName) {
+        this.userNickName = userNickName;
     }
 
     @Basic
@@ -127,6 +129,16 @@ public class User {
 
     public void setUserLogo(String userLogo) {
         this.userLogo = userLogo;
+    }
+
+    @Basic
+    @Column(name = "user_name")
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     @Basic
@@ -242,8 +254,9 @@ public class User {
                 Objects.equals(userUnionId, user.userUnionId) &&
                 Objects.equals(userOpenId, user.userOpenId) &&
                 Objects.equals(userTel, user.userTel) &&
-                Objects.equals(userName, user.userName) &&
+                Objects.equals(userNickName, user.userNickName) &&
                 Objects.equals(userLogo, user.userLogo) &&
+                Objects.equals(userName, user.userName) &&
                 Objects.equals(userSex, user.userSex) &&
                 Objects.equals(userBirthday, user.userBirthday) &&
                 Objects.equals(userProvince, user.userProvince) &&
@@ -255,6 +268,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, password, userUnionId, userOpenId, userTel, userName, userLogo, userSex, userBirthday, userProvince, userCity, userArea, userAddress, userCreateTime, userForbidden, userNologin, userCancel);
+        return Objects.hash(id, password, userUnionId, userOpenId, userTel, userNickName, userLogo, userName, userSex, userBirthday, userProvince, userCity, userArea, userAddress, userCreateTime, userForbidden, userNologin, userCancel);
     }
 }

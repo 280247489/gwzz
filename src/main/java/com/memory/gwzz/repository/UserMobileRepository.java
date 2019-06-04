@@ -10,7 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @Date 2019/5/27 15:46
  */
 public interface UserMobileRepository extends JpaRepository<User,String> {
-    User findByUserTel(String userTel);
+    User findByUserTelAndUserNologinAndUserCancel(String userTel, Integer userNologin, Integer userCancel);
     User findByUserTelAndPassword(String userPhone, String userPwd);
     User findByUserOpenId(String userOpenId);
+    User findByIdAndUserNologinAndUserCancel(String id,Integer userNologin,Integer userCancel);
 }

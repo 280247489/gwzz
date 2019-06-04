@@ -40,8 +40,11 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
         articleComment.setUserName(userName);
         articleComment.setCommentType(commentType);
         articleComment.setCommentRootId(articleId);
-        String cpId = commentType==0?articleId:commentType==1?commentParentId:"";
-        articleComment.setCommentParentId(cpId);
+        if(commentType==0){
+            articleComment.setCommentParentId(articleId);
+        }else if (commentType==1){
+            articleComment.setCommentParentId(commentParentId);
+        }
         articleComment.setCommentParentUserName(commentParentUserName);
         articleComment.setCommentContent(commentContent);
         articleComment.setCommentCreateTime(new Date());

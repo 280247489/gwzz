@@ -90,13 +90,14 @@ public class DemoController extends BaseController {
 
         return msg;
     }
-    public static void main(String[] args) {
-        String msgId ="{\"msg_id\":\"770920259755\"}";
+    public static   void main(String[] args) {
+//        String msgId ="{\"msg_id\":\"770920259755\"}";
 //        Utils.sendSMSCode(1,"15844064331");
 //        Utils.sendValidSMSCode("769585791451","730440");
 //        Utils.sendValidSMSCode("769584789081","496507");
 //        System.out.println();769584332810
-        System.out.println(JSON.parse(msgId));
+//      RedisUtil redisUtil = new RedisUtil();
+//        redisUtil.incr(CacheConstantConfig.USER_SMS_SUM+":"+,RedisUtil.CACHE_TIME_D_1,1);
 
     }
 

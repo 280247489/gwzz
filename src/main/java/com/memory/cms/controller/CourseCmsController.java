@@ -199,7 +199,6 @@ public class CourseCmsController {
                     FileUtils.upload(titleFile,fileUploadedPath,fileName);
                   //  course_logo = fileUploadedPath + "/" +fileName;
                     course_logo = id + "/" +fileName;
-
                 }
 
                 if(!radioFile.isEmpty()){

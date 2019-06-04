@@ -1,7 +1,9 @@
 package com.memory.gwzz.service.impl;
 
+import com.memory.common.utils.FileUploadUtil;
 import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
+
 import com.memory.entity.jpa.User;
 import com.memory.gwzz.repository.UserMobileRepository;
 import com.memory.gwzz.service.UserMobileService;
@@ -10,7 +12,9 @@ import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -32,6 +36,8 @@ public class UserMobileServiceImpl implements UserMobileService {
     @Autowired
     private DaoUtils daoUtils;
 
+    SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
+
     /**
      * 用户注册
      * @param phone
@@ -45,9 +51,9 @@ public class UserMobileServiceImpl implements UserMobileService {
         Date date = new Date();
         if (user==null){
             user = new User(Utils.generateUUIDs(), Utils.md5Password(userPwd), "", "",  phone,
-                    "", "", "", "", "",
+                    "","", "", "", "", "",
                     "", "", "", date, 0, 0, 0);
-            daoUtils.save(user);
+            userMobileRepository.save(user);
 
         }
         return  user;
@@ -64,17 +70,17 @@ public class UserMobileServiceImpl implements UserMobileService {
      * @return
      */
     public User registerWeChat( String userId,  String userUnionId,  String userOpenId,
-                                String userName,  String userSex,  String userLogo ){
+                                String userNickName,  String userSex,  String userLogo ){
         User user = (User) daoUtils.getById("User",userId);
         Date date = new Date();
         if (user==null){
             user = new User(Utils.generateUUIDs(), "", userUnionId, userOpenId,  "",
-                    userName, userLogo, userSex, "", "",
+                    userNickName, userLogo, "",userSex, "", "",
                     "", "", "", date, 0, 0, 0);
         }else{
             user.setUserUnionId(userUnionId);
             user.setUserOpenId(userOpenId);
-            user.setUserName(userName);
+            user.setUserNickName(userNickName);
             user.setUserSex(userSex);
             user.setUserLogo(userLogo);
         }
@@ -119,7 +125,7 @@ public class UserMobileServiceImpl implements UserMobileService {
      * @return
      */
     @Override
-    public User checkPhone(String userPhone){return  userMobileRepository.findByUserTel(userPhone); }
+    public User checkPhone(String userPhone){return  userMobileRepository.findByUserTelAndUserNologinAndUserCancel(userPhone,0,0); }
 
     /**
      * 发送短信验证码
@@ -130,7 +136,7 @@ public class UserMobileServiceImpl implements UserMobileService {
     public String getSMSCode(String userPhone){
         String msgId = Utils.sendSMSCode(164674,userPhone);
         if (!"".equals(msgId)){
-            redisUtil.incr(CacheConstantConfig.USER_SMS_SUM+":"+userPhone,RedisUtil.CACHE_TIME_D_1,1);
+            redisUtil.incr(CacheConstantConfig.USER_SMS_SUM+":"+userPhone,1,RedisUtil.CACHE_TIME_D_1);
         }
         return msgId;
     }
@@ -148,9 +154,84 @@ public class UserMobileServiceImpl implements UserMobileService {
         return  flag;
     }
 
+    /**
+     * 修改用户姓名
+     * @param user
+     * @param userName
+     * @return
+     */
+    @Override
+    public User updUserName(User user, String userName){
+        user.setUserName(userName);
+        return userMobileRepository.save(user);
+    }
 
+    /**
+     * 修改用户性别
+     * @param user
+     * @param userSex
+     * @return
+     */
+    @Override
+    public User updUserSex(User user, String userSex){
+        user.setUserSex(userSex);
+        return userMobileRepository.save(user);
+    }
 
+    /**
+     * 修改用户生日
+     * @param user
+     * @param userBirthday
+     * @return
+     */
+    @Override
+    public User updUserBirthday(User user, String userBirthday){
+        user.setUserBirthday(userBirthday);
+        return userMobileRepository.save(user);
+    }
 
+    /**
+     * 修改用户头像
+     * @param user
+     * @param userLogo
+     * @return
+     */
+    @Override
+    public User updUserLogo(User user, MultipartFile userLogo){
+        String filePath ="/home/work/apps/image.houai.com/image";
+        String dbUrl = "/ha_app_agent_file/user/logo";
+         if (userLogo!=null){
+             user.setUserLogo(FileUploadUtil.uploadFile(userLogo,filePath,dbUrl,Utils.getShortUUTimeStamp()));
+         }
+        return userMobileRepository.save(user);
+    }
 
+    /**
+     * 修改用户地址
+     * @param user
+     * @param userProvince
+     * @param userCity
+     * @param userArea
+     * @param userAddress
+     * @return
+     */
+    @Override
+    public User updAddress(User user, String userProvince, String userCity, String userArea, String userAddress) {
+        user.setUserProvince(userProvince);
+        user.setUserCity(userCity);
+        user.setUserAddress(userAddress);
+        return userMobileRepository.save(user);
+    }
 
+    /**
+     * 修改用户昵称
+     * @param user
+     * @param userNickName
+     * @return
+     */
+    @Override
+    public User updUserNickName(User user, String userNickName) {
+        user.setUserNickName(userNickName);
+        return userMobileRepository.save(user);
+    }
 }

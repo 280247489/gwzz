@@ -202,15 +202,14 @@ public class RedisUtil {
      * @param delta     自增变量
      * @return
      */
-    public long incr(String key, long liveTime,long delta) {
-        RedisAtomicLong entityIdCounter = new RedisAtomicLong(key, redisTemplate.getConnectionFactory(),delta);
-        Long increment = entityIdCounter.getAndIncrement();
-
-        if ((null == increment || increment.longValue() == 0) && liveTime > 0) {//初始设置过期时间
-            entityIdCounter.expire(liveTime, TimeUnit.SECONDS);
+    public long incr(String key,long delta, long liveTime) {
+        if (delta < 0) {
+            throw new RuntimeException("递增因子必须大于0");
         }
+        long val = redisTemplate.opsForValue().increment(key, delta);
+        expire(key, liveTime);
+        return val;
 
-        return increment;
     }
 
 

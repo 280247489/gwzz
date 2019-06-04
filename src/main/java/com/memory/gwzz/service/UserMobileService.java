@@ -1,6 +1,7 @@
 package com.memory.gwzz.service;
 
 import com.memory.entity.jpa.User;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @ClassName UserMobileService
@@ -16,4 +17,10 @@ public interface UserMobileService {
     User registerWeChat( String userId,  String userUnionId,  String userOpenId, String userName,  String userSex,  String userLogo );
     User logo(String phone,String userPwd,String userOpenId, Integer type);
     User setUserPwd(String phone,String userPwd);
+    User updUserName(User user, String userName);
+    User updUserSex(User user, String userSex);
+    User updUserBirthday(User user, String userBirthday);
+    User updUserLogo(User user, MultipartFile userLogo);
+    User updAddress(User user, String userProvince,String userCity,String userArea,String userAddress);
+    User updUserNickName(User user,String userNickName);
 }
