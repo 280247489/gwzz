@@ -10,4 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @Date 2019/6/4 13:39
  */
 public interface ArticleCommentLikeMobileRepository extends JpaRepository<ArticleCommentLike,String> {
+    ArticleCommentLike findByCommentIdAndUserId(String commentId,String userId);
 }

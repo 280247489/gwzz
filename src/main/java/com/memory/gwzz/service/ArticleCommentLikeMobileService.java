@@ -1,5 +1,7 @@
 package com.memory.gwzz.service;
 
+import com.memory.entity.jpa.ArticleCommentLike;
+
 /**
  * @ClassName ArticleCommentLikeMobileService
  * @Descriotion TODO
@@ -7,4 +9,6 @@ package com.memory.gwzz.service;
  * @Date 2019/6/4 13:38
  */
 public interface ArticleCommentLikeMobileService {
+
+    ArticleCommentLike like(String cid,String uid);
 }
