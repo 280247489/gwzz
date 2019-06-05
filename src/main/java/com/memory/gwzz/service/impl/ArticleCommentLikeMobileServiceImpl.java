@@ -37,8 +37,9 @@ public class ArticleCommentLikeMobileServiceImpl implements ArticleCommentLikeMo
             articleCommentLike = this.getByCidUid(cid,uid);
             if (articleCommentLike !=null){
                 if (articleCommentLike.getCommentLikeYn()==1){
+                    Integer b =1;
                     articleCommentLike.setCommentLikeYn(0);
-                    articleComment.setCommentTotalLike(articleComment.getCommentTotalLike()-1);
+                    articleComment.setCommentTotalLike(articleComment.getCommentTotalLike()-b);
                 }else {
                     articleCommentLike.setCommentLikeYn(1);
                     articleComment.setCommentTotalLike(articleComment.getCommentTotalLike()+1);

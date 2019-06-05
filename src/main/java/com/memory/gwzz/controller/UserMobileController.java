@@ -3,6 +3,7 @@ package com.memory.gwzz.controller;
 import com.alibaba.fastjson.JSON;
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
+import com.memory.common.utils.Utils;
 import com.memory.entity.jpa.User;
 import com.memory.gwzz.repository.UserMobileRepository;
 import com.memory.gwzz.service.UserMobileService;
@@ -367,6 +368,41 @@ public class UserMobileController extends BaseController {
         }catch (Exception e){
             e.printStackTrace();
             logger.error("异常信息");
+        }
+        return msg;
+    }
+
+    /**
+     * 修改密码
+     * URL:192.168.1.185:8081/gwzz/user/mobile/updUserPwd
+     * @param userId String 用户标识Id
+     * @param oldPassword String 旧密码
+     * @param newPassWord String新密码
+     * @return User对象
+     */
+    @RequestMapping(value = "updUserPwd",method = RequestMethod.POST)
+    public Message updUserPwd(@RequestParam String userId,@RequestParam String oldPassword,@RequestParam String newPassWord){
+        msg = Message.success();
+        try {
+            User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
+            if (user != null){
+                String oldPwd = Utils.md5Password(oldPassword);
+                if (user.getPassword()==oldPwd){
+                    msg.setRecode(0);
+                    msg.setData(userMobileService.updPassWord(user,newPassWord));
+                }else{
+                    msg.setRecode(2);
+                    msg.setMsg("旧密码错误");
+                }
+
+            }else{
+                msg.setRecode(1);
+                msg.setMsg("无此用户");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("异常");
         }
         return msg;
     }

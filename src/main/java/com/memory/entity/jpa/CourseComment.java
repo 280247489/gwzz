@@ -1,7 +1,7 @@
 package com.memory.entity.jpa;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -23,8 +23,28 @@ public class CourseComment {
     private String commentParentId;
     private String commentParentUserName;
     private String commentContent;
-    private Timestamp commentCreateTime;
+    private Date commentCreateTime;
     private int commentTotalLike;
+
+    public CourseComment() {
+    }
+
+    public CourseComment(String id, String courseId, String userId, String userLogo, String userName, int commentType,
+                         String commentRootId, String commentParentId, String commentParentUserName, String commentContent,
+                         Date commentCreateTime, int commentTotalLike) {
+        this.id = id;
+        this.courseId = courseId;
+        this.userId = userId;
+        this.userLogo = userLogo;
+        this.userName = userName;
+        this.commentType = commentType;
+        this.commentRootId = commentRootId;
+        this.commentParentId = commentParentId;
+        this.commentParentUserName = commentParentUserName;
+        this.commentContent = commentContent;
+        this.commentCreateTime = commentCreateTime;
+        this.commentTotalLike = commentTotalLike;
+    }
 
     @Id
     @Column(name = "id")
@@ -128,11 +148,11 @@ public class CourseComment {
 
     @Basic
     @Column(name = "comment_create_time")
-    public Timestamp getCommentCreateTime() {
+    public Date getCommentCreateTime() {
         return commentCreateTime;
     }
 
-    public void setCommentCreateTime(Timestamp commentCreateTime) {
+    public void setCommentCreateTime(Date commentCreateTime) {
         this.commentCreateTime = commentCreateTime;
     }
 

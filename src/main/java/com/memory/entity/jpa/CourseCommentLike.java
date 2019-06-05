@@ -1,14 +1,14 @@
 package com.memory.entity.jpa;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 /**
  * @ClassName CourseCommentLike
  * @Descriotion TODO
  * @Author Ganxiqing
- * @Date 2019/6/4 13:29
+ * @Date 2019/6/4 16:35
  */
 @Entity
 @Table(name = "course_comment_like", schema = "gwzz_db", catalog = "")
@@ -16,7 +16,8 @@ public class CourseCommentLike {
     private String id;
     private String userId;
     private String commentId;
-    private Timestamp createTime;
+    private int commentLikeYn;
+    private Date createTime;
 
     @Id
     @Column(name = "id")
@@ -49,12 +50,22 @@ public class CourseCommentLike {
     }
 
     @Basic
+    @Column(name = "comment_like_yn")
+    public int getCommentLikeYn() {
+        return commentLikeYn;
+    }
+
+    public void setCommentLikeYn(int commentLikeYn) {
+        this.commentLikeYn = commentLikeYn;
+    }
+
+    @Basic
     @Column(name = "create_time")
-    public Timestamp getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Timestamp createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -63,7 +74,8 @@ public class CourseCommentLike {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CourseCommentLike that = (CourseCommentLike) o;
-        return Objects.equals(id, that.id) &&
+        return commentLikeYn == that.commentLikeYn &&
+                Objects.equals(id, that.id) &&
                 Objects.equals(userId, that.userId) &&
                 Objects.equals(commentId, that.commentId) &&
                 Objects.equals(createTime, that.createTime);
@@ -71,6 +83,6 @@ public class CourseCommentLike {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, commentId, createTime);
+        return Objects.hash(id, userId, commentId, commentLikeYn, createTime);
     }
 }

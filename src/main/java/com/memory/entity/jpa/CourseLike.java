@@ -1,11 +1,11 @@
 package com.memory.entity.jpa;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 /**
- * @ClassName CourseLike
+ * @ClassName CourseLikeMobileServiceImpl
  * @Descriotion TODO
  * @Author Ganxiqing
  * @Date 2019/6/4 13:29
@@ -17,7 +17,7 @@ public class CourseLike {
     private String userId;
     private String courseId;
     private int likeStatus;
-    private Timestamp createTime;
+    private Date createTime;
 
     @Id
     @Column(name = "id")
@@ -61,11 +61,11 @@ public class CourseLike {
 
     @Basic
     @Column(name = "create_time")
-    public Timestamp getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Timestamp createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 

@@ -23,4 +23,5 @@ public interface UserMobileService {
     User updUserLogo(User user, MultipartFile userLogo);
     User updAddress(User user, String userProvince,String userCity,String userArea,String userAddress);
     User updUserNickName(User user,String userNickName);
+    User updPassWord(User user, String newPassWord);
 }

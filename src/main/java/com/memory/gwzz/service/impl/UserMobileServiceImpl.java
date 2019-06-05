@@ -234,4 +234,10 @@ public class UserMobileServiceImpl implements UserMobileService {
         user.setUserNickName(userNickName);
         return userMobileRepository.save(user);
     }
+
+    @Override
+    public User updPassWord(User user, String newPassWord) {
+        user.setPassword(Utils.md5Password(newPassWord));
+        return userMobileRepository.save(user);
+    }
 }
