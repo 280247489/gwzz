@@ -198,8 +198,8 @@ public class UserMobileServiceImpl implements UserMobileService {
      */
     @Override
     public User updUserLogo(User user, MultipartFile userLogo){
-        String filePath ="/home/work/apps/image.houai.com/image";
-        String dbUrl = "/ha_app_agent_file/user/logo";
+        String filePath ="E:\\userLogo";
+        String dbUrl = "/gwzz_file/user/logo";
          if (userLogo!=null){
              user.setUserLogo(FileUploadUtil.uploadFile(userLogo,filePath,dbUrl,Utils.getShortUUTimeStamp()));
          }
@@ -219,6 +219,7 @@ public class UserMobileServiceImpl implements UserMobileService {
     public User updAddress(User user, String userProvince, String userCity, String userArea, String userAddress) {
         user.setUserProvince(userProvince);
         user.setUserCity(userCity);
+        user.setUserArea(userArea);
         user.setUserAddress(userAddress);
         return userMobileRepository.save(user);
     }
@@ -235,6 +236,12 @@ public class UserMobileServiceImpl implements UserMobileService {
         return userMobileRepository.save(user);
     }
 
+    /**
+     * 修改密码
+     * @param user
+     * @param newPassWord
+     * @return
+     */
     @Override
     public User updPassWord(User user, String newPassWord) {
         user.setPassword(Utils.md5Password(newPassWord));

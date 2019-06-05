@@ -1,6 +1,7 @@
 package com.memory.gwzz.service.impl;
 
 import com.memory.common.utils.Utils;
+import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.ArticleComment;
 import com.memory.gwzz.repository.ArticleCommentMobileRepository;
 import com.memory.gwzz.service.ArticleCommentMobileService;
@@ -24,7 +25,8 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
     @Autowired
     private ArticleCommentMobileRepository articleCommentMobileRepository;
 
-
+    @Autowired
+    private DaoUtils daoUtils;
 
     @Transient
     @Override
@@ -39,13 +41,15 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
         articleComment.setUserLogo(userLogo);
         articleComment.setUserName(userName);
         articleComment.setCommentType(commentType);
-        articleComment.setCommentRootId(articleId);
         if(commentType==0){
-            articleComment.setCommentParentId(articleId);
+            articleComment.setCommentRootId(userId);
+            articleComment.setCommentParentId("");
+            articleComment.setCommentParentUserName("");
         }else if (commentType==1){
+            articleComment.setCommentRootId(this.getByPid(commentParentId).getCommentRootId());
             articleComment.setCommentParentId(commentParentId);
+            articleComment.setCommentParentUserName("回复@"+commentParentUserName);
         }
-        articleComment.setCommentParentUserName(commentParentUserName);
         articleComment.setCommentContent(commentContent);
         articleComment.setCommentCreateTime(new Date());
         articleComment.setCommentTotalLike(0);
@@ -56,6 +60,9 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
         return returnMap;
     }
 
+    public ArticleComment getByPid(String pid){
+        return (ArticleComment) daoUtils.getById("ArticleComment",pid);
+    }
 
 
 
