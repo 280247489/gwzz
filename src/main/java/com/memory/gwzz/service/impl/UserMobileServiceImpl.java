@@ -199,7 +199,7 @@ public class UserMobileServiceImpl implements UserMobileService {
     @Override
     public User updUserLogo(User user, MultipartFile userLogo){
         String filePath ="E:\\userLogo";
-        String dbUrl = "/gwzz_file/user/logo";
+        String dbUrl = "/gwzz_file/user/logo/";
          if (userLogo!=null){
              user.setUserLogo(FileUploadUtil.uploadFile(userLogo,filePath,dbUrl,Utils.getShortUUTimeStamp()));
          }

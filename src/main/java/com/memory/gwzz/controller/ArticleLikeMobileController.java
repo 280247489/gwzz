@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date 2019/5/25 14:20
  */
 @RestController
-@RequestMapping(value = "articleLikeMobile/mobile")
+@RequestMapping(value = "articleLike/mobile")
 public class ArticleLikeMobileController extends BaseController {
 
     private final static Logger logger = LoggerFactory.getLogger(ArticleLikeMobileController.class);
@@ -27,10 +27,10 @@ public class ArticleLikeMobileController extends BaseController {
 
     /**
      * 添加文章点赞
-     * URL：192.168.1.185：8081/articleLikeMobile/mobile/addLike
-     * @param articleId
-     * @param userId
-     * @return
+     * URL：192.168.1.185:8081/gwzz/articleLike/mobile/mobile/addLike
+     * @param articleId String 文章唯一标识ID
+     * @param userId String 用户唯一标识ID
+     * @return like 对象
      */
     @RequestMapping(value = "addLike")
     public Message add(@RequestParam String articleId, @RequestParam String userId){

@@ -178,7 +178,7 @@ public class UserMobileController extends BaseController {
     }
 
     /**
-     * 修改密码
+     * 忘记密码
      * URL:192.168.1.185:8081/gwzz/user/mobile/setUserPwd
      * @param phone 电话号码 String
      * @param userPwd 用户新密码 String
@@ -213,10 +213,10 @@ public class UserMobileController extends BaseController {
     }
 
     /**
-     * 修改用户昵称
+     * 修改用户真实姓名
      * URL:192.168.1.185:8081/gwzz/user/mobile/updUserName
      * @param userId 用户主键ID
-     * @param userName 用户昵称
+     * @param userName 用户真实姓名
      * @return user对象
      */
     @RequestMapping(value = "updUserName", method = RequestMethod.POST)
@@ -387,7 +387,7 @@ public class UserMobileController extends BaseController {
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user != null){
                 String oldPwd = Utils.md5Password(oldPassword);
-                if (user.getPassword()==oldPwd){
+                if (user.getPassword().equals(oldPwd) ){
                     msg.setRecode(0);
                     msg.setData(userMobileService.updPassWord(user,newPassWord));
                 }else{

@@ -29,7 +29,7 @@ public class ArticleCommentMobileController extends BaseController {
 
     /**
      * 添加文章评论接口
-     *  URL：192.168.1.185：8081/gwzz/articleComment/mobile/add
+     *  URL：192.168.1.185:8081/gwzz/articleComment/mobile/add
      * @param articleId 文章ID
      * @param userId 用户ID
      * @param userLogo 评论人头像

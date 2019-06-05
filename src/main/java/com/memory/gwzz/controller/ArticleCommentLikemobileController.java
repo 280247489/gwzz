@@ -28,7 +28,7 @@ public class ArticleCommentLikemobileController extends BaseController {
 
     /**
      * 添加评论点赞
-     * URL：192.168.1.185：8081/articleCommentLike/mobile/addLike
+     * URL：192.168.1.185:8081/gwzz/articleCommentLike/mobile/addLike
      * @param commentId String 评论Id
      * @param userId String 用户Id
      * @return ArticleCommentLike 对象 评论点赞对象
