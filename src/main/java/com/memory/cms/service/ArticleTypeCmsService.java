@@ -21,6 +21,9 @@ public interface ArticleTypeCmsService {
 
     List<ArticleType> queryArticleTypeList(Integer isUse);
 
+    int updateArticleTypeIsUseById(int is_use,String id);
 
+    ArticleType queryArticleTypeById(String id);
 
+    ArticleType update(ArticleType articleType);
 }

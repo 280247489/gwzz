@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+
+    <style>
+        .bg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-image: url(./images/mask.png);
+            background-size: 100% auto;
+            background-position: 0 100%;
+            background-repeat: no-repeat;
+            z-index: 22
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" media="all" href="./css/style.css">
+    <link rel="Shortcut Icon" href="./images/favicon.ico" />
+    <script src="./js/jquery.min.js" type="text/javascript"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.5.0.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            var $_GET = (function () {
+                var url = window.document.location.href.toString();
+                var u = url.split("?");
+                if (typeof (u[1]) == "string") {
+                    u = u[1].split("&");
+                    var get = {};
+                    for (var i in u) {
+                        var j = u[i].split("=");
+                        get[j[0]] = j[1];
+                    }
+                    return get;
+                } else {
+                    return {};
+                }
+            })();
+            var state = $_GET['state'];
+            var code = $_GET['code'];
+            if (state == '' || state == undefined) {
+                alert('无效的链接地址！');
+                WeixinJSBridge.call('closeWindow');
+                return false;
+            } else {
+                if (code == '' || code == null || code == undefined) {
+                    var appid = 'wxbf553fc8992a2e86';
+                    var redirect_uri = encodeURIComponent('http://tmanager.houaihome.com/live/zhibo.html');
+                    var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appid +
+                        "&redirect_uri=" +
+                        redirect_uri + "&response_type=code&scope=snsapi_userinfo&state=" + state +
+                        "#wechat_redirect";
+                    window.location.replace(url);
+                    return false;
+                }
+            }
+            document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+                // 通过下面这个API隐藏右上角按钮
+                WeixinJSBridge.call('hideOptionMenu');
+            });
+            pushHistory();
+
+            function pushHistory() {
+                var state = {
+                    title: "",
+                    url: ""
+                };
+                window.history.pushState(state, "", "");
+            }
+            window.addEventListener("popstate", function (e) {
+                WeixinJSBridge.call('closeWindow');
+                return false;
+            }, false);
+            var u = navigator.userAgent;
+            if (u.match(/MicroMessenger/i) != 'MicroMessenger') {
+                window.location.href =
+                    "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbf553fc8992a2e86&redirect_uri=http%3A%2F%2Ftmanager.houaihome.com";
+                return false;
+            }
+            if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+                var device = 'http://android.myapp.com/myapp/detail.htm?apkName=com.zjst.houai&ADTAG=mobile'
+            } else if (u.indexOf('iPhone') > -1) {
+                var device = 'https://itunes.apple.com/cn/app/zhong-jing-sheng-tian/id1288452365?mt=8'
+            } else if (u.indexOf('Windows Phone') > -1) {
+                var device = 'javascript:alert("不支持的系统！")';
+            } else {
+                var device = 'javascript:alert("不支持的系统！")';
+            }
+            $('.dl a').attr('href', device);
+            var api = 'http://tmanager.houaihome.com/courseExt/web/list';
+            var server_course = 'http://image.houaihome.com/yy/cms/';
+
+            //http://tmanager.houaihome.com/live/
+            var url = window.location.href.split('#')[0];
+            var _title;
+            _openid = sessionStorage.getItem('openid');
+            if (_openid == '' || _openid == null || _openid == undefined) {
+                arr_info = {
+                    action: 'getInfo',
+                    state: '',
+                    code: code
+                };
+                $.post("http://tmanager.houaihome.com/wechat/auth", arr_info, function (data) {
+                    if (data == 0) {
+                        console.log('获取用户信息失败！');
+                        console.log(data);
+                        window.location.href = 'http://tmanager.houaihome.com/live/zhibo.html?id=' + id;
+                        return false;
+                    } else {
+                        $('.content').attr('data-open-id', data.data.openId);
+                        sessionStorage.setItem("openid", data.data.openId);
+                        topage(data.data.openId);
+                    }
+                }, "json");
+            } else {
+                $('.content').attr('data-open-id', _openid);
+                topage(_openid);
+            }
+            var ht = document.documentElement.clientHeight;
+            $('.popupimg').css('max-height', ht);
+            var view = sessionStorage.getItem('view');
+
+            function _change() {
+                sessionStorage.setItem("view", "1");
+                $('.bg').animate({
+                    marginTop: "-240%"
+                }, 2048);
+                //enable_scroll();
+            }
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "http://tmanager.houaihome.com/wechat/sign",
+                data: {
+                    url: url
+                },
+                success: function (data) {
+                    setTimeout(function () {
+                        function get_title() {
+                            if (_title == '' || _title == null || _title == undefined) {
+                                _title = sessionStorage.getItem('title');
+                            } else {
+                                if (_title == '' || _title == null || _title == undefined) {
+                                    _title = $('.block h3').html();
+                                } else {
+                                    clearInterval(_get_title);
+                                }
+                            }
+                        }
+                        var _get_title = setInterval(get_title, 50);
+                        //微信注入权限接口
+                        wx.config({
+                            debug: false,
+                            appId: data.data.appId,
+                            timestamp: data.data.timestamp,
+                            nonceStr: data.data.nonceStr,
+                            signature: data.data.signature,
+                            jsApiList: [
+                                'onMenuShareAppMessage',
+                                'onMenuShareTimeline'
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.onMenuShareAppMessage({
+                                title: _title, // 分享标题
+                                desc: '点击链接进入课程',
+                                imgUrl: 'http://tmanager.houaihome.com/live/images/logo_share.png',
+                                link: 'http://tmanager.houaihome.com/live/zhibo.html?state=' +
+                                state,
+                                type: 'link'
+                            });
+                            wx.onMenuShareTimeline({
+                                title: _title, // 分享标题
+                                desc: '点击链接进入课程', // 分享描述
+                                imgUrl: 'http://tmanager.houaihome.com/live/images/logo_share.png',
+                                link: 'http://tmanager.houaihome.com/live/zhibo.html?state=' +
+                                state,
+                                type: 'link'
+                            });
+
+                            wx.checkJsApi({
+                                jsApiList: [
+                                    'onMenuShareAppMessage',
+                                    'onMenuShareTimeline'
+                                ],
+                                success: function (data) {
+                                    //alert(res.errMsg);  
+                                    WeixinJSBridge.call(
+                                        'showOptionMenu');
+                                }
+                            });
+                        });
+                        wx.error(function (data) {
+                            alert('错误');
+                        });
+                    }, 300);
+                },
+                error: function () {
+                    alert('网络错误！');
+                }
+            });
+
+            function topage(_openid) {
+                var arr_api = {
+                    courseId: state,
+                    openId: _openid
+                }
+                $.ajax({
+                    url: api,
+                    type: 'POST',
+                    data: arr_api,
+                    async: false,
+                    cache: false,
+                    dataType: "json",
+                    timeout: 50000,
+                    beforeSend: function () {},
+                    success: function (data) {
+                        console.log(data);
+                        if (data.recode == '0') {
+                            if (data.data !== '' && data.data !== 'notExist' && data.data !==
+                                null) {
+                                $('.block h3').html(data.data.course);
+                                _title = data.data.course;
+                                sessionStorage.setItem("title", data.data.course);
+                                $('title').html(data.data.course);
+                                var _content = data.data.courseExt;
+                                var avatar = './images/logo_new.png';
+                                //var int_first = 1;
+                                $.each(_content, function (i, n) {
+                                    var _img_url;
+                                    var _ado_url;
+                                    if (n.courseExtImgUrl == undefined) {} else {
+                                        _img_url = n.courseExtImgUrl.substr(0, 4);
+                                    }
+                                    if (_img_url == 'http') {
+                                        var this_img_url = n
+                                            .courseExtImgUrl;
+                                    } else {
+                                        var this_img_url = server_course + n
+                                            .courseExtImgUrl;
+                                    }
+                                    if (n.courseExtAudio == undefined) {} else {
+                                        _ado_url = n.courseExtAudio.substr(0, 4);
+                                    }
+                                    if (_ado_url == 'http') {
+                                        var this_ado_url = n.courseExtAudio;
+                                    } else {
+                                        var this_ado_url = server_course + n
+                                            .courseExtAudio;
+                                    }
+                                    var block = n.courseExtAudioTimes * 2;
+                                    if (n.courseExtType == '1') {
+                                        $('.content').append(
+                                            '<div  class="msg mw"><div class="h"><img src="' +
+                                            avatar +
+                                            '" /></div><div class="fl"><h3 class="n">' +
+                                            n.courseExtNickname +
+                                            '</h3><div class="c w">' + n
+                                            .courseExtWords +
+                                            '<span class="t"></span></div></div></div>'
+                                        );
+                                    } else if (n.courseExtType == '2') {
+                                        $('.content').append(
+                                            '<div  class="msg ma"><div class="h"><img src="' +
+                                            avatar +
+                                            '" /></div><div class="fl"><h3 class="n">' +
+                                            n.courseExtNickname +
+                                            '</h3><div class="c a"><audio><source src="' +
+                                            this_ado_url +
+                                            '" type="audio/mp3"></audio><div class="audio-left"><img src="./images/sd.png" class="audioPlayer" /></div><div class="audio-right"><span class="audio_times">' +
+                                            n.courseExtAudioTimes +
+                                            ' "</span><span class="time_block" style="width:' +
+                                            block +
+                                            'px"></span></div><span class="t"></span></div><span class="r p"></span></div></div>'
+                                        );
+                                    } else if (n.courseExtType == '3') {
+                                        $('.content').append(
+                                            '<div class="msg mi "><div class="h"><img src="' +
+                                            avatar +
+                                            '" /></div><div class="fl"><h3 class="n">' +
+                                            n.courseExtNickname +
+                                            '</h3><div class="c i"><a href="javascript:void(0);" rel="popuprel"  title="" class="popup"><img class="" src="' +
+                                            this_img_url +
+                                            '" ></a><span class="t"></span></div></div></div>'
+                                        );
+                                    } else {}
+                                });
+                            } else {
+                                alert('直播已关闭！');
+                                WeixinJSBridge.call('closeWindow');
+                                return false;
+                            }
+                        } else {
+                            console.log(data);
+                            console.log('出错了');
+                        }
+                    },
+                    complete: function (data) {
+                        //console.log(view);
+                        var view = sessionStorage.getItem('view');
+                        if (view == null || view == '' || view == undefined) {
+                            setTimeout(_change, 666);
+                        } else if (_openid == '1') {
+                            $('.bg').hide();
+                        } else {
+                            $('.bg').hide();
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        console.log('出错了!');
+                    }
+                }, "json");
+            }
+        });
+    </script>
+    <title>直播分享</title>
+</head>
+
+<body>
+    <div class="mask">
+        <div class="bd"></div>
+    </div>
+    <div class="bg"></div>
+    <div class="header">
+        <div class="block">
+            <h3>&nbsp;</h3>
+        </div>
+        <div class="dl">
+            <a href="http://down.houaihome.com/download/"></a>
+        </div>
+    </div>
+    <div class="content" data-open-id=''>
+    </div>
+    <div class="bottom"></div>
+    <div class="popupbox" id="popuprel">
+        <img class="popupimg" src="">
+    </div>
+    <div id="fade"></div>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            $('.content').on('click', '.ma .a', function () {
+                audio = $(this).find('audio');
+                initAudioEvent(audio);
+            });
+
+            function initAudioEvent(curr_audio) {
+                var this_offset = curr_audio.parent().parent().parent().offset().top;
+                var this_scroll = $(window).scrollTop();
+                var this_ht = $(window).height()
+                audio = curr_audio.get(0);
+                var curr = $('audio').index(audio); //当前序号
+
+
+
+
+                if (this_scroll + this_ht < this_offset + 76) {
+                    var _offset = this_offset + 246 - this_ht;
+                    $('body,html').animate({
+                        scrollTop: _offset
+                    }, 300);
+                } else if (this_scroll > this_offset) {
+                    console.log('在屏幕上方');
+                }
+                var total = $('.content').find('audio').length;
+
+                function play_next(curr) {
+                    if (curr >= total - 1) {
+                        console.log('没了');
+                        return false;
+                    } else {
+                        next = $('.content').find('audio').eq(curr + 1);
+                        next_audio = next.get(0);
+                        initAudioEvent(next);
+                    }
+                }
+
+                $('.content').find('audio').not(curr_audio).each(function () {
+                    var _audio = $(this).get(0);
+                    _audio.currentTime = 0;
+                    if (_audio.paused) {} else {
+                        _audio.pause();
+                        $(this).parent().find('.audioPlayer').attr('src', './images/sd.png');
+                    }
+                });
+
+                if (audio.paused) {
+                    WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
+                        audio.play();
+                    });
+                } else {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    curr_audio.parent().find('.audioPlayer').attr('src', './images/sd.png');
+                }
+
+
+                // 监听播放完成事件
+                audio.addEventListener('ended', function () {
+                    audio.currentTime = 0;
+                    $(audio).parent().find('.audioPlayer').attr('src', './images/sd.png');
+                    play_next(curr);
+                }, false);
+                audio.addEventListener('error', function () {
+                    WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                        audio.load();
+                        audio.play();
+                    });
+                }, false);
+
+
+                audio.addEventListener("waiting", function () {
+                    $(audio).parent().find('.audioPlayer').attr('src', './images/load.gif');
+                    curr_audio.parent().parent().find('.p').removeClass('r');
+                });
+                audio.addEventListener("playing", function () {
+                    $(audio).parent().find('.audioPlayer').attr('src', './images/sd.gif');
+                    curr_audio.parent().parent().find('.p').removeClass('r');
+                });
+            }
+            $('.content').on('click', 'a.popup', function () {
+                var popupid = $(this).attr('rel');
+                var img = $(this).find('img').attr('src');
+                $('.popupimg').attr("src", img);
+                $('#' + popupid).fadeIn();
+                $('#fade').css({
+                    'filter': 'alpha(opacity=70)'
+                }).fadeIn(100);
+                var popuptopmargin = ($('#' + popupid).height()) / 2;
+                var popupleftmargin = ($('#' + popupid).width()) / 2;
+                $('#' + popupid).css({
+                    'margin-top': -popuptopmargin,
+                    'margin-left': -popupleftmargin
+                });
+            });
+            $('#fade, #popuprel').click(function () {
+                $('#fade , #popuprel , #popuprel2 , #popuprel3').fadeOut(100);
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>

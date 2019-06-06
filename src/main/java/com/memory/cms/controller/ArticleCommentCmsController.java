@@ -30,11 +30,11 @@ public class ArticleCommentCmsController {
 
     @RequestMapping(value = "list")
     public Result queryArticleCommentByQue(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
-                       @RequestParam("key_words") String key_words, @RequestParam("phone_number") String phone_number,
-                       @RequestParam("article_name") String article_name,@RequestParam("user_name") String user_name,
-                       @RequestParam("comment_type") Integer comment_type,@RequestParam("query_start_time") String query_start_time,
-                       @RequestParam("query_end_time") String query_end_time, @RequestParam("sort_role") Integer sort_role,
-                                           @RequestParam("comment_root_id") String comment_root_id, @RequestParam("id") String id){
+                                           @RequestParam("key_words") String key_words, @RequestParam("phone_number") String phone_number,
+                                           @RequestParam("article_name") String article_name,@RequestParam("user_name") String user_name,
+                                           @RequestParam("comment_type") Integer comment_type,@RequestParam("query_start_time") String query_start_time,
+                                           @RequestParam("query_end_time") String query_end_time, @RequestParam("sort_role") Integer sort_role,
+                                           @RequestParam("comment_root_id") String comment_root_id, @RequestParam(value = "id",required = false) String id){
 
         int pageIndex = page+1;
         int limit = size;
@@ -53,6 +53,9 @@ public class ArticleCommentCmsController {
         pageResult.setData(list);
         return ResultUtil.success(pageResult);
     }
+
+
+
 
     /**
      *

@@ -4,12 +4,12 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/5/24 10:45
+ * @date 2019/6/5 17:01
  */
 
 @Entity
@@ -19,19 +19,19 @@ public class User {
     private String userUnionId;
     private String userOpenId;
     private String userTel;
-    private String userName;
+    private String userNickName;
     private String userLogo;
+    private String userName;
     private String userSex;
     private String userBirthday;
     private String userProvince;
     private String userCity;
     private String userArea;
     private String userAddress;
-    private Timestamp userCreateTime;
+    private Date userCreateTime;
     private int userForbidden;
     private int userNologin;
     private int userCancel;
-
 
     @Id
     @Column(name = "id")
@@ -84,13 +84,13 @@ public class User {
     }
 
     @Basic
-    @Column(name = "user_name")
-    public String getUserName() {
-        return userName;
+    @Column(name = "user_nick_name")
+    public String getUserNickName() {
+        return userNickName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserNickName(String userNickName) {
+        this.userNickName = userNickName;
     }
 
     @Basic
@@ -101,6 +101,16 @@ public class User {
 
     public void setUserLogo(String userLogo) {
         this.userLogo = userLogo;
+    }
+
+    @Basic
+    @Column(name = "user_name")
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     @Basic
@@ -165,11 +175,11 @@ public class User {
 
     @Basic
     @Column(name = "user_create_time")
-    public Timestamp getUserCreateTime() {
+    public Date getUserCreateTime() {
         return userCreateTime;
     }
 
-    public void setUserCreateTime(Timestamp userCreateTime) {
+    public void setUserCreateTime(Date userCreateTime) {
         this.userCreateTime = userCreateTime;
     }
 
@@ -216,8 +226,9 @@ public class User {
                 Objects.equals(userUnionId, user.userUnionId) &&
                 Objects.equals(userOpenId, user.userOpenId) &&
                 Objects.equals(userTel, user.userTel) &&
-                Objects.equals(userName, user.userName) &&
+                Objects.equals(userNickName, user.userNickName) &&
                 Objects.equals(userLogo, user.userLogo) &&
+                Objects.equals(userName, user.userName) &&
                 Objects.equals(userSex, user.userSex) &&
                 Objects.equals(userBirthday, user.userBirthday) &&
                 Objects.equals(userProvince, user.userProvince) &&
@@ -229,6 +240,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, password, userUnionId, userOpenId, userTel, userName, userLogo, userSex, userBirthday, userProvince, userCity, userArea, userAddress, userCreateTime, userForbidden, userNologin, userCancel);
+        return Objects.hash(id, password, userUnionId, userOpenId, userTel, userNickName, userLogo, userName, userSex, userBirthday, userProvince, userCity, userArea, userAddress, userCreateTime, userForbidden, userNologin, userCancel);
     }
 }

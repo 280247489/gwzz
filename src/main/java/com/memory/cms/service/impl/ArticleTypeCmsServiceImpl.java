@@ -38,4 +38,20 @@ public class ArticleTypeCmsServiceImpl implements ArticleTypeCmsService {
     public List<ArticleType> queryArticleTypeList(Integer isUse) {
         return repository.queryArticleTypeTypeList(isUse);
     }
+
+
+    @Override
+    public int updateArticleTypeIsUseById(int is_use, String id) {
+        return repository.updateArticleTypeIsUseById(is_use,id);
+    }
+
+    @Override
+    public ArticleType queryArticleTypeById(String id) {
+        return repository.queryArticleTypeById(id);
+    }
+
+    @Override
+    public ArticleType update(ArticleType articleType) {
+        return repository.save(articleType);
+    }
 }

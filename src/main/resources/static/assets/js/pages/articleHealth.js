@@ -244,7 +244,7 @@ jQuery(document).ready(function () {
     });
 
     $('.articleHealth_list').on('click', '.alert_url', function () {
-        alert('http://hdqd.houaihome.com/zhibo/index.php?id=' + $(this).attr('data-id'));
+        alert('http://tmanager.houaihome.com/live/index.html?id=' + $(this).attr('data-id'));
 
     });
     $('.articleHealth_list').on('click', '.articleHealth_edit', function () {

@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 @RequestMapping(value = "jodit")
 public class JoditConrtoller {
 
+
    // private static final String uploadFilePath = "G:/upload/jodit";
  //   private static final String baseUrl = "http://192.168.1.119:8091/file/jodit/";
 
@@ -35,6 +36,7 @@ public class JoditConrtoller {
 
    @Autowired
    private MyFileConfig config;
+
 
     @RequestMapping(value = "uploadImg", method = RequestMethod.POST)
     @ResponseBody

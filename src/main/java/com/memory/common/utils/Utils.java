@@ -2,6 +2,11 @@ package com.memory.common.utils;
 
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.*;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -68,6 +73,36 @@ public class Utils {
     public static Boolean isHttpAccess(String url) throws MalformedURLException {
       return   new UrlResource(url).exists();
     }
+
+    /**
+     * 向目的URL发送post请求
+     * @param url       目的url
+     * @param params    发送的参数
+     * @return  ResultVO
+     */
+    public static Object sendPostRequest(String url, MultiValueMap<String, String> params){
+        RestTemplate client = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        HttpMethod method = HttpMethod.POST;
+        // 以表单的方式提交
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        //将请求头部和参数合成一个请求
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, headers);
+
+       // client.exchange(url, method, requestEntity);
+        //执行HTTP请求，将返回的结构使用ResultVO类格式化
+        ResponseEntity<Object> response = client.exchange(url, method, requestEntity, Object.class);
+
+        return response.getBody();
+    }
+
+
+
+
+
+
+
+
 
 }
 

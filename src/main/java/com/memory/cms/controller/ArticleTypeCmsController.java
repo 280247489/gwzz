@@ -116,7 +116,60 @@ public class ArticleTypeCmsController {
         return result;
     }
 
+    @RequestMapping(value = "isUse", method = RequestMethod.POST)
+    public Result updateIsUse(@RequestParam(value = "is_use") Integer is_use,String id ){
+        Result result = new Result();
+        try {
+            if(is_use !=null){
+                articleTypeService.updateArticleTypeIsUseById(is_use,id);
+                String str = "未启用";
+                if(is_use!=null && is_use == 1){
+                    str = "启用";
+                }
+                result = ResultUtil.success("变更分类状态为:"+str);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 
+    @RequestMapping(value = "update", method = RequestMethod.POST)
+    public Result update(@RequestParam(value = "id") String id,@RequestParam(value = "typeName") String typeName,@RequestParam(value = "imgUrl" ,required = false) String imgUrl,  @RequestParam(value = "typeFile" ,required = false) MultipartFile typeFile){
+        Result result = new Result();
+        try {
+            String prefix = "";
+            String suffix = "";
+            String dayStr = DateUtils.getDate("yyyyMMdd");
+            String hoursStr = DateUtils.getDate("HHmmss");
+            String fileUploadedPath = "";
+            String fileName="";
+            String uuid = Utils.getShortUUTimeStamp();
+            String fileUrl = myFileConfig.getUpload_local_article_path();
+            if(typeFile != null && !typeFile.isEmpty()){
+                prefix = "type";
+                //图片默认转成png格式
+                suffix = ".png";
+                fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
+                uuid = "article/" +uuid;
+                // fileUploadedPath = fileUrl + "/" + uuid;
+                //上传标题图
+                imgUrl=  FileUtils.upload(typeFile,fileUrl,fileName,uuid);
+                // imgUrl =  "article/"  +fileUploadedPath + "/" +fileName;
+
+            }
+            ArticleType articleType =articleTypeService.queryArticleTypeById(id);
+            articleType.setImg(imgUrl);
+            articleType.setTypeName(typeName);
+            articleType = articleTypeService.update(articleType);
+
+            result = ResultUtil.success(articleType);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 
 

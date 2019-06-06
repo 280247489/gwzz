@@ -5,15 +5,11 @@ import com.memory.cms.repository.ArticleCommentCmsRepository;
 import com.memory.cms.service.ArticleCommentCmsService;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.bean.ArticleComment;
-import com.memory.entity.jpa.Article;
-import com.memory.entity.jpa.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.*;
 import javax.swing.*;
 import java.util.*;
 
@@ -125,26 +121,26 @@ public class ArticleCommentCmsServiceImpl implements ArticleCommentCmsService {
 
             //筛选时间
             if(!"".equals(query_start_time) && !"".equals(query_end_time)){
-                stringBuffer.append(" AND ac.commentCreateTime between "+query_start_time+" and  " +query_end_time);
+                stringBuffer.append(" AND ac.commentCreateTime between "+"'"+query_start_time+"'"+" and  " +"'"+ query_end_time+"'");
             }else{
 
                 if(!"".equals(query_start_time)){
 
                     String yhmTime = query_start_time.substring(0,10);
                     String lastTime = yhmTime + " 23:59:59";
-                    stringBuffer.append(" AND ac.commentCreateTime between "+query_start_time+" and  " +lastTime);
+                    stringBuffer.append(" AND ac.commentCreateTime between "+"'"+query_start_time+"'"+" and  " +"'"+lastTime+"'");
                 }
 
                 if(!"".equals(query_end_time)){
 
                     String yhmTime = query_end_time.substring(0,10);
                     String firstTime = yhmTime + " 00:00:00";
-                    stringBuffer.append(" AND ac.commentCreateTime between "+firstTime+" and  " +query_end_time);
+                    stringBuffer.append(" AND ac.commentCreateTime between "+"'"+firstTime+"'"+" and  " +"'"+query_end_time+"'");
                 }
 
             }
 
-            if(!"".equals(id)){
+            if(id != null && !"".equals(id)){
                 stringBuffer.append(" AND ac.commentParentId = :id  ");
                 paramMap.put("id", id);
             }

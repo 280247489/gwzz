@@ -3,6 +3,7 @@ package com.memory.cms.repository;
 import com.memory.entity.jpa.ArticleType;
 import com.memory.entity.jpa.CourseType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -22,5 +23,11 @@ public interface ArticleTypeCmsRepository extends JpaRepository<ArticleType,Stri
     @Query(value = "select  c.id,c.type_name,c.type_create_time,c.img,c.sum,c.is_use " +
             "from article_type c   ORDER BY  c.type_create_time desc", nativeQuery = true)
     List<ArticleType> queryAllArticleTypeListByTypeCreateTimeDesc();
+
+    @Modifying
+    @Query("update ArticleType a set a.isUse  = ?1 where a.id =?2 ")
+    int  updateArticleTypeIsUseById(int is_use,String id);
+
+    ArticleType queryArticleTypeById(String id);
 
 }

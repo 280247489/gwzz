@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <script type="text/javascript" src="./js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var $_GET = (function () {
+                var url = window.document.location.href.toString();
+                var u = url.split("?");
+                if (typeof (u[1]) == "string") {
+                    u = u[1].split("&");
+                    var get = {};
+                    for (var i in u) {
+                        var j = u[i].split("=");
+                        get[j[0]] = j[1];
+                    }
+                    return get;
+                } else {
+                    return {};
+                }
+            })();
+            var state = $_GET['id'];
+            var useragent = navigator.userAgent;
+            if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
+                window.location.href =
+                    "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbf553fc8992a2e86&redirect_uri=http%3A%2F%2Ftmanager.houaihome.com%2Flive%2Findex.html&response_type=code&scope=snsapi_userinfo&#wechat_redirect";
+                return false;
+            }
+            var h = {
+                title: "",
+                url: ""
+            };
+            window.history.pushState(h, "", "");
+            var appid = 'wxbf553fc8992a2e86';
+            var redirect_uri = encodeURIComponent('http://tmanager.houaihome.com/live/zhibo.html');
+            var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + appid + "&redirect_uri=" +
+                redirect_uri + "&response_type=code&scope=snsapi_userinfo&state=" + state + "#wechat_redirect";
+            window.location.replace(url);
+            return false;
+        });
+    </script>
+    <title></title>
+</head>
+
+<body>
+</body>
+
+</html>
