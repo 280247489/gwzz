@@ -11,7 +11,7 @@ import java.util.Objects;
  * @ClassName User
  * @Descriotion TODO
  * @Author Ganxiqing
- * @Date 2019/6/3 16:20
+ * @Date 2019/6/10 11:06
  */
 @Entity
 public class User {
@@ -32,6 +32,7 @@ public class User {
     private Date userCreateTime;
     private int userForbidden;
     private int userNologin;
+    private int userRole;
     private int userCancel;
 
     public User() {
@@ -39,8 +40,8 @@ public class User {
 
     public User(String id, String password, String userUnionId, String userOpenId, String userTel, String userNickName,
                 String userLogo, String userName, String userSex, String userBirthday, String userProvince,
-                String userCity, String userArea, String userAddress, Date userCreateTime,
-                int userForbidden, int userNologin, int userCancel) {
+                String userCity, String userArea, String userAddress, Date userCreateTime, int userForbidden,
+                int userNologin, int userRole, int userCancel) {
         this.id = id;
         this.password = password;
         this.userUnionId = userUnionId;
@@ -58,6 +59,7 @@ public class User {
         this.userCreateTime = userCreateTime;
         this.userForbidden = userForbidden;
         this.userNologin = userNologin;
+        this.userRole = userRole;
         this.userCancel = userCancel;
     }
 
@@ -232,6 +234,16 @@ public class User {
     }
 
     @Basic
+    @Column(name = "user_role")
+    public int getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(int userRole) {
+        this.userRole = userRole;
+    }
+
+    @Basic
     @Column(name = "user_cancel")
     public int getUserCancel() {
         return userCancel;
@@ -248,6 +260,7 @@ public class User {
         User user = (User) o;
         return userForbidden == user.userForbidden &&
                 userNologin == user.userNologin &&
+                userRole == user.userRole &&
                 userCancel == user.userCancel &&
                 Objects.equals(id, user.id) &&
                 Objects.equals(password, user.password) &&
@@ -268,6 +281,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, password, userUnionId, userOpenId, userTel, userNickName, userLogo, userName, userSex, userBirthday, userProvince, userCity, userArea, userAddress, userCreateTime, userForbidden, userNologin, userCancel);
+        return Objects.hash(id, password, userUnionId, userOpenId, userTel, userNickName, userLogo, userName, userSex, userBirthday, userProvince, userCity, userArea, userAddress, userCreateTime, userForbidden, userNologin, userRole, userCancel);
     }
 }

@@ -28,7 +28,7 @@ public class CourseCommentLikeMobileController extends BaseController {
 
     /**
      * 添加评论点赞
-     * URL：192.168.1.185：8081/gwzz/courseCommentLike/mobile/addLike
+     * URL：192.168.1.185:8081/gwzz/courseCommentLike/mobile/addLike
      * @param cid String 评论id
      * @param uid String 用户id
      * @return 评论点赞对象

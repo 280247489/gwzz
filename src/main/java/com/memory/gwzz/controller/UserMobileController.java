@@ -83,6 +83,8 @@ public class UserMobileController extends BaseController {
             }
         }catch (Exception e){
             e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
 
@@ -112,6 +114,8 @@ public class UserMobileController extends BaseController {
             }
         }catch (Exception e){
             e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
 
@@ -124,22 +128,24 @@ public class UserMobileController extends BaseController {
      * @param userId 用户唯一标识ID String
      * @param userUnionId 微信unionId String
      * @param userOpenId 微信openId   String
-     * @param userName 微信昵称 String
+     * @param userNickName 微信昵称 String
      * @param userSex 微信性别 String
      * @param userLogo 微信头像URL String
      * @return user对象
      */
     @RequestMapping(value = "registerWeChat", method = RequestMethod.POST)
     public Message registerWeChat (@RequestParam String userId, @RequestParam String userUnionId, @RequestParam String userOpenId,
-                                   @RequestParam String userName, @RequestParam String userSex, @RequestParam String userLogo){
+                                   @RequestParam String userNickName, @RequestParam String userSex, @RequestParam String userLogo){
         msg = Message.success();
         try {
-            User user = userMobileService.registerWeChat(userId, userUnionId, userOpenId, userName, userSex, userLogo);
+            User user = userMobileService.registerWeChat(userId, userUnionId, userOpenId, userNickName, userSex, userLogo);
             msg.setMsg("注册成功");
             msg.setRecode(0);
             msg.setData(user);
         }catch (Exception e){
             e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -159,8 +165,8 @@ public class UserMobileController extends BaseController {
     public Message login (@RequestParam String phone, @RequestParam String userPwd, @RequestParam String userOpenId, @RequestParam Integer logoType){
         msg = Message.success();
         try {
-            User user = userMobileService.logo(phone, userPwd, userOpenId, logoType);
-            if (user ==null){
+            User user = userMobileService.login(phone, userPwd, userOpenId, logoType);
+            if (user == null){
                 msg.setRecode(2);
                 msg.setMsg("登录失败");
             }else{
@@ -171,7 +177,7 @@ public class UserMobileController extends BaseController {
         }catch (Exception e){
             e.printStackTrace();
             msg.setRecode(1);
-            msg.setMsg("异常");
+            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return  msg;
@@ -206,6 +212,8 @@ public class UserMobileController extends BaseController {
             }
         }catch (Exception e){
             e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
 
@@ -233,6 +241,8 @@ public class UserMobileController extends BaseController {
             }
         }catch (Exception e){
             e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -259,6 +269,8 @@ public class UserMobileController extends BaseController {
             }
         }catch (Exception e){
             e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -285,6 +297,8 @@ public class UserMobileController extends BaseController {
             }
         }catch (Exception e){
             e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -311,6 +325,8 @@ public class UserMobileController extends BaseController {
             }
         }catch (Exception e){
             e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -341,6 +357,8 @@ public class UserMobileController extends BaseController {
             }
         }catch (Exception e){
             e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -367,6 +385,8 @@ public class UserMobileController extends BaseController {
             }
         }catch (Exception e){
             e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -402,6 +422,36 @@ public class UserMobileController extends BaseController {
 
         }catch (Exception e){
             e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
+            logger.error("异常");
+        }
+        return msg;
+    }
+
+    /**
+     * 注销账户
+     * URL:192.168.1.185:8081/gwzz/user/mobile/logOFF
+     * @param userId String 用户标识ID
+     * @return
+     */
+    @RequestMapping(value = "logOFF",method = RequestMethod.POST)
+    public Message logOFF(String userId){
+        msg = Message.success();
+        try {
+            User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
+            if (user!=null){
+                userMobileService.logOFFUser(user);
+                msg.setRecode(0);
+                msg.setMsg("注销成功");
+            }else{
+                msg.setRecode(1);
+                msg.setMsg("无此用户");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
             logger.error("异常");
         }
         return msg;

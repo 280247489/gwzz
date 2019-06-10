@@ -26,6 +26,19 @@ public class CourseCommentMobileController extends BaseController {
     private CourseCommentMobileService courseCommentMobileService;
 
 
+    /**
+     * 课程评论
+     * URL:192.168.1.185:8081/gwzz/courseComment/mobile/add
+     * @param courseId String 课程Id
+     * @param userId String 用户Id
+     * @param userLogo String 用户头像
+     * @param userName String 用户昵称
+     * @param commentType String 评论类型（评论0，回复1）
+     * @param commentParentId String 回复上级Id
+     * @param commentParentUserName String 回复上级昵称
+     * @param commentContent 评论内容
+     * @return 评论对象
+     */
     @RequestMapping(value = "add",method = RequestMethod.POST)
     public Message add(@RequestParam String courseId, @RequestParam String userId, @RequestParam String userLogo,
                        @RequestParam String userName, @RequestParam Integer commentType, @RequestParam String commentParentId,

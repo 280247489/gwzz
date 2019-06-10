@@ -15,7 +15,7 @@ public interface UserMobileService {
     User registerPhone(String phone, String userPwd);
     Boolean checkSmsCode(String msgId,String code);
     User registerWeChat( String userId,  String userUnionId,  String userOpenId, String userName,  String userSex,  String userLogo );
-    User logo(String phone,String userPwd,String userOpenId, Integer type);
+    User login(String phone,String userPwd,String userOpenId, Integer type);
     User setUserPwd(String phone,String userPwd);
     User updUserName(User user, String userName);
     User updUserSex(User user, String userSex);
@@ -24,4 +24,5 @@ public interface UserMobileService {
     User updAddress(User user, String userProvince,String userCity,String userArea,String userAddress);
     User updUserNickName(User user,String userNickName);
     User updPassWord(User user, String newPassWord);
+    User logOFFUser(User user);
 }

@@ -52,7 +52,7 @@ public class UserMobileServiceImpl implements UserMobileService {
         if (user==null){
             user = new User(Utils.generateUUIDs(), Utils.md5Password(userPwd), "", "",  phone,
                     "","", "", "", "", "",
-                    "", "", "", date, 0, 0, 0);
+                    "", "", "", date, 0, 0, 0, 0);
             userMobileRepository.save(user);
 
         }
@@ -64,7 +64,7 @@ public class UserMobileServiceImpl implements UserMobileService {
      * @param userId
      * @param userUnionId
      * @param userOpenId
-     * @param userName
+     * @param userNickName
      * @param userSex
      * @param userLogo
      * @return
@@ -76,7 +76,7 @@ public class UserMobileServiceImpl implements UserMobileService {
         if (user==null){
             user = new User(Utils.generateUUIDs(), "", userUnionId, userOpenId,  "",
                     userNickName, userLogo, "",userSex, "", "",
-                    "", "", "", date, 0, 0, 0);
+                    "", "", "", date, 0, 0,0, 0);
         }else{
             user.setUserUnionId(userUnionId);
             user.setUserOpenId(userOpenId);
@@ -97,10 +97,10 @@ public class UserMobileServiceImpl implements UserMobileService {
      * @return
      */
     @Override
-    public User logo(String phone,String userPwd,String userOpenId, Integer type){
+    public User login(String phone,String userPwd,String userOpenId, Integer type){
         User user = null;
         if (type==1){
-            user = userMobileRepository.findByUserTelAndPassword(phone,Utils.md5Password(userPwd));
+            user = userMobileRepository.findByUserTelAndPasswordAndUserNologinAndUserCancel(phone,Utils.md5Password(userPwd),0,0);
         }else if (type==2){
             user = userMobileRepository.findByUserOpenId(userOpenId);
         }
@@ -245,6 +245,12 @@ public class UserMobileServiceImpl implements UserMobileService {
     @Override
     public User updPassWord(User user, String newPassWord) {
         user.setPassword(Utils.md5Password(newPassWord));
+        return userMobileRepository.save(user);
+    }
+
+    @Override
+    public User logOFFUser(User user) {
+        user.setUserCancel(1);
         return userMobileRepository.save(user);
     }
 }

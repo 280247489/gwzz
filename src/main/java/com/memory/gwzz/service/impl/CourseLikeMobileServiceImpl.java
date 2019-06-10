@@ -9,6 +9,7 @@ import com.memory.gwzz.repository.CourseLikeMobileRepository;
 import com.memory.gwzz.service.CourseLikeMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -26,6 +27,7 @@ public class CourseLikeMobileServiceImpl implements CourseLikeMobileService {
     @Autowired
     private CourseLikeMobileRepository courseLikeMobileRepository;
 
+    @Transactional
     @Override
     public CourseLike like(String cid, String uid) {
         Course course = (Course) daoUtils.getById("Course",cid);

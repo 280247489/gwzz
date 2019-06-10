@@ -46,7 +46,7 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
         CourseComment courseComment = new CourseComment(Utils.generateUUIDs(),courseId,userId,userLogo,userName,commentType,
                 crId,cpId,cpUserName,commentContent,date,0);
         courseCommentMobileRepository.save(courseComment);
-        returnMap.put("courseComment",commentContent);
+        returnMap.put("courseComment",courseComment);
 
         return returnMap;
     }
