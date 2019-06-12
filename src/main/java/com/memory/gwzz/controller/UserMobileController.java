@@ -457,4 +457,73 @@ public class UserMobileController extends BaseController {
         return msg;
     }
 
+    /**
+     * 修改用户绑定的手机号
+     * URL:192.168.1.185:8081/gwzz/user/mobile/updPhone
+     * @param userId String 用户ID
+     * @param phone String 新手机号
+     * @param msgId String 短信标识msgId
+     * @param code String 短信验证码
+     * @return user 对象
+     */
+    @RequestMapping(value = "updPhone",method = RequestMethod.POST)
+    public Message updPhone (@RequestParam String userId, @RequestParam String phone, @RequestParam String msgId, @RequestParam String code){
+        msg = Message.success();
+        try {
+            User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
+            if (user!=null){
+                if (userMobileService.checkSmsCode(msgId,code)){
+                    msg.setMsg("成功");
+                    msg.setRecode(0);
+                    msg.setData(userMobileService.updPhone(user,phone));
+                }else {
+                    msg.setRecode(2);
+                    msg.setMsg("验证码失效");
+                }
+            }else{
+                msg.setRecode(3);
+                msg.setMsg("该用户不存在");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
+            logger.error("异常");
+        }
+        return msg;
+    }
+
+    /**
+     * 修改绑定微信
+     * @param userId String 用户唯一标识
+     * @param openId String
+     * @param uid String
+     * @return user 对象
+     */
+    @RequestMapping(value = "updWeChat",method = RequestMethod.POST)
+    public Message updWeChat (@RequestParam String userId, @RequestParam String openId, @RequestParam String uid){
+        msg = Message.success();
+        try {
+            User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
+            if (user!=null){
+                if (!user.getUserOpenId().equals(openId)){
+                    msg.setRecode(0);
+                    msg.setData(userMobileService.updWeChat(user,openId,uid));
+                }else{
+                    msg.setRecode(3);
+                    msg.setMsg("已绑定该微信");
+                }
+            }else{
+                msg.setRecode(2);
+                msg.setMsg("该用户不存在");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
+            logger.error("异常");
+        }
+        return msg;
+    }
+
 }

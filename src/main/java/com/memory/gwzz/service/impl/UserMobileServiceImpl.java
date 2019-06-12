@@ -261,4 +261,16 @@ public class UserMobileServiceImpl implements UserMobileService {
         user.setUserCancel(1);
         return userMobileRepository.save(user);
     }
+    @Override
+    public User updPhone(User user,String phone) {
+        user.setUserTel(phone);
+        return userMobileRepository.save(user);
+    }
+
+    @Override
+    public User updWeChat(User user,String openId,String uid) {
+        user.setUserOpenId(openId);
+        user.setUserUnionId(uid);
+        return userMobileRepository.save(user);
+    }
 }

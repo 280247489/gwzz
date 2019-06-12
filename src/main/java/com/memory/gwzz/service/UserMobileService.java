@@ -25,4 +25,6 @@ public interface UserMobileService {
     User updUserNickName(User user,String userNickName);
     User updPassWord(User user, String newPassWord);
     User logOFFUser(User user);
+    User updPhone(User user,String phone);
+    User updWeChat(User user,String openId,String uid);
 }
