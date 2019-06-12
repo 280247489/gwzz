@@ -78,18 +78,21 @@ public class UserMobileServiceImpl implements UserMobileService {
                     userNickName, userLogo, "",userSex, "", "",
                     "", "", "", date, 0, 0,0, 0);
         }else{
+            if ("".equals(user.getUserTel())){
+                user.setUserNickName(userNickName);
+                user.setUserSex(userSex);
+                user.setUserLogo(userLogo);
+            }
             user.setUserUnionId(userUnionId);
             user.setUserOpenId(userOpenId);
-            user.setUserNickName(userNickName);
-            user.setUserSex(userSex);
-            user.setUserLogo(userLogo);
+
         }
         userMobileRepository.save(user);
         return user;
     }
 
     /**
-     * 用户登录\
+     * 用户登录
      * @param phone
      * @param userPwd
      * @param userOpenId
@@ -198,7 +201,7 @@ public class UserMobileServiceImpl implements UserMobileService {
      */
     @Override
     public User updUserLogo(User user, MultipartFile userLogo){
-        String filePath ="E:\\userLogo";
+        String filePath ="D:\\Tomcat 7.0\\webapps";
         String dbUrl = "/gwzz_file/user/logo/";
          if (userLogo!=null){
              user.setUserLogo(FileUploadUtil.uploadFile(userLogo,filePath,dbUrl,Utils.getShortUUTimeStamp()));
@@ -248,6 +251,11 @@ public class UserMobileServiceImpl implements UserMobileService {
         return userMobileRepository.save(user);
     }
 
+    /**
+     * 注销用户
+     * @param user
+     * @return
+     */
     @Override
     public User logOFFUser(User user) {
         user.setUserCancel(1);

@@ -39,6 +39,8 @@ public class AdvertiseMobileController extends BaseController {
             msg.setData(advertiseMobileService.getAdvertiseOnline());
         }catch (Exception e){
             e.printStackTrace();
+            msg.setRecode(1);
+            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return  msg;
