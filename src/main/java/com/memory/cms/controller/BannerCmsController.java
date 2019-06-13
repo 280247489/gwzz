@@ -36,6 +36,17 @@ public class BannerCmsController extends BaseController {
     @Autowired
     private DaoUtils daoUtils;
 
+    /**
+     * 添加轮播图
+     * URL:192.168.1.185:8081/gwzz/banner/cms/add
+     * @param bName 名称 String
+     * @param bLogo 图片 File
+     * @param typeTable String 关联表 【外链rul】
+     * @param typeTableId String 关联ID
+     * @param bannerSort int 排序
+     * @param createId 创建人
+     * @return
+     */
     @RequestMapping(value = "add",method = RequestMethod.POST)
     public Message addBanner(@RequestParam String bName, @RequestParam MultipartFile bLogo, @RequestParam String typeTable,
                              @RequestParam String typeTableId, @RequestParam Integer bannerSort, @RequestParam String createId){
@@ -61,6 +72,16 @@ public class BannerCmsController extends BaseController {
         return msg;
     }
 
+    /**
+     * 查询轮播图
+     * URL:192.168.1.185:8081/gwzz/banner/cms/list
+     * @param page
+     * @param size
+     * @param direction
+     * @param sorts
+     * @param bName 名称 String
+     * @return list
+     */
     @RequestMapping(value = "list", method = RequestMethod.POST)
     public Message queryArticleList(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
                                     @RequestParam(defaultValue = "asc") String direction,@RequestParam(defaultValue = "bannerSort") String sorts,
@@ -80,6 +101,12 @@ public class BannerCmsController extends BaseController {
         return msg;
     }
 
+    /**
+     * 根据id查询详情
+     * URL:192.168.1.185:8081/gwzz/banner/cms/getById
+     * @param id String 唯一标识
+     * @return banner对象
+     */
     @RequestMapping(value = "getById", method = RequestMethod.POST)
     public Message getById(@RequestParam String id){
         msg = Message.success();
@@ -101,6 +128,19 @@ public class BannerCmsController extends BaseController {
 
         return msg;
     }
+
+    /**
+     * 修改轮播图
+     * URL:192.168.1.185:8081/gwzz/banner/cms/upd
+     * @param id String 唯一标识
+     * @param bName String 名称
+     * @param bLogo File 图片
+     * @param typeTable String 关联表 【外链rul】
+     * @param typeTableId String 关联表Id
+     * @param bannerSort int 排序
+     * @param createId  String 创建人Id
+     * @return
+     */
     @RequestMapping(value = "upd", method = RequestMethod.POST)
     public Message upd (@RequestParam String id, @RequestParam String bName, @RequestParam MultipartFile bLogo,
                         @RequestParam String typeTable, @RequestParam String typeTableId,@RequestParam Integer bannerSort,
@@ -131,6 +171,13 @@ public class BannerCmsController extends BaseController {
         }
         return msg;
     }
+
+    /**
+     * 设置状态
+     * URL:192.168.1.185:8081/gwzz/banner/cms/updupdOnline
+     * @param id String 唯一标识
+     * @return
+     */
     @RequestMapping(value = "updOnline",method = RequestMethod.POST)
     public Message updOnline(@RequestParam String id){
         msg = Message.success();
@@ -152,6 +199,13 @@ public class BannerCmsController extends BaseController {
         }
         return msg;
     }
+
+    /**
+     * 删除
+     * URL:192.168.1.185:8081/gwzz/banner/cms/del
+     * @param id String 唯一标识
+     * @return
+     */
     @RequestMapping(value = "del",method = RequestMethod.POST)
     public Message del(@RequestParam String id){
         msg = Message.success();
