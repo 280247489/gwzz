@@ -8,6 +8,7 @@ import com.memory.entity.bean.ArticleComment;
 import com.memory.entity.bean.CourseComment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -33,7 +34,7 @@ public class CourseCommentCmsServiceImpl implements CourseCommentCmsService {
         //    private String commentParentId;
         //    private String commentParentUserName;
         //java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, long, java.util.Date, int, java.lang.String, java.lang.String
-        stringBuffer.append("SELECT new com.memory.entity.bean.CourseComment(ac.id, ac.userName, us.userTel, a.courseTitle, ac.commentContent,ac.commentTotalLike, (select count(*) from CourseComment WHERE commentRootId = ac.commentRootId) as commentSum," +
+        stringBuffer.append("SELECT new com.memory.entity.bean.CourseComment(ac.id, ac.userName, us.userTel, a.courseTitle, ac.commentContent,ac.commentTotalLike, (select count(*) from CourseComment WHERE commentRootId = ac.commentRootId  AND commentRootId != id ) as commentSum," +
                 "ac.commentCreateTime,ac.commentRootId , ac.commentType,ac.commentParentId,ac.commentParentUserName) " +
                 "FROM CourseComment  ac , Course a ,User us " +
                 "WHERE ac.courseId = a.id  and ac.userId = us.id ");
@@ -200,8 +201,9 @@ public class CourseCommentCmsServiceImpl implements CourseCommentCmsService {
     }
 
     @Override
+    @Transactional
     public void deleteCourseCommentByCommentRootId(String root_id) {
-        repository.deleteCourseCommentByCommentRootId(root_id);
+        repository.deleteCourseCommentByCommentRootIds(root_id);
     }
 
     @Override

@@ -18,4 +18,10 @@ public interface CourseMemoryService {
     void clearAll();
 
     Map<String,Object> findAll();
+
+    void addLiveMemory(String masterId);
+
+    Object getLiveSlaveById(String masterId);
+
+
 }

@@ -121,16 +121,21 @@ public class ArticleCommentCmsController {
                 articleCommentCmsService.deleteArticleCommentByCommentRootId(comment_root_id);
             }else{
                 Date comment_create_time = articleComment.getCommentCreateTime();
-                List< com.memory.entity.jpa.ArticleComment> list = articleCommentCmsService.queryArticleCommentList(comment_root_id,comment_create_time);
+                List<com.memory.entity.jpa.ArticleComment> list = articleCommentCmsService.queryArticleCommentList(comment_root_id,comment_create_time);
+                System.out.println("query msg = " );
+                System.out.println(JSON.toJSONString(list));
 
                 if(list.size()<=100){
                     removeComment(list, comment_id,removeList);
-                }else{
                     removeList.add(articleComment);
-                    result = ResultUtil.error(-1,"递归删除长度大于100，只删除当前评论!");
+                }else{
+                 //   removeList.add(articleComment);
+                    result = ResultUtil.error(-1,"递归删除长度大于100,禁止删除!");
                 }
 
             }
+           // System.out.println("remove list size ================== " +removeList.size());
+          //  System.out.println("remove list = " + JSON.toJSONString(removeList));
             articleCommentCmsService.deleteAll(removeList);
             result = ResultUtil.success("删除成功");
 
@@ -145,13 +150,19 @@ public class ArticleCommentCmsController {
     public List<com.memory.entity.jpa.ArticleComment> removeComment(List< com.memory.entity.jpa.ArticleComment> list, String parentId,  List<com.memory.entity.jpa.ArticleComment> removeList){
 
         if(list.size()<=100){
-            for (int i = 0; i < list.size(); i++) {
-                com.memory.entity.jpa.ArticleComment dg_obj = list.get(i);
-                if(parentId.equals(dg_obj.getCommentParentId())){
-                    removeList.add(dg_obj);
-                    removeComment(list, dg_obj.getId(),removeList);
+            if(list.size() == 1){
+                removeList.add(list.get(0));
+            }else{
+                for (int i = 0; i < list.size(); i++) {
+                    com.memory.entity.jpa.ArticleComment dg_obj = list.get(i);
+                    if(parentId.equals(dg_obj.getCommentParentId())){
+                        removeList.add(dg_obj);
+                        removeComment(list, dg_obj.getId(),removeList);
+                    }
                 }
             }
+
+
         }else{
             System.out.println("递归数据大于100");
         }

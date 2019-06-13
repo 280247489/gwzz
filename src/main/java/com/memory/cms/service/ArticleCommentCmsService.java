@@ -36,4 +36,6 @@ public interface ArticleCommentCmsService {
 
     void deleteArticleCommentByCommentRootId(String root_id);
 
+    void delete(String id);
+
 }

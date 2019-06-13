@@ -8,6 +8,7 @@ import com.memory.common.utils.Utils;
 import com.memory.entity.bean.CourseComment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -101,7 +102,6 @@ public class CourseCommentCmsController {
         Result result = new Result();
         try{
 
-
             List<com.memory.entity.jpa.CourseComment> removeList = new ArrayList<>();
 
             com.memory.entity.jpa.CourseComment courseComment = courseCommentCmsService.queryCourseCommentById(comment_id);
@@ -120,6 +120,7 @@ public class CourseCommentCmsController {
 
                 if(list.size()<=100){
                     removeComment(list, comment_id,removeList);
+                    removeList.add(courseComment);
                 }else{
                     removeList.add(courseComment);
                     result = ResultUtil.error(-1,"递归删除长度大于100，只删除当前评论!");
@@ -140,13 +141,18 @@ public class CourseCommentCmsController {
     public List<com.memory.entity.jpa.CourseComment> removeComment(List< com.memory.entity.jpa.CourseComment> list, String parentId,  List<com.memory.entity.jpa.CourseComment> removeList){
 
         if(list.size()<=100){
-            for (int i = 0; i < list.size(); i++) {
-                com.memory.entity.jpa.CourseComment dg_obj = list.get(i);
-                if(parentId.equals(dg_obj.getCommentParentId())){
-                    removeList.add(dg_obj);
-                    removeComment(list, dg_obj.getId(),removeList);
+            if(list.size() == 1){
+                removeList.add(list.get(0));
+            }else{
+                for (int i = 0; i < list.size(); i++) {
+                    com.memory.entity.jpa.CourseComment dg_obj = list.get(i);
+                    if(parentId.equals(dg_obj.getCommentParentId())){
+                        removeList.add(dg_obj);
+                        removeComment(list, dg_obj.getId(),removeList);
+                    }
                 }
             }
+
         }else{
             System.out.println("递归数据大于100");
         }

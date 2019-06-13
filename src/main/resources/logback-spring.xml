@@ -51,7 +51,8 @@
         <!--日志输出编码格式化-->
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d [%thread] %-5level %logger{36} %line - %msg%n</pattern>
+           <!-- <pattern>%d [%thread] %-5level %logger{36} %line - %msg%n</pattern>-->
+            <pattern>%d [%thread] %-5level %C.%M (Line == %line）[Method == %M] %n%msg%n</pattern>
         </encoder>
     </appender>
 
@@ -77,7 +78,9 @@
         <!--日志输出编码格式化-->
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d [%thread] %-5level %logger{36} %line - %msg%n</pattern>
+          <!--  <pattern>%d [%thread] %-5level %logger{36} %line - %msg%n</pattern>-->
+
+            <pattern>%d [%thread] %-5level %C.%M (Line == %line）[Method == %M] %n%msg%n</pattern>
         </encoder>
     </appender>
 

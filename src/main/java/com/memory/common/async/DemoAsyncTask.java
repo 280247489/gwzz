@@ -1,6 +1,10 @@
 package com.memory.common.async;
 
+import com.memory.cms.service.CourseExtCmsService;
+import com.memory.cms.service.LiveSlaveCmsService;
 import com.memory.common.utils.FileUtils;
+import com.memory.common.utils.Utils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
@@ -16,6 +20,10 @@ import java.util.concurrent.Future;
  */
 @Component
 public class DemoAsyncTask {
+
+    @Autowired
+    private LiveSlaveCmsService liveSlaveCmsService;
+
 
     @Async
     public Future<Boolean> doTask_one() throws Exception{
@@ -53,6 +61,33 @@ public class DemoAsyncTask {
         FileUtils.downLoadFromUrl(url,fileName,path);
         long end = System.currentTimeMillis();
         System.out.println("doTask_one: " + (end - start) + "毫秒");
+        return new AsyncResult<>(true);
+    }
+
+    @Async
+    public Future<Boolean> doTask_fileSyncDownload(String url,String fileName,String path,String masterId,String sort,int fileType) throws Exception{
+        long start = System.currentTimeMillis();
+        String showPath ="";
+        path = path + "/" + masterId;
+        //校验资源链接是否有效
+        if(Utils.isHttpAccess(url)){
+          Boolean isTrue =  FileUtils.downLoadFromUrl(url,fileName,path);
+          //文件下载成功变更路径地址
+          if(isTrue){
+              showPath = masterId + "/" +fileName;
+          }
+
+        }
+
+        //语音
+        if(fileType ==2){
+            liveSlaveCmsService.setLiveSlaveStaticPathByMasterIdAndLiveSlaveSort(masterId,sort,null,showPath);
+        //图片
+        }else{
+            liveSlaveCmsService.setLiveSlaveStaticPathByMasterIdAndLiveSlaveSort(masterId,sort,showPath,null);
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("doTask_fileSyncDownload: " + (end - start) + "毫秒");
         return new AsyncResult<>(true);
     }
 

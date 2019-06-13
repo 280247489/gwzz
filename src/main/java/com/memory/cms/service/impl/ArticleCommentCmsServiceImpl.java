@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.*;
 import java.util.*;
@@ -207,7 +208,13 @@ public class ArticleCommentCmsServiceImpl implements ArticleCommentCmsService {
     }
 
     @Override
+    @Transactional
     public void deleteArticleCommentByCommentRootId(String root_id) {
         repository.deleteArticleCommentByCommentRootId(root_id);
+    }
+
+    @Override
+    public void delete(String id) {
+
     }
 }

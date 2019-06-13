@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/6/5 17:01
+ * @date 2019/6/10 10:32
  */
 
 @Entity
@@ -31,6 +31,7 @@ public class User {
     private Date userCreateTime;
     private int userForbidden;
     private int userNologin;
+    private int userRole;
     private int userCancel;
 
     @Id
@@ -204,6 +205,16 @@ public class User {
     }
 
     @Basic
+    @Column(name = "user_role")
+    public int getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(int userRole) {
+        this.userRole = userRole;
+    }
+
+    @Basic
     @Column(name = "user_cancel")
     public int getUserCancel() {
         return userCancel;
@@ -220,6 +231,7 @@ public class User {
         User user = (User) o;
         return userForbidden == user.userForbidden &&
                 userNologin == user.userNologin &&
+                userRole == user.userRole &&
                 userCancel == user.userCancel &&
                 Objects.equals(id, user.id) &&
                 Objects.equals(password, user.password) &&
@@ -240,6 +252,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, password, userUnionId, userOpenId, userTel, userNickName, userLogo, userName, userSex, userBirthday, userProvince, userCity, userArea, userAddress, userCreateTime, userForbidden, userNologin, userCancel);
+        return Objects.hash(id, password, userUnionId, userOpenId, userTel, userNickName, userLogo, userName, userSex, userBirthday, userProvince, userCity, userArea, userAddress, userCreateTime, userForbidden, userNologin, userRole, userCancel);
     }
 }

@@ -146,7 +146,7 @@ public class ArticleCmsController {
         Result result = new Result();
         try {
 
-            String fileUrl = myFileConfig.getUpload_local_article_path();
+            String fileUrl = myFileConfig.getUpload_local_path();
 
             String id = Utils.getShortUUTimeStamp();
             String prefix = "";
@@ -215,7 +215,7 @@ public class ArticleCmsController {
 
         Result result = new Result();
         try {
-            String fileUrl = myFileConfig.getUpload_local_article_path();
+            String fileUrl = myFileConfig.getUpload_local_path();
 
             String prefix = "";
             String suffix = "";

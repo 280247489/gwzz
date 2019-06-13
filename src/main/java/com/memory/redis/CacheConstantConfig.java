@@ -2,7 +2,9 @@ package com.memory.redis;
 
 import com.memory.common.yml.MyFileConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,11 +13,9 @@ import java.util.Map;
  * @Date: 2019/3/28 0028 15:28
  * @Description:
  */
+
+@Component
 public class CacheConstantConfig {
-
-
-    @Autowired
-    private static MyFileConfig config;
 
     //APP数据Hash
     public static final String SYSAPPDATA = "sysAppData";
@@ -30,7 +30,7 @@ public class CacheConstantConfig {
 
 
     /**
-     * 课程直播 start========
+     * 课程直播 redis 键值存储规范 start========
      */
     //课程直播分享用户数据
     public static final String SHARECOURSEVIEW = "share:course:view:";
@@ -44,7 +44,7 @@ public class CacheConstantConfig {
     //课程直播内存信息
     public static Map<String,Object> COURSEMAP = new HashMap<String,Object>();
     /**
-     * 课程直播 end========
+     * 课程直播 键值存储规范 end========
      */
 
 
@@ -53,14 +53,12 @@ public class CacheConstantConfig {
      * 微信分享 start========
      */
     //微信公众平台基础服务access_token（每天有数量限制）
-    public static String WECHATSHAREACCESSTOKEN = "wechat:platform:share:access_token";
+    public static final String WECHATSHAREACCESSTOKEN = "wechat:platform:share:access_token";
     //微信公众平台基础服务jsapi_ticket（每天有数量限制）
-    public static String WECHATSHAREJSAPITICKET ="wechat:platform:share:jsapi_ticket";
+    public static final String WECHATSHAREJSAPITICKET ="wechat:platform:share:jsapi_ticket";
     /**
      * 微信分享 end========
      */
-
-
 
 
 

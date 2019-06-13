@@ -1,8 +1,12 @@
 package com.memory.common.utils;
 
+import com.memory.common.yml.MyFileConfig;
 import com.memory.file.controller.FileController;
+import com.memory.redis.CacheConstantConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -24,15 +29,21 @@ import java.util.Map;
  * @author INS6+
  * @date 2019/5/10 11:12
  */
-
+@Component
 public class FileUtils {
 
     private static final Logger log = LoggerFactory.getLogger(FileController.class);
 
-    private static final String loadPath = "G:/upload/";
+    private static FileUtils fileUtils;
 
-    private static final String resourcesUrl = "http://192.168.1.118:8081/upload";
+    @Autowired
+    private MyFileConfig config;
 
+
+    @PostConstruct
+    public void init(){
+        fileUtils = this;
+    }
 
 
     public static String upload(MultipartFile file, String fileUploadedPath,String fileName) {
@@ -170,8 +181,8 @@ public class FileUtils {
      * @param savePath
      * @throws IOException
      */
-    public static void  downLoadFromUrl(String urlStr,String fileName,String savePath) {
-
+    public static boolean  downLoadFromUrl(String urlStr,String fileName,String savePath) {
+        boolean flag =false;
         try {
             URL url = new URL(urlStr);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
@@ -198,20 +209,21 @@ public class FileUtils {
 
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(getData);
+
             if(fos!=null){
                 fos.close();
             }
             if(inputStream!=null){
                 inputStream.close();
             }
-
+            flag = true;
             log.info("Url:【"+urlStr+"】下载成功.存储文件【"+ savePath+"/"+fileName+"】");
             System.out.println("Url:【"+urlStr+"】下载成功.存储文件【"+ savePath+"/"+fileName+"】");
         }catch (Exception e){
             e.printStackTrace();
             log.error("Url:【"+urlStr+"】下载失败",e.getMessage());
         }
-
+        return flag;
     }
 
     /**
@@ -273,6 +285,12 @@ public class FileUtils {
         String dayStr = DateUtils.getDate("yyyyMMdd");
         String hoursStr = DateUtils.getDate("HHmmss");
         return   prefix + "_" + dayStr + "_" + hoursStr + suffix;
+    }
+
+
+    public static String getPath(String dir){
+
+        return fileUtils.config.getUpload_local_path()+ "/" + dir;
     }
 
 

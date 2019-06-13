@@ -86,7 +86,7 @@ public class ArticleTypeCmsController {
             String fileUploadedPath = "";
             String fileName="";
             String uuid = Utils.getShortUUTimeStamp();
-            String fileUrl = myFileConfig.getUpload_local_article_path();
+            String fileUrl = myFileConfig.getUpload_local_path();
             if(typeFile != null && !typeFile.isEmpty()){
                 prefix = "type";
                 //图片默认转成png格式
@@ -145,7 +145,7 @@ public class ArticleTypeCmsController {
             String fileUploadedPath = "";
             String fileName="";
             String uuid = Utils.getShortUUTimeStamp();
-            String fileUrl = myFileConfig.getUpload_local_article_path();
+            String fileUrl = myFileConfig.getUpload_local_path();
             if(typeFile != null && !typeFile.isEmpty()){
                 prefix = "type";
                 //图片默认转成png格式

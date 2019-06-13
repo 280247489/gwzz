@@ -27,6 +27,9 @@ public class Ext {
 
     private String courseId;
 
+    //操作人id
+    private String operateId;
+
     public int getType() {
         return type;
     }
@@ -99,6 +102,14 @@ public class Ext {
         this.courseId = courseId;
     }
 
+    public String getOperateId() {
+        return operateId;
+    }
+
+    public void setOperateId(String operateId) {
+        this.operateId = operateId;
+    }
+
     @Override
     public String toString() {
         return "Ext{" +
@@ -111,6 +122,7 @@ public class Ext {
                 ", audioFile=" + audioFile +
                 ", imgFile=" + imgFile +
                 ", courseId='" + courseId + '\'' +
+                ", operateId='" + operateId + '\'' +
                 '}';
     }
 

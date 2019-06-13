@@ -1,12 +1,11 @@
 package com.memory.cms.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.memory.cms.service.CourseCmsService;
-import com.memory.cms.service.CourseMemoryLoadService;
-import com.memory.cms.service.CourseMemoryService;
+import com.memory.cms.service.*;
 import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.CourseExt;
 import com.memory.entity.jpa.CourseMemoryLoad;
+import com.memory.entity.jpa.LiveMaster;
 import com.memory.gwzz.service.CourseExtWebService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +30,12 @@ public class CourseMemoryServiceImpl implements CourseMemoryService {
 
     @Autowired
     private CourseMemoryLoadService courseMemoryLoadService;
+
+    @Autowired
+    private LiveSlaveCmsService liveSlaveCmsService;
+
+    @Autowired
+    private LiveMasterCmsService liveMasterCmsService;
 
     public void addMemory(String courseId){
             String keyHash = SHARECOURSECONTENT + courseId;
@@ -65,15 +70,7 @@ public class CourseMemoryServiceImpl implements CourseMemoryService {
             returnMap.put("courseExt",resultList);
             COURSEMAP.put(keyHash,returnMap);
 
-            CourseMemoryLoad courseMemoryLoad = new CourseMemoryLoad();
-            courseMemoryLoad.setCourseId(courseId);
-            courseMemoryLoad.setContent(JSON.toJSONString(returnMap));
-            courseMemoryLoad.setOperator("admin");
-            courseMemoryLoad.setLoadStatus(0);
-            courseMemoryLoad.setCreateTime(new Date());
-            courseMemoryLoad.setUpdateTime(new Date());
-            courseMemoryLoad.setCourseRedisKey(keyHash);
-            courseMemoryLoadService.addCourseMemoryLoad(courseMemoryLoad);
+        initMemoryLoad(courseId, keyHash, returnMap);
 
     }
 
@@ -126,6 +123,44 @@ public class CourseMemoryServiceImpl implements CourseMemoryService {
     }
 
 
+    @Override
+    public void addLiveMemory(String masterId) {
+        com.memory.entity.bean.LiveSlave liveSlave = new  com.memory.entity.bean.LiveSlave();
+        String keyHash = SHARECOURSECONTENT + masterId;
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        Map<String,Object> returnMap = new HashMap<String, Object>();
+
+        List<com.memory.entity.bean.LiveSlave> list = liveSlaveCmsService.queryLiveSlaveList(masterId);
+        List<Map<String,Object>> showList = liveSlave.refactorData(list);
+        LiveMaster master = liveMasterCmsService.getLiveMasterById(masterId);
+
+        returnMap.put("master",master.getLiveMasterName());
+        returnMap.put("slave",showList);
+        COURSEMAP.put(keyHash,returnMap);
+
+        initMemoryLoad(masterId, keyHash, returnMap);
 
 
+    }
+
+    private void initMemoryLoad(String masterId, String keyHash, Map<String, Object> returnMap) {
+        CourseMemoryLoad courseMemoryLoad = new CourseMemoryLoad();
+        courseMemoryLoad.setCourseId(masterId);
+        courseMemoryLoad.setContent(JSON.toJSONString(returnMap));
+        courseMemoryLoad.setOperator("admin");
+        courseMemoryLoad.setLoadStatus(0);
+        courseMemoryLoad.setCreateTime(new Date());
+        courseMemoryLoad.setUpdateTime(new Date());
+        courseMemoryLoad.setCourseRedisKey(keyHash);
+        courseMemoryLoadService.addCourseMemoryLoad(courseMemoryLoad);
+    }
+
+    @Override
+    public Object getLiveSlaveById(String masterId) {
+        String keyHash = SHARECOURSECONTENT + masterId;
+        if( !COURSEMAP.containsKey(keyHash)){
+            return null;
+        }
+        return COURSEMAP.get(keyHash);
+    }
 }

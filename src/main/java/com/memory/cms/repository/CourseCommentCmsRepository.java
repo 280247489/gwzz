@@ -2,6 +2,7 @@ package com.memory.cms.repository;
 import com.memory.entity.jpa.CourseComment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Date;
@@ -21,7 +22,9 @@ public interface CourseCommentCmsRepository extends JpaRepository<CourseComment,
 
     CourseComment getCourseCommentById(String id);
 
-    void  deleteCourseCommentByCommentRootId(String root_id);
+    @Modifying
+    @Query(value = "delete from CourseComment  where commentRootId =?1 ")
+    void  deleteCourseCommentByCommentRootIds(String root_id);
 
 
 

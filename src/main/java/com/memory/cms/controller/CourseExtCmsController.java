@@ -82,7 +82,7 @@ public class CourseExtCmsController {
                 //addCourseExt2Redis(extList, extListSave,false);
 
                 //异步同步网络资源到服务器
-               //asyncDownloadFromXiaoZhuShou(extListSave);
+             //  asyncDownloadFromXiaoZhuShou(extListSave);
             }
             result = ResultUtil.success(extListSave);
 
@@ -272,7 +272,7 @@ public class CourseExtCmsController {
                      realFileName = realFileName.substring(realFileName.lastIndexOf("/")+1);
                      fileName = FileUtils.getCourseExtRadioFileName(sort+"",realFileName);
                     //String urlStr,String fileName,String savePath
-                     String savePath  = config.getUpload_local_path_xiaozhushou() + "/" + courseId;
+                     String savePath  = config.getUpload_local_path() + "/" + courseId;
                      //异步线程任务下载
                      task.doTask_fileDownload(radioUrl,fileName,savePath);
                      showPath = courseId + "/" + fileName;
@@ -287,7 +287,7 @@ public class CourseExtCmsController {
                  String imgUrl = ext.getCourseExtImgUrl();
                  if(imgUrl.indexOf("http") >  -1){
                      fileName = FileUtils.getCourseExtImgFileName(sort+"");
-                     String savePath  = config.getUpload_local_path_xiaozhushou() + "/" + ext.getCourseId();
+                     String savePath  = config.getUpload_local_path() + "/" + ext.getCourseId();
                      //异步线程任务下载
                      task.doTask_fileDownload(imgUrl,fileName,savePath);
                      showPath = courseId + "/" + fileName;

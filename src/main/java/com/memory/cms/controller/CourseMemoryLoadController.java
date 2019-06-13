@@ -2,10 +2,12 @@ package com.memory.cms.controller;
 
 import com.memory.cms.service.CourseCmsService;
 import com.memory.cms.service.CourseMemoryLoadService;
+import com.memory.cms.service.LiveMasterCmsService;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.entity.bean.Course;
 import com.memory.entity.jpa.CourseMemoryLoad;
+import com.memory.entity.jpa.LiveMaster;
 import org.apache.solr.common.util.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,12 +33,17 @@ public class CourseMemoryLoadController {
     @Autowired
     private CourseCmsService courseService;
 
+
+    @Autowired
+    private LiveMasterCmsService liveMasterCmsService;
+
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
     public Result findAll(){
         Result result = new Result();
         try {
             List<Map<String,Object>> returnMap = new ArrayList<Map<String,Object>>();
             Map<String ,Object> mapper = new HashMap<String ,Object>();
+            //List<LiveMaster> options = liveMasterCmsService.queryListMasterOptions();
             List<com.memory.entity.bean.Course>  optionsList = courseService.queryCourseOptions();
             for (Course course : optionsList) {
                 mapper.put(course.getId(),course.getCourseTitle());

@@ -148,6 +148,10 @@ public class CourseComment {
     public CourseComment() {
     }
 
+    public CourseComment(String commentRootId) {
+        this.commentRootId = commentRootId;
+    }
+
     public CourseComment(String id, String courseId, String userId, String userLogo, String userName, int commentType, String commentRootId, String commentParentId, String commentParentUserName, String commentContent, Date commentCreateTime, int commentTotalLike) {
         this.id = id;
         this.courseId = courseId;
