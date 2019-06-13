@@ -1,7 +1,6 @@
 package com.memory.cms.repository;
 
 import com.memory.entity.jpa.Course;
-import com.memory.entity.jpa.CourseMemoryLoad;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;

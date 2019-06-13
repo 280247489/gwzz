@@ -72,20 +72,21 @@ public class DemoAsyncTask {
         //校验资源链接是否有效
         if(Utils.isHttpAccess(url)){
           Boolean isTrue =  FileUtils.downLoadFromUrl(url,fileName,path);
-          //文件下载成功变更路径地址
+          //文件下载成功变更路径地址，文件下载成功后更新db
           if(isTrue){
               showPath = masterId + "/" +fileName;
+              //语音
+              if(fileType ==2){
+                  liveSlaveCmsService.setLiveSlaveStaticPathByMasterIdAndLiveSlaveSort(masterId,sort,null,showPath);
+                  //图片
+              }else{
+                  liveSlaveCmsService.setLiveSlaveStaticPathByMasterIdAndLiveSlaveSort(masterId,sort,showPath,null);
+              }
           }
 
         }
 
-        //语音
-        if(fileType ==2){
-            liveSlaveCmsService.setLiveSlaveStaticPathByMasterIdAndLiveSlaveSort(masterId,sort,null,showPath);
-        //图片
-        }else{
-            liveSlaveCmsService.setLiveSlaveStaticPathByMasterIdAndLiveSlaveSort(masterId,sort,showPath,null);
-        }
+
         long end = System.currentTimeMillis();
         System.out.println("doTask_fileSyncDownload: " + (end - start) + "毫秒");
         return new AsyncResult<>(true);

@@ -3,9 +3,9 @@ import com.alibaba.fastjson.JSON;
 import com.memory.cms.service.CourseExtCmsService;
 import com.memory.cms.service.CourseMemoryService;
 import com.memory.common.yml.MyFileConfig;
-import com.memory.entity.jpa.Course;
 import com.memory.cms.service.CourseCmsService;
 import com.memory.common.utils.*;
+import com.memory.entity.jpa.Course;
 import com.memory.redis.config.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -211,18 +211,14 @@ public class CourseCmsController {
 
                 String fileUploadedPath = "",fileName="";
 
-
                 if(!titleFile.isEmpty()){
                     prefix = "title";
                     //图片默认转成png格式
                     suffix = ".png";
                     fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
-                   // fileUploadedPath = fileUrl + "/" + id;
                     //上传标题图
                     course_logo=  FileUtils.upload(titleFile,fileUrl,fileName,id);
-                  //  course_logo = fileUploadedPath + "/" +fileName;
-                    //course_logo = id + "/" +fileName;
 
                 }
 
@@ -231,12 +227,8 @@ public class CourseCmsController {
                     suffix = ".mp3";
                     fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
-                   // fileUploadedPath = fileUrl + "/" + id;
                     //上传MP3音频
                     course_audio_url =  FileUtils.upload(radioFile,fileUrl,fileName,id);
-
-                   // course_audio_url = fileUploadedPath + "/" +fileName;
-                    //course_audio_url = id + "/" +fileName;
                 }
 
 
@@ -302,11 +294,8 @@ public class CourseCmsController {
                 suffix = ".png";
                 fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
-             //   fileUploadedPath = fileUrl + "/" + id;
                 //上传标题图
                 course_logo=  FileUtils.upload(titleFile,fileUrl,fileName,id);
-               // course_logo = fileUploadedPath + "/" +fileName;
-               // course_logo = id + "/" +fileName;
 
             }
 
@@ -314,13 +303,8 @@ public class CourseCmsController {
                 prefix = "radio";
                 suffix = ".mp3";
                 fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
-
-               // fileUploadedPath = fileUrl + "/" + id;
                 //上传MP3音频
                 course_audio_url= FileUtils.upload(radioFile,fileUrl,fileName,id);
-
-                //course_audio_url = fileUploadedPath + "/" +fileName;
-               // course_audio_url = id + "/" +fileName;
             }
 
             Course course = courseService.getCourseById(id);
@@ -341,7 +325,6 @@ public class CourseCmsController {
                 course.setCourseUpdateTime(new Date());
                 course.setCourseOnline(course_online);
                 course.setCourseRecommend(course_recommend);
-                //course.setCourseAudioTimes(course_audio_times);
 
 
             }
@@ -349,14 +332,6 @@ public class CourseCmsController {
             if(course_online ==0){
                 courseMemoryService.clear(id);
             }
-
-       /*     Course course = init(course_type_id,course_title,
-                    course_logo,course_content,
-                    course_audio_url,course_video_url,
-                    course_label,course_key_words,
-                    course_online,course_create_id,
-                    course_update_id,id,course_recommend,course_describe,course_create_time,false
-            );*/
 
             course = courseService.update(course);
 
@@ -385,7 +360,7 @@ public class CourseCmsController {
                         String course_audio_url, String course_video_url,
                         String course_label, String course_key_words,
                         Integer course_online, String course_create_id,
-                        String course_update_id, String id, Integer course_recommend, String course_describe, String course_create_time,Boolean isSave){
+                        String course_update_id, String id, Integer course_recommend, String course_describe, String course_create_time, Boolean isSave){
 
                 Course course = new Course();
                 if(id != null){
@@ -396,9 +371,6 @@ public class CourseCmsController {
                 course.setCourseTitle(course_title);
                 course.setCourseLogo(course_logo);
                 course.setCourseContent(course_content);
-            /*    if(course_audio_url != null && !"".equals(course_audio_url)){
-                    course.setCourseAudioUrl(course_audio_url);
-                }*/
                 course.setCourseAudioUrl(course_audio_url);
                 course.setCourseVideoUrl(course_video_url);
                 course.setCourseLabel(course_label);
@@ -421,26 +393,9 @@ public class CourseCmsController {
 
                 course.setCourseUpdateTime(new  Date());
                 course.setCourseUpdateId(course_create_id);
+                course.setAlbumId("");
 
         return course;
-    }
-
-
-    public static String isImagesTrue(String posturl) throws IOException {
-        URL url = new URL(posturl);
-        HttpURLConnection urlcon = (HttpURLConnection) url.openConnection();
-        urlcon.setRequestMethod("POST");
-        urlcon.setRequestProperty("Content-type",
-                "application/x-www-form-urlencoded");
-        if (urlcon.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            System.out.println(HttpURLConnection.HTTP_OK + posturl
-                    + ":posted ok!");
-            return "200";
-        } else {
-            System.out.println(urlcon.getResponseCode() + posturl
-                    + ":Bad post...");
-            return "404";
-        }
     }
 
     @RequestMapping(value = "options", method = RequestMethod.POST)

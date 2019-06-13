@@ -3,7 +3,6 @@ import com.memory.cms.service.ArticleCmsService;
 import com.memory.common.utils.*;
 import com.memory.common.yml.MyFileConfig;
 import com.memory.entity.jpa.Article;
-import com.memory.entity.jpa.Course;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

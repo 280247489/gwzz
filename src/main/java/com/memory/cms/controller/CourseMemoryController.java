@@ -1,13 +1,10 @@
 package com.memory.cms.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.memory.cms.redis.service.CourseRedisCmsService;
-import com.memory.cms.service.CourseCmsService;
 import com.memory.cms.service.CourseExtCmsService;
 import com.memory.cms.service.CourseMemoryService;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
-import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.CourseExt;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
