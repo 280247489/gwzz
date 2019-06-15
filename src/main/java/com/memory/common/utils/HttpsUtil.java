@@ -1,4 +1,4 @@
-package com.memory.http.https;
+package com.memory.common.utils;
 import com.memory.wechat.platform.JEEWeiXinX509TrustManager;
 
 import javax.net.ssl.HttpsURLConnection;

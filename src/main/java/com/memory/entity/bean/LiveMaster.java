@@ -11,6 +11,8 @@ public class LiveMaster {
     private String liveMasterName;
     private String liveMasterDescribe;
     private String operatorId;
+    private String startTime;
+    private String endTime;
 
     public String getId() {
         return id;
@@ -44,6 +46,22 @@ public class LiveMaster {
         this.operatorId = operatorId;
     }
 
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
 
     @Override
     public String toString() {
@@ -52,6 +70,8 @@ public class LiveMaster {
                 ", liveMasterName='" + liveMasterName + '\'' +
                 ", liveMasterDescribe='" + liveMasterDescribe + '\'' +
                 ", operatorId='" + operatorId + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
                 '}';
     }
 }

@@ -7,6 +7,7 @@ import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.common.utils.Utils;
 import com.memory.entity.bean.ArticleComment;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,17 +41,7 @@ public class ArticleCommentCmsController {
         int limit = size;
         List<ArticleComment> list = articleCommentCmsService.queryArticleCommentByQueHql( pageIndex, limit, key_words, phone_number,  article_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id,id);
         int totalElements = articleCommentCmsService.queryArticleCommentByQueHqlCount(  key_words, phone_number,  article_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id,id);
-        int totalPages = totalElements/size;
-        if(totalElements%size != 0){
-            totalPages+=1;
-        }
-        PageResult pageResult = new PageResult();
-        pageResult.setPageNumber(page + 1);
-        pageResult.setOffset(0L);
-        pageResult.setPageSize(size);
-        pageResult.setTotalPages(totalPages);
-        pageResult.setTotalElements(Long.valueOf(totalElements));
-        pageResult.setData(list);
+        PageResult pageResult = PageResult.getPageResult(page, size, list, totalElements);
         return ResultUtil.success(pageResult);
     }
 
@@ -63,13 +54,14 @@ public class ArticleCommentCmsController {
      * @param user_logo
      * @param user_name
      * @param comment_parent_id
-     * @param comment_content
+     * @param content
      * @return
      */
     @RequestMapping(value = "add")
-    public  Result addAdminComment(@RequestParam("user_id") String user_id,@RequestParam("user_logo") String user_logo,@RequestParam("user_name") String user_name,@RequestParam("comment_parent_id") String comment_parent_id,@RequestParam("comment_content") String comment_content  ){
+    public  Result addAdminComment(@RequestParam("user_id") String user_id,@RequestParam("user_logo") String user_logo,@RequestParam("user_name") String user_name,@RequestParam("comment_parent_id") String comment_parent_id,@RequestParam("content") String content ,@RequestParam("content_replace") String content_replace  ){
         Result result = new Result();
         try{
+            System.out.println("content_replace == " + content_replace);
             com.memory.entity.jpa.ArticleComment parentArticleComment =  articleCommentCmsService.getArticleCommentById(comment_parent_id);
             com.memory.entity.jpa.ArticleComment articleComment  = new com.memory.entity.jpa.ArticleComment();
             articleComment.setId(Utils.getShortUUTimeStamp());
@@ -85,8 +77,7 @@ public class ArticleCommentCmsController {
             }else{
                 articleComment.setCommentParentUserName("");
             }
-
-            articleComment.setCommentContent(comment_content);
+            articleComment.setCommentContent(content);
             articleComment.setCommentCreateTime(new Date());
             articleComment.setCommentTotalLike(0);
             com.memory.entity.jpa.ArticleComment articleComment1 =   articleCommentCmsService.addArticleComment(articleComment);

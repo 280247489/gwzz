@@ -98,6 +98,18 @@ public class Utils {
 
 
 
+    /**
+     * 判断是否为基本类型：包括String/Integer/Double/Boolean
+     * @param clazz clazz
+     * @return  true：是;     false：不是
+     */
+    public static boolean isPrimite(Class<?> clazz){
+        if (clazz.isPrimitive() || clazz == String.class || clazz == Integer.class || clazz == Double.class || clazz == Boolean.class){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
 
 

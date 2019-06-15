@@ -127,5 +127,10 @@ public class CourseCmsServiceImpl implements CourseCmsService {
     public int updateCourseUpdateTimeById(Date update_time, String id) {
         return repository.updateCourseUpdateTimeById(update_time,id);
     }
+
+    @Override
+    public List<Course> queryAllOnlineCourse() {
+        return repository.queryAllOnlineCourse();
+    }
 }
 

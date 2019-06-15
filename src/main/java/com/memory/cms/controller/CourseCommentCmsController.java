@@ -40,17 +40,7 @@ public class CourseCommentCmsController {
         int limit = size;
         List<CourseComment> list = courseCommentCmsService.queryCourseCommentByQueHql( pageIndex, limit, key_words, phone_number,  course_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id, id);
         int totalElements = courseCommentCmsService.queryCourseCommentByQueHqlCount(  key_words, phone_number,  course_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id,id);
-        int totalPages = totalElements/size;
-        if(totalElements%size != 0){
-            totalPages+=1;
-        }
-        PageResult pageResult = new PageResult();
-        pageResult.setPageNumber(page + 1);
-        pageResult.setOffset(0L);
-        pageResult.setPageSize(size);
-        pageResult.setTotalPages(totalPages);
-        pageResult.setTotalElements(Long.valueOf(totalElements));
-        pageResult.setData(list);
+        PageResult pageResult = PageResult.getPageResult(page, size, list, totalElements);
         return ResultUtil.success(pageResult);
     }
 

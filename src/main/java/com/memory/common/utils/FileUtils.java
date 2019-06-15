@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * file相关 的util方法
  * @author INS6+
  * @date 2019/5/10 11:12
  */
@@ -288,11 +289,43 @@ public class FileUtils {
     }
 
 
+    /**
+     * 获取上传路径
+     * @param dir
+     * @return
+     */
     public static String getPath(String dir){
 
         return fileUtils.config.getUpload_local_path()+ "/" + dir;
     }
 
+
+    /**
+     * 扫描指定路径下的文件
+     * @param path
+     * @return
+     */
+    public static ArrayList<File> getFiles(String path){
+        ArrayList<File> fileArrayList = new ArrayList<File>();
+        try{
+            File file = new File(path);
+            if(file.isDirectory()){
+                File [] files = file.listFiles();
+                for (File fileIndex : files) {
+                    //如果这个文件是个目录则递归遍历
+                    if(fileIndex.isDirectory()){
+                        getFiles(fileIndex.getPath());
+                    }else {
+                        fileArrayList.add(fileIndex);
+                    }
+
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return fileArrayList;
+    }
 
 
 }

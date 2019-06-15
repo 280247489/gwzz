@@ -39,5 +39,9 @@ public interface CourseCmsRepository extends JpaRepository<Course,String>, JpaSp
     int  updateCourseUpdateTimeById(Date update_time, String id);
 
 
+    @Query(" from Course where courseOnline = 1 ")
+    List<Course> queryAllOnlineCourse();
+
+
 
 }

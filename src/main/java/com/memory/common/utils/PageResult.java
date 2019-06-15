@@ -1,5 +1,10 @@
 package com.memory.common.utils;
 
+import org.jetbrains.annotations.NotNull;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+
 /**
  * @author INS6+
  * @date 2019/5/8 18:22
@@ -30,6 +35,23 @@ public class PageResult {
         this.totalElements = totalElements;
         this.data = data;
     }
+
+    @NotNull
+    public static PageResult getPageResult(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size, List<?> list, int totalElements) {
+        int totalPages = totalElements/size;
+        if(totalElements%size != 0){
+            totalPages+=1;
+        }
+        PageResult pageResult = new PageResult();
+        pageResult.setPageNumber(page + 1);
+        pageResult.setOffset(0L);
+        pageResult.setPageSize(size);
+        pageResult.setTotalPages(totalPages);
+        pageResult.setTotalElements(Long.valueOf(totalElements));
+        pageResult.setData(list);
+        return pageResult;
+    }
+
 
     public Integer getPageNumber() {
         return pageNumber;

@@ -105,7 +105,7 @@ public class LiveMasterCmsController {
                 //存储到redis 临时
                 redisLive2NoExist(uuid);
 
-                asyncDownloadFromXiaoZhuShou(slaveList);
+                //asyncDownloadFromXiaoZhuShou(slaveList);
 
             }
 
@@ -170,6 +170,7 @@ public class LiveMasterCmsController {
     public Result changeLiveStatus(@RequestParam("status") Integer status,@RequestParam("id") String id){
         Result result = new Result();
         try {
+            System.out.println("id === " + id);
             if(!checkLiveMaster(id)){
                 return ResultUtil.error(-1,"非法请求.当前课程不存在！");
             }
@@ -314,6 +315,8 @@ public class LiveMasterCmsController {
         master.setLiveMasterIsRelation(0);
         //是否推送(0未推送，1已推送)
         master.setLiveMasterIsPush(0);
+        master.setLiveMasterStarttime(liveMaster.getStartTime());
+        master.setLiveMasterEndtime(liveMaster.getEndTime());
         master.setLiveMasterCreateTime(new Date());
         master.setLiveMasterCreateId(liveMaster.getOperatorId());
         master.setLiveMasterUpdateTime(new Date());
@@ -325,9 +328,11 @@ public class LiveMasterCmsController {
         List<Ext> extList =   extModel.getExtList();
         int sort = 0;
         List<LiveSlave> slaveList = new ArrayList<LiveSlave>();
-        String nickname ="",logo="",words="",imgUrl="",audioUrl="";
-        int audioTime = 0;
+
+
         for (Ext ext : extList) {
+            int audioTime = 0;
+            String nickname ="",logo="",words="",imgUrl="",audioUrl="";
             sort ++ ;
             int type = ext.getType();
             nickname = ext.getName();
@@ -373,15 +378,12 @@ public class LiveMasterCmsController {
 
     private String uploadImg(String uuid, int sort, Ext ext) {
         String imgUrl ="";
-        if(ext.getImgFile() != null ){
-            MultipartFile imgFile = ext.getImgFile();
-            if(imgFile.isEmpty() ){
+        MultipartFile imgFile = ext.getImgFile();
+        if(imgFile != null ){
                 String prefix = sort + "";
                 String fileName = FileUtils.getCourseExtImgFileName(prefix);
-
                 imgUrl =  FileUtils.upload(imgFile,FileUtils.getPath("live"),fileName,uuid);
 
-            }
         }else {
                 imgUrl = ext.getImgUrl();
         }
@@ -390,15 +392,15 @@ public class LiveMasterCmsController {
 
     private String uploadAudio(String uuid, int sort, Ext ext) {
         String audioUrl="";
-        if(ext.getAudioFile() != null){
-            MultipartFile audioFile = ext.getAudioFile();
-            if(audioFile.isEmpty()){
+        MultipartFile audioFile = ext.getAudioFile();
+        if(audioFile != null){
+
                 String prefix = sort + "";
                 String fileName = FileUtils.getCourseExtRadioFileName(prefix,audioFile);
                 audioUrl =  FileUtils.upload(audioFile,FileUtils.getPath("live"),fileName,uuid);
 
 
-            }
+
         }else {
               audioUrl = ext.getAudioUrl();
         }

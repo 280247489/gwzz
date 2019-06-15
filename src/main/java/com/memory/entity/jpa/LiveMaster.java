@@ -6,7 +6,7 @@ import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/6/6 15:49
+ * @date 2019/6/14 16:11
  */
 
 @Entity
@@ -23,6 +23,8 @@ public class LiveMaster {
     private int liveMasterIsOnline;
     private int liveMasterIsRelation;
     private int liveMasterIsPush;
+    private String liveMasterStarttime;
+    private String liveMasterEndtime;
     private Date liveMasterCreateTime;
     private String liveMasterCreateId;
     private Date liveMasterUpdateTime;
@@ -139,6 +141,26 @@ public class LiveMaster {
     }
 
     @Basic
+    @Column(name = "live_master_starttime")
+    public String getLiveMasterStarttime() {
+        return liveMasterStarttime;
+    }
+
+    public void setLiveMasterStarttime(String liveMasterStarttime) {
+        this.liveMasterStarttime = liveMasterStarttime;
+    }
+
+    @Basic
+    @Column(name = "live_master_endtime")
+    public String getLiveMasterEndtime() {
+        return liveMasterEndtime;
+    }
+
+    public void setLiveMasterEndtime(String liveMasterEndtime) {
+        this.liveMasterEndtime = liveMasterEndtime;
+    }
+
+    @Basic
     @Column(name = "live_master_create_time")
     public Date getLiveMasterCreateTime() {
         return liveMasterCreateTime;
@@ -182,26 +204,28 @@ public class LiveMaster {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LiveMaster that = (LiveMaster) o;
-        return liveMasterStatus == that.liveMasterStatus &&
-                liveMasterLike == that.liveMasterLike &&
-                liveMasterIsSynthesisAudio == that.liveMasterIsSynthesisAudio &&
-                liveMasterSynthesisAudioUrl == that.liveMasterSynthesisAudioUrl &&
-                liveMasterIsOnline == that.liveMasterIsOnline &&
-                liveMasterIsRelation == that.liveMasterIsRelation &&
-                liveMasterIsPush == that.liveMasterIsPush &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(courseId, that.courseId) &&
-                Objects.equals(liveMasterName, that.liveMasterName) &&
-                Objects.equals(liveMasterDescribe, that.liveMasterDescribe) &&
-                Objects.equals(liveMasterCreateTime, that.liveMasterCreateTime) &&
-                Objects.equals(liveMasterCreateId, that.liveMasterCreateId) &&
-                Objects.equals(liveMasterUpdateTime, that.liveMasterUpdateTime) &&
-                Objects.equals(liveMasterUpdateId, that.liveMasterUpdateId);
+        LiveMaster master = (LiveMaster) o;
+        return liveMasterStatus == master.liveMasterStatus &&
+                liveMasterLike == master.liveMasterLike &&
+                liveMasterIsSynthesisAudio == master.liveMasterIsSynthesisAudio &&
+                liveMasterSynthesisAudioUrl == master.liveMasterSynthesisAudioUrl &&
+                liveMasterIsOnline == master.liveMasterIsOnline &&
+                liveMasterIsRelation == master.liveMasterIsRelation &&
+                liveMasterIsPush == master.liveMasterIsPush &&
+                Objects.equals(id, master.id) &&
+                Objects.equals(courseId, master.courseId) &&
+                Objects.equals(liveMasterName, master.liveMasterName) &&
+                Objects.equals(liveMasterDescribe, master.liveMasterDescribe) &&
+                Objects.equals(liveMasterStarttime, master.liveMasterStarttime) &&
+                Objects.equals(liveMasterEndtime, master.liveMasterEndtime) &&
+                Objects.equals(liveMasterCreateTime, master.liveMasterCreateTime) &&
+                Objects.equals(liveMasterCreateId, master.liveMasterCreateId) &&
+                Objects.equals(liveMasterUpdateTime, master.liveMasterUpdateTime) &&
+                Objects.equals(liveMasterUpdateId, master.liveMasterUpdateId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, courseId, liveMasterName, liveMasterDescribe, liveMasterStatus, liveMasterLike, liveMasterIsSynthesisAudio, liveMasterSynthesisAudioUrl, liveMasterIsOnline, liveMasterIsRelation, liveMasterIsPush, liveMasterCreateTime, liveMasterCreateId, liveMasterUpdateTime, liveMasterUpdateId);
+        return Objects.hash(id, courseId, liveMasterName, liveMasterDescribe, liveMasterStatus, liveMasterLike, liveMasterIsSynthesisAudio, liveMasterSynthesisAudioUrl, liveMasterIsOnline, liveMasterIsRelation, liveMasterIsPush, liveMasterStarttime, liveMasterEndtime, liveMasterCreateTime, liveMasterCreateId, liveMasterUpdateTime, liveMasterUpdateId);
     }
 }

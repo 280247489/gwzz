@@ -1,10 +1,10 @@
 package com.memory;
 
-import com.alibaba.fastjson.JSON;
 import com.memory.cms.service.CourseMemoryLoadService;
 import com.memory.cms.service.CourseMemoryService;
 import com.memory.common.yml.MyRedisConfig;
 import com.memory.entity.jpa.CourseMemoryLoad;
+import com.memory.common.utils.BadWordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -43,6 +43,7 @@ public class MainApplication extends SpringBootServletInitializer {
     public void init(){
 
         load_course_memory();
+        load_illegalWord_2_memory();
 
     }
 
@@ -58,6 +59,15 @@ public class MainApplication extends SpringBootServletInitializer {
             courseMemoryService.addMemory(course_id);
         }
     }
+
+    /**
+     * 违禁词项目启动初始化，加载到内存中
+     */
+    public void load_illegalWord_2_memory(){
+        BadWordUtil.initWords();
+    }
+
+
 
 
 }

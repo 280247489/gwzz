@@ -1,10 +1,9 @@
 package com.memory.wechat.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
-import com.memory.http.https.HttpsUtil;
+import com.memory.common.utils.HttpsUtil;
 import com.memory.redis.config.RedisUtil;
 import com.memory.wechat.platform.WechatShareUtil;
 import org.slf4j.Logger;

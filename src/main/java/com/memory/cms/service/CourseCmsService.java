@@ -35,4 +35,6 @@ public interface CourseCmsService {
 
     int  updateCourseUpdateTimeById(Date update_time, String id);
 
+    List<Course> queryAllOnlineCourse();
+
 }

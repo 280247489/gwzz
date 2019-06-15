@@ -7,8 +7,6 @@ import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.entity.bean.Course;
 import com.memory.entity.jpa.CourseMemoryLoad;
-import com.memory.entity.jpa.LiveMaster;
-import org.apache.solr.common.util.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

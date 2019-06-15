@@ -1,7 +1,7 @@
 package com.memory.wechat.controller;
 import com.alibaba.fastjson.*;
 import com.memory.common.utils.*;
-import com.memory.http.https.HttpsUtil;
+import com.memory.common.utils.HttpsUtil;
 import com.memory.wechat.platform.WechatUserInfoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
