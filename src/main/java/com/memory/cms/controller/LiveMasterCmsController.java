@@ -105,7 +105,7 @@ public class LiveMasterCmsController {
                 //存储到redis 临时
                 redisLive2NoExist(uuid);
 
-                //asyncDownloadFromXiaoZhuShou(slaveList);
+                asyncDownloadFromXiaoZhuShou(slaveList);
 
             }
 
@@ -133,6 +133,9 @@ public class LiveMasterCmsController {
             String uuid = masterModel.getLiveMaster().getId();
             com.memory.entity.bean.LiveMaster liveMaster = masterModel.getLiveMaster();
             LiveMaster master = liveMasterCmsService.getLiveMasterById(uuid);
+            if(master == null){
+                return ResultUtil.error(-1,"非法直播!");
+            }
 
             List<LiveSlave>  slaveList = dealData(extModel, uuid, liveMaster.getOperatorId());
 
@@ -229,6 +232,9 @@ public class LiveMasterCmsController {
     public Result relationCourse(@RequestParam("id") String id,@RequestParam("courseId") String courseId){
         Result result = new Result();
         try {
+            if(!checkLiveMaster(id)){
+                return ResultUtil.error(-1,"非法课程");
+            }
 
             int count = liveMasterCmsService.upgradeLiveMasterIsRelation(1,courseId,id);
             if(count > 0){
@@ -379,10 +385,11 @@ public class LiveMasterCmsController {
     private String uploadImg(String uuid, int sort, Ext ext) {
         String imgUrl ="";
         MultipartFile imgFile = ext.getImgFile();
-        if(imgFile != null ){
+        if(!imgFile.isEmpty() ){
                 String prefix = sort + "";
-                String fileName = FileUtils.getCourseExtImgFileName(prefix);
-                imgUrl =  FileUtils.upload(imgFile,FileUtils.getPath("live"),fileName,uuid);
+                String fileName = FileUtils.getImgFileName(prefix);
+                String customCmsPath = FileUtils.getCustomCmsPath("live",uuid);
+                imgUrl =  FileUtils.upload(imgFile,FileUtils.getLocalPath(),customCmsPath,fileName);
 
         }else {
                 imgUrl = ext.getImgUrl();
@@ -393,11 +400,12 @@ public class LiveMasterCmsController {
     private String uploadAudio(String uuid, int sort, Ext ext) {
         String audioUrl="";
         MultipartFile audioFile = ext.getAudioFile();
-        if(audioFile != null){
+        if(!audioFile.isEmpty()){
 
                 String prefix = sort + "";
-                String fileName = FileUtils.getCourseExtRadioFileName(prefix,audioFile);
-                audioUrl =  FileUtils.upload(audioFile,FileUtils.getPath("live"),fileName,uuid);
+                String fileName = FileUtils.getAudioFileName(prefix,audioFile);
+                String customCmsPath = FileUtils.getCustomCmsPath("live",uuid);
+                audioUrl =  FileUtils.upload(audioFile,FileUtils.getLocalPath(),customCmsPath,fileName);
 
 
 
@@ -414,6 +422,7 @@ public class LiveMasterCmsController {
            int sort = liveSlave.getLiveSlaveSort();
            String masterId = liveSlave.getLiveMasterId();
            String fileName ="";
+           String customCmsPath = FileUtils.getCustomCmsPath("live",masterId);
 
            //语音
            if(type == 2){
@@ -421,16 +430,17 @@ public class LiveMasterCmsController {
                if(audioUrl.indexOf("http") > -1){
                    String realFileName = audioUrl;
                    realFileName = realFileName.substring(realFileName.lastIndexOf("/")+1);
-                   fileName = FileUtils.getCourseExtRadioFileName(sort+"",realFileName);
-                   task.doTask_fileSyncDownload(audioUrl,fileName,FileUtils.getPath("live"),masterId,sort+"",type);
+
+                   fileName = FileUtils.getAudioFileName(sort+"",realFileName);
+                   task.doTask_fileSyncDownload(audioUrl,fileName,customCmsPath,masterId,sort+"",type);
                }
            }
            //图片
            if(type == 3){
                String imgUrl = liveSlave.getLiveSlaveImgurl();
                if(imgUrl.indexOf("http") > -1){
-                   fileName = FileUtils.getCourseExtImgFileName(sort+"");
-                   task.doTask_fileSyncDownload(imgUrl,fileName,FileUtils.getPath("live"),masterId,sort+"",type);
+                   fileName = FileUtils.getImgFileName(sort+"");
+                   task.doTask_fileSyncDownload(imgUrl,fileName,customCmsPath,masterId,sort+"",type);
                }
 
            }

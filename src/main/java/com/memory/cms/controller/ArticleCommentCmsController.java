@@ -80,6 +80,7 @@ public class ArticleCommentCmsController {
             articleComment.setCommentContent(content);
             articleComment.setCommentCreateTime(new Date());
             articleComment.setCommentTotalLike(0);
+            articleComment.setCommentContentReplace(content_replace);
             com.memory.entity.jpa.ArticleComment articleComment1 =   articleCommentCmsService.addArticleComment(articleComment);
             result = ResultUtil.success(articleComment1);
         }catch (Exception e){

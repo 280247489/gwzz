@@ -186,7 +186,7 @@ public class CourseCmsController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public Result addCourse(@RequestParam("titleFile") MultipartFile titleFile,@RequestParam("radioFile") MultipartFile radioFile ,@RequestParam("course_type_id") String course_type_id, @RequestParam("course_title") String course_title,
+    public Result addComment(@RequestParam("titleFile") MultipartFile titleFile,@RequestParam("radioFile") MultipartFile radioFile ,@RequestParam("course_type_id") String course_type_id, @RequestParam("course_title") String course_title,
                             @RequestParam("course_recommend") Integer course_recommend, @RequestParam("course_content") String course_content,
                             @RequestParam("course_describe") String course_describe,/* @RequestParam("course_live_status") Integer course_live_status,*/
                             @RequestParam("course_label") String course_label, @RequestParam("course_key_words") String course_key_words,
@@ -195,37 +195,22 @@ public class CourseCmsController {
            Result result = new Result();
             try {
 
-                String fileUrl = config.getUpload_local_path();
                 String course_logo = "";
                 String course_video_url = "";
                 String course_audio_url = "";
 
                 String id = Utils.getShortUUTimeStamp();
-                String prefix = "";
-                String suffix = "";
-                String dayStr = DateUtils.getDate("yyyyMMdd");
-                String hoursStr = DateUtils.getDate("HHmmss");
 
-                String fileUploadedPath = "",fileName="";
 
                 if(!titleFile.isEmpty()){
-                    prefix = "title";
-                    //图片默认转成png格式
-                    suffix = ".png";
-                    fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
-
-                    //上传标题图
-                    course_logo=  FileUtils.upload(titleFile,fileUrl,fileName,id);
+                    course_logo = getCourseLogo(titleFile, id);
 
                 }
 
                 if(!radioFile.isEmpty()){
-                    prefix = "radio";
-                    suffix = ".mp3";
-                    fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
-                    //上传MP3音频
-                    course_audio_url =  FileUtils.upload(radioFile,fileUrl,fileName,id);
+                    course_audio_url = getAudioFileUrl(radioFile, id);
+
                 }
 
 
@@ -260,10 +245,27 @@ public class CourseCmsController {
         return result;
     }
 
+    private String getAudioFileUrl(@RequestParam("radioFile") MultipartFile radioFile, String id) {
+        String course_audio_url;
+        String prefix =  "audio";
+        String fileName = FileUtils.getAudioFileName(prefix,radioFile);
+        String customCmsPath = FileUtils.getCustomCmsPath("course",id);
+        course_audio_url =  FileUtils.upload(radioFile,FileUtils.getLocalPath(),customCmsPath,fileName);
+        return course_audio_url;
+    }
+
+    private String getCourseLogo(@RequestParam("titleFile") MultipartFile titleFile, String id) {
+        String course_logo;
+        String prefix =   "title";
+        String fileName = FileUtils.getImgFileName(prefix);
+        String customCmsPath = FileUtils.getCustomCmsPath("course",id);
+        course_logo =  FileUtils.upload(titleFile,FileUtils.getLocalPath(),customCmsPath,fileName);
+        return course_logo;
+    }
 
 
     @RequestMapping(value = "update", method = RequestMethod.POST)
-    public Result updateCourse(@RequestParam(value = "titleFile" ,required = false) MultipartFile titleFile,@RequestParam(value = "radioFile" ,required = false) MultipartFile radioFile,@RequestParam("id") String id,@RequestParam("course_type_id") String course_type_id,@RequestParam("course_title") String course_title,
+    public Result updateComment(@RequestParam(value = "titleFile" ,required = false) MultipartFile titleFile,@RequestParam(value = "radioFile" ,required = false) MultipartFile radioFile,@RequestParam("id") String id,@RequestParam("course_type_id") String course_type_id,@RequestParam("course_title") String course_title,
                             @RequestParam(value = "course_logo",required = false) String course_logo, @RequestParam("course_content") String course_content,
                             @RequestParam("course_describe") String course_describe,/* @RequestParam("course_live_status") Integer course_live_status,*/
                             @RequestParam(value = "course_audio_url" ,required = false) String course_audio_url,/* @RequestParam("course_video_url") String course_video_url,*/
@@ -274,41 +276,21 @@ public class CourseCmsController {
 
         Result result = new Result();
         try {
-            String fileUrl = config.getUpload_local_path();
-            //String course_audio_url="";
-            String course_video_url="";
-            String prefix = "";
-            String suffix = "";
-            String dayStr = DateUtils.getDate("yyyyMMdd");
-            String hoursStr = DateUtils.getDate("HHmmss");
-            String fileUploadedPath = "";
-            String fileName="";
-
-
-            if(titleFile != null && !titleFile.isEmpty()){
-                prefix = "title";
-                //图片默认转成png格式
-                suffix = ".png";
-                fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
-
-                //上传标题图
-                course_logo=  FileUtils.upload(titleFile,fileUrl,fileName,id);
-
-            }
-
-            if(radioFile != null && !radioFile.isEmpty()){
-                prefix = "radio";
-                suffix = ".mp3";
-                fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
-                //上传MP3音频
-                course_audio_url= FileUtils.upload(radioFile,fileUrl,fileName,id);
-            }
 
             Course course = courseService.getCourseById(id);
 
             if(course == null){
-                result = ResultUtil.error(1,"课程检查不到，请刷新后再进行编辑！");
+                result = ResultUtil.error(1,"非法课程！");
             }else{
+                if(!titleFile.isEmpty()){
+                    course_logo = getCourseLogo(titleFile, id);
+                }
+
+                if(!radioFile.isEmpty()){
+                    course_audio_url = getAudioFileUrl(radioFile, id);
+                }
+
+
                 course.setCourseTypeId(course_type_id);
                 course.setCourseTitle(course_title);
                 course.setCourseLogo(course_logo);

@@ -16,8 +16,7 @@ import java.util.List;
 public interface CourseCommentCmsRepository extends JpaRepository<CourseComment,String>, JpaSpecificationExecutor {
 
 
-    @Query(value = "select  new com.memory.entity.jpa.CourseComment(c.id,c.courseId,c.userId,c.userLogo,c.userName,c.commentType,c.commentRootId,c.commentParentId,c.commentParentUserName,c.commentContent,c.commentCreateTime,c.commentTotalLike ) " +
-            "from CourseComment c  where  c.commentRootId =?1  AND c.commentCreateTime >?2 ORDER BY  c.commentCreateTime desc")
+    @Query(value =  "from CourseComment c  where  c.commentRootId =?1  AND c.commentCreateTime >?2 ORDER BY  c.commentCreateTime desc")
     List<CourseComment> queryCourseCommentList(String  comment_root_id, Date comment_create_time );
 
     CourseComment getCourseCommentById(String id);

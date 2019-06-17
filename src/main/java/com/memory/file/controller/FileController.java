@@ -46,7 +46,7 @@ public class FileController {
         Map<String,Object> map = new HashMap<>();
         String uploadDateTime = DateUtils.getDate("yyyyMMdd");
         try {
-            if (file.isEmpty()) {
+            if (!file.isEmpty()) {
                 result = ResultUtil.error(1,"文件为空");
                 result.setMsg("文件为空");
             }

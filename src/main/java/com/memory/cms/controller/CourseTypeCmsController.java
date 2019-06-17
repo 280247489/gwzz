@@ -79,25 +79,14 @@ public class CourseTypeCmsController {
         Result result = new Result();
         try{
 
-            String prefix = "";
-            String suffix = "";
-            String dayStr = DateUtils.getDate("yyyyMMdd");
-            String hoursStr = DateUtils.getDate("HHmmss");
-            String fileUploadedPath = "";
-            String fileName="";
             String uuid = Utils.getShortUUTimeStamp();
-            String fileUrl = config.getUpload_local_path();
 
             if(typeFile != null && !typeFile.isEmpty()){
-                prefix = "type";
-                //图片默认转成png格式
-                suffix = ".png";
-                fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
 
-               // fileUploadedPath = fileUrl + "/" + uuid;
-                //上传标题图
-                imgUrl=  FileUtils.upload(typeFile,fileUrl,fileName,uuid);
-                //imgUrl = fileUploadedPath + "/" +fileName;
+                String prefix =   "type";
+                String fileName = FileUtils.getImgFileName(prefix);
+                String customCmsPath = FileUtils.getCustomCmsPath("courseType",uuid);
+                imgUrl =  FileUtils.upload(typeFile,FileUtils.getLocalPath(),customCmsPath,fileName);
 
             }
 

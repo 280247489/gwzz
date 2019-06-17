@@ -78,25 +78,9 @@ public class ArticleTypeCmsController {
     public  Result add(@RequestParam(value = "imgUrl" ,required = false) String imgUrl, Integer isUse, String typeName, @RequestParam(value = "typeFile" ,required = false) MultipartFile typeFile){
         Result result = new Result();
         try{
-
-            String prefix = "";
-            String suffix = "";
-            String dayStr = DateUtils.getDate("yyyyMMdd");
-            String hoursStr = DateUtils.getDate("HHmmss");
-            String fileUploadedPath = "";
-            String fileName="";
             String uuid = Utils.getShortUUTimeStamp();
-            String fileUrl = myFileConfig.getUpload_local_path();
             if(typeFile != null && !typeFile.isEmpty()){
-                prefix = "type";
-                //图片默认转成png格式
-                suffix = ".png";
-                fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
-                uuid = "article/" +uuid;
-               // fileUploadedPath = fileUrl + "/" + uuid;
-                //上传标题图
-                imgUrl=  FileUtils.upload(typeFile,fileUrl,fileName,uuid);
-               // imgUrl =  "article/"  +fileUploadedPath + "/" +fileName;
+                imgUrl = uploadImgFile(typeFile, uuid);
 
             }
 
@@ -114,6 +98,15 @@ public class ArticleTypeCmsController {
             log.error("articleType/cms/add  err =",e.getMessage());
         }
         return result;
+    }
+
+    private String uploadImgFile(@RequestParam(value = "typeFile", required = false) MultipartFile typeFile, String uuid) {
+        String imgUrl;
+        String prefix = "type";
+        String fileName = FileUtils.getImgFileName(prefix);
+        String customCmsPath = FileUtils.getCustomCmsPath("articleType", uuid);
+        imgUrl = FileUtils.upload(typeFile, FileUtils.getLocalPath(), customCmsPath, fileName);
+        return imgUrl;
     }
 
     @RequestMapping(value = "isUse", method = RequestMethod.POST)
@@ -138,24 +131,9 @@ public class ArticleTypeCmsController {
     public Result update(@RequestParam(value = "id") String id,@RequestParam(value = "typeName") String typeName,@RequestParam(value = "imgUrl" ,required = false) String imgUrl,  @RequestParam(value = "typeFile" ,required = false) MultipartFile typeFile){
         Result result = new Result();
         try {
-            String prefix = "";
-            String suffix = "";
-            String dayStr = DateUtils.getDate("yyyyMMdd");
-            String hoursStr = DateUtils.getDate("HHmmss");
-            String fileUploadedPath = "";
-            String fileName="";
             String uuid = Utils.getShortUUTimeStamp();
-            String fileUrl = myFileConfig.getUpload_local_path();
             if(typeFile != null && !typeFile.isEmpty()){
-                prefix = "type";
-                //图片默认转成png格式
-                suffix = ".png";
-                fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
-                uuid = "article/" +uuid;
-                // fileUploadedPath = fileUrl + "/" + uuid;
-                //上传标题图
-                imgUrl=  FileUtils.upload(typeFile,fileUrl,fileName,uuid);
-                // imgUrl =  "article/"  +fileUploadedPath + "/" +fileName;
+                imgUrl = uploadImgFile(typeFile, uuid);
 
             }
             ArticleType articleType =articleTypeService.queryArticleTypeById(id);

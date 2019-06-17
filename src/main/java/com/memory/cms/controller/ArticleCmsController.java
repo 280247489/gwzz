@@ -31,9 +31,6 @@ public class ArticleCmsController {
     @Autowired
     private ArticleCmsService articleService;
 
-    @Autowired
-    private MyFileConfig myFileConfig;
-
     /**
      * 变更上线下线状态
      *
@@ -41,7 +38,7 @@ public class ArticleCmsController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "online"/*, method = RequestMethod.POST*/)
+    @RequestMapping(value = "online", method = RequestMethod.POST)
     public Result setArticleOnline(@RequestParam("online") Integer online, @RequestParam("id") String id) {
         Result result = new Result();
         try {
@@ -79,7 +76,7 @@ public class ArticleCmsController {
      * @param sort_status
      * @return
      */
-    @RequestMapping(value = "list"/*, method = RequestMethod.POST*/)
+    @RequestMapping(value = "list", method = RequestMethod.POST)
     public Result queryArticleList(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
                                    @RequestParam("article_title") String article_title, @RequestParam("article_update_id") String article_update_id,
                                    @RequestParam("article_online") Integer article_online, @RequestParam("sort_status") String sort_status, @RequestParam("type_id") String type_id) {
@@ -112,7 +109,7 @@ public class ArticleCmsController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/detail"/*, method = RequestMethod.POST*/)
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
     public Result getArticleDetail(@RequestParam("id") String id) {
         Result result = new Result();
         try {
@@ -135,46 +132,34 @@ public class ArticleCmsController {
 
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public Result addCourse(@RequestParam("titleFile") MultipartFile titleFile, @RequestParam("type_id") String type_id, @RequestParam("article_title") String article_title,
+    public Result addComment(@RequestParam("titleFile1") MultipartFile titleFile1, @RequestParam("type_id") String type_id, @RequestParam("article_title") String article_title,
                            /* @RequestParam("article_logo") String article_logo,*/ @RequestParam("article_content") String article_content,
                             @RequestParam("article_label") String article_label,
                             @RequestParam("article_key_words") String article_key_words,
                             @RequestParam("article_online") Integer article_online, @RequestParam("article_create_id") String article_create_id,
                             @RequestParam("article_update_id") String article_update_id, @RequestParam("article_describe") String article_describe,
-                            @RequestParam("article_recommend") Integer article_recommend) {
+                            @RequestParam("article_recommend") Integer article_recommend,@RequestParam("titleFile2") MultipartFile titleFile2,@RequestParam("titleFile3") MultipartFile titleFile3) {
         Result result = new Result();
         try {
-
-            String fileUrl = myFileConfig.getUpload_local_path();
-
-            String id = Utils.getShortUUTimeStamp();
-            String prefix = "";
-            String suffix = "";
-            String dayStr = DateUtils.getDate("yyyyMMdd");
-            String hoursStr = DateUtils.getDate("HHmmss");
-
-            String fileUploadedPath = "", fileName = "",article_logo= "";
-
-
-            if (!titleFile.isEmpty()) {
-                prefix = "title";
-                //图片默认转成png格式
-                suffix = ".png";
-                fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
-
-                id = "/article/" +  id;
-              //  fileUploadedPath = fileUrl + "/" + id;
-                //上传标题图
-                article_logo =  FileUtils.upload(titleFile, fileUrl, fileName,id);
-              //  article_logo = "/article/" +  id + "/" + fileName;
-
-            }
-
-
             String uuid = Utils.getShortUUTimeStamp();
+            String article_logo1= "";
+            String article_logo2= "";
+            String article_logo3= "";
+
+
+            String prefix1 ="title1";
+            article_logo1 = getLogo(titleFile1, uuid, article_logo1, prefix1);
+
+
+            String prefix2 ="title2";
+            article_logo2 = getLogo(titleFile2, uuid, article_logo2, prefix2);
+
+            String prefix3 ="title3";
+            article_logo3 = getLogo(titleFile3, uuid, article_logo3, prefix3);
+
 
             Article article = init(type_id, article_title,
-                    article_logo, article_content,
+                    article_logo1,article_logo2,article_logo3, article_content,
                     article_label, article_key_words,
                     article_online, article_create_id,
                    uuid, article_recommend, article_describe, null, true
@@ -201,58 +186,55 @@ public class ArticleCmsController {
         return result;
     }
 
+    private String getLogo( MultipartFile titleFile, String uuid, String article_logo, String prefix) {
+        if (!titleFile.isEmpty()) {
+            String fileName = FileUtils.getImgFileName(prefix);
+            String customCmsPath = FileUtils.getCustomCmsPath("live",uuid);
+            //上传标题图
+            article_logo =   FileUtils.upload(titleFile,FileUtils.getLocalPath(),customCmsPath,fileName);
+
+        }
+        return article_logo;
+    }
+
 
     @RequestMapping(value = "update", method = RequestMethod.POST)
-    public Result updateCourse(@RequestParam(value = "titleFile", required = false) MultipartFile titleFile,  @RequestParam("id") String id, @RequestParam("type_id") String type_id,
+    public Result updateComment(@RequestParam(value = "titleFile1", required = false) MultipartFile titleFile1,  @RequestParam("id") String id, @RequestParam("type_id") String type_id,
                                @RequestParam("article_title") String article_title,
-                               @RequestParam(value = "article_logo", required = false) String article_logo, @RequestParam("article_content") String article_content,
+                               @RequestParam(value = "article_logo1", required = false) String article_logo1, @RequestParam(value = "article_logo2", required = false) String article_logo2,
+                               @RequestParam(value = "article_logo3", required = false) String article_logo3,@RequestParam("article_content") String article_content,
                                @RequestParam("article_describe") String article_describe,
                                @RequestParam("article_label") String article_label, @RequestParam("article_key_words") String article_key_words,
                                @RequestParam("article_online") Integer article_online,
                                @RequestParam("article_update_id") String article_update_id,
-                               @RequestParam("article_recommend") Integer article_recommend) {
+                               @RequestParam("article_recommend") Integer article_recommend,@RequestParam("titleFile2") MultipartFile titleFile2,@RequestParam("titleFile3") MultipartFile titleFile3) {
 
         Result result = new Result();
         try {
-            String fileUrl = myFileConfig.getUpload_local_path();
-
-            String prefix = "";
-            String suffix = "";
-            String dayStr = DateUtils.getDate("yyyyMMdd");
-            String hoursStr = DateUtils.getDate("HHmmss");
-            //String fileUploadedPath = "";
-            String fileName = "";
-
-
-            if (titleFile != null && !titleFile.isEmpty()) {
-                prefix = "title";
-                //图片默认转成png格式
-                suffix = ".png";
-                fileName = prefix + "_" + dayStr + "_" + hoursStr + suffix;
-
-             //   fileUploadedPath = fileUrl + "/" + id;
-
-                id = "article/"  + id;
-                //上传标题图
-                article_logo = FileUtils.upload(titleFile, fileUrl, fileName,id);
-              //  article_logo = "article/"  +id + "/" + fileName;
-
-            }
-
-
-
             Article article = articleService.getArticleById(id);
 
             if (article == null) {
-                result = ResultUtil.error(1, "文章检查不到，请刷新后再进行编辑！");
+                result = ResultUtil.error(1, "非法文章！");
             } else {
+
+
+
+                String prefix1 ="title1";
+                String prefix2 ="title2";
+                String prefix3 ="title3";
+                article_logo1 = getLogo(titleFile1, id, article_logo1, prefix1);
+                article_logo2 = getLogo(titleFile2, id, article_logo2, prefix2);
+                article_logo3 = getLogo(titleFile3, id, article_logo3, prefix3);
+
+                article.setArticleLogo1(article_logo1);
+                article.setArticleLogo2(article_logo2);
+                article.setArticleLogo3(article_logo3);
+
                 article.setTypeId(type_id);
                 article.setArticleTitle(article_title);
-                article.setArticleLogo(article_logo);
                 article.setArticleContent(article_content);
                 article.setArticleLabel(article_label);
                 article.setArticleKeyWords(article_key_words);
-
                 article.setArticleUpdateId(article_update_id);
                 article.setArticleDescribe(article_describe);
                 article.setArticleUpdateTime(new Date());
@@ -260,8 +242,6 @@ public class ArticleCmsController {
                 article.setArticleRecommend(article_recommend);
 
             }
-
-
             article = articleService.update(article);
 
             if (article != null) {
@@ -279,13 +259,12 @@ public class ArticleCmsController {
             result = ResultUtil.error(-1, "系统异常");
             log.error("course/cms/update  err =", e.getMessage());
         }
-
         return result;
     }
 
 
     private Article init(String type_id, String article_title,
-                         String article_logo, String article_content,
+                         String article_logo1,String article_logo2,String article_logo3, String article_content,
                          String article_label, String article_key_words,
                          Integer article_online, String article_create_id,
                           String id, Integer article_recommend, String article_describe, String article_create_time, Boolean isSave) {
@@ -297,11 +276,10 @@ public class ArticleCmsController {
 
         article.setTypeId(type_id);
         article.setArticleTitle(article_title);
-        article.setArticleLogo(article_logo);
+        article.setArticleLogo1(article_logo1);
+        article.setArticleLogo2(article_logo2);
+        article.setArticleLogo3(article_logo3);
         article.setArticleContent(article_content);
-            /*    if(article_audio_url != null && !"".equals(article_audio_url)){
-                    course.setCourseAudioUrl(article_audio_url);
-                }*/
         article.setArticleLabel(article_label);
         article.setArticleKeyWords(article_key_words);
         article.setArticleOnline(article_online);

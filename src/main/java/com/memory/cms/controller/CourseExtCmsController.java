@@ -25,6 +25,7 @@ import static com.memory.redis.CacheConstantConfig.SHARECOURSECONTENT;
 
 
 /**
+ *   ===============  已废弃 ================
  * @author INS6+
  * @date 2019/5/11 14:18
  */
@@ -231,7 +232,7 @@ public class CourseExtCmsController {
         if(!imgFiles.isEmpty()){
             prefix = i+1+"";
             //图片默认转成png
-            String fileName = FileUtils.getCourseExtImgFileName(prefix);
+            String fileName = FileUtils.getImgFileName(prefix);
             //上传图片
             course_img_url =  FileUtils.upload(imgFiles,fileUrl,fileName,courseUUid);
 
@@ -249,7 +250,7 @@ public class CourseExtCmsController {
             prefix = i+1+"";
             //语音
 
-            String fileName = FileUtils.getCourseExtRadioFileName(prefix,audioFile);
+            String fileName = FileUtils.getAudioFileName(prefix,audioFile);
             //上传语音
             course_audio_url =   FileUtils.upload(audioFile,fileUrl,fileName,courseUUid);
         }
@@ -270,7 +271,7 @@ public class CourseExtCmsController {
                  if(radioUrl.indexOf("http") > -1){
                      String realFileName = ext.getCourseExtAudio();
                      realFileName = realFileName.substring(realFileName.lastIndexOf("/")+1);
-                     fileName = FileUtils.getCourseExtRadioFileName(sort+"",realFileName);
+                     fileName = FileUtils.getAudioFileName(sort+"",realFileName);
                     //String urlStr,String fileName,String savePath
                      String savePath  = config.getUpload_local_path() + "/" + courseId;
                      //异步线程任务下载
@@ -286,7 +287,7 @@ public class CourseExtCmsController {
                  //网络图片资源下载路径
                  String imgUrl = ext.getCourseExtImgUrl();
                  if(imgUrl.indexOf("http") >  -1){
-                     fileName = FileUtils.getCourseExtImgFileName(sort+"");
+                     fileName = FileUtils.getImgFileName(sort+"");
                      String savePath  = config.getUpload_local_path() + "/" + ext.getCourseId();
                      //异步线程任务下载
                      task.doTask_fileDownload(imgUrl,fileName,savePath);

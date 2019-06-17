@@ -37,7 +37,8 @@ public class DemoAspect {
     }
 
 
-    @Pointcut("execution(public * com.memory.cms.controller.ArticleCommentCmsController.addAdminComment(..)) ")
+    @Pointcut("execution(public * com.memory.cms.controller.ArticleCommentCmsController.addAdminComment(..))  || " +
+            "execution(public * com.memory.cms.controller.ArticleCommentCmsController.addAdminComment(..))" )
     public void filterWords(){
     }
 
@@ -66,24 +67,28 @@ public class DemoAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         try {
-
-            //字符串参数过滤 < >
-            Object[] obj = proceedingJoinPoint.getArgs();
-            for (int i=0; i<obj.length;i++){
-                if(obj[i] instanceof String){
-                    //**为空参数不处理**
-                    if(!"".equals(obj[i]) && obj[i]!=null ){
-                        obj[i]=  StringUtil.getHtmlIncodeByString( obj[i].toString());
-                    }
-                }
-            }
-             result = proceedingJoinPoint.proceed(obj);
-
+            String methodName = proceedingJoinPoint.getSignature().getName();
             String Url = request.getRequestURL().toString();
-            String ClassMethod =  proceedingJoinPoint.getSignature().getDeclaringTypeName()+ proceedingJoinPoint.getSignature().getName();
+            String ClassMethod =  proceedingJoinPoint.getSignature().getDeclaringTypeName()+ methodName;
             String HttpMethod = request.getMethod();
             String IP = request.getRemoteAddr();
             Object RequestArgs= new Gson().toJson(getParamInfo(proceedingJoinPoint).get("args"));
+            //字符串参数过滤 < >
+            Object[] obj = proceedingJoinPoint.getArgs();
+            //jodit富文本编辑器内容不做<>过滤处理
+            if(!methodName.equals("addComment")  && !methodName.equals("updateComment")){
+                for (int i=0; i<obj.length;i++){
+                    if(obj[i] instanceof String){
+                        //**为空参数不处理**
+                        if(!"".equals(obj[i]) && obj[i]!=null ){
+                            obj[i]=  StringUtil.getHtmlIncodeByString( obj[i].toString());
+                        }
+                    }
+                }
+            }
+
+             result = proceedingJoinPoint.proceed(obj);
+
             String ResponseArgs = new Gson().toJson(result);
 
             logger.info(String.format(

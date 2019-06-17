@@ -6,7 +6,7 @@ import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/5/27 9:39
+ * @date 2019/6/17 8:50
  */
 
 @Entity
@@ -22,10 +22,9 @@ public class ArticleComment {
     private String commentParentId;
     private String commentParentUserName;
     private String commentContent;
+    private String commentContentReplace;
     private Date commentCreateTime;
     private int commentTotalLike;
-
-
 
     @Id
     @Column(name = "id")
@@ -128,6 +127,16 @@ public class ArticleComment {
     }
 
     @Basic
+    @Column(name = "comment_content_replace")
+    public String getCommentContentReplace() {
+        return commentContentReplace;
+    }
+
+    public void setCommentContentReplace(String commentContentReplace) {
+        this.commentContentReplace = commentContentReplace;
+    }
+
+    @Basic
     @Column(name = "comment_create_time")
     public Date getCommentCreateTime() {
         return commentCreateTime;
@@ -147,24 +156,6 @@ public class ArticleComment {
         this.commentTotalLike = commentTotalLike;
     }
 
-    public ArticleComment() {
-    }
-
-    public ArticleComment(String id, String articleId, String userId, String userLogo, String userName, int commentType, String commentRootId, String commentParentId, String commentParentUserName, String commentContent, Date commentCreateTime, int commentTotalLike) {
-        this.id = id;
-        this.articleId = articleId;
-        this.userId = userId;
-        this.userLogo = userLogo;
-        this.userName = userName;
-        this.commentType = commentType;
-        this.commentRootId = commentRootId;
-        this.commentParentId = commentParentId;
-        this.commentParentUserName = commentParentUserName;
-        this.commentContent = commentContent;
-        this.commentCreateTime = commentCreateTime;
-        this.commentTotalLike = commentTotalLike;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -181,11 +172,12 @@ public class ArticleComment {
                 Objects.equals(commentParentId, that.commentParentId) &&
                 Objects.equals(commentParentUserName, that.commentParentUserName) &&
                 Objects.equals(commentContent, that.commentContent) &&
+                Objects.equals(commentContentReplace, that.commentContentReplace) &&
                 Objects.equals(commentCreateTime, that.commentCreateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, articleId, userId, userLogo, userName, commentType, commentRootId, commentParentId, commentParentUserName, commentContent, commentCreateTime, commentTotalLike);
+        return Objects.hash(id, articleId, userId, userLogo, userName, commentType, commentRootId, commentParentId, commentParentUserName, commentContent, commentContentReplace, commentCreateTime, commentTotalLike);
     }
 }

@@ -136,8 +136,9 @@ public class AlbumCmsController {
         String imgUrl ="";
         if(logoFile != null ){
                 String prefix = 1 + "";
-                String fileName = FileUtils.getCourseExtImgFileName(prefix);
-                imgUrl =  FileUtils.upload(logoFile,FileUtils.getPath("album"),fileName,uuid);
+                String fileName = FileUtils.getImgFileName(prefix);
+                String customCmsPath = FileUtils.getCustomCmsPath("album",uuid);
+                imgUrl =  FileUtils.upload(logoFile,FileUtils.getLocalPath(),customCmsPath,fileName);
         }
         return imgUrl;
     }

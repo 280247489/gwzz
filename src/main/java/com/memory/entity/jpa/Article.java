@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/5/22 16:38
+ * @date 2019/6/17 17:16
  */
 
 @Entity
@@ -17,7 +17,9 @@ public class Article {
     private String id;
     private String typeId;
     private String articleTitle;
-    private String articleLogo;
+    private String articleLogo1;
+    private String articleLogo2;
+    private String articleLogo3;
     private String articleContent;
     private String articleAudioUrl;
     private String articleVideoUrl;
@@ -65,13 +67,33 @@ public class Article {
     }
 
     @Basic
-    @Column(name = "article_logo")
-    public String getArticleLogo() {
-        return articleLogo;
+    @Column(name = "article_logo1")
+    public String getArticleLogo1() {
+        return articleLogo1;
     }
 
-    public void setArticleLogo(String articleLogo) {
-        this.articleLogo = articleLogo;
+    public void setArticleLogo1(String articleLogo1) {
+        this.articleLogo1 = articleLogo1;
+    }
+
+    @Basic
+    @Column(name = "article_logo2")
+    public String getArticleLogo2() {
+        return articleLogo2;
+    }
+
+    public void setArticleLogo2(String articleLogo2) {
+        this.articleLogo2 = articleLogo2;
+    }
+
+    @Basic
+    @Column(name = "article_logo3")
+    public String getArticleLogo3() {
+        return articleLogo3;
+    }
+
+    public void setArticleLogo3(String articleLogo3) {
+        this.articleLogo3 = articleLogo3;
     }
 
     @Basic
@@ -237,7 +259,9 @@ public class Article {
                 Objects.equals(id, article.id) &&
                 Objects.equals(typeId, article.typeId) &&
                 Objects.equals(articleTitle, article.articleTitle) &&
-                Objects.equals(articleLogo, article.articleLogo) &&
+                Objects.equals(articleLogo1, article.articleLogo1) &&
+                Objects.equals(articleLogo2, article.articleLogo2) &&
+                Objects.equals(articleLogo3, article.articleLogo3) &&
                 Objects.equals(articleContent, article.articleContent) &&
                 Objects.equals(articleAudioUrl, article.articleAudioUrl) &&
                 Objects.equals(articleVideoUrl, article.articleVideoUrl) &&
@@ -252,6 +276,6 @@ public class Article {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, typeId, articleTitle, articleLogo, articleContent, articleAudioUrl, articleVideoUrl, articleLabel, articleKeyWords, articleOnline, articleTotalView, articleTotalShare, articleTotalLike, articleCreateTime, articleCreateId, articleUpdateTime, articleUpdateId, articleRecommend, articleDescribe);
+        return Objects.hash(id, typeId, articleTitle, articleLogo1, articleLogo2, articleLogo3, articleContent, articleAudioUrl, articleVideoUrl, articleLabel, articleKeyWords, articleOnline, articleTotalView, articleTotalShare, articleTotalLike, articleCreateTime, articleCreateId, articleUpdateTime, articleUpdateId, articleRecommend, articleDescribe);
     }
 }

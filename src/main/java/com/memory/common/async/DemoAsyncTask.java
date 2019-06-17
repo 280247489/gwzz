@@ -74,7 +74,7 @@ public class DemoAsyncTask {
           Boolean isTrue =  FileUtils.downLoadFromUrl(url,fileName,path);
           //文件下载成功变更路径地址，文件下载成功后更新db
           if(isTrue){
-              showPath = masterId + "/" +fileName;
+              showPath = path + "/" +fileName;
               //语音
               if(fileType ==2){
                   liveSlaveCmsService.setLiveSlaveStaticPathByMasterIdAndLiveSlaveSort(masterId,sort,null,showPath);

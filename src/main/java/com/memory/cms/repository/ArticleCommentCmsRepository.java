@@ -16,8 +16,7 @@ import java.util.List;
 public interface ArticleCommentCmsRepository extends JpaRepository<ArticleComment,String>, JpaSpecificationExecutor {
 
 
-    @Query(value = "select  new com.memory.entity.jpa.ArticleComment(c.id,c.articleId,c.userId,c.userLogo,c.userName,c.commentType,c.commentRootId,c.commentParentId,c.commentParentUserName,c.commentContent,c.commentCreateTime,c.commentTotalLike ) " +
-            "from ArticleComment c  where  c.commentRootId =?1  AND c.commentCreateTime >?2 ORDER BY  c.commentCreateTime desc")
+    @Query(value ="from ArticleComment c  where  c.commentRootId =?1  AND c.commentCreateTime >?2 ORDER BY  c.commentCreateTime desc")
     List<ArticleComment> queryArticleCommentList(String  comment_root_id, Date comment_create_time );
 
 

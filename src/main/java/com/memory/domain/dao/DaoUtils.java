@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +22,23 @@ public class DaoUtils {
     @Autowired
     private EntityManager em;
     private Page page;
+
+    public Object save(Object obj){
+        em.merge(obj);
+        return obj;
+    }
+    public Object del(Object obj){
+        em.detach(obj);
+        return obj;
+    }
+
+    public Object getById(String className, String id){
+        StringBuffer sb=new StringBuffer(" from "+className+" where id=:id");
+        Map<String, Object> getByIdMap=new HashMap<>();
+        getByIdMap.put("id", id);
+        Object obj=this.findObjectHQL(sb.toString(), getByIdMap);
+        return obj;
+    }
 
     /**
      * HQL语句查询结果集
@@ -112,7 +131,11 @@ public class DaoUtils {
      */
     public Object findObjectHQL(String hql, Map map) {
         Query query = getHQLQuery(hql, map);
-        return query.getSingleResult();
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     //获取HQLQuery
@@ -141,15 +164,19 @@ public class DaoUtils {
         return query;
     }
 
-    public Page getPage(int pageIndex, int limit){
+    public Page getPage(Integer pageIndex, Integer limit){
         if(page == null){
             page = new Page();
         }
+        if(pageIndex == null || pageIndex == 0)
+            pageIndex = 1;
+        if(limit == null || limit == 0)
+            limit = 10;
         page.setPageIndex(pageIndex);
         page.setLimit(limit);
         return page;
     }
-   public class Page{
+    public static class Page{
         private int start = 0;
         private int limit = 10;
         private int pageIndex = 1;

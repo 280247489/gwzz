@@ -48,7 +48,7 @@ public class ArticleCommentCmsServiceImpl implements ArticleCommentCmsService {
         //    private String commentParentId;
         //    private String commentParentUserName;
         stringBuffer.append("SELECT new com.memory.entity.bean.ArticleComment(ac.id, ac.userName, us.userTel, a.articleTitle, ac.commentContent,ac.commentRootId , ac.commentTotalLike, (select count(*) from ArticleComment WHERE commentRootId = ac.commentRootId AND commentRootId != id ) as commentSum," +
-                "ac.commentCreateTime,ac.commentType,ac.commentParentId,ac.commentParentUserName) " +
+                "ac.commentCreateTime,ac.commentType,ac.commentParentId,ac.commentParentUserName,ac.commentContentReplace) " +
                                 "FROM ArticleComment  ac , Article a ,User us " +
                                 "WHERE ac.articleId = a.id  and ac.userId = us.id ");
 

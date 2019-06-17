@@ -23,11 +23,21 @@ public class MyFileConfig {
      *     path_article: G:/upload/jodit/article
      *     base_url_article: http://192.168.1.119:8091/file/jodit/article
      */
+    /**
+     *   show_url:  http://192.168.1.119:8091/file/
+     *   cms_path: cms
+     *   gwzz_path: gwzz
+     * @param parent_path
+     * @param dir
+     * @return
+     */
+
 
 
     private String upload_local_path;
-    private String upload_local_article_path;
-    private String upload_local_path_xiaozhushou;
+    private String cms_path;
+    private String gwzz_path;
+    private String show_url;
     private Map<String,String> jodit =new HashMap<String,String>();
 
 
@@ -47,19 +57,27 @@ public class MyFileConfig {
         this.jodit = jodit;
     }
 
-    public String getUpload_local_article_path() {
-        return upload_local_article_path;
+    public String getCms_path() {
+        return cms_path;
     }
 
-    public void setUpload_local_article_path(String upload_local_article_path) {
-        this.upload_local_article_path = upload_local_article_path;
+    public void setCms_path(String cms_path) {
+        this.cms_path = cms_path;
     }
 
-    public String getUpload_local_path_xiaozhushou() {
-        return upload_local_path_xiaozhushou;
+    public String getGwzz_path() {
+        return gwzz_path;
     }
 
-    public void setUpload_local_path_xiaozhushou(String upload_local_path_xiaozhushou) {
-        this.upload_local_path_xiaozhushou = upload_local_path_xiaozhushou;
+    public void setGwzz_path(String gwzz_path) {
+        this.gwzz_path = gwzz_path;
+    }
+
+    public String getShow_url() {
+        return show_url;
+    }
+
+    public void setShow_url(String show_url) {
+        this.show_url = show_url;
     }
 }

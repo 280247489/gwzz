@@ -35,7 +35,7 @@ public class CourseCommentCmsServiceImpl implements CourseCommentCmsService {
         //    private String commentParentUserName;
         //java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, long, java.util.Date, int, java.lang.String, java.lang.String
         stringBuffer.append("SELECT new com.memory.entity.bean.CourseComment(ac.id, ac.userName, us.userTel, a.courseTitle, ac.commentContent,ac.commentTotalLike, (select count(*) from CourseComment WHERE commentRootId = ac.commentRootId  AND commentRootId != id ) as commentSum," +
-                "ac.commentCreateTime,ac.commentRootId , ac.commentType,ac.commentParentId,ac.commentParentUserName) " +
+                "ac.commentCreateTime,ac.commentRootId , ac.commentType,ac.commentParentId,ac.commentParentUserName,ac.commentContentReplace) " +
                 "FROM CourseComment  ac , Course a ,User us " +
                 "WHERE ac.courseId = a.id  and ac.userId = us.id ");
 

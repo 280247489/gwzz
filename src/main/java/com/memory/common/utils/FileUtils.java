@@ -68,7 +68,27 @@ public class FileUtils {
     }
 
 
-    public static String upload(MultipartFile file, String fileUploadedPath,String fileName,String UUID) {
+    public static String upload(MultipartFile file, String fileUploadedPath,String customPath,String fileName) {
+        String returnFileName = "";
+        try {
+            File dest = new File(fileUploadedPath + "/" + customPath + "/" + fileName);
+            returnFileName =  customPath + "/" + fileName;
+            // 检测是否存在目录
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();// 新建文件夹
+            }
+            file.transferTo(dest);// 文件写入
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnFileName;
+    }
+
+
+
+ /*   public static String upload(MultipartFile file, String fileUploadedPath,String fileName,String UUID) {
         String returnFileName = "";
         try {
 
@@ -89,6 +109,7 @@ public class FileUtils {
         }
         return returnFileName;
     }
+*/
 
     public static List<Object> handleFileUpload(HttpServletRequest request, String fileUploadedPath) {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
@@ -251,7 +272,7 @@ public class FileUtils {
      * @param audioFile
      * @return
      */
-    public static String getCourseExtRadioFileName(String prefix, MultipartFile audioFile){
+    public static String getAudioFileName(String prefix, MultipartFile audioFile){
         String fileNameReal =  audioFile.getOriginalFilename();
         String suffix = fileNameReal.substring(fileNameReal.lastIndexOf("."));
         String dayStr = DateUtils.getDate("yyyyMMdd");
@@ -266,7 +287,7 @@ public class FileUtils {
      * @param realFileName
      * @return
      */
-    public static String getCourseExtRadioFileName(String prefix, String realFileName){
+    public static String getAudioFileName(String prefix, String realFileName){
         String suffix = realFileName.substring(realFileName.lastIndexOf("."));
         String dayStr = DateUtils.getDate("yyyyMMdd");
         String hoursStr = DateUtils.getDate("HHmmss");
@@ -279,7 +300,7 @@ public class FileUtils {
      * @param prefix
      * @return
      */
-    public static String getCourseExtImgFileName(String prefix){
+    public static String getImgFileName(String prefix){
         //String fileNameReal =  imgFile.getOriginalFilename();
         //String suffix = fileNameReal.substring(fileNameReal.lastIndexOf("."));
         String suffix = ".png";
@@ -288,16 +309,26 @@ public class FileUtils {
         return   prefix + "_" + dayStr + "_" + hoursStr + suffix;
     }
 
-
     /**
-     * 获取上传路径
-     * @param dir
+     * 获取Cms上传路径
      * @return
      */
-    public static String getPath(String dir){
-
-        return fileUtils.config.getUpload_local_path()+ "/" + dir;
+    public static String getLocalPath(){
+            return fileUtils.config.getUpload_local_path() ;
     }
+
+
+    public static String getCustomCmsPath(String dir,String UUID){
+        String cmsPath = fileUtils.config.getCms_path();
+        if(UUID!=null && !"".equals(UUID)){
+            return cmsPath+ "/" + dir + "/"+UUID;
+        }else {
+            return cmsPath+ "/" + dir ;
+        }
+    }
+
+
+
 
 
     /**

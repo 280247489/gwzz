@@ -51,11 +51,10 @@ public class CourseCommentCmsController {
      * @param user_logo
      * @param user_name
      * @param comment_parent_id
-     * @param comment_content
      * @return
      */
     @RequestMapping(value = "add")
-    public  Result addAdminComment(@RequestParam("user_id") String user_id,@RequestParam("user_logo") String user_logo,@RequestParam("user_name") String user_name,@RequestParam("comment_parent_id") String comment_parent_id,@RequestParam("comment_content") String comment_content  ){
+    public  Result addAdminComment(@RequestParam("user_id") String user_id,@RequestParam("user_logo") String user_logo,@RequestParam("user_name") String user_name,@RequestParam("comment_parent_id") String comment_parent_id,@RequestParam("content") String content ,@RequestParam("content_replace") String content_replace  ){
         Result result = new Result();
         try{
             com.memory.entity.jpa.CourseComment parentCourseComment = courseCommentCmsService.queryCourseCommentById(comment_parent_id);
@@ -75,7 +74,8 @@ public class CourseCommentCmsController {
             }
 
             courseComment.setCommentParentUserName(parentCourseComment.getCommentParentUserName());
-            courseComment.setCommentContent(comment_content);
+            courseComment.setCommentContent(content);
+            courseComment.setCommentContentReplace(content_replace);
             courseComment.setCommentCreateTime(new Date());
             courseComment.setCommentTotalLike(0);
             com.memory.entity.jpa.CourseComment courseComment1 =   courseCommentCmsService.addCourseComment(courseComment );
