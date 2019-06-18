@@ -18,8 +18,8 @@ import java.util.Enumeration;
  * @Date: 2018/11/5 0005 14:24
  * @Description: 过滤器类
  */
-@Component
-@WebFilter(urlPatterns = "/*")
+//@Component
+//@WebFilter(urlPatterns = "/*")
 public class DemoFilter implements Filter {
     private final static Logger logger = LoggerFactory.getLogger(DemoFilter.class);
 

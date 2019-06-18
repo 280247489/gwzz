@@ -1,14 +1,11 @@
 package com.memory.cms.controller;
-import com.alibaba.fastjson.JSON;
 import com.memory.common.yml.MyFileConfig;
-import com.memory.entity.jpa.Course;
 import com.memory.cms.service.CourseCmsService;
 import com.memory.common.utils.*;
-import com.memory.file.controller.FileController;
+import com.memory.entity.jpa.Course;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Date;
 
 /**
@@ -358,7 +354,7 @@ public class CourseCmsController {
                         String course_audio_url, String course_video_url,
                         String course_label, String course_key_words,
                         Integer course_online, String course_create_id,
-                        String course_update_id, String id, Integer course_recommend, String course_describe, String course_create_time,Boolean isSave){
+                        String course_update_id, String id, Integer course_recommend, String course_describe, String course_create_time, Boolean isSave){
 
                 Course course = new Course();
                 if(id != null){

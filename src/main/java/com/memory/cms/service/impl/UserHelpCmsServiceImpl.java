@@ -18,6 +18,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -82,6 +84,11 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
         userHelp.setHelpUpdateId(createId);
         userHelp.setHelpSort(helpSort);
         userHelp.setUseYn(1);
+        try {
+            filePath = URLDecoder.decode("filePath","utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         List<String> list = FileUploadUtil.uploadFiles(filePath,dbUrl+"/",id,request);
         userHelp.setHelpLogo(list.get(0));
         userHelp.setHelpContent(list.get(1));
@@ -141,6 +148,11 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
         userHelp.setHelpUpdateTime(date);
         userHelp.setHelpUpdateId(createId);
         userHelp.setHelpSort(helpSort);
+        try {
+            filePath = URLDecoder.decode("filePath","utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         List<String> list = FileUploadUtil.uploadFiles(filePath,dbUrl+"/",id,request);
         userHelp.setHelpLogo(list.get(0));
         userHelp.setHelpContent(list.get(1));

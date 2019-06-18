@@ -3,7 +3,6 @@ import com.memory.cms.service.ArticleCmsService;
 import com.memory.common.utils.*;
 import com.memory.common.yml.MyFileConfig;
 import com.memory.entity.jpa.Article;
-import com.memory.entity.jpa.Course;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -246,7 +245,7 @@ public class ArticleCmsController {
             } else {
                 article.setTypeId(type_id);
                 article.setArticleTitle(article_title);
-                article.setArticleLogo(article_logo);
+//                article.setArticleLogo(article_logo);
                 article.setArticleContent(article_content);
                 article.setArticleLabel(article_label);
                 article.setArticleKeyWords(article_key_words);
@@ -286,7 +285,7 @@ public class ArticleCmsController {
                          String article_logo, String article_content,
                          String article_label, String article_key_words,
                          Integer article_online, String article_create_id,
-                          String id, Integer article_recommend, String article_describe, String article_create_time, Boolean isSave) {
+                         String id, Integer article_recommend, String article_describe, String article_create_time, Boolean isSave) {
 
         Article article = new Article();
         if (id != null) {
@@ -295,7 +294,7 @@ public class ArticleCmsController {
 
         article.setTypeId(type_id);
         article.setArticleTitle(article_title);
-        article.setArticleLogo(article_logo);
+//        article.setArticleLogo(article_logo);
         article.setArticleContent(article_content);
             /*    if(article_audio_url != null && !"".equals(article_audio_url)){
                     course.setCourseAudioUrl(article_audio_url);

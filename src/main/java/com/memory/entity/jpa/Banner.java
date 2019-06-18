@@ -27,6 +27,7 @@ public class Banner {
     private Date bannerUpdateTime;
     private String bannerUpdateId;
 
+
     @Id
     @Column(name = "id")
     public String getId() {

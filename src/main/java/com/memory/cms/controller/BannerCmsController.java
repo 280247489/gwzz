@@ -174,7 +174,7 @@ public class BannerCmsController extends BaseController {
 
     /**
      * 设置状态
-     * URL:192.168.1.185:8081/gwzz/banner/cms/updupdOnline
+     * URL:192.168.1.185:8081/gwzz/banner/cms/updOnline
      * @param id String 唯一标识
      * @return
      */

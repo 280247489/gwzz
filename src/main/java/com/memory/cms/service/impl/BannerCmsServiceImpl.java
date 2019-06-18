@@ -18,6 +18,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -54,6 +56,11 @@ public class BannerCmsServiceImpl implements BannerCmsService {
         banner.setId(Utils.generateUUIDs());
         banner.setBannerName(bName);
         if (bLogo!=null){
+            try {
+                filePath = URLDecoder.decode("filePath","utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             banner.setBannerLogo(FileUploadUtil.uploadFile(bLogo,filePath,dbUrl,Utils.getShortUUTimeStamp()));
         }
         banner.setTypeTable(typeTable);
@@ -129,7 +136,12 @@ public class BannerCmsServiceImpl implements BannerCmsService {
     public Banner upd(Banner banner, String bName, MultipartFile bLogo, String typeTable, String typeTableId,Integer bannerSort, String createId) {
         Date date = new Date();
         banner.setBannerName(bName);
-        if (bLogo!=null){
+        if (!bLogo.isEmpty()){
+            try {
+                filePath = URLDecoder.decode("filePath","utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             banner.setBannerLogo(FileUploadUtil.uploadFile(bLogo,filePath,dbUrl,Utils.getShortUUTimeStamp()));
         }
         banner.setTypeTable(typeTable);
@@ -165,7 +177,7 @@ public class BannerCmsServiceImpl implements BannerCmsService {
     @Override
     @Transactional
     public void del(Banner banner){
-        daoUtils.del(banner);
+        bannerCmsRepository.delete(banner);
     }
 
 

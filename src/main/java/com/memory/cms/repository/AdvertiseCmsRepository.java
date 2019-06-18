@@ -11,4 +11,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @Date 2019/6/11 11:14
  */
 public interface AdvertiseCmsRepository extends JpaRepository<Advertise,String>, JpaSpecificationExecutor {
+//    Advertise findByAdvertiseOnline
 }

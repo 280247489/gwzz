@@ -183,6 +183,7 @@ public class AdvertiseCmsController extends BaseController {
     public Message updOnline(@RequestParam String id){
         msg = Message.success();
         try {
+
             Advertise  advertise = (Advertise) daoUtils.getById("Advertise", id);
             if (advertise!=null){
                 msg.setRecode(0);

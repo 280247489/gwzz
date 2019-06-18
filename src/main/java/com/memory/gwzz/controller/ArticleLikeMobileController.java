@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +33,7 @@ public class ArticleLikeMobileController extends BaseController {
      * @param userId String 用户唯一标识ID
      * @return like 对象
      */
-    @RequestMapping(value = "addLike")
+    @RequestMapping(value = "addLike",method = RequestMethod.POST)
     public Message add(@RequestParam String articleId, @RequestParam String userId){
         msg = Message.success();
         try {

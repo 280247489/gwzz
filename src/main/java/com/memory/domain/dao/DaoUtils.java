@@ -176,7 +176,7 @@ public class DaoUtils {
         page.setLimit(limit);
         return page;
     }
-    public class Page{
+    public static class Page{
         private int start = 0;
         private int limit = 10;
         private int pageIndex = 1;

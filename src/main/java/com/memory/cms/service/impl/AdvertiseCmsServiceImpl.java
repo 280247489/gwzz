@@ -19,6 +19,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.swing.*;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -37,6 +39,7 @@ public class AdvertiseCmsServiceImpl implements AdvertiseCmsService {
     private DaoUtils daoUtils;
 
     String filePath ="D:\\Tomcat 7.0\\webapps";
+
     String dbUrl = "/gwzz_file/Advertise/logo/";
 
     /**
@@ -56,6 +59,11 @@ public class AdvertiseCmsServiceImpl implements AdvertiseCmsService {
         advertise.setId(Utils.generateUUIDs());
         advertise.setAdvertiseName(aName);
         if (aLogo!=null){
+            try {
+                filePath = URLDecoder.decode("filePath","utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             advertise.setAdvertiseLogo(FileUploadUtil.uploadFile(aLogo,filePath,dbUrl,Utils.getShortUUTimeStamp()));
         }
         advertise.setAdvertiseType(aType);
@@ -107,7 +115,7 @@ public class AdvertiseCmsServiceImpl implements AdvertiseCmsService {
                 if(!"".equals(aName)){
                     list.add(criteriaBuilder.like(root.get("advertiseName"),"%" + aName + "%"));
                 }
-                if(!"".equals(aType)){
+                if(!"".equals(aType) && aType!=null){
                     list.add(criteriaBuilder.equal(root.get("advertiseType"), aType ));
                 }
 
@@ -134,7 +142,13 @@ public class AdvertiseCmsServiceImpl implements AdvertiseCmsService {
     public Advertise upd(Advertise advertise, String aName, MultipartFile aLogo, String aH5Type, String aH5Url, String createId) {
         Date date = new Date();
         advertise.setAdvertiseName(aName);
-        if (aLogo!=null){
+//        if (aLogo!=null){
+        if (!aLogo.isEmpty()){
+            try {
+                filePath = URLDecoder.decode("filePath","utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             advertise.setAdvertiseLogo(FileUploadUtil.uploadFile(aLogo,filePath,dbUrl,Utils.getShortUUTimeStamp()));
         }
         advertise.setAdvertiseH5Type(aH5Type);
@@ -158,7 +172,5 @@ public class AdvertiseCmsServiceImpl implements AdvertiseCmsService {
 
     @Override
     @Transactional
-    public void del(Advertise advertise){
-         daoUtils.del(advertise);
-    }
+    public void del(Advertise advertise){advertiseCmsRepository.delete(advertise); }
 }
