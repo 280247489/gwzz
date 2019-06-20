@@ -1,5 +1,7 @@
 package com.memory.gwzz.service;
 
+import com.memory.gwzz.model.LiveMaster;
+
 import java.util.Map;
 
 /**
@@ -10,5 +12,5 @@ import java.util.Map;
  */
 public interface HomePageMobileService {
     Map<String,Object> HomePageOne();
-    Map<String, Object> HomePageTwo();
+    LiveMaster HomePageTwo();
 }

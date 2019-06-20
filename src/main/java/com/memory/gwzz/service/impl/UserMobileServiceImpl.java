@@ -36,7 +36,7 @@ public class UserMobileServiceImpl implements UserMobileService {
     @Autowired
     private DaoUtils daoUtils;
 
-    SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
+    SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
     /**
      * 用户注册
@@ -202,9 +202,9 @@ public class UserMobileServiceImpl implements UserMobileService {
     @Override
     public User updUserLogo(User user, MultipartFile userLogo){
         String filePath ="D:\\Tomcat 7.0\\webapps";
-        String dbUrl = "/gwzz_file/user/logo/";
+        String dbUrl = "/gwzz_file/user/"+user.getId()+"/";
          if (userLogo!=null){
-             user.setUserLogo(FileUploadUtil.uploadFile(userLogo,filePath,dbUrl,Utils.getShortUUTimeStamp()));
+             user.setUserLogo(FileUploadUtil.uploadFile(userLogo,filePath,dbUrl,"logo_"+Utils.getShortUUTimeStamp()));
          }
         return userMobileRepository.save(user);
     }

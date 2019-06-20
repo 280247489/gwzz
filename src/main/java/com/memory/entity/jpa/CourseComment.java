@@ -8,7 +8,7 @@ import java.util.Objects;
  * @ClassName CourseComment
  * @Descriotion TODO
  * @Author Ganxiqing
- * @Date 2019/6/4 13:29
+ * @Date 2019/6/20 9:32
  */
 @Entity
 @Table(name = "course_comment", schema = "gwzz_db", catalog = "")
@@ -23,28 +23,10 @@ public class CourseComment {
     private String commentParentId;
     private String commentParentUserName;
     private String commentContent;
+    private String commentParentContent;
+    private String commentContentReplace;
     private Date commentCreateTime;
     private int commentTotalLike;
-
-    public CourseComment() {
-    }
-
-    public CourseComment(String id, String courseId, String userId, String userLogo, String userName, int commentType,
-                         String commentRootId, String commentParentId, String commentParentUserName, String commentContent,
-                         Date commentCreateTime, int commentTotalLike) {
-        this.id = id;
-        this.courseId = courseId;
-        this.userId = userId;
-        this.userLogo = userLogo;
-        this.userName = userName;
-        this.commentType = commentType;
-        this.commentRootId = commentRootId;
-        this.commentParentId = commentParentId;
-        this.commentParentUserName = commentParentUserName;
-        this.commentContent = commentContent;
-        this.commentCreateTime = commentCreateTime;
-        this.commentTotalLike = commentTotalLike;
-    }
 
     @Id
     @Column(name = "id")
@@ -147,6 +129,26 @@ public class CourseComment {
     }
 
     @Basic
+    @Column(name = "comment_parent_content")
+    public String getCommentParentContent() {
+        return commentParentContent;
+    }
+
+    public void setCommentParentContent(String commentParentContent) {
+        this.commentParentContent = commentParentContent;
+    }
+
+    @Basic
+    @Column(name = "comment_content_replace")
+    public String getCommentContentReplace() {
+        return commentContentReplace;
+    }
+
+    public void setCommentContentReplace(String commentContentReplace) {
+        this.commentContentReplace = commentContentReplace;
+    }
+
+    @Basic
     @Column(name = "comment_create_time")
     public Date getCommentCreateTime() {
         return commentCreateTime;
@@ -182,11 +184,13 @@ public class CourseComment {
                 Objects.equals(commentParentId, that.commentParentId) &&
                 Objects.equals(commentParentUserName, that.commentParentUserName) &&
                 Objects.equals(commentContent, that.commentContent) &&
+                Objects.equals(commentParentContent, that.commentParentContent) &&
+                Objects.equals(commentContentReplace, that.commentContentReplace) &&
                 Objects.equals(commentCreateTime, that.commentCreateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, courseId, userId, userLogo, userName, commentType, commentRootId, commentParentId, commentParentUserName, commentContent, commentCreateTime, commentTotalLike);
+        return Objects.hash(id, courseId, userId, userLogo, userName, commentType, commentRootId, commentParentId, commentParentUserName, commentContent, commentParentContent, commentContentReplace, commentCreateTime, commentTotalLike);
     }
 }

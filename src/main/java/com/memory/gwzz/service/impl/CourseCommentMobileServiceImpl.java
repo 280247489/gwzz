@@ -39,14 +39,16 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
             cpId = "";
             cpUserName = "";
         }else{
-            crId = this.getByPid(commentParentId).getCommentRootId();
+            CourseComment cc = this.getByPid(commentParentId);
+            crId = cc.getCommentRootId();
             cpId = commentParentId;
-            cpUserName = "回复@"+commentParentUserName;
+            cpUserName =
+                    "回复@"+commentParentUserName+cc.getCommentContent();
         }
-        CourseComment courseComment = new CourseComment(Utils.generateUUIDs(),courseId,userId,userLogo,userName,commentType,
-                crId,cpId,cpUserName,commentContent,date,0);
-        courseCommentMobileRepository.save(courseComment);
-        returnMap.put("courseComment",courseComment);
+//        CourseComment courseComment = new CourseComment(Utils.generateUUIDs(),courseId,userId,userLogo,userName,commentType,
+//                crId,cpId,cpUserName,commentContent,date,0);
+//        courseCommentMobileRepository.save(courseComment);
+//        returnMap.put("courseComment",courseComment);
 
         return returnMap;
     }

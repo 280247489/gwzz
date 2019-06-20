@@ -11,13 +11,14 @@ import java.util.Objects;
  * @ClassName Course
  * @Descriotion TODO
  * @Author Ganxiqing
- * @Date 2019/6/18 10:14
+ * @Date 2019/6/20 9:32
  */
 @Entity
 public class Course {
     private String id;
     private String courseTypeId;
     private String albumId;
+    private int courseNumber;
     private String courseTitle;
     private String courseLogo;
     private String courseContent;
@@ -67,6 +68,16 @@ public class Course {
 
     public void setAlbumId(String albumId) {
         this.albumId = albumId;
+    }
+
+    @Basic
+    @Column(name = "course_number")
+    public int getCourseNumber() {
+        return courseNumber;
+    }
+
+    public void setCourseNumber(int courseNumber) {
+        this.courseNumber = courseNumber;
     }
 
     @Basic
@@ -274,7 +285,8 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return courseOnline == course.courseOnline &&
+        return courseNumber == course.courseNumber &&
+                courseOnline == course.courseOnline &&
                 courseTotalView == course.courseTotalView &&
                 courseTotalShare == course.courseTotalShare &&
                 courseTotalLike == course.courseTotalLike &&
@@ -301,6 +313,6 @@ public class Course {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, courseTypeId, albumId, courseTitle, courseLogo, courseContent, courseAudioUrl, courseVideoUrl, courseLabel, courseKeyWords, courseOnline, courseTotalView, courseTotalShare, courseTotalLike, courseTotalComment, courseReleaseTime, courseCreateTime, courseCreateId, courseUpdateTime, courseUpdateId, courseRecommend, courseDescribe, courseLiveStatus);
+        return Objects.hash(id, courseTypeId, albumId, courseNumber, courseTitle, courseLogo, courseContent, courseAudioUrl, courseVideoUrl, courseLabel, courseKeyWords, courseOnline, courseTotalView, courseTotalShare, courseTotalLike, courseTotalComment, courseReleaseTime, courseCreateTime, courseCreateId, courseUpdateTime, courseUpdateId, courseRecommend, courseDescribe, courseLiveStatus);
     }
 }

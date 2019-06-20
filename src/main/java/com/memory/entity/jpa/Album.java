@@ -11,15 +11,17 @@ import java.util.Objects;
  * @ClassName Album
  * @Descriotion TODO
  * @Author Ganxiqing
- * @Date 2019/6/15 11:22
+ * @Date 2019/6/20 9:32
  */
 @Entity
 public class Album {
     private String id;
     private String albumName;
     private String albumLogo;
+    private String albumSynopsis;
     private int albumIsOnline;
     private int albumCourseSum;
+    private int albumCourseLimit;
     private int albumTotalView;
     private int albumIsEnd;
     private int albumIsCharge;
@@ -62,6 +64,16 @@ public class Album {
     }
 
     @Basic
+    @Column(name = "album_synopsis")
+    public String getAlbumSynopsis() {
+        return albumSynopsis;
+    }
+
+    public void setAlbumSynopsis(String albumSynopsis) {
+        this.albumSynopsis = albumSynopsis;
+    }
+
+    @Basic
     @Column(name = "album_is_online")
     public int getAlbumIsOnline() {
         return albumIsOnline;
@@ -79,6 +91,16 @@ public class Album {
 
     public void setAlbumCourseSum(int albumCourseSum) {
         this.albumCourseSum = albumCourseSum;
+    }
+
+    @Basic
+    @Column(name = "album_course_limit")
+    public int getAlbumCourseLimit() {
+        return albumCourseLimit;
+    }
+
+    public void setAlbumCourseLimit(int albumCourseLimit) {
+        this.albumCourseLimit = albumCourseLimit;
     }
 
     @Basic
@@ -188,6 +210,7 @@ public class Album {
         Album album = (Album) o;
         return albumIsOnline == album.albumIsOnline &&
                 albumCourseSum == album.albumCourseSum &&
+                albumCourseLimit == album.albumCourseLimit &&
                 albumTotalView == album.albumTotalView &&
                 albumIsEnd == album.albumIsEnd &&
                 albumIsCharge == album.albumIsCharge &&
@@ -197,6 +220,7 @@ public class Album {
                 Objects.equals(id, album.id) &&
                 Objects.equals(albumName, album.albumName) &&
                 Objects.equals(albumLogo, album.albumLogo) &&
+                Objects.equals(albumSynopsis, album.albumSynopsis) &&
                 Objects.equals(albumCreateTime, album.albumCreateTime) &&
                 Objects.equals(albumCreateId, album.albumCreateId) &&
                 Objects.equals(albumUpdateTime, album.albumUpdateTime) &&
@@ -205,6 +229,6 @@ public class Album {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, albumName, albumLogo, albumIsOnline, albumCourseSum, albumTotalView, albumIsEnd, albumIsCharge, albumSort, albumIsHomePage, albumChargePrice, albumCreateTime, albumCreateId, albumUpdateTime, albumUpdateId);
+        return Objects.hash(id, albumName, albumLogo, albumSynopsis, albumIsOnline, albumCourseSum, albumCourseLimit, albumTotalView, albumIsEnd, albumIsCharge, albumSort, albumIsHomePage, albumChargePrice, albumCreateTime, albumCreateId, albumUpdateTime, albumUpdateId);
     }
 }

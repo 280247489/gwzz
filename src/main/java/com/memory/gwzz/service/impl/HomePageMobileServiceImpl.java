@@ -68,15 +68,12 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
         return returnMap;
     }
     @Override
-    public Map<String, Object> HomePageTwo() {
-        Map<String,Object> returnMap = new HashMap<>();
+    public LiveMaster HomePageTwo() {
         //查询直播
         StringBuffer sbliveMaster = new StringBuffer(" SELECT NEW com.memory.gwzz.model.LiveMaster(id,liveMasterName,liveMasterDescribe,liveMasterStatus,liveMasterIsOnline,liveMasterStarttime) " +
-                "FROM LiveMaster WHERE liveMasterIsOnline = 1 AND liveMasterIsOnline = 1 ");
+                "FROM LiveMaster WHERE liveMasterIsOnline = 1 AND liveMasterStatus = 1 ");
         LiveMaster liveMaster = (LiveMaster) daoUtils.findObjectHQL(sbliveMaster.toString(),null);
 
-        returnMap.put("liveMaster",liveMaster);
-
-        return returnMap;
+        return liveMaster;
     }
 }
