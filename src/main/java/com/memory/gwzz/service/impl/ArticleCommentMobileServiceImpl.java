@@ -3,6 +3,7 @@ package com.memory.gwzz.service.impl;
 import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.ArticleComment;
+import com.memory.entity.jpa.User;
 import com.memory.gwzz.repository.ArticleCommentMobileRepository;
 import com.memory.gwzz.service.ArticleCommentMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,27 +31,30 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
 
     @Transient
     @Override
-    public Map<String,Object> add(String articleId, String userId, String userLogo,String userName,
-                                  Integer commentType, String commentParentId, String commentParentUserName,
-                                  String commentContent){
+    public Map<String,Object> add(String articleId, User user, Integer commentType, String commentParentId, String content, String content_replace){
         Map<String,Object> returnMap = new HashMap<>();
         ArticleComment articleComment = new ArticleComment();
+        String userId = user.getId();
         articleComment.setId(Utils.generateUUIDs());
         articleComment.setArticleId(articleId);
         articleComment.setUserId(userId);
-        articleComment.setUserLogo(userLogo);
-        articleComment.setUserName(userName);
+        articleComment.setUserLogo(user.getUserLogo());
+        articleComment.setUserName(user.getUserName());
         articleComment.setCommentType(commentType);
         if(commentType==0){
             articleComment.setCommentRootId(userId);
             articleComment.setCommentParentId("");
             articleComment.setCommentParentUserName("");
+            articleComment.setCommentParentContent("");
         }else if (commentType==1){
-            articleComment.setCommentRootId(this.getByPid(commentParentId).getCommentRootId());
+            ArticleComment articleComment1 = this.getByPid(commentParentId);
+            articleComment.setCommentRootId(articleComment1.getCommentRootId());
             articleComment.setCommentParentId(commentParentId);
-            articleComment.setCommentParentUserName("回复@"+commentParentUserName);
+            articleComment.setCommentParentUserName("@"+articleComment1.getUserName());
+            articleComment.setCommentParentContent(articleComment1.getCommentContentReplace());
         }
-        articleComment.setCommentContent(commentContent);
+        articleComment.setCommentContent(content);
+        articleComment.setCommentContentReplace(content_replace);
         articleComment.setCommentCreateTime(new Date());
         articleComment.setCommentTotalLike(0);
         articleCommentMobileRepository.save(articleComment);

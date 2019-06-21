@@ -2,6 +2,8 @@ package com.memory.gwzz.controller;
 
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
+import com.memory.domain.dao.DaoUtils;
+import com.memory.entity.jpa.User;
 import com.memory.gwzz.service.ArticleCommentMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,28 +29,35 @@ public class ArticleCommentMobileController extends BaseController {
     @Autowired
     private ArticleCommentMobileService articleCommentMobileService;
 
+    @Autowired
+    private DaoUtils daoUtils;
+
     /**
      * 添加文章评论接口
      *  URL：192.168.1.185:8081/gwzz/articleComment/mobile/add
      * @param articleId 文章ID
      * @param userId 用户ID
-     * @param userLogo 评论人头像
-     * @param userName 评论人昵称
      * @param commentType 评论类型（0文章评论，1回复评论）
      * @param commentParentId 文章评论的根ID
-     * @param commentParentUserName 评论父级用户昵称
-     * @param commentContent 评论内容
      * @return
      */
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public Message add(@RequestParam String articleId, @RequestParam String userId, @RequestParam String userLogo, @RequestParam String userName,
-                       @RequestParam Integer commentType, @RequestParam String commentParentId, @RequestParam String commentParentUserName,
-                       @RequestParam String commentContent){
-        msg = Message.success();
+    public Message add(@RequestParam String articleId, @RequestParam String userId,@RequestParam Integer commentType, @RequestParam String commentParentId,
+                       @RequestParam("content") String content ,@RequestParam("content_replace") String content_replace){
         try {
-            msg.setRecode(0);
-            msg.setData(articleCommentMobileService.add(articleId,userId,userLogo,userName,commentType,commentParentId,commentParentUserName,commentContent));
+            msg = Message.success();
+            User user = (User) daoUtils.getById("User",userId);
+            if (user!=null){
+                msg.setRecode(0);
+                msg.setData(articleCommentMobileService.add(articleId,user,commentType,commentParentId,content,content_replace));
+            }else {
+                msg.setRecode(2);
+                msg.setMsg("无此用户信息");
+            }
+
+
         }catch (Exception e){
+            msg = Message.error();
             logger.error("异常信息");
             e.printStackTrace();
         }

@@ -24,6 +24,8 @@ public class AlbumMobileServiceImpl implements AlbumMobileService {
     @Autowired
     private DaoUtils daoUtils;
 
+
+
     @Override
     public Map<String,Object> fandAlbum(Integer start,Integer limit){
         Map<String,Object> returnMap = new HashMap<>();
@@ -52,18 +54,26 @@ public class AlbumMobileServiceImpl implements AlbumMobileService {
     }
 
     @Override
-    public Map<String,Object> fandCourseByAlbunmId(String albumId,Integer start,Integer limit){
+    public Map<String,Object> fandCourseByAlbunmId(String albumId,Integer start){
         Map<String,Object> returnMap = new HashMap<>();
-//        Album album = (Album) daoUtils.getById("Album",id);
-//        returnMap.put("album",album);
-        StringBuffer sbCourse = new StringBuffer( " FROM Course WHERE  albumId=:albumId AND courseOnline=1 ORDER BY courseReleaseTime DESC");
-        Map<String,Object> map = new HashMap<>();
-        map.put("albumId", albumId);
-        DaoUtils.Page page = new DaoUtils.Page();
-        page.setPageIndex(start);
-        page.setLimit(limit);
-        List<Course> courseList = daoUtils.findByHQL(sbCourse.toString(),map,page);
-        returnMap.put("courseList",courseList);
+        Album album = (Album) daoUtils.getById("Album",albumId);
+        if (album!=null){
+            StringBuffer sbCourse = new StringBuffer( " FROM Course WHERE  albumId=:albumId AND courseOnline=1 ORDER BY courseReleaseTime DESC");
+            StringBuffer stringBuffer = new StringBuffer("SELECT course_number FROM course where album_id=:albumId AND course_online=1 ORDER BY course_number ASC");
+            Map<String,Object> map = new HashMap<>();
+            map.put("albumId", albumId);
+            DaoUtils.Page page = new DaoUtils.Page();
+            page.setPageIndex(start);
+            page.setLimit(album.getAlbumCourseLimit());
+            List<Course> courseList = daoUtils.findByHQL(sbCourse.toString(),map,page);
+            Object objectList = daoUtils.findBySQL(stringBuffer.toString(),map,null,null);
+            returnMap.put("anthology",objectList);
+
+
+            returnMap.put("courseList",courseList);
+        }
+        returnMap.put("album",album);
+
         return returnMap;
     }
 

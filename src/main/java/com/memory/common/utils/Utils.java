@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
 import java.util.UUID;
@@ -142,6 +143,35 @@ public class Utils {
             logger.info("Error Message: " + e.getMessage());
         }
         return flag;
+    }
+
+    /**
+     * 判断是否为基本类型：包括String/Integer/Double/Boolean
+     * @param clazz clazz
+     * @return  true：是;     false：不是
+     */
+    public static boolean isPrimite(Class<?> clazz){
+        if (clazz.isPrimitive() || clazz == String.class || clazz == Integer.class || clazz == Double.class || clazz == Boolean.class){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public static Boolean isNull(String str){
+        return  str!=null && str.length()>0;
+    }
+
+    public static Boolean isNull(Integer str){
+        return  str!=null ;
+    }
+
+    public static Boolean isNull(Boolean str){
+        return  str!=null ;
+    }
+
+    public static Boolean isNull(MultipartFile file){
+        return file!=null && !file.isEmpty();
     }
 
 

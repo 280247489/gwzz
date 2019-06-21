@@ -62,6 +62,9 @@ public class ArticleMobileController extends BaseController {
         try {
             msg = Message.success();
             Article article = (Article) daoUtils.getById("Article",articleId);
+            String label = article.getArticleLabel();
+            String[] labels = label.split(",");
+            article.setArticleLabel(labels[0]);
             msg.setMsg("查询成功");
             msg.setData(article);
         }catch (Exception e){
@@ -71,4 +74,5 @@ public class ArticleMobileController extends BaseController {
         }
         return msg;
     }
+
 }

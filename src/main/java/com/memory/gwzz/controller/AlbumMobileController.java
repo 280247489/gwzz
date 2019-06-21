@@ -2,6 +2,8 @@ package com.memory.gwzz.controller;
 
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
+import com.memory.domain.dao.DaoUtils;
+import com.memory.entity.jpa.Album;
 import com.memory.gwzz.service.AlbumMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,9 @@ public class AlbumMobileController extends BaseController {
     private final static Logger logger = LoggerFactory.getLogger(AlbumMobileController.class);
     @Autowired
     private AlbumMobileService albumMobileService;
+
+    @Autowired
+    private DaoUtils daoUtils;
 
 
     /**
@@ -57,9 +62,16 @@ public class AlbumMobileController extends BaseController {
     public Message findById(@RequestParam String id){
         try {
             msg = Message.success();
-            msg.setMsg("成功");
-            msg.setRecode(0);
-            msg.setData(albumMobileService.fandById(id));
+            Album album = (Album) daoUtils.getById("Album",id);
+            if (album!=null){
+                msg.setMsg("成功");
+                msg.setRecode(0);
+                msg.setData(albumMobileService.fandById(id));
+            }else {
+                msg.setMsg("无此数据");
+                msg.setRecode(2);
+            }
+
         }catch (Exception e){
             e.printStackTrace();
             msg = Message.error();
@@ -73,16 +85,15 @@ public class AlbumMobileController extends BaseController {
      * URL:192.168.1.185:8081/gwzz/album/mobile/fandCourseByAlbunmId
      * @param id
      * @param start
-     * @param limit
      * @return
      */
     @RequestMapping(value = "fandCourseByAlbunmId",method = RequestMethod.POST)
-    public Message fandCourseByAlbunmId(@RequestParam String id,@RequestParam Integer start, @RequestParam Integer limit){
+    public Message fandCourseByAlbunmId(@RequestParam String id,@RequestParam Integer start){
         try {
             msg = Message.success();
             msg.setMsg("成功");
             msg.setRecode(0);
-            msg.setData(albumMobileService.fandCourseByAlbunmId(id, start, limit));
+            msg.setData(albumMobileService.fandCourseByAlbunmId(id, start));
         }catch (Exception e){
             e.printStackTrace();
             msg = Message.error();

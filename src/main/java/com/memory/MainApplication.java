@@ -1,6 +1,7 @@
 package com.memory;
 
 import com.alibaba.fastjson.JSON;
+import com.memory.common.utils.BadWordUtil;
 import com.memory.common.yml.MyRedisConfig;
 import com.memory.redis.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,12 @@ public class MainApplication extends SpringBootServletInitializer {
     @Autowired
     private MyRedisConfig myRedisConfig;
 
+//    @Autowired
+//    private CourseMemoryLoadService courseMemoryLoadService;
+
+//    @Autowired
+//    private CourseMemoryService courseMemoryService;
+
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(MainApplication.class);
@@ -32,17 +39,26 @@ public class MainApplication extends SpringBootServletInitializer {
 
     @PostConstruct
     public void init(){
+//        load_course_memory();
+        load_illegalWord_2_memory();
+    }
+    /**
+     * 重启服务，内存加载并发缓存课程
+     */
+//    public void load_course_memory(){
+//        //获取数据加载状态为0的课程
+//        List<CourseMemoryLoad>   loadList = courseMemoryLoadService.queryAllCourseMemoryLoadByLoadStatus(0);
+//        for (CourseMemoryLoad courseMemoryLoad : loadList) {
+//            String course_id = courseMemoryLoad.getCourseId();
+//            courseMemoryService.addMemory(course_id);
+//        }
+//    }
 
-        System.out.println("init this ... redis connecting ...");
-        System.out.println(JSON.toJSONString(myRedisConfig));
-        //redis初始化
-        RedisUtil.initDialStatsPool(myRedisConfig.getHost(),myRedisConfig.getPort(),
-                ("").equals(myRedisConfig.getPassword())?null:myRedisConfig.getPassword(),myRedisConfig.getTimeout(),myRedisConfig.getDatabase());
-
-       // JedisPool jedis = RedisUtil.getDialStatsPool();
-        //System.out.println(   JSON.toJSONString( RedisUtil.getByKey("xrLlwgWI1558084748010",jedis)));
-
-        //RedisUtil.close(jedis.getResource());
+    /**
+     * 违禁词项目启动初始化，加载到内存中
+     */
+    public void load_illegalWord_2_memory(){
+        BadWordUtil.initWords();
     }
 
 }

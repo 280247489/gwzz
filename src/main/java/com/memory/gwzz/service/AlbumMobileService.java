@@ -11,5 +11,5 @@ import java.util.Map;
 public interface AlbumMobileService {
     Map<String,Object> fandAlbum(Integer start,Integer limit);
     Map<String,Object> fandById(String id);
-    Map<String,Object> fandCourseByAlbunmId(String albumId,Integer start,Integer limit);
+    Map<String,Object> fandCourseByAlbunmId(String albumId,Integer start);
 }
