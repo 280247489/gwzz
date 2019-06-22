@@ -42,11 +42,13 @@ public class ArticleCommentMobileController extends BaseController {
 
     /**
      * 添加文章评论接口
-     *  URL：192.168.1.185:8081/gwzz/articleComment/mobile/add
-     * @param articleId 文章ID
-     * @param userId 用户ID
-     * @param commentType 评论类型（0文章评论，1回复评论）
-     * @param commentParentId 文章评论的根ID
+     * URL：192.168.1.185:8081/gwzz/articleComment/mobile/add
+     * @param articleId String 文章ID
+     * @param userId String 用户ID
+     * @param commentType String 评论类型（0文章评论，1回复评论）
+     * @param commentParentId String 文章回复的上级Id
+     * @param content  评论内容
+     * @param content_replace
      * @return
      */
     @RequestMapping(value = "add", method = RequestMethod.POST)
@@ -54,16 +56,20 @@ public class ArticleCommentMobileController extends BaseController {
                        @RequestParam("content") String content ,@RequestParam("content_replace") String content_replace){
         try {
             msg = Message.success();
-            User user = (User) daoUtils.getById("User",userId);
-            if (user!=null){
-                msg.setRecode(0);
-                msg.setData(articleCommentMobileService.add(articleId,user,commentType,commentParentId,content,content_replace));
+            Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
+            if (article!=null){
+                User user = (User) daoUtils.getById("User",userId);
+                if (user!=null){
+                    msg.setRecode(0);
+                    msg.setData(articleCommentMobileService.add(articleId,user,commentType,commentParentId,content,content_replace));
+                }else {
+                    msg.setRecode(2);
+                    msg.setMsg("无此用户信息");
+                }
             }else {
                 msg.setRecode(2);
-                msg.setMsg("无此用户信息");
+                msg.setMsg("无此文章");
             }
-
-
         }catch (Exception e){
             msg = Message.error();
             logger.error("异常信息");
@@ -91,7 +97,7 @@ public class ArticleCommentMobileController extends BaseController {
                 msg.setData(articleCommentMobileService.listArtComByAid(articleId, start, limit));
             }else{
                 msg.setRecode(2);
-                msg.setMsg("无此课程");
+                msg.setMsg("无此文章");
             }
         }catch (Exception e){
             msg = Message.error();
@@ -117,7 +123,7 @@ public class ArticleCommentMobileController extends BaseController {
             Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
             if (article==null){
                 msg.setRecode(2);
-                msg.setMsg("无此课程");
+                msg.setMsg("无此文章");
             }else{
                 Map<String,Object> map = articleCommentMobileService.listArtComByRid(commentId, start, limit);
                 if (map.values()==null){

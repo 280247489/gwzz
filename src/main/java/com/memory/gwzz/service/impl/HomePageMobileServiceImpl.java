@@ -38,7 +38,7 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
 //                "FROM LiveMaster WHERE liveMasterIsOnline = 1 AND liveMasterIsOnline = 1 ");
 //        LiveMaster liveMaster = (LiveMaster) daoUtils.findObjectHQL(sbliveMaster.toString(),null);
         //查询最新两期课程
-        StringBuffer sbCourse = new StringBuffer( "SELECT NEW com.memory.gwzz.model.Course( id, courseTitle, courseLogo, courseLabel,courseOnline,courseTotalComment,courseTotalView,courseReleaseTime)  " +
+        StringBuffer sbCourse = new StringBuffer( "SELECT NEW com.memory.gwzz.model.Course( id, courseNumber,courseTitle, courseLogo, courseLabel,courseOnline,courseTotalComment,courseTotalView,courseReleaseTime)  " +
                 "FROM Course WHERE courseOnline =1 ORDER BY courseReleaseTime DESC");
         DaoUtils.Page pageCourse = new DaoUtils.Page();
         pageCourse.setPageIndex(1);

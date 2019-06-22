@@ -32,15 +32,15 @@ public class UserHelpMobileController extends BaseController {
      */
     @RequestMapping(value = "listUserHelp",method = RequestMethod.POST)
     public Message listUserHelp(){
-        msg = Message.success();
+
         try {
+            msg = Message.success();
             msg.setRecode(0);
             msg.setData(userHelpMobileService.listUserHelp());
 
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;

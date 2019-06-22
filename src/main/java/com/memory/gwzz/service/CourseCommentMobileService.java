@@ -1,5 +1,7 @@
 package com.memory.gwzz.service;
 
+import com.memory.entity.jpa.User;
+
 import java.util.Map;
 
 /**
@@ -9,7 +11,9 @@ import java.util.Map;
  * @Date 2019/6/4 16:43
  */
 public interface CourseCommentMobileService {
-    Map<String,Object> add(String courseId, String userId, String userLogo, String userName,
-                           Integer commentType, String commentParentId, String commentParentUserName,
-                           String commentContent);
+    Map<String, Object> add(String courseId, User user, Integer commentType, String commentParentId, String content, String content_replace);
+
+    Map<String, Object> listComByCid(String courseId, Integer start, Integer limit);
+
+    Map<String, Object> listCouComByRid(String commentId, Integer start, Integer limit);
 }

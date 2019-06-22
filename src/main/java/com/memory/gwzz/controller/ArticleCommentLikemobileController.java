@@ -35,12 +35,14 @@ public class ArticleCommentLikemobileController extends BaseController {
      */
     @RequestMapping(value = "addLike")
     public Message add(@RequestParam String commentId, @RequestParam String userId){
-        msg = Message.success();
+
         try {
+            msg = Message.success();
             ArticleCommentLike articleCommentLike = articleCommentLikeMobileService.like(commentId,userId);
             msg.setRecode(0);
             msg.setData(articleCommentLike);
         }catch (Exception e){
+            msg = Message.error();
             logger.error("异常信息");
             e.printStackTrace();
         }

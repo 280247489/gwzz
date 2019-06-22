@@ -10,6 +10,7 @@ import java.util.Objects;
 
 public class Course {
     private String id;
+    private int courseNumber;
     private String courseTitle;
     private String courseLogo;
     private String courseLabel;
@@ -24,6 +25,14 @@ public class Course {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getCourseNumber() {
+        return courseNumber;
+    }
+
+    public void setCourseNumber(int courseNumber) {
+        this.courseNumber = courseNumber;
     }
 
     public String getCourseTitle() {
@@ -87,7 +96,8 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return courseOnline == course.courseOnline &&
+        return courseNumber == course.courseNumber &&
+                courseOnline == course.courseOnline &&
                 courseTotalComment == course.courseTotalComment &&
                 courseTotalView == course.courseTotalView &&
                 Objects.equals(id, course.id) &&
@@ -99,14 +109,15 @@ public class Course {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, courseTitle, courseLogo, courseLabel, courseOnline, courseTotalComment, courseTotalView, courseReleaseTime);
+        return Objects.hash(id, courseNumber, courseTitle, courseLogo, courseLabel, courseOnline, courseTotalComment, courseTotalView, courseReleaseTime);
     }
 
     public Course() {
     }
 
-    public Course(String id, String courseTitle, String courseLogo, String courseLabel, int courseOnline, int courseTotalComment, int courseTotalView, Date courseReleaseTime) {
+    public Course(String id, int courseNumber, String courseTitle, String courseLogo, String courseLabel, int courseOnline, int courseTotalComment, int courseTotalView, Date courseReleaseTime) {
         this.id = id;
+        this.courseNumber = courseNumber;
         this.courseTitle = courseTitle;
         this.courseLogo = courseLogo;
         this.courseLabel = courseLabel;

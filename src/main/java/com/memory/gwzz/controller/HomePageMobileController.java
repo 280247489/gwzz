@@ -60,7 +60,6 @@ public class HomePageMobileController extends BaseController {
     public Message homePageTwo(){
         try {
             msg = Message.success();
-
             LiveMaster liveMaster = homePageMobileService.HomePageTwo();
                 if (liveMaster==null){
                     msg.setRecode(2);

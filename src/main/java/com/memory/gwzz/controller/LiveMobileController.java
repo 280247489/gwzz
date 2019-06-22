@@ -31,7 +31,7 @@ import static com.memory.redis.CacheConstantConfig.*;
 @RequestMapping("live/mobile")
 public class LiveMobileController extends BaseController {
 
-    private final static Logger logger = LoggerFactory.getLogger(AdvertiseMobileController.class);
+    private final static Logger logger = LoggerFactory.getLogger(LiveMobileController.class);
 
     @Autowired
     private RedisUtil redisUtil;
@@ -45,10 +45,10 @@ public class LiveMobileController extends BaseController {
     /**
      * 查询直播详情
      * URL:192.168.1.185:8081/gwzz/live/mobile/getLiveById
-     * @param id
-     * @param openId
-     * @param terminal
-     * @param os
+     * @param id 直播ID
+     * @param openId  微信openId 或 appId
+     * @param terminal 终端  0 ：app 或  1 ：h5
+     * @param os 操作系统 0：ios 或 1：android
      * @return
      */
     @RequestMapping(value = "getLiveById",method = RequestMethod.POST)
@@ -137,6 +137,8 @@ public class LiveMobileController extends BaseController {
             }
         }catch (Exception e){
             msg = Message.error();
+            e.printStackTrace();
+            logger.error("异常信息");
         }
         return msg;
     }

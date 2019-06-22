@@ -32,16 +32,15 @@ public class AdvertiseMobileController extends BaseController {
      */
     @RequestMapping(value = "advertiseInit", method = RequestMethod.POST)
     public Message getAdvertiseOnline(){
-        msg = Message.success();
         try {
+            msg = Message.success();
             msg.setRecode(0);
             msg.setMsg("查询成功");
             msg.setData(advertiseMobileService.getAdvertiseOnline());
         }catch (Exception e){
-            e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
+            msg = Message.error();
             logger.error("异常信息");
+            e.printStackTrace();
         }
         return  msg;
     }

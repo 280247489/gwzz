@@ -37,7 +37,8 @@ public class DemoAspect {
     }
 
 
-    @Pointcut("execution(public * com.memory.gwzz.controller.ArticleCommentMobileController.add(..)) " )
+    @Pointcut("execution(public * com.memory.gwzz.controller.ArticleCommentMobileController.add(..)) || " +
+            "execution(public * com.memory.gwzz.controller.CourseCommentMobileController.add(..)) " )
     public void filterWords(){
     }
 

@@ -35,11 +35,12 @@ public class ArticleLikeMobileController extends BaseController {
      */
     @RequestMapping(value = "addLike",method = RequestMethod.POST)
     public Message add(@RequestParam String articleId, @RequestParam String userId){
-        msg = Message.success();
         try {
+            msg = Message.success();
             msg.setRecode(0);
             msg.setData(articleLikeMobileService.like(articleId,userId));
         }catch (Exception e){
+            msg = Message.error();
             logger.error("异常信息");
             e.printStackTrace();
         }

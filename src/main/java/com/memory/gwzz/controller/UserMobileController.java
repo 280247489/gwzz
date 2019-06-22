@@ -47,8 +47,8 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "getSMSCode", method = RequestMethod.POST)
     public Message getSMSCode(@RequestParam String phone,@RequestParam Integer type){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileService.checkPhone(phone);
             String userSMSSum = String.valueOf(redisUtil.get(CacheConstantConfig.USER_SMS_SUM+":"+phone));
             if (!"null".equals(userSMSSum)){
@@ -82,9 +82,8 @@ public class UserMobileController extends BaseController {
                 msg.setData(JSON.parse(userMobileService.getSMSCode(phone)));
             }
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
 
@@ -102,8 +101,8 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "registerPhone", method = RequestMethod.POST)
     public Message registerPhone (@RequestParam String phone, @RequestParam String userPwd, @RequestParam String msgId, @RequestParam String code){
-        msg = Message.success();
         try {
+            msg = Message.success();
             if (userMobileService.checkSmsCode(msgId,code)){
                 msg.setMsg("成功");
                 msg.setRecode(0);
@@ -113,9 +112,8 @@ public class UserMobileController extends BaseController {
                 msg.setMsg("验证码失效");
             }
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
 
@@ -136,16 +134,15 @@ public class UserMobileController extends BaseController {
     @RequestMapping(value = "registerWeChat", method = RequestMethod.POST)
     public Message registerWeChat (@RequestParam String userId, @RequestParam String userUnionId, @RequestParam String userOpenId,
                                    @RequestParam String userNickName, @RequestParam String userSex, @RequestParam String userLogo){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileService.registerWeChat(userId, userUnionId, userOpenId, userNickName, userSex, userLogo);
             msg.setMsg("注册成功");
             msg.setRecode(0);
             msg.setData(user);
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -163,8 +160,8 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public Message login (@RequestParam String phone, @RequestParam String userPwd, @RequestParam String userOpenId, @RequestParam Integer logoType){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileService.login(phone, userPwd, userOpenId, logoType);
             if (user == null){
                 msg.setRecode(2);
@@ -175,9 +172,8 @@ public class UserMobileController extends BaseController {
                 msg.setData(user);
             }
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return  msg;
@@ -194,8 +190,8 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "setUserPwd", method = RequestMethod.POST)
     public Message setUserPwd(@RequestParam String phone, @RequestParam String userPwd, @RequestParam String msgId, @RequestParam String code){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileService.checkPhone(phone);
             if (user!=null){
                 if (userMobileService.checkSmsCode(msgId,code)){
@@ -211,9 +207,8 @@ public class UserMobileController extends BaseController {
                 msg.setMsg("无此用户");
             }
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
 
@@ -229,8 +224,8 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "updUserName", method = RequestMethod.POST)
     public Message updUserName(@RequestParam String userId, @RequestParam String userName){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
                 msg.setRecode(0);
@@ -240,9 +235,8 @@ public class UserMobileController extends BaseController {
                 msg.setMsg("无此用户");
             }
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -257,8 +251,8 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "updUserSex", method = RequestMethod.POST)
     public Message updUserSex(@RequestParam String userId, @RequestParam String userSex){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
                 msg.setRecode(0);
@@ -268,9 +262,8 @@ public class UserMobileController extends BaseController {
                 msg.setMsg("无此用户");
             }
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -285,8 +278,8 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "updUserBirthday", method = RequestMethod.POST)
     public Message updUserBirthday(@RequestParam String userId, @RequestParam String userBirthday){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
                 msg.setRecode(0);
@@ -296,9 +289,8 @@ public class UserMobileController extends BaseController {
                 msg.setMsg("无此用户");
             }
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -313,8 +305,8 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "updUserLogo", method = RequestMethod.POST)
     public Message updUserLogo(@RequestParam String userId, @RequestParam("file") MultipartFile UserLogo ){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
                 msg.setRecode(0);
@@ -345,8 +337,8 @@ public class UserMobileController extends BaseController {
     @RequestMapping(value = "updAddress", method = RequestMethod.POST)
     public Message updAddress(@RequestParam String userId,@RequestParam String userProvince, @RequestParam String userCity,
                               @RequestParam String userArea, @RequestParam String userAddress){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
                 msg.setRecode(0);
@@ -356,9 +348,8 @@ public class UserMobileController extends BaseController {
                 msg.setMsg("无此用户");
             }
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -373,8 +364,8 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "updUserNickName", method = RequestMethod.POST)
     public Message updUserNickName(@RequestParam String userId,@RequestParam String userNickName){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
                 msg.setRecode(0);
@@ -384,9 +375,8 @@ public class UserMobileController extends BaseController {
                 msg.setMsg("无此用户");
             }
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;
@@ -402,8 +392,8 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "updUserPwd",method = RequestMethod.POST)
     public Message updUserPwd(@RequestParam String userId,@RequestParam String oldPassword,@RequestParam String newPassWord){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user != null){
                 String oldPwd = Utils.md5Password(oldPassword);
@@ -421,10 +411,9 @@ public class UserMobileController extends BaseController {
             }
 
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
-            logger.error("异常");
+            logger.error("异常信息");
         }
         return msg;
     }
@@ -437,8 +426,8 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "logOFF",method = RequestMethod.POST)
     public Message logOFF(String userId){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
                 userMobileService.logOFFUser(user);
@@ -449,10 +438,9 @@ public class UserMobileController extends BaseController {
                 msg.setMsg("无此用户");
             }
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
-            logger.error("异常");
+            logger.error("异常信息");
         }
         return msg;
     }
@@ -468,8 +456,8 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "updPhone",method = RequestMethod.POST)
     public Message updPhone (@RequestParam String userId, @RequestParam String phone, @RequestParam String msgId, @RequestParam String code){
-        msg = Message.success();
         try {
+            msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
                 if (userMobileService.checkSmsCode(msgId,code)){
@@ -485,10 +473,9 @@ public class UserMobileController extends BaseController {
                 msg.setMsg("该用户不存在");
             }
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
-            logger.error("异常");
+            logger.error("异常信息");
         }
         return msg;
     }
@@ -502,8 +489,9 @@ public class UserMobileController extends BaseController {
      */
     @RequestMapping(value = "updWeChat",method = RequestMethod.POST)
     public Message updWeChat (@RequestParam String userId, @RequestParam String openId, @RequestParam String uid){
-        msg = Message.success();
+
         try {
+            msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
                 if (!user.getUserOpenId().equals(openId)){
@@ -518,10 +506,9 @@ public class UserMobileController extends BaseController {
                 msg.setMsg("该用户不存在");
             }
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
-            logger.error("异常");
+            logger.error("异常信息");
         }
         return msg;
     }

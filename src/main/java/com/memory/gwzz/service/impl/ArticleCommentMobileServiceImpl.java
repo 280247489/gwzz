@@ -64,7 +64,6 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
 
         daoUtils.save(article);
         daoUtils.save(articleComment);
-//        articleCommentMobileRepository.save(articleComment);
 
         returnMap.put("articleComment",articleComment);
 

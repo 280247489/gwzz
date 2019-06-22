@@ -33,14 +33,13 @@ public class ShareUrlMobileController extends BaseController {
      */
     @RequestMapping(value = "getShareUrlByName",method = RequestMethod.POST)
     public Message getShareUrlByName(@RequestParam  String name){
-        msg = Message.success();
         try {
+            msg = Message.success();
             msg.setRecode(0);
             msg.setData(shareUrlMobileService.getShareUrlByName(name));
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
-            msg.setRecode(1);
-            msg.setMsg("系统错误");
             logger.error("异常信息");
         }
         return msg;

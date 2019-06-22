@@ -35,14 +35,16 @@ public class CourseLikeMobileController extends BaseController {
      */
     @RequestMapping(value = "addLike" ,method = RequestMethod.POST)
     public Message add(@RequestParam String cid, @RequestParam String uid){
-        msg = Message.success();
+
         try {
+            msg = Message.success();
             msg.setRecode(0);
             CourseLike courseLike = courseLikeMobileService.like(cid,uid);
             msg.setData(courseLike);
         }catch (Exception e){
             e.printStackTrace();
-            logger.error("异常");
+            msg = Message.error();
+            logger.error("异常信息");
         }
         return msg;
     }
