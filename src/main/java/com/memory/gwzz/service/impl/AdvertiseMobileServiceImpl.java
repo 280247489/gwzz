@@ -66,7 +66,7 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
         Map<String, Object> returnMap = new HashMap<>();
         String type = advertise.getAdvertiseH5Type();
         String typeId = advertise.getAdvertiseH5Url();
-        if (type == "Article") {
+        if ( "Article".equals(type)) {
             Article article = articleMobileRepository.findByIdAndArticleOnline(typeId, 1);
             if (article != null) {
                 String label = article.getArticleLabel();
@@ -76,7 +76,7 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
             } else {
                 returnMap = null;
             }
-        } else if (type == "Course") {
+        } else if ("Course".equals(type)) {
             Course course = courseMobileRepository.findByIdAndCourseOnline(typeId, 1);
             if (course != null) {
                 String isLive = "noData";
@@ -91,7 +91,7 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
             } else {
                 returnMap = null;
             }
-        } else if (type == "Live") {
+        } else if ( "Live".equals(type)) {
             LiveMaster liveMaster1 = liveMasterMobileRepository.findByCourseIdAndLiveMasterIsOnline(typeId, 1);
             if (liveMaster1 != null) {
                 String keyCourseView = COURSEVIEW + typeId;
@@ -148,8 +148,8 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
             }else{
                 returnMap = null;
             }
-        } else if (type == "Goods") {
-
+        } else if ("Goods".equals(type)) {
+            returnMap = null;
         } else {
             returnMap = null;
         }

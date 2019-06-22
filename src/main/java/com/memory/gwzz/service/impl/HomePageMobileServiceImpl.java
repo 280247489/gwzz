@@ -109,7 +109,7 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
         Map<String, Object> returnMap = new HashMap<>();
         String type = banner.getTypeTable();
         String typeId = banner.getTypeTableId();
-        if (type == "Article") {
+        if ("Article".equals(type)) {
             com.memory.entity.jpa.Article article = articleMobileRepository.findByIdAndArticleOnline(typeId, 1);
             if (article != null) {
                 String label = article.getArticleLabel();
@@ -119,7 +119,7 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
             } else {
                 returnMap = null;
             }
-        } else if (type == "Course") {
+        } else if ("Course".equals(type)) {
             com.memory.entity.jpa.Course course = courseMobileRepository.findByIdAndCourseOnline(typeId, 1);
             if (course != null) {
                 String isLive = "noData";
@@ -134,7 +134,7 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
             } else {
                 returnMap = null;
             }
-        } else if (type == "Live") {
+        } else if ("Live".equals(type)) {
             com.memory.entity.jpa.LiveMaster liveMaster1 = liveMasterMobileRepository.findByCourseIdAndLiveMasterIsOnline(typeId, 1);
             if (liveMaster1 != null) {
                 String keyCourseView = COURSEVIEW + typeId;
@@ -190,8 +190,8 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
             }else{
                 returnMap = null;
             }
-        } else if (type == "Goods") {
-
+        } else if ("Goods".equals(type)) {
+            returnMap = null;
         } else {
             returnMap = null;
         }
