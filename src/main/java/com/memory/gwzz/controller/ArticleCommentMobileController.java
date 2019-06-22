@@ -3,7 +3,9 @@ package com.memory.gwzz.controller;
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
 import com.memory.domain.dao.DaoUtils;
+import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.User;
+import com.memory.gwzz.repository.ArticleMobileRepository;
 import com.memory.gwzz.service.ArticleCommentMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -28,6 +33,9 @@ public class ArticleCommentMobileController extends BaseController {
 
     @Autowired
     private ArticleCommentMobileService articleCommentMobileService;
+
+    @Autowired
+    private ArticleMobileRepository articleMobileRepository;
 
     @Autowired
     private DaoUtils daoUtils;
@@ -63,4 +71,71 @@ public class ArticleCommentMobileController extends BaseController {
         }
         return msg;
     }
+
+    /**
+     * 查询文章一级评论
+     * URL:192.168.1.185:8081/gwzz/articleComment/mobile/listArticleCommentOne
+     * @param articleId String 文章Id
+     * @param start int 第几页
+     * @param limit int 每页条数
+     * @return
+     */
+    @RequestMapping(value = "listArticleCommentOne",method = RequestMethod.POST)
+    public Message listArtComByAid(@RequestParam String articleId,@RequestParam Integer start,@RequestParam Integer limit){
+        try {
+            msg = Message.success();
+            Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
+            if (article!=null){
+                msg.setRecode(0);
+                msg.setMsg("成功");
+                msg.setData(articleCommentMobileService.listArtComByAid(articleId, start, limit));
+            }else{
+                msg.setRecode(2);
+                msg.setMsg("无此课程");
+            }
+        }catch (Exception e){
+            msg = Message.error();
+            logger.error("异常信息");
+            e.printStackTrace();
+        }
+        return msg;
+    }
+
+    /**
+     * 查询2级评论
+     * URL:192.168.1.185:8081/gwzz/articleComment/mobile/listArticleCommentTwo
+     * @param articleId String 文章Id
+     * @param commentId String 评论Id
+     * @param start int 第几页
+     * @param limit int 每页条数
+     * @return
+     */
+    @RequestMapping(value = "listArticleCommentTwo",method = RequestMethod.POST)
+    public Message listArtComByRid(@RequestParam String articleId,@RequestParam String commentId,@RequestParam Integer start,@RequestParam Integer limit){
+        try {
+            msg = Message.success();
+            Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
+            if (article==null){
+                msg.setRecode(2);
+                msg.setMsg("无此课程");
+            }else{
+                Map<String,Object> map = articleCommentMobileService.listArtComByRid(commentId, start, limit);
+                if (map.values()==null){
+                    msg.setRecode(3);
+                    msg.setMsg("无此评论");
+                }else{
+                    msg.setRecode(0);
+                    msg.setMsg("成功");
+                    msg.setData(map);
+                }
+
+            }
+        }catch (Exception e){
+            msg = Message.error();
+            logger.error("异常信息");
+            e.printStackTrace();
+        }
+        return msg;
+    }
+
 }

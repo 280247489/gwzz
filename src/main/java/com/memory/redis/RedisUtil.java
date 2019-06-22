@@ -1,7 +1,6 @@
 package com.memory.redis;
 
 
-import com.alibaba.fastjson.JSON;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.jedis.*;
 
