@@ -3,6 +3,7 @@ package com.memory.gwzz.service;
 import com.memory.entity.jpa.Advertise;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName AdvertiseMobileService
@@ -12,4 +13,5 @@ import java.util.List;
  */
 public interface AdvertiseMobileService {
     List<Advertise> getAdvertiseOnline();
+    Map<String, Object> getAdvertiseById(Advertise advertise, String openId, Integer terminal, Integer os);
 }

@@ -4,6 +4,7 @@ import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
+import com.memory.gwzz.repository.ArticleMobileRepository;
 import com.memory.gwzz.service.ArticleMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class ArticleMobileController extends BaseController {
     private ArticleMobileService articleMobileService;
 
     @Autowired
-    private DaoUtils daoUtils;
+    private ArticleMobileRepository articleMobileRepository;
 
     /**
      * 查询文章列表
@@ -61,12 +62,17 @@ public class ArticleMobileController extends BaseController {
     public Message getById(@RequestParam  String articleId){
         try {
             msg = Message.success();
-            Article article = (Article) daoUtils.getById("Article",articleId);
-            String label = article.getArticleLabel();
-            String[] labels = label.split(",");
-            article.setArticleLabel(labels[0]);
-            msg.setMsg("查询成功");
-            msg.setData(article);
+            Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
+            if (article!=null){
+                String label = article.getArticleLabel();
+                String[] labels = label.split(",");
+                article.setArticleLabel(labels[0]);
+                msg.setMsg("查询成功");
+                msg.setData(article);
+            }else {
+                msg.setMsg("无此数据");
+                msg.setRecode(1);
+            }
         }catch (Exception e){
             e.printStackTrace();
             msg = Message.error();

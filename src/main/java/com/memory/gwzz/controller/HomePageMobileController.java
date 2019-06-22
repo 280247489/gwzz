@@ -2,7 +2,9 @@ package com.memory.gwzz.controller;
 
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
+import com.memory.entity.jpa.Banner;
 import com.memory.gwzz.model.LiveMaster;
+import com.memory.gwzz.repository.BannerMobileRepository;
 import com.memory.gwzz.service.HomePageMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,9 @@ public class HomePageMobileController extends BaseController {
     private final static Logger logger = LoggerFactory.getLogger(AdvertiseMobileController.class);
     @Autowired
     private HomePageMobileService homePageMobileService;
+
+    @Autowired
+    private BannerMobileRepository bannerMobileRepository;
 
     /**
      * 首页查询
@@ -73,6 +78,37 @@ public class HomePageMobileController extends BaseController {
             msg = Message.error();
             e.printStackTrace();
             logger.error("异常信息");
+        }
+        return msg;
+    }
+
+    /**
+     * 根据Id查询Banner跳转详情
+     * URL:192.168.1.185:8081/gwzz/homePage/mobile/getBannerById
+     * @param id String 唯一标识
+     * @param openId 用户openId
+     * @param terminal 终端  0 ：app 或  1 ：h5
+     * @param os 操作系统 0：ios 或 1：android
+     * @return
+     */
+    @RequestMapping(value = "getBannerById",method = RequestMethod.POST)
+    public Message getBannerById(String id,String openId,Integer terminal,Integer os){
+        try {
+            msg = Message.success();
+            Banner banner = bannerMobileRepository.findByIdAndBannerOnline(id,1);
+            if (banner==null){
+                msg.setRecode(1);
+                msg.setMsg("该轮播不存在");
+            }else {
+                msg.setRecode(0);
+                msg.setData(homePageMobileService.getAdvertiseById(banner, openId, terminal,os));
+                msg.setMsg("成功");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            msg = Message.error();
+            logger.error("异常信息");
+
         }
         return msg;
     }
