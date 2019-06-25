@@ -5,6 +5,7 @@ import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.CourseLike;
 import com.memory.entity.jpa.User;
+import com.memory.gwzz.model.Article;
 import com.memory.gwzz.repository.CourseLikeMobileRepository;
 import com.memory.gwzz.service.CourseLikeMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName CourseLikeMobileServiceImpl
@@ -64,5 +68,34 @@ public class CourseLikeMobileServiceImpl implements CourseLikeMobileService {
 
     public CourseLike getBycidAndUid(String cid,String uid){
         return courseLikeMobileRepository.findByCourseIdAndUserId(cid, uid);
+    }
+
+    @Override
+    public Map<String,Object> ListCourseLikeByUserId(String userId, Integer start, Integer limit){
+        Map<String,Object> returnMap = new HashMap<>();
+
+        StringBuffer stringBuffer = new StringBuffer(" SELECT NEW com.memory.gwzz.model.Course(c.id, c.courseNumber,c.courseTitle, c.courseLogo, c.courseLabel,c.courseOnline,c.courseTotalComment,c.courseTotalView,c.courseReleaseTime ) " +
+                "FROM Course c, CourseLike cl WHERE c.id=cl.courseId AND cl.likeStatus = 1 ");
+        Map<String,Object> map = new HashMap<>();
+
+        StringBuffer stringBuffer1 = new StringBuffer("SELECT count(*) FROM course_like where like_status = 1 ");
+        map.put("userId",userId);
+        stringBuffer.append(" AND cl.userId =: userId ");
+        stringBuffer1.append("AND user_id =:userId");
+
+        DaoUtils.Page pageArticle = new DaoUtils.Page();
+        pageArticle.setPageIndex(start);
+        pageArticle.setLimit(limit);
+
+        stringBuffer.append(" ORDER BY cl.createTime DESC");
+
+        List<Course> courseList = daoUtils.findByHQL(stringBuffer.toString(),map,pageArticle);
+
+        Integer courseCount = daoUtils.getTotalBySQL(stringBuffer1.toString(),map);
+
+        returnMap.put("courseList",courseList);
+        returnMap.put("courseCount",courseCount);
+
+        return returnMap;
     }
 }

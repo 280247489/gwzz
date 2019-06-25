@@ -2,7 +2,11 @@ package com.memory.gwzz.controller;
 
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
+import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.CourseLike;
+import com.memory.entity.jpa.User;
+import com.memory.gwzz.repository.CourseMobileRepository;
+import com.memory.gwzz.repository.UserMobileRepository;
 import com.memory.gwzz.service.CourseLikeMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +30,12 @@ public class CourseLikeMobileController extends BaseController {
     @Autowired
     private CourseLikeMobileService courseLikeMobileService;
 
+    @Autowired
+    private CourseMobileRepository courseMobileRepository;
+
+    @Autowired
+    private UserMobileRepository userMobileRepository;
+
     /**
      * 添加课程点赞
      * URL：192.168.1.185:8081/gwzz/courseLike/mobile/addLike
@@ -38,13 +48,48 @@ public class CourseLikeMobileController extends BaseController {
 
         try {
             msg = Message.success();
-            msg.setRecode(0);
-            CourseLike courseLike = courseLikeMobileService.like(cid,uid);
-            msg.setData(courseLike);
+            Course course = courseMobileRepository.findByIdAndCourseOnline(cid,1);
+            if (course!=null){
+                msg.setRecode(0);
+                CourseLike courseLike = courseLikeMobileService.like(cid,uid);
+                msg.setData(courseLike);
+            }else {
+                msg.setRecode(1);
+                msg.setMsg("课程已存在！");
+            }
+
         }catch (Exception e){
             e.printStackTrace();
             msg = Message.error();
             logger.error("异常信息");
+        }
+        return msg;
+    }
+
+    /**
+     * 查询我的点赞课程
+     * URL：192.168.1.185:8081/gwzz/courseLike/mobile/listCourseLikeByUserId
+     * @param userId String 用户Id
+     * @param start int 第几页
+     * @param limit int 每页条数
+     * @return
+     */
+    @RequestMapping(value = "listCourseLikeByUserId",method = RequestMethod.POST)
+    public Message listCourseLikeByUserId(@RequestParam String userId, @RequestParam Integer start,@RequestParam Integer limit){
+        try {
+            msg = Message.success();
+            User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
+            if (user != null){
+                msg.setRecode(0);
+                msg.setData(courseLikeMobileService.ListCourseLikeByUserId(userId, start, limit));
+            }else {
+                msg.setRecode(1);
+                msg.setMsg("该用户不存在");
+            }
+        }catch (Exception e){
+            msg = Message.error();
+            logger.error("异常信息");
+            e.printStackTrace();
         }
         return msg;
     }

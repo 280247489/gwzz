@@ -57,6 +57,10 @@ public class AlbumMobileServiceImpl implements AlbumMobileService {
     public Map<String,Object> fandCourseByAlbunmId(String albumId,Integer start){
         Map<String,Object> returnMap = new HashMap<>();
         Album album = (Album) daoUtils.getById("Album",albumId);
+        Integer limit = album.getAlbumCourseLimit();
+//        if (limit<0){
+//            limit=20;
+//        }
         if (album!=null){
             StringBuffer sbCourse = new StringBuffer( "SELECT NEW com.memory.gwzz.model.Course( id, courseNumber,courseTitle, courseLogo, courseLabel,courseOnline,courseTotalComment,courseTotalView,courseReleaseTime) " +
                     " FROM Course WHERE  albumId=:albumId AND courseOnline=1 ORDER BY courseReleaseTime DESC");
@@ -65,7 +69,7 @@ public class AlbumMobileServiceImpl implements AlbumMobileService {
             map.put("albumId", albumId);
             DaoUtils.Page page = new DaoUtils.Page();
             page.setPageIndex(start);
-            page.setLimit(album.getAlbumCourseLimit());
+            page.setLimit(limit);
             List<Course> courseList = daoUtils.findByHQL(sbCourse.toString(),map,page);
             Object objectList = daoUtils.findBySQL(stringBuffer.toString(),map,null,null);
             returnMap.put("anthology",objectList);

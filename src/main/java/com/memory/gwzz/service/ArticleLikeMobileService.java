@@ -2,6 +2,8 @@ package com.memory.gwzz.service;
 
 import com.memory.entity.jpa.ArticleLike;
 
+import java.util.Map;
+
 /**
  * @ClassName ArticleLikeMobileService
  * @Descriotion TODO
@@ -10,4 +12,5 @@ import com.memory.entity.jpa.ArticleLike;
  */
 public interface ArticleLikeMobileService {
     ArticleLike like(String aid, String uid);
+    Map<String,Object> ListArticleLikeByUserId(String userId, Integer start, Integer limit);
 }

@@ -90,7 +90,7 @@ public class DemoAspect {
 
             result = proceedingJoinPoint.proceed(obj);
 
-            String ResponseArgs = new Gson().toJson(result);
+//            String ResponseArgs = new Gson().toJson(result);
 
             logger.info(String.format(
                     "%n ======Start====== " +
@@ -101,9 +101,10 @@ public class DemoAspect {
                             "%n IP : %s " +
                             "%n Request Args : %s " +
                             "%n +++++++++++++++++++++++++  " +
-                            "%n Response Args : %s " +
+//                            "%n Response Args : %s " +
                             "%n ======End====== "  ,
-                    Url,HttpMethod,ClassMethod,IP,RequestArgs,ResponseArgs));
+//                    Url,HttpMethod,ClassMethod,IP,RequestArgs,ResponseArgs));
+                    Url,HttpMethod,ClassMethod,IP,RequestArgs));
         }catch (Throwable e){
             e.printStackTrace();
         }

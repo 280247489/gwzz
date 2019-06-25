@@ -54,6 +54,7 @@ public class MainApplication extends SpringBootServletInitializer {
 //        }
 //    }
 
+
     /**
      * 违禁词项目启动初始化，加载到内存中
      */
