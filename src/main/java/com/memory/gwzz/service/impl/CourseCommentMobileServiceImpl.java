@@ -4,7 +4,9 @@ import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.CourseComment;
+import com.memory.entity.jpa.CourseCommentLike;
 import com.memory.entity.jpa.User;
+import com.memory.gwzz.repository.CourseCommentLikeMobileRepository;
 import com.memory.gwzz.repository.CourseCommentMobileRepository;
 import com.memory.gwzz.service.CourseCommentMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
     private CourseCommentMobileRepository courseCommentMobileRepository;
 
     @Autowired
+    private CourseCommentLikeMobileRepository courseCommentLikeMobileRepository;
+
+    @Autowired
     private DaoUtils daoUtils;
 
     @Transactional
@@ -36,14 +41,15 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
         Course course = (Course) daoUtils.getById("Course",courseId);
         if (course!=null){
             String userId = user.getId();
-            courseComment.setId(Utils.generateUUIDs());
+            String courseCommentId= Utils.generateUUIDs();
+            courseComment.setId(courseCommentId);
             courseComment.setCourseId(courseId);
             courseComment.setUserId(userId);
             courseComment.setUserLogo(user.getUserLogo());
-            courseComment.setUserName(user.getUserName());
+            courseComment.setUserName(user.getUserNickName());
             courseComment.setCommentType(commentType);
             if (commentType==0){
-                courseComment.setCommentRootId(userId);
+                courseComment.setCommentRootId(courseCommentId);
                 courseComment.setCommentParentId("");
                 courseComment.setCommentParentUserName("");
                 courseComment.setCommentParentContent("");
@@ -81,12 +87,13 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
      * @return
      */
     @Override
-    public Map<String, Object> listComByCid(String courseId,Integer start,Integer limit) {
+    public Map<String, Object> listComByCid(String courseId,Integer start,Integer limit,String uid) {
         Map<String,Object> returnMap = new HashMap<>();
         //查询一级评论列表
-        StringBuffer sbCourseCommentList = new StringBuffer("select id,course_id,user_id AS uid,user_logo,user_name,comment_content_replace,comment_create_time,comment_total_like," +
-                "(select count(*) from article_comment where course_id=:courseId and comment_root_id = uid and comment_type=1) from course_comment " +
-                "where course_id=:courseId AND comment_type=0 order by comment_total_like desc");
+        StringBuffer sbCourseCommentList = new StringBuffer("select id AS courseCommentId,course_id,user_id AS uid,user_logo,user_name,comment_content_replace,comment_create_time,comment_total_like," +
+                "(select count(*) from article_comment where course_id=:courseId and comment_root_id = courseCommentId and comment_type=1)," +
+                "(SELECT ccl.comment_like_yn FROM course_comment_like ccl WHERE ccl.comment_id = courseCommentId AND ccl.user_id ='"+uid+"') " +
+                "from course_comment where course_id=:courseId AND comment_type=0 order by comment_total_like desc");
         //查询一级评论总数
         StringBuffer sbCount = new StringBuffer("select count(*) from course_comment where course_id=:courseId AND comment_type=0 ");
         Map<String, Object> map = new HashMap<String, Object>();
@@ -98,6 +105,7 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
         List<Map<String, Object>> returnList=new ArrayList<Map<String,Object>>();
         for (int i = 0; i < list.size(); i++) {
             Map<String, Object> objMap=new HashMap<String, Object>();
+            Integer isLike = 0;
             objMap.put("id", list.get(i)[0]);
             objMap.put("course_id", list.get(i)[1]);
             objMap.put("userId", list.get(i)[2]);
@@ -107,6 +115,13 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
             objMap.put("comment_create_time", list.get(i)[6]);
             objMap.put("comment_total_like", list.get(i)[7]);
             objMap.put("comment_reply_sum", list.get(i)[8]);
+            Object commentLike = list.get(i)[9];
+            if (commentLike==null){
+                isLike=0;
+            }else{
+                isLike=(Integer) commentLike;
+            }
+            objMap.put("comment_like", isLike);
 
             returnList.add(objMap);
         }
@@ -121,12 +136,18 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
     }
 
     @Override
-    public Map<String, Object> listCouComByRid(String commentId, Integer start, Integer limit) {
+    public Map<String, Object> listCouComByRid(String commentId,String uid, Integer start, Integer limit) {
         Map<String,Object> returnMap = new HashMap<>();
         //查询一级评论对象
         CourseComment courseComment = (CourseComment) daoUtils.getById("CourseComment",commentId);
         if (courseComment!=null){
-
+            CourseCommentLike courseCommentLike =courseCommentLikeMobileRepository.findByCommentIdAndUserId(commentId,uid);
+            Integer isCommentLike = 0;
+            if (courseCommentLike==null){
+                isCommentLike=0;
+            }else {
+                isCommentLike=courseCommentLike.getCommentLikeYn();
+            }
             String commentRootId = courseComment.getUserId();
             //查询子级评论列表
             StringBuffer sbCCTWO = new StringBuffer("select id,course_id,user_id,user_logo,user_name,comment_content_replace,comment_parent_user_name,comment_parent_content," +
@@ -156,9 +177,10 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
 
             Integer commentCount = daoUtils.getTotalBySQL(sbCount.toString(),null);
 
-            returnMap.put("articleComment",courseComment);
+            returnMap.put("courseComment",courseComment);
             returnMap.put("twoList",twoList);
             returnMap.put("commentCount",commentCount);
+            returnMap.put("isCommentLike",isCommentLike);
         }else{
             returnMap.put("null",null);
         }

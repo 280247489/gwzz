@@ -81,19 +81,20 @@ public class CourseCommentMobileController extends BaseController {
      * 查询课程一级评论
      * URL:192.168.1.185:8081/gwzz/courseComment/mobile/listCourseCommentOne
      * @param courseId String 课程Id
+     * @param uid String 用户Id
      * @param start int 第几页
      * @param limit  int 每页条数
      * @return
      */
     @RequestMapping(value = "listCourseCommentOne",method = RequestMethod.POST)
-    public Message listCourseCommentOne(@RequestParam String courseId,@RequestParam Integer start,@RequestParam Integer limit){
+    public Message listCourseCommentOne(@RequestParam String courseId,@RequestParam String uid, @RequestParam Integer start,@RequestParam Integer limit){
         try {
             msg = Message.success();
             Course course = courseMobileRepository.findByIdAndCourseOnline(courseId,1);
             if (course!=null){
                 msg.setRecode(0);
                 msg.setMsg("成功");
-                msg.setData(courseCommentMobileService.listComByCid(courseId, start, limit));
+                msg.setData(courseCommentMobileService.listComByCid(courseId, start, limit,uid));
             }else{
                 msg.setRecode(2);
                 msg.setMsg("无此课程");
@@ -110,13 +111,14 @@ public class CourseCommentMobileController extends BaseController {
      * 查询课程2级评论
      * URL:192.168.1.185:8081/gwzz/courseComment/mobile/listCourseCommentTwo
      * @param courseId  String 课程Id
+     * @param uid String 用户Id
      * @param commentId String 评论Id
      * @param start int 第几页
      * @param limit int 每页条数
      * @return
      */
     @RequestMapping(value = "listCourseCommentTwo",method = RequestMethod.POST)
-    public Message listCourseCommentTwo(@RequestParam String courseId,@RequestParam String commentId,@RequestParam Integer start,@RequestParam Integer limit){
+    public Message listCourseCommentTwo(@RequestParam String courseId,@RequestParam String uid,@RequestParam String commentId,@RequestParam Integer start,@RequestParam Integer limit){
         try {
             msg = Message.success();
             Course course = courseMobileRepository.findByIdAndCourseOnline(courseId,1);
@@ -124,7 +126,7 @@ public class CourseCommentMobileController extends BaseController {
                 msg.setRecode(2);
                 msg.setMsg("无此课程");
             }else{
-                Map<String,Object> map = courseCommentMobileService.listCouComByRid(commentId, start, limit);
+                Map<String,Object> map = courseCommentMobileService.listCouComByRid(commentId, uid,start, limit);
                 if (map.values()!=null){
                     msg.setRecode(0);
                     msg.setMsg("成功");

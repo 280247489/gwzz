@@ -87,7 +87,7 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
                 }
                 returnMap.put("course", course);
                 returnMap.put("isLive", isLive);
-                returnMap.put("courselist", courseMobileService.getCourseById(albumId));
+                returnMap.put("courseList", courseMobileService.getCourseById(albumId));
             } else {
                 returnMap = null;
             }

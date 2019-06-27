@@ -36,14 +36,15 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
         Article article = (Article) daoUtils.getById("Article",articleId);
         if (article!=null){
             String userId = user.getId();
-            articleComment.setId(Utils.generateUUIDs());
+            String articleCommentId =Utils.generateUUIDs();
+            articleComment.setId(articleCommentId);
             articleComment.setArticleId(articleId);
             articleComment.setUserId(userId);
             articleComment.setUserLogo(user.getUserLogo());
-            articleComment.setUserName(user.getUserName());
+            articleComment.setUserName(user.getUserNickName());
             articleComment.setCommentType(commentType);
             if(commentType==0){
-                articleComment.setCommentRootId(userId);
+                articleComment.setCommentRootId(articleCommentId);
                 articleComment.setCommentParentId("");
                 articleComment.setCommentParentUserName("");
                 articleComment.setCommentParentContent("");
@@ -78,8 +79,8 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
     public Map<String, Object> listArtComByAid(String articleId,Integer start,Integer limit) {
         Map<String,Object> returnMap = new HashMap<>();
         //查询一级评论列表
-        StringBuffer sbAC = new StringBuffer("select id,article_id,user_id AS uid,user_logo,user_name,comment_content_replace,comment_create_time,comment_total_like," +
-                "(select count(*) from article_comment where article_id=:articleId and comment_root_id = uid and comment_type=1) from article_comment " +
+        StringBuffer sbAC = new StringBuffer("select id AS articleCommentId,article_id,user_id,user_logo,user_name,comment_content_replace,comment_create_time,comment_total_like," +
+                "(select count(*) from article_comment where article_id=:articleId and comment_root_id = articleCommentId and comment_type=1) from article_comment " +
                 "where article_id=:articleId AND comment_type=0 order by comment_total_like desc");
         //查询一级评论总数
         StringBuffer sbCount = new StringBuffer("select count(*) from article_comment where article_id=:articleId AND comment_type=0 ");

@@ -41,7 +41,7 @@ public class CourseLikeMobileController extends BaseController {
      * URL：192.168.1.185:8081/gwzz/courseLike/mobile/addLike
      * @param cid String 课程Id
      * @param uid String 用户对象
-     * @return 点赞对象
+     * @return
      */
     @RequestMapping(value = "addLike" ,method = RequestMethod.POST)
     public Message add(@RequestParam String cid, @RequestParam String uid){
@@ -50,9 +50,12 @@ public class CourseLikeMobileController extends BaseController {
             msg = Message.success();
             Course course = courseMobileRepository.findByIdAndCourseOnline(cid,1);
             if (course!=null){
-                msg.setRecode(0);
                 CourseLike courseLike = courseLikeMobileService.like(cid,uid);
-                msg.setData(courseLike);
+                if (courseLike.getLikeStatus()==0){
+                    msg.setRecode(0);
+                }else {
+                    msg.setRecode(1);
+                }
             }else {
                 msg.setRecode(1);
                 msg.setMsg("课程已存在！");

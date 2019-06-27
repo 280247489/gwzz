@@ -13,7 +13,7 @@ import java.util.Map;
 public interface CourseCommentMobileService {
     Map<String, Object> add(String courseId, User user, Integer commentType, String commentParentId, String content, String content_replace);
 
-    Map<String, Object> listComByCid(String courseId, Integer start, Integer limit);
+    Map<String, Object> listComByCid(String courseId,Integer start,Integer limit,String uid);
 
-    Map<String, Object> listCouComByRid(String commentId, Integer start, Integer limit);
+    Map<String, Object> listCouComByRid(String commentId,String uid, Integer start, Integer limit);
 }

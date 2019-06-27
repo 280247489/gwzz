@@ -1,10 +1,8 @@
 package com.memory.gwzz.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.memory.cms.redis.service.CourseRedisCmsService;
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
-import com.memory.common.utils.Utils;
 import com.memory.common.yml.MyRedisConfig;
 import com.memory.gwzz.service.CourseExtMobileService;
 import com.memory.redis.CacheConstantConfig;

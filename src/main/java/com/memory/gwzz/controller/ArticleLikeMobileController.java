@@ -4,6 +4,7 @@ import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
+import com.memory.entity.jpa.ArticleLike;
 import com.memory.entity.jpa.User;
 import com.memory.gwzz.repository.ArticleMobileRepository;
 import com.memory.gwzz.repository.UserMobileRepository;
@@ -42,7 +43,7 @@ public class ArticleLikeMobileController extends BaseController {
      * URL：192.168.1.185:8081/gwzz/articleLike/mobile/addLike
      * @param articleId String 文章唯一标识ID
      * @param userId String 用户唯一标识ID
-     * @return like 对象
+     * @return
      */
     @RequestMapping(value = "addLike",method = RequestMethod.POST)
     public Message add(@RequestParam String articleId, @RequestParam String userId){
@@ -50,8 +51,12 @@ public class ArticleLikeMobileController extends BaseController {
             msg = Message.success();
             Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
             if (article != null){
-                msg.setRecode(0);
-                msg.setData(articleLikeMobileService.like(articleId,userId));
+                ArticleLike articleLike = articleLikeMobileService.like(articleId,userId);
+                if (articleLike.getLikeStatus()==1){
+                    msg.setRecode(1);
+                }else{
+                    msg.setRecode(0);
+                }
             }else {
                 msg.setRecode(1);
                 msg.setMsg("该课程不存在");
