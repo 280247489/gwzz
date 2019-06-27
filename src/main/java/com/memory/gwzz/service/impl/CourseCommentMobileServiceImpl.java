@@ -148,7 +148,7 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
             }else {
                 isCommentLike=courseCommentLike.getCommentLikeYn();
             }
-            String commentRootId = courseComment.getUserId();
+            String commentRootId = courseComment.getCommentRootId();
             //查询子级评论列表
             StringBuffer sbCCTWO = new StringBuffer("select id,course_id,user_id,user_logo,user_name,comment_content_replace,comment_parent_user_name,comment_parent_content," +
                     "comment_create_time,comment_total_like from course_comment where comment_root_id = '"+commentRootId+"' and comment_type=1 " +

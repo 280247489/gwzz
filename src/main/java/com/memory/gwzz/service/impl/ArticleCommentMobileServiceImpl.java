@@ -4,7 +4,9 @@ import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.ArticleComment;
+import com.memory.entity.jpa.ArticleCommentLike;
 import com.memory.entity.jpa.User;
+import com.memory.gwzz.repository.ArticleCommentLikeMobileRepository;
 import com.memory.gwzz.repository.ArticleCommentMobileRepository;
 import com.memory.gwzz.service.ArticleCommentMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
 
     @Autowired
     private ArticleCommentMobileRepository articleCommentMobileRepository;
+
+    @Autowired
+    private ArticleCommentLikeMobileRepository articleCommentLikeMobileRepository;
 
     @Autowired
     private DaoUtils daoUtils;
@@ -76,12 +81,13 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
     }
 
     @Override
-    public Map<String, Object> listArtComByAid(String articleId,Integer start,Integer limit) {
+    public Map<String, Object> listArtComByAid(String articleId, String uid, Integer start, Integer limit) {
         Map<String,Object> returnMap = new HashMap<>();
         //查询一级评论列表
         StringBuffer sbAC = new StringBuffer("select id AS articleCommentId,article_id,user_id,user_logo,user_name,comment_content_replace,comment_create_time,comment_total_like," +
-                "(select count(*) from article_comment where article_id=:articleId and comment_root_id = articleCommentId and comment_type=1) from article_comment " +
-                "where article_id=:articleId AND comment_type=0 order by comment_total_like desc");
+                "(select count(*) from article_comment where article_id=:articleId and comment_root_id = articleCommentId and comment_type=1), " +
+                "(SELECT comment_like_yn FROM article_comment_like WHERE comment_id = articleCommentId AND user_id = '"+uid+"') " +
+                "from article_comment where article_id=:articleId AND comment_type=0 order by comment_total_like desc");
         //查询一级评论总数
         StringBuffer sbCount = new StringBuffer("select count(*) from article_comment where article_id=:articleId AND comment_type=0 ");
         Map<String, Object> map = new HashMap<String, Object>();
@@ -102,6 +108,14 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
             objMap.put("comment_create_time", list.get(i)[6]);
             objMap.put("comment_total_like", list.get(i)[7]);
             objMap.put("comment_reply_sum", list.get(i)[8]);
+            Integer  isLike = 0;
+            Object commentLike = list.get(i)[9];
+            if (commentLike==null){
+                isLike=0;
+            }else{
+                isLike=(Integer) commentLike;
+            }
+            objMap.put("comment_like", isLike);
 
             returnList.add(objMap);
         }
@@ -115,11 +129,18 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
     }
 
     @Override
-    public Map<String, Object> listArtComByRid(String commentId, Integer start, Integer limit) {
+    public Map<String, Object> listArtComByRid(String commentId, String uid,Integer start, Integer limit) {
         Map<String,Object> returnMap = new HashMap<>();
         //查询一级评论对象
         ArticleComment articleComment = (ArticleComment) daoUtils.getById("ArticleComment",commentId);
         if (articleComment!=null){
+            ArticleCommentLike articleCommentLike = articleCommentLikeMobileRepository.findByCommentIdAndUserId(commentId,uid);
+            Integer isCommentLike = 0;
+            if (articleCommentLike==null){
+                isCommentLike=0;
+            }else {
+                isCommentLike=articleCommentLike.getCommentLikeYn();
+            }
 
             String commentRootId = articleComment.getUserId();
             //查询子级评论列表
@@ -153,6 +174,7 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
             returnMap.put("articleComment",articleComment);
             returnMap.put("twoList",twoList);
             returnMap.put("commentCount",commentCount);
+            returnMap.put("isCommentLike",isCommentLike);
         }else{
             returnMap.put("null",null);
         }

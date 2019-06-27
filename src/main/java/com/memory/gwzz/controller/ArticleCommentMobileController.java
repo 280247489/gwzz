@@ -82,19 +82,20 @@ public class ArticleCommentMobileController extends BaseController {
      * 查询文章一级评论
      * URL:192.168.1.185:8081/gwzz/articleComment/mobile/listArticleCommentOne
      * @param articleId String 文章Id
+     * @param uid String 用户Id
      * @param start int 第几页
      * @param limit int 每页条数
      * @return
      */
     @RequestMapping(value = "listArticleCommentOne",method = RequestMethod.POST)
-    public Message listArtComByAid(@RequestParam String articleId,@RequestParam Integer start,@RequestParam Integer limit){
+    public Message listArtComByAid(@RequestParam String articleId,@RequestParam String uid,@RequestParam Integer start,@RequestParam Integer limit){
         try {
             msg = Message.success();
             Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
             if (article!=null){
                 msg.setRecode(0);
                 msg.setMsg("成功");
-                msg.setData(articleCommentMobileService.listArtComByAid(articleId, start, limit));
+                msg.setData(articleCommentMobileService.listArtComByAid(articleId, uid, start, limit));
             }else{
                 msg.setRecode(2);
                 msg.setMsg("无此文章");
@@ -112,12 +113,13 @@ public class ArticleCommentMobileController extends BaseController {
      * URL:192.168.1.185:8081/gwzz/articleComment/mobile/listArticleCommentTwo
      * @param articleId String 文章Id
      * @param commentId String 评论Id
+     * @param uid String 用户Id
      * @param start int 第几页
      * @param limit int 每页条数
      * @return
      */
     @RequestMapping(value = "listArticleCommentTwo",method = RequestMethod.POST)
-    public Message listArtComByRid(@RequestParam String articleId,@RequestParam String commentId,@RequestParam Integer start,@RequestParam Integer limit){
+    public Message listArtComByRid(@RequestParam String articleId,@RequestParam String commentId,@RequestParam String uid,@RequestParam Integer start,@RequestParam Integer limit){
         try {
             msg = Message.success();
             Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
@@ -125,7 +127,7 @@ public class ArticleCommentMobileController extends BaseController {
                 msg.setRecode(2);
                 msg.setMsg("无此文章");
             }else{
-                Map<String,Object> map = articleCommentMobileService.listArtComByRid(commentId, start, limit);
+                Map<String,Object> map = articleCommentMobileService.listArtComByRid(commentId, uid, start, limit);
                 if (map.values()==null){
                     msg.setRecode(3);
                     msg.setMsg("无此评论");

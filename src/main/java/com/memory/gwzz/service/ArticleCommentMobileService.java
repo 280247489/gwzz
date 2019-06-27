@@ -12,6 +12,8 @@ import java.util.Map;
  */
 public interface ArticleCommentMobileService {
     Map<String,Object> add(String articleId, User user, Integer commentType, String commentParentId, String content, String content_replace);
-    Map<String,Object> listArtComByAid(String articleId,Integer start,Integer limit);
-    Map<String,Object> listArtComByRid(String commentRootId,Integer start,Integer limit);
+
+    Map<String, Object> listArtComByAid(String articleId, String uid, Integer start, Integer limit);
+
+    Map<String, Object> listArtComByRid(String commentId, String uid, Integer start, Integer limit);
 }
