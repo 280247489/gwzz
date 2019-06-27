@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 
 /**
  * @ClassName BannerCmsController
@@ -77,18 +81,27 @@ public class BannerCmsController extends BaseController {
      * URL:192.168.1.185:8081/gwzz/banner/cms/list
      * @param page
      * @param size
-     * @param direction
-     * @param sorts
      * @param bName 名称 String
      * @return list
      */
     @RequestMapping(value = "list", method = RequestMethod.POST)
     public Message queryArticleList(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
-                                    @RequestParam(defaultValue = "asc") String direction,@RequestParam(defaultValue = "bannerSort") String sorts,
                                     @RequestParam String bName) {
         msg = Message.success();
         try {
-            Pageable pageable = PageRequest.of(page, size,direction.toLowerCase().equals("asc")? Sort.Direction.ASC:Sort.Direction.DESC,sorts);
+
+            Sort.Order order1 = new Sort.Order(Sort.Direction.DESC,"bannerOnline");
+            Sort.Order order2 = new Sort.Order(Sort.Direction.ASC,"bannerSort");
+            Sort.Order order3 = new Sort.Order(Sort.Direction.DESC,"bannerUpdateTime");
+            Sort.Order order4 = new Sort.Order(Sort.Direction.DESC,"bannerCreateTime");
+            List sortList =new ArrayList();
+            sortList.add(order1);
+            sortList.add(order2);
+            sortList.add(order3);
+            sortList.add(order4);
+            Sort sort =new Sort(sortList);
+
+            Pageable pageable = PageRequest.of(page, size,sort);
             Page<Banner> list = bannerCmsService.findBanner(pageable,bName);
             msg.setRecode(0);
             msg.setData(list);
@@ -179,7 +192,7 @@ public class BannerCmsController extends BaseController {
      * @return
      */
     @RequestMapping(value = "updOnline",method = RequestMethod.POST)
-    public Message updOnline(@RequestParam String id){
+    public Message updOnline(@RequestParam String id,@RequestParam String operator_id){
         msg = Message.success();
         try {
             Banner banner = (Banner) daoUtils.getById("Banner", id);
@@ -187,6 +200,8 @@ public class BannerCmsController extends BaseController {
                 msg.setRecode(2);
                 msg.setMsg("无此信息");
             }else{
+                banner.setBannerUpdateId(operator_id);
+                banner.setBannerUpdateTime(new Date());
                 msg.setRecode(0);
                 msg.setMsg("修改成功");
                 msg.setData( bannerCmsService.updOnine(banner));

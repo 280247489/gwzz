@@ -18,9 +18,9 @@ public interface ArticleCommentCmsService {
     Page<Painter> queryArticleCommentByQue(Pageable pageable,String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role );
 
 
-    List<ArticleComment> queryArticleCommentByQueHql(int pageIndex,int limit,String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id,String id);
+    List<ArticleComment> queryArticleCommentByQueHql(int pageIndex,int limit,String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id,String id,String article_id);
 
-    int queryArticleCommentByQueHqlCount(String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id,String id);
+    int queryArticleCommentByQueHqlCount(String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id,String id,String article_id);
 
 
     com.memory.entity.jpa.ArticleComment addArticleComment(com.memory.entity.jpa.ArticleComment articleComment);

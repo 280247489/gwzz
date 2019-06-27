@@ -116,7 +116,7 @@ public class BannerCmsServiceImpl implements BannerCmsService {
                 }
                 Predicate[] p = new Predicate[list.size()];
                 criteriaQuery.where(criteriaBuilder.and(list.toArray(p)));
-                criteriaQuery.orderBy(criteriaBuilder.asc(root.get("bannerSort")));
+               // criteriaQuery.orderBy(criteriaBuilder.asc(root.get("bannerSort")));
                 return criteriaQuery.getRestriction();
             }
         };

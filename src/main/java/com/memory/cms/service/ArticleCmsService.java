@@ -30,5 +30,8 @@ public interface ArticleCmsService {
 
     Page<Painter> queryArticleByQue(Pageable pageable,String article_title,String article_update_id,Integer article_online,String sort_status,String type_id);
 
+    Article queryArticleByArticleTitle(String articleTitle);
+
+    Article queryArticleByArticleTitleAndId(String articleTitle,String id);
 
 }

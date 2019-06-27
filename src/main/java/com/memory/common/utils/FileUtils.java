@@ -1,19 +1,12 @@
 package com.memory.common.utils;
 
 import com.memory.common.yml.MyFileConfig;
-import com.memory.file.controller.FileController;
-import com.memory.redis.CacheConstantConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +26,7 @@ import java.util.Map;
 @Component
 public class FileUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(FileController.class);
+    private static final Logger log = LoggerFactory.getLogger(FileUtils.class);
 
     private static FileUtils fileUtils;
 
@@ -320,7 +313,7 @@ public class FileUtils {
 
     public static String getCustomCmsPath(String dir,String UUID){
         String cmsPath = fileUtils.config.getCms_path();
-        if(UUID!=null && !"".equals(UUID)){
+        if(Utils.isNotNull(UUID)){
             return cmsPath+ "/" + dir + "/"+UUID;
         }else {
             return cmsPath+ "/" + dir ;

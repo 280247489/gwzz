@@ -1,6 +1,7 @@
 package com.memory.cms.service;
 
 import com.memory.entity.jpa.User;
+import com.memory.entity.jpa.UserHelp;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public interface UserCmsService {
     void deleteUser(String id);
 
     User addUserInfo(User user);
+
+
 
 
 

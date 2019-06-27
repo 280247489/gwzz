@@ -43,6 +43,7 @@ public class JoditConrtoller {
     public JoditImg  uploadImg(HttpServletRequest request,MultipartFileArrayModel model){
         JoditImg joditImg = new JoditImg();
         try{
+            System.out.println("11111111111");
             String uploadFilePath = config.getJodit().get("path");
             String baseUrl = config.getJodit().get("base_url");
 

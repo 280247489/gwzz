@@ -38,7 +38,7 @@ public class DemoAspect {
 
 
     @Pointcut("execution(public * com.memory.cms.controller.ArticleCommentCmsController.addAdminComment(..))  || " +
-            "execution(public * com.memory.cms.controller.ArticleCommentCmsController.addAdminComment(..))" )
+            "execution(public * com.memory.cms.controller.CourseCommentCmsController.addAdminComment(..))" )
     public void filterWords(){
     }
 
@@ -69,14 +69,15 @@ public class DemoAspect {
         try {
             String methodName = proceedingJoinPoint.getSignature().getName();
             String Url = request.getRequestURL().toString();
-            String ClassMethod =  proceedingJoinPoint.getSignature().getDeclaringTypeName()+ methodName;
+            String ClassMethod =  proceedingJoinPoint.getSignature().getDeclaringTypeName()+"."+ methodName;
             String HttpMethod = request.getMethod();
             String IP = request.getRemoteAddr();
             Object RequestArgs= new Gson().toJson(getParamInfo(proceedingJoinPoint).get("args"));
             //字符串参数过滤 < >
             Object[] obj = proceedingJoinPoint.getArgs();
             //jodit富文本编辑器内容不做<>过滤处理
-            if(!methodName.equals("addComment")  && !methodName.equals("updateComment")){
+            if(!methodName.equals("addCourse")  && !methodName.equals("updateCourse")
+                    && !methodName.equals("addArticle")    && !methodName.equals("updateArticle")){
                 for (int i=0; i<obj.length;i++){
                     if(obj[i] instanceof String){
                         //**为空参数不处理**
@@ -127,8 +128,6 @@ public class DemoAspect {
             HttpServletRequest request = attributes.getRequest();
             String content =  request.getParameter("content");
             String content_replace = BadWordUtil.replaceBadWord(content,2,"*");
-            System.out.println("old content = " + content);
-            System.out.println("new content replace= " + content_replace);
             String[] parameterNames = ((MethodSignature) proceedingJoinPoint.getSignature()).getParameterNames();
             Map<String,Integer> mapIndex = new HashMap<String, Integer>();
             for (int i=0;i<parameterNames.length;i++){
@@ -163,10 +162,13 @@ public class DemoAspect {
                 if( point.getArgs()!=null && point.getArgs()[i] != null){
                     if(Utils.isPrimite( point.getArgs()[i].getClass())){
                             value =  point.getArgs()[i].toString();
-                    }else {
-                        value = new Gson().toJson(point.getArgs()[i]);
+                            args.put(parameterNames[i], value);
+                    //MultipartFile 文件不做处理
+                    }else if(!"org.springframework.web.multipart.support.StandardMultipartHttpServletRequest".equals(point.getArgs()[i].getClass().getTypeName())){
+                            value = new Gson().toJson(point.getArgs()[i]);
+                            args.put(parameterNames[i], value);
                     }
-                    args.put(parameterNames[i], value);
+
                 }else {
                     args.put(parameterNames[i], "");
                 }

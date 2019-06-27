@@ -1,7 +1,6 @@
 package com.memory.cms.controller;
 import com.memory.cms.service.ArticleCmsService;
 import com.memory.common.utils.*;
-import com.memory.common.yml.MyFileConfig;
 import com.memory.entity.jpa.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,13 +38,22 @@ public class ArticleCmsController {
      * @return
      */
     @RequestMapping(value = "online", method = RequestMethod.POST)
-    public Result setArticleOnline(@RequestParam("online") Integer online, @RequestParam("id") String id) {
+    public Result setArticleOnline(@RequestParam("online") Integer online, @RequestParam("id") String id,@RequestParam("operator_id") String operator_id) {
         Result result = new Result();
         try {
 
             Article article = articleService.getArticleById(id);
             if (article != null) {
-                int status = articleService.updateArticleOnlineById(online, id);
+
+                article.setArticleOnline(online);
+                article.setArticleUpdateTime(new Date());
+                article.setArticleUpdateId(operator_id);
+
+                Article returnArticle =  articleService.update(article);
+
+                if(returnArticle==null){
+                    return ResultUtil.error(-1,"变更上下线失败","变更上下线失败");
+                }
                 String str = "上线";
                 if (online == 0) {
                     str = "下线";
@@ -132,15 +140,21 @@ public class ArticleCmsController {
 
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public Result addComment(@RequestParam("titleFile1") MultipartFile titleFile1, @RequestParam("type_id") String type_id, @RequestParam("article_title") String article_title,
+    public Result addArticle(@RequestParam("titleFile1") MultipartFile titleFile1, @RequestParam("type_id") String type_id, @RequestParam("article_title") String article_title,
                            /* @RequestParam("article_logo") String article_logo,*/ @RequestParam("article_content") String article_content,
                             @RequestParam("article_label") String article_label,
                             @RequestParam("article_key_words") String article_key_words,
                             @RequestParam("article_online") Integer article_online, @RequestParam("article_create_id") String article_create_id,
                             @RequestParam("article_update_id") String article_update_id, @RequestParam("article_describe") String article_describe,
-                            @RequestParam("article_recommend") Integer article_recommend,@RequestParam("titleFile2") MultipartFile titleFile2,@RequestParam("titleFile3") MultipartFile titleFile3) {
+                            @RequestParam("article_recommend") Integer article_recommend,@RequestParam("titleFile2") MultipartFile titleFile2,@RequestParam("titleFile3") MultipartFile titleFile3,
+                             @RequestParam("article_release_time") String article_release_time) {
         Result result = new Result();
         try {
+
+            if(isExistArticleTitle(article_title)){
+                return  ResultUtil.error(2,"文章标题已存在!");
+            }
+
             String uuid = Utils.getShortUUTimeStamp();
             String article_logo1= "";
             String article_logo2= "";
@@ -162,7 +176,7 @@ public class ArticleCmsController {
                     article_logo1,article_logo2,article_logo3, article_content,
                     article_label, article_key_words,
                     article_online, article_create_id,
-                   uuid, article_recommend, article_describe, null, true
+                   uuid, article_recommend, article_describe, null, true,article_release_time
             );
 
             article = articleService.add(article);
@@ -199,7 +213,7 @@ public class ArticleCmsController {
 
 
     @RequestMapping(value = "update", method = RequestMethod.POST)
-    public Result updateComment(@RequestParam(value = "titleFile1", required = false) MultipartFile titleFile1,  @RequestParam("id") String id, @RequestParam("type_id") String type_id,
+    public Result updateArticle(@RequestParam(value = "titleFile1", required = false) MultipartFile titleFile1,  @RequestParam("id") String id, @RequestParam("type_id") String type_id,
                                @RequestParam("article_title") String article_title,
                                @RequestParam(value = "article_logo1", required = false) String article_logo1, @RequestParam(value = "article_logo2", required = false) String article_logo2,
                                @RequestParam(value = "article_logo3", required = false) String article_logo3,@RequestParam("article_content") String article_content,
@@ -207,10 +221,15 @@ public class ArticleCmsController {
                                @RequestParam("article_label") String article_label, @RequestParam("article_key_words") String article_key_words,
                                @RequestParam("article_online") Integer article_online,
                                @RequestParam("article_update_id") String article_update_id,
-                               @RequestParam("article_recommend") Integer article_recommend,@RequestParam("titleFile2") MultipartFile titleFile2,@RequestParam("titleFile3") MultipartFile titleFile3) {
+                               @RequestParam("article_recommend") Integer article_recommend,@RequestParam("titleFile2") MultipartFile titleFile2,@RequestParam("titleFile3") MultipartFile titleFile3,String article_release_time) {
 
         Result result = new Result();
         try {
+
+            if(isExistArticleTitle(article_title,id)){
+                return  ResultUtil.error(2,"文章标题已存在!");
+            }
+
             Article article = articleService.getArticleById(id);
 
             if (article == null) {
@@ -240,6 +259,10 @@ public class ArticleCmsController {
                 article.setArticleUpdateTime(new Date());
                 article.setArticleOnline(article_online);
                 article.setArticleRecommend(article_recommend);
+                if(Utils.isNotNull(article_release_time)){
+                    article.setArticleReleaseTime(DateUtils.strToDate(article_release_time));
+                }
+
 
             }
             article = articleService.update(article);
@@ -264,10 +287,10 @@ public class ArticleCmsController {
 
 
     private Article init(String type_id, String article_title,
-                         String article_logo1,String article_logo2,String article_logo3, String article_content,
+                         String article_logo1, String article_logo2, String article_logo3, String article_content,
                          String article_label, String article_key_words,
                          Integer article_online, String article_create_id,
-                          String id, Integer article_recommend, String article_describe, String article_create_time, Boolean isSave) {
+                         String id, Integer article_recommend, String article_describe, String article_create_time, Boolean isSave,String article_release_time) {
 
         Article article = new Article();
         if (id != null) {
@@ -289,6 +312,9 @@ public class ArticleCmsController {
         article.setArticleRecommend(article_recommend);
         article.setArticleDescribe(article_describe);
         article.setArticleCreateId(article_create_id);
+        article.setArticleTotalComment(0);
+        //暂定不用
+        article.setArticleReleaseTime(new Date());
         if (isSave) {
 
             article.setArticleCreateTime(new Date());
@@ -302,11 +328,33 @@ public class ArticleCmsController {
 
         article.setArticleAudioUrl("");
         article.setArticleVideoUrl("");
+        article.setArticleReleaseTime(DateUtils.strToDate(article_release_time));
 
 
         return article;
 
 
     }
+
+
+    private Boolean isExistArticleTitle(String articleTitle){
+        Boolean flag =false;
+        Article article = articleService.queryArticleByArticleTitle(articleTitle);
+        if(Utils.isNotNull(article)){
+            flag = true;
+        }
+        return flag;
+    }
+
+
+    private Boolean isExistArticleTitle(String articleTitle,String id){
+        Boolean flag =false;
+        Article article = articleService.queryArticleByArticleTitleAndId(articleTitle,id);
+        if(Utils.isNotNull(article)){
+            flag = true;
+        }
+        return flag;
+    }
+
 
 }

@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/6/17 8:45
+ * @date 2019/6/19 17:46
  */
 
 @Entity
@@ -17,6 +17,7 @@ public class Course {
     private String id;
     private String courseTypeId;
     private String albumId;
+    private int courseNumber;
     private String courseTitle;
     private String courseLogo;
     private String courseContent;
@@ -28,6 +29,8 @@ public class Course {
     private int courseTotalView;
     private int courseTotalShare;
     private int courseTotalLike;
+    private int courseTotalComment;
+    private Date courseReleaseTime;
     private Date courseCreateTime;
     private String courseCreateId;
     private Date courseUpdateTime;
@@ -64,6 +67,16 @@ public class Course {
 
     public void setAlbumId(String albumId) {
         this.albumId = albumId;
+    }
+
+    @Basic
+    @Column(name = "course_number")
+    public int getCourseNumber() {
+        return courseNumber;
+    }
+
+    public void setCourseNumber(int courseNumber) {
+        this.courseNumber = courseNumber;
     }
 
     @Basic
@@ -177,6 +190,26 @@ public class Course {
     }
 
     @Basic
+    @Column(name = "course_total_comment")
+    public int getCourseTotalComment() {
+        return courseTotalComment;
+    }
+
+    public void setCourseTotalComment(int courseTotalComment) {
+        this.courseTotalComment = courseTotalComment;
+    }
+
+    @Basic
+    @Column(name = "course_release_time")
+    public Date getCourseReleaseTime() {
+        return courseReleaseTime;
+    }
+
+    public void setCourseReleaseTime(Date courseReleaseTime) {
+        this.courseReleaseTime = courseReleaseTime;
+    }
+
+    @Basic
     @Column(name = "course_create_time")
     public Date getCourseCreateTime() {
         return courseCreateTime;
@@ -251,10 +284,12 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return courseOnline == course.courseOnline &&
+        return courseNumber == course.courseNumber &&
+                courseOnline == course.courseOnline &&
                 courseTotalView == course.courseTotalView &&
                 courseTotalShare == course.courseTotalShare &&
                 courseTotalLike == course.courseTotalLike &&
+                courseTotalComment == course.courseTotalComment &&
                 courseRecommend == course.courseRecommend &&
                 courseLiveStatus == course.courseLiveStatus &&
                 Objects.equals(id, course.id) &&
@@ -267,6 +302,7 @@ public class Course {
                 Objects.equals(courseVideoUrl, course.courseVideoUrl) &&
                 Objects.equals(courseLabel, course.courseLabel) &&
                 Objects.equals(courseKeyWords, course.courseKeyWords) &&
+                Objects.equals(courseReleaseTime, course.courseReleaseTime) &&
                 Objects.equals(courseCreateTime, course.courseCreateTime) &&
                 Objects.equals(courseCreateId, course.courseCreateId) &&
                 Objects.equals(courseUpdateTime, course.courseUpdateTime) &&
@@ -276,6 +312,6 @@ public class Course {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, courseTypeId, albumId, courseTitle, courseLogo, courseContent, courseAudioUrl, courseVideoUrl, courseLabel, courseKeyWords, courseOnline, courseTotalView, courseTotalShare, courseTotalLike, courseCreateTime, courseCreateId, courseUpdateTime, courseUpdateId, courseRecommend, courseDescribe, courseLiveStatus);
+        return Objects.hash(id, courseTypeId, albumId, courseNumber, courseTitle, courseLogo, courseContent, courseAudioUrl, courseVideoUrl, courseLabel, courseKeyWords, courseOnline, courseTotalView, courseTotalShare, courseTotalLike, courseTotalComment, courseReleaseTime, courseCreateTime, courseCreateId, courseUpdateTime, courseUpdateId, courseRecommend, courseDescribe, courseLiveStatus);
     }
 }

@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName UserHelpCmsController
@@ -39,7 +42,7 @@ public class UserHelpCmsController extends BaseController {
 
     /**
      * 添加用户帮助
-     * URL:192.168.1.185:8081/gwzz/userHelp/cms/addUsreHelp
+     * URL:192.168.1.185:8081/gwzz/userHelp/cms/addUserHelp
      * @param helpTitle String 标题
      * @param helpSubtitle String 副标题
      * @param helpType int 类型
@@ -47,7 +50,7 @@ public class UserHelpCmsController extends BaseController {
      * @param createId String 创建人
      * @return
      */
-    @RequestMapping(value = "addUsreHelp",method = RequestMethod.POST)
+    @RequestMapping(value = "addUserHelp",method = RequestMethod.POST)
     public Message addUsreHelp(@RequestParam String helpTitle, @RequestParam String helpSubtitle, @RequestParam Integer helpType,
                                @RequestParam Integer helpSort, @RequestParam String createId, MultipartFile helpLogo,MultipartFile helpContent){
         msg = Message.success();
@@ -87,7 +90,18 @@ public class UserHelpCmsController extends BaseController {
                                     @RequestParam String heleTitle, @RequestParam Integer useYn) {
         msg = Message.success();
         try {
-            Pageable pageable = PageRequest.of(page, size,direction.toLowerCase().equals("asc")? Sort.Direction.ASC:Sort.Direction.DESC,sorts);
+            List sortList =new ArrayList();
+            Sort.Order order1 = new Sort.Order(Sort.Direction.ASC,"useYn");
+            Sort.Order order2 = new Sort.Order(Sort.Direction.ASC,"helpSort");
+            Sort.Order order3 = new Sort.Order(Sort.Direction.DESC,"helpUpdateTime");
+            Sort.Order order4 = new Sort.Order(Sort.Direction.DESC,"helpCreateTime");
+            sortList.add(order1);
+            sortList.add(order2);
+            sortList.add(order3);
+            sortList.add(order4);
+            Sort sort =new Sort(sortList);
+            Pageable pageable = PageRequest.of(page, size,sort);
+
             Page<UserHelp> list = userHelpCmsService.findUserHelp(pageable,heleTitle,useYn);
             msg.setRecode(0);
             msg.setData(list);
@@ -129,7 +143,7 @@ public class UserHelpCmsController extends BaseController {
     }
     /**
      * 修改用户帮助信息
-     * URL:192.168.1.185:8081/gwzz/userHelp/cms/updUsreHelp
+     * URL:192.168.1.185:8081/gwzz/userHelp/cms/updUserHelp
      * @param id String 唯一标识ID
      * @param helpTitle String 标题
      * @param helpSubtitle String 副标题
@@ -138,19 +152,30 @@ public class UserHelpCmsController extends BaseController {
      * @param createId String 修改人Id
      * @return
      */
-    @RequestMapping(value = "updUsreHelp", method = RequestMethod.POST)
+    @RequestMapping(value = "updUserHelp", method = RequestMethod.POST)
     public Message updUsreHelp(@RequestParam String id,@RequestParam String helpTitle, @RequestParam String helpSubtitle,
                                @RequestParam Integer helpType, @RequestParam Integer helpSort,String createId, MultipartFile helpLogo,MultipartFile helpContent){
         msg = Message.success();
         try {
             UserHelp userHelp = userHelpCmsService.checkHelpTitle(helpTitle,id);
-            if (userHelp==null){
+            if (userHelp!=null){
                 msg.setRecode(2);
                 msg.setMsg("该标题已存在");
             }else{
-                userHelpCmsService.upd(userHelp,helpTitle,helpSubtitle,helpType,helpSort,createId,helpLogo,helpContent);
-                msg.setRecode(0);
-                msg.setMsg("修改成功");
+                userHelp = userHelpCmsService.getUserHelpById(id);
+                if(userHelp==null){
+                    msg.setRecode(2);
+                    msg.setMsg("非法id");
+                }else{
+                    UserHelp returnUserHelp =   userHelpCmsService.upd(userHelp,helpTitle,helpSubtitle,helpType,helpSort,createId,helpLogo,helpContent);
+                    if(returnUserHelp!=null){
+                        msg.setRecode(0);
+                        msg.setMsg("修改成功");
+                    }else {
+                        msg.setRecode(1);
+                        msg.setMsg("数据库保持失败");
+                    }
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -168,7 +193,7 @@ public class UserHelpCmsController extends BaseController {
      * @return
      */
     @RequestMapping(value = "updUseYn", method = RequestMethod.POST)
-    public Message updUseYn(@RequestParam String id){
+    public Message updUseYn(@RequestParam String id,@RequestParam String operator_id){
         msg = Message.success();
         try {
             UserHelp userHelp = (UserHelp) daoUtils.getById("UserHelp",id);
@@ -176,9 +201,10 @@ public class UserHelpCmsController extends BaseController {
                 msg.setRecode(2);
                 msg.setMsg("该信息不存在");
             }else{
-                userHelpCmsService.upduseYn(userHelp);
+                UserHelp returnUserHelp =  userHelpCmsService.upduseYn(userHelp,operator_id);
                 msg.setRecode(0);
                 msg.setMsg("修改成功");
+                msg.setData(returnUserHelp.getUseYn());
             }
         }catch (Exception e){
             e.printStackTrace();

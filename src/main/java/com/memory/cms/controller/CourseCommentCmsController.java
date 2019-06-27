@@ -1,11 +1,14 @@
 package com.memory.cms.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.memory.cms.service.CourseCommentCmsService;
+import com.memory.cms.service.SysAdminCmsService;
 import com.memory.common.utils.PageResult;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.common.utils.Utils;
 import com.memory.entity.bean.CourseComment;
+import com.memory.entity.jpa.SysAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +30,9 @@ public class CourseCommentCmsController {
     @Autowired
     private CourseCommentCmsService courseCommentCmsService;
 
+    @Autowired
+    private SysAdminCmsService sysAdminCmsService;
+
 
     @RequestMapping(value = "list")
     public Result queryArticleCommentByQue(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
@@ -34,12 +40,12 @@ public class CourseCommentCmsController {
                                            @RequestParam("course_name") String course_name, @RequestParam("user_name") String user_name,
                                            @RequestParam("comment_type") Integer comment_type, @RequestParam("query_start_time") String query_start_time,
                                            @RequestParam("query_end_time") String query_end_time, @RequestParam("sort_role") Integer sort_role,
-                                           @RequestParam("comment_root_id") String comment_root_id,@RequestParam("id") String id){
+                                           @RequestParam("comment_root_id") String comment_root_id,@RequestParam("id") String id,@RequestParam(value ="course_id",required = false) String course_id){
 
         int pageIndex = page+1;
         int limit = size;
-        List<CourseComment> list = courseCommentCmsService.queryCourseCommentByQueHql( pageIndex, limit, key_words, phone_number,  course_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id, id);
-        int totalElements = courseCommentCmsService.queryCourseCommentByQueHqlCount(  key_words, phone_number,  course_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id,id);
+        List<CourseComment> list = courseCommentCmsService.queryCourseCommentByQueHql( pageIndex, limit, key_words, phone_number,  course_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id, id,course_id);
+        int totalElements = courseCommentCmsService.queryCourseCommentByQueHqlCount(  key_words, phone_number,  course_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id,id,course_id);
         PageResult pageResult = PageResult.getPageResult(page, size, list, totalElements);
         return ResultUtil.success(pageResult);
     }
@@ -48,37 +54,41 @@ public class CourseCommentCmsController {
     /**
      *
      * @param user_id
-     * @param user_logo
-     * @param user_name
      * @param comment_parent_id
      * @return
      */
     @RequestMapping(value = "add")
-    public  Result addAdminComment(@RequestParam("user_id") String user_id,@RequestParam("user_logo") String user_logo,@RequestParam("user_name") String user_name,@RequestParam("comment_parent_id") String comment_parent_id,@RequestParam("content") String content ,@RequestParam("content_replace") String content_replace  ){
+    public  Result addAdminComment(@RequestParam("user_id") String user_id,@RequestParam("comment_parent_id") String comment_parent_id,@RequestParam("content") String content ,@RequestParam("content_replace") String content_replace){
         Result result = new Result();
         try{
+
+            SysAdmin sysAdmin =sysAdminCmsService.getSysAdminById(user_id);
+            if(sysAdmin==null){
+                return ResultUtil.error(-1,"非法用户！");
+            }
             com.memory.entity.jpa.CourseComment parentCourseComment = courseCommentCmsService.queryCourseCommentById(comment_parent_id);
             com.memory.entity.jpa.CourseComment courseComment = new    com.memory.entity.jpa.CourseComment();
             courseComment.setId(Utils.getShortUUTimeStamp());
             courseComment.setUserId(user_id);
-            courseComment.setUserLogo(user_logo);
-            courseComment.setUserName(user_name);
+            courseComment.setUserLogo(sysAdmin.getLogo());
+            courseComment.setUserName(sysAdmin.getId());
             courseComment.setCourseId(parentCourseComment.getCourseId());
             courseComment.setCommentType(1);
             courseComment.setCommentRootId(parentCourseComment.getCommentRootId());
             courseComment.setCommentParentId(comment_parent_id);
             if(parentCourseComment.getCommentType() == 1){
-                courseComment.setCommentParentUserName("回复@"+parentCourseComment.getUserName());
+                System.out.println("parentUserName = " + "@"+parentCourseComment.getUserName());
+                courseComment.setCommentParentUserName("@"+parentCourseComment.getUserName());
+                courseComment.setCommentParentContent(parentCourseComment.getCommentContentReplace());
             }else{
                 courseComment.setCommentParentUserName("");
+                courseComment.setCommentParentContent("");
             }
-
-            courseComment.setCommentParentUserName(parentCourseComment.getCommentParentUserName());
             courseComment.setCommentContent(content);
             courseComment.setCommentContentReplace(content_replace);
             courseComment.setCommentCreateTime(new Date());
             courseComment.setCommentTotalLike(0);
-            com.memory.entity.jpa.CourseComment courseComment1 =   courseCommentCmsService.addCourseComment(courseComment );
+            com.memory.entity.jpa.CourseComment courseComment1 = courseCommentCmsService.addCourseComment(courseComment );
             result = ResultUtil.success(courseComment1);
         }catch (Exception e){
             e.printStackTrace();

@@ -7,6 +7,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -59,10 +60,6 @@ public class Utils {
      */
     public static String md5Password(String str){ return  DigestUtils.md5DigestAsHex(str.getBytes()); }
 
-    public static void main(String[] args) {
-        System.out.println(getShortUUTimeStamp());
-    }
-
 
     /**
      * 检测网络资源是否可访问
@@ -111,6 +108,25 @@ public class Utils {
         }
     }
 
+    public static Boolean isNotNull(String str){
+        return  str!=null && str.length()>0;
+    }
+
+    public static Boolean isNotNull(Integer str){
+        return  str!=null ;
+    }
+
+    public static Boolean isNotNull(Boolean str){
+        return  str!=null ;
+    }
+
+    public static Boolean isNotNull(MultipartFile file){
+        return file!=null && !file.isEmpty();
+    }
+
+    public static Boolean isNotNull(Object file){
+        return file!=null;
+    }
 
 
 

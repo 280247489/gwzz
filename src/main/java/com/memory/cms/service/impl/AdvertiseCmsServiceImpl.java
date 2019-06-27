@@ -39,9 +39,6 @@ public class AdvertiseCmsServiceImpl implements AdvertiseCmsService {
     @Autowired
     private DaoUtils daoUtils;
 
-    String filePath ="D:\\Tomcat 7.0\\webapps";
-
-    String dbUrl = "/gwzz_file/Advertise/logo/";
 
     /**
      * 添加广告
@@ -161,6 +158,7 @@ public class AdvertiseCmsServiceImpl implements AdvertiseCmsService {
             advertise.setAdvertiseOnline(0);
         }else {
             advertise.setAdvertiseOnline(1);
+            advertiseCmsRepository.closeOnlineByType(advertise.getAdvertiseType(),advertise.getId());
         }
         return advertiseCmsRepository.save(advertise);
     }

@@ -64,8 +64,8 @@ public interface LiveMasterCmsRepository extends JpaRepository<LiveMaster,String
     //把所有上线直播状态的记录变更为直播完毕
     @Modifying
     @Transactional
-    @Query("update LiveMaster m set m.liveMasterStatus =2 where m.liveMasterStatus=1")
-    int changeAllStatus2close();
+    @Query("update LiveMaster m set m.liveMasterStatus =2 where m.liveMasterStatus=1 and m.id  <> ?1")
+    int changeAllStatus2close(String id);
 
 
     List<LiveMaster> queryLiveMasterByLiveMasterIsSynthesisAudio(int isSynthesisAudio);
@@ -74,6 +74,7 @@ public interface LiveMasterCmsRepository extends JpaRepository<LiveMaster,String
     List<LiveMaster> queryListMasterOptions();
 
 
+    LiveMaster getLiveMasterByCourseId(String courseId);
 
 
 

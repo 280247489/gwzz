@@ -21,6 +21,11 @@ public class ResultUtil {
         return result;
     }
 
+    public static Result error(Integer code, String msg,String data) {
+        Result result = new Result(code, msg, data);
+        return result;
+    }
+
     public static final int SUCCESS = 0;
     public static final int ERROR = -1;
     public static final int ERROR_REQ = 100;

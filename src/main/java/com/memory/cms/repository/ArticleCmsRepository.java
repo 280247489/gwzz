@@ -17,5 +17,10 @@ public interface ArticleCmsRepository extends JpaRepository<Article,String>, Jpa
     @Query("update Article a set a.articleOnline  = ?1 where a.id =?2 ")
     int  updateArticleOnlineById(int articleOnline,String id);
 
+    Article queryArticleByArticleTitle(String articleTitle);
+
+    @Query(value="from Article a where a.articleTitle =?1 AND a.id <> ?2")
+    Article queryArticleByArticleTitleAndId(String articleTitle,String id);
+
 
 }

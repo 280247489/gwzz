@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/6/17 17:16
+ * @date 2019/6/20 14:01
  */
 
 @Entity
@@ -29,6 +29,8 @@ public class Article {
     private int articleTotalView;
     private int articleTotalShare;
     private int articleTotalLike;
+    private int articleTotalComment;
+    private Date articleReleaseTime;
     private Date articleCreateTime;
     private String articleCreateId;
     private Date articleUpdateTime;
@@ -187,6 +189,26 @@ public class Article {
     }
 
     @Basic
+    @Column(name = "article_total_comment")
+    public int getArticleTotalComment() {
+        return articleTotalComment;
+    }
+
+    public void setArticleTotalComment(int articleTotalComment) {
+        this.articleTotalComment = articleTotalComment;
+    }
+
+    @Basic
+    @Column(name = "article_release_time")
+    public Date getArticleReleaseTime() {
+        return articleReleaseTime;
+    }
+
+    public void setArticleReleaseTime(Date articleReleaseTime) {
+        this.articleReleaseTime = articleReleaseTime;
+    }
+
+    @Basic
     @Column(name = "article_create_time")
     public Date getArticleCreateTime() {
         return articleCreateTime;
@@ -255,6 +277,7 @@ public class Article {
                 articleTotalView == article.articleTotalView &&
                 articleTotalShare == article.articleTotalShare &&
                 articleTotalLike == article.articleTotalLike &&
+                articleTotalComment == article.articleTotalComment &&
                 articleRecommend == article.articleRecommend &&
                 Objects.equals(id, article.id) &&
                 Objects.equals(typeId, article.typeId) &&
@@ -267,6 +290,7 @@ public class Article {
                 Objects.equals(articleVideoUrl, article.articleVideoUrl) &&
                 Objects.equals(articleLabel, article.articleLabel) &&
                 Objects.equals(articleKeyWords, article.articleKeyWords) &&
+                Objects.equals(articleReleaseTime, article.articleReleaseTime) &&
                 Objects.equals(articleCreateTime, article.articleCreateTime) &&
                 Objects.equals(articleCreateId, article.articleCreateId) &&
                 Objects.equals(articleUpdateTime, article.articleUpdateTime) &&
@@ -276,6 +300,6 @@ public class Article {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, typeId, articleTitle, articleLogo1, articleLogo2, articleLogo3, articleContent, articleAudioUrl, articleVideoUrl, articleLabel, articleKeyWords, articleOnline, articleTotalView, articleTotalShare, articleTotalLike, articleCreateTime, articleCreateId, articleUpdateTime, articleUpdateId, articleRecommend, articleDescribe);
+        return Objects.hash(id, typeId, articleTitle, articleLogo1, articleLogo2, articleLogo3, articleContent, articleAudioUrl, articleVideoUrl, articleLabel, articleKeyWords, articleOnline, articleTotalView, articleTotalShare, articleTotalLike, articleTotalComment, articleReleaseTime, articleCreateTime, articleCreateId, articleUpdateTime, articleUpdateId, articleRecommend, articleDescribe);
     }
 }

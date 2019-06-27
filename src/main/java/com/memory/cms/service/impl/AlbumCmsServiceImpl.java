@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author INS6+
@@ -60,7 +59,7 @@ public class AlbumCmsServiceImpl implements AlbumCmsService {
     public List<Album> queryAlbumByQueHql(int pageIndex, int limit) {
         List<Album> list = new ArrayList<Album>();
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(" FROM Album  where 1=1 order by albumCreateTime DESC,albumUpdateTime DESC ");
+        stringBuffer.append(" FROM Album  where 1=1 order by  albumIsOnline DESC,albumSort ASC,albumUpdateTime DESC ");
         DaoUtils.Page page = daoUtils.getPage(pageIndex, limit);
         list = daoUtils.findByHQL(stringBuffer.toString(),null,page);
         return list;
@@ -71,5 +70,15 @@ public class AlbumCmsServiceImpl implements AlbumCmsService {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("select count(*) FROM Album  where 1=1 ");
         return daoUtils.getTotalByHQL(stringBuffer.toString(),null);
+    }
+
+    @Override
+    public Album queryAlbumByAlbumName(String albumName) {
+        return repository.queryAlbumByAlbumName(albumName);
+    }
+
+    @Override
+    public Album queryAlbumByAlbumNameAndId(String albumName, String id) {
+        return repository.queryAlbumByAlbumNameAndId(albumName, id);
     }
 }

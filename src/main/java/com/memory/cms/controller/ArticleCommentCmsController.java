@@ -2,11 +2,13 @@ package com.memory.cms.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.memory.cms.service.ArticleCommentCmsService;
+import com.memory.cms.service.SysAdminCmsService;
 import com.memory.common.utils.PageResult;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.common.utils.Utils;
 import com.memory.entity.bean.ArticleComment;
+import com.memory.entity.jpa.SysAdmin;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +30,10 @@ public class ArticleCommentCmsController {
     @Autowired
     private ArticleCommentCmsService articleCommentCmsService;
 
+    @Autowired
+    private SysAdminCmsService sysAdminCmsService;
+
+
 
     @RequestMapping(value = "list")
     public Result queryArticleCommentByQue(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
@@ -35,12 +41,13 @@ public class ArticleCommentCmsController {
                                            @RequestParam("article_name") String article_name,@RequestParam("user_name") String user_name,
                                            @RequestParam("comment_type") Integer comment_type,@RequestParam("query_start_time") String query_start_time,
                                            @RequestParam("query_end_time") String query_end_time, @RequestParam("sort_role") Integer sort_role,
-                                           @RequestParam("comment_root_id") String comment_root_id, @RequestParam(value = "id",required = false) String id){
+                                           @RequestParam("comment_root_id") String comment_root_id, @RequestParam(value = "id",required = false) String id,
+                                           @RequestParam(value = "article_id",required = false) String article_id){
 
         int pageIndex = page+1;
         int limit = size;
-        List<ArticleComment> list = articleCommentCmsService.queryArticleCommentByQueHql( pageIndex, limit, key_words, phone_number,  article_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id,id);
-        int totalElements = articleCommentCmsService.queryArticleCommentByQueHqlCount(  key_words, phone_number,  article_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id,id);
+        List<ArticleComment> list = articleCommentCmsService.queryArticleCommentByQueHql( pageIndex, limit, key_words, phone_number,  article_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id,id,article_id);
+        int totalElements = articleCommentCmsService.queryArticleCommentByQueHqlCount(  key_words, phone_number,  article_name,  user_name,  comment_type,  query_start_time,  query_end_time,  sort_role,comment_root_id,id,article_id);
         PageResult pageResult = PageResult.getPageResult(page, size, list, totalElements);
         return ResultUtil.success(pageResult);
     }
@@ -61,6 +68,12 @@ public class ArticleCommentCmsController {
     public  Result addAdminComment(@RequestParam("user_id") String user_id,@RequestParam("user_logo") String user_logo,@RequestParam("user_name") String user_name,@RequestParam("comment_parent_id") String comment_parent_id,@RequestParam("content") String content ,@RequestParam("content_replace") String content_replace  ){
         Result result = new Result();
         try{
+
+            SysAdmin sysAdmin =sysAdminCmsService.getSysAdminById(user_id);
+            if(sysAdmin==null){
+                return ResultUtil.error(-1,"非法用户！");
+            }
+
             System.out.println("content_replace == " + content_replace);
             com.memory.entity.jpa.ArticleComment parentArticleComment =  articleCommentCmsService.getArticleCommentById(comment_parent_id);
             com.memory.entity.jpa.ArticleComment articleComment  = new com.memory.entity.jpa.ArticleComment();
@@ -73,9 +86,12 @@ public class ArticleCommentCmsController {
             articleComment.setCommentRootId(parentArticleComment.getCommentRootId());
             articleComment.setCommentParentId(comment_parent_id);
             if(parentArticleComment.getCommentType() == 1){
-                articleComment.setCommentParentUserName("回复@" + parentArticleComment.getUserName());
+                System.out.println("parentUserName = " + "@"+parentArticleComment.getUserName());
+                articleComment.setCommentParentUserName("@"+parentArticleComment.getUserName());
+                articleComment.setCommentParentContent(parentArticleComment.getCommentContentReplace());
             }else{
                 articleComment.setCommentParentUserName("");
+                articleComment.setCommentParentContent("");
             }
             articleComment.setCommentContent(content);
             articleComment.setCommentCreateTime(new Date());

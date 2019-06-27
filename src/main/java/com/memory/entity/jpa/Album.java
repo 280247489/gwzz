@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/6/13 17:48
+ * @date 2019/6/19 17:53
  */
 
 @Entity
@@ -17,11 +17,15 @@ public class Album {
     private String id;
     private String albumName;
     private String albumLogo;
+    private String albumSynopsis;
     private int albumIsOnline;
     private int albumCourseSum;
+    private int albumCourseLimit;
     private int albumTotalView;
     private int albumIsEnd;
     private int albumIsCharge;
+    private int albumSort;
+    private int albumIsHomePage;
     private double albumChargePrice;
     private Date albumCreateTime;
     private String albumCreateId;
@@ -59,6 +63,16 @@ public class Album {
     }
 
     @Basic
+    @Column(name = "album_synopsis")
+    public String getAlbumSynopsis() {
+        return albumSynopsis;
+    }
+
+    public void setAlbumSynopsis(String albumSynopsis) {
+        this.albumSynopsis = albumSynopsis;
+    }
+
+    @Basic
     @Column(name = "album_is_online")
     public int getAlbumIsOnline() {
         return albumIsOnline;
@@ -76,6 +90,16 @@ public class Album {
 
     public void setAlbumCourseSum(int albumCourseSum) {
         this.albumCourseSum = albumCourseSum;
+    }
+
+    @Basic
+    @Column(name = "album_course_limit")
+    public int getAlbumCourseLimit() {
+        return albumCourseLimit;
+    }
+
+    public void setAlbumCourseLimit(int albumCourseLimit) {
+        this.albumCourseLimit = albumCourseLimit;
     }
 
     @Basic
@@ -106,6 +130,26 @@ public class Album {
 
     public void setAlbumIsCharge(int albumIsCharge) {
         this.albumIsCharge = albumIsCharge;
+    }
+
+    @Basic
+    @Column(name = "album_sort")
+    public int getAlbumSort() {
+        return albumSort;
+    }
+
+    public void setAlbumSort(int albumSort) {
+        this.albumSort = albumSort;
+    }
+
+    @Basic
+    @Column(name = "album_is_home_page")
+    public int getAlbumIsHomePage() {
+        return albumIsHomePage;
+    }
+
+    public void setAlbumIsHomePage(int albumIsHomePage) {
+        this.albumIsHomePage = albumIsHomePage;
     }
 
     @Basic
@@ -165,13 +209,17 @@ public class Album {
         Album album = (Album) o;
         return albumIsOnline == album.albumIsOnline &&
                 albumCourseSum == album.albumCourseSum &&
+                albumCourseLimit == album.albumCourseLimit &&
                 albumTotalView == album.albumTotalView &&
                 albumIsEnd == album.albumIsEnd &&
                 albumIsCharge == album.albumIsCharge &&
+                albumSort == album.albumSort &&
+                albumIsHomePage == album.albumIsHomePage &&
                 Double.compare(album.albumChargePrice, albumChargePrice) == 0 &&
                 Objects.equals(id, album.id) &&
                 Objects.equals(albumName, album.albumName) &&
                 Objects.equals(albumLogo, album.albumLogo) &&
+                Objects.equals(albumSynopsis, album.albumSynopsis) &&
                 Objects.equals(albumCreateTime, album.albumCreateTime) &&
                 Objects.equals(albumCreateId, album.albumCreateId) &&
                 Objects.equals(albumUpdateTime, album.albumUpdateTime) &&
@@ -180,6 +228,6 @@ public class Album {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, albumName, albumLogo, albumIsOnline, albumCourseSum, albumTotalView, albumIsEnd, albumIsCharge, albumChargePrice, albumCreateTime, albumCreateId, albumUpdateTime, albumUpdateId);
+        return Objects.hash(id, albumName, albumLogo, albumSynopsis, albumIsOnline, albumCourseSum, albumCourseLimit, albumTotalView, albumIsEnd, albumIsCharge, albumSort, albumIsHomePage, albumChargePrice, albumCreateTime, albumCreateId, albumUpdateTime, albumUpdateId);
     }
 }

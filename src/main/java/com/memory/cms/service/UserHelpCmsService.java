@@ -18,8 +18,10 @@ public interface UserHelpCmsService {
     void add(String helpTitle, String helpSubtitle, Integer helpType, Integer helpSort, String createId, MultipartFile helpLogo,MultipartFile helpContent);
     Page<UserHelp> findUserHelp(Pageable pageable, String helpTitle, Integer useYn);
     UserHelp upd(UserHelp userHelp, String helpTitle, String helpSubtitle, Integer helpType, Integer helpSort, String createId,MultipartFile helpLogo,MultipartFile helpContent);
-    UserHelp upduseYn(UserHelp userHelp);
+    UserHelp upduseYn(UserHelp userHelp,String operatorId);
     void del(UserHelp userHelp);
+    UserHelp getUserHelpById(String id);
 
+    UserHelp queryUserHelpByHelpTitle(String helpTitle);
 
 }

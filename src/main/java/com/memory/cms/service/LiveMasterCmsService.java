@@ -39,5 +39,18 @@ public interface LiveMasterCmsService {
 
     List<LiveMaster> queryListMasterOptions();
 
+    List<LiveMaster> queryLiveMasterByQueHql(int pageIndex,int limit,String live_master_name,String operator_id,Integer status );
+
+    int queryLiveMasterByQueHqlCount(String live_master_name,String operator_id,Integer status);
+
+    int changeAllStatus2close(String id);
+
+    void redisLive2NoExist(String uuid);
+
+    void  upgradeLiveDb2Redis(String masterId,boolean isAddMemory);
+
+    LiveMaster getLiveMasterByCourseId(String courseId);
+
+
 
 }

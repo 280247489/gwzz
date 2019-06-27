@@ -4,6 +4,7 @@ import com.memory.cms.service.CourseExtCmsService;
 import com.memory.cms.service.LiveSlaveCmsService;
 import com.memory.common.utils.FileUtils;
 import com.memory.common.utils.Utils;
+import com.memory.common.yml.MyFileConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -68,7 +69,7 @@ public class DemoAsyncTask {
     public Future<Boolean> doTask_fileSyncDownload(String url,String fileName,String path,String masterId,String sort,int fileType) throws Exception{
         long start = System.currentTimeMillis();
         String showPath ="";
-        path = path + "/" + masterId;
+        path = FileUtils.getLocalPath() +"/" + path;
         //校验资源链接是否有效
         if(Utils.isHttpAccess(url)){
           Boolean isTrue =  FileUtils.downLoadFromUrl(url,fileName,path);
@@ -82,6 +83,8 @@ public class DemoAsyncTask {
               }else{
                   liveSlaveCmsService.setLiveSlaveStaticPathByMasterIdAndLiveSlaveSort(masterId,sort,showPath,null);
               }
+          }else{
+              System.out.println("return ======================================== + "+isTrue);
           }
 
         }

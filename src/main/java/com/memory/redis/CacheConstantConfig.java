@@ -48,6 +48,87 @@ public class CacheConstantConfig {
      */
 
 
+    /**
+     * live 直播kv start============
+     */
+
+    //阅读量
+    //key ：  Course:view:uuid
+    //value ：count
+    public static final String COURSEVIEW = "Course:view:";
+
+    //阅读用户统计
+    //  key : Course:view_id:uuid;
+    //  value :map==> openid:count
+    public static final String COURSEVIEWID="Course:view_id:";
+
+    //ios app 阅读量
+    //key ： Course:view:ios:app:uuid
+    //value ：count
+    public static final String COURSEVIEWIOSAPP="Course:view:ios:app:";
+
+    //ios h5 阅读量
+    //key ： Course:view:ios:h5:uuid
+    //value ：count
+    public static final String COURSEVIEWIOSH5="Course:view:ios:h5:";
+
+    //android app 阅读量
+    //key ： Course:view:android:app:uuid
+    //value ：count
+    public static final String COURSEVIEWANDROIDAPP="Course:view:android:app:";
+
+    //android h5 阅读量
+    //key ： Course:view:android:h5:uuid
+    //value ：count
+    public static final String COURSEVIEWANDROIDH5="Course:view:android:h5:";
+
+    //直播内容
+    public static final String COURSECOMMENT="Course:comment:";
+
+    //分享量
+    public static final String COURSESHARE="Course:share:";
+
+    //分享用户统计
+    //  key : Course:share_id:uuid;
+    //  value :map==> openid:count
+    public static final String COURSESHAREID="Course:share_id:";
+
+    //ios app 分享量
+    //key ： Course:share:ios:app:uuid
+    //value ：count
+    public static final String COURSESHAREIOSAPP="Course:share:ios:app:";
+
+    //ios h5 分享量
+    //key ： Course:share:ios:h5:uuid
+    //value ：count
+    public static final String GETCOURSESHAREIOSH5="Course:share:ios:h5:";
+
+    //android app 分享量
+    //key ： Course:share:android:app:uuid
+    //value ：count
+    public static final String COURSESHAREANDROIDAPP="Course:share:android:app:";
+
+    //android h5 分享量
+    //key ： Course:share:android:h5:uuid
+    //value ：count
+    public static final String COURSESHAREANDROIDH5="Course:share:android:h5:";
+
+    //点赞量
+    public static final String COURSELIKE="Course:like:";
+
+    //点赞用户统计
+    //  key : Course:like_id;
+    //  value :map==> openid:count
+    public static final String COURSELIKEID="Course:like_id";
+
+
+    /**
+     * live 直播kv end============
+     */
+
+
+
+
 
     /**
      * 微信分享 start========

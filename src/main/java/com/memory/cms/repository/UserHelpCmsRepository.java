@@ -1,5 +1,6 @@
 package com.memory.cms.repository;
 
+import com.memory.entity.jpa.User;
 import com.memory.entity.jpa.UserHelp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -11,5 +12,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @Date 2019/6/12 16:26
  */
 public interface UserHelpCmsRepository extends JpaRepository<UserHelp,String>, JpaSpecificationExecutor {
+
+    UserHelp queryUserHelpByHelpTitle(String helpTitle);
 
 }

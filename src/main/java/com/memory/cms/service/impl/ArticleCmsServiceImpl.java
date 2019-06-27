@@ -111,6 +111,14 @@ public class ArticleCmsServiceImpl implements ArticleCmsService {
         return repository.findAll(specification,pageable);
     }
 
+    @Override
+    public Article queryArticleByArticleTitle(String articleTitle) {
+        return repository.queryArticleByArticleTitle(articleTitle);
+    }
 
+    @Override
+    public Article queryArticleByArticleTitleAndId(String articleTitle, String id) {
+        return repository.queryArticleByArticleTitleAndId(articleTitle, id);
+    }
 }
 

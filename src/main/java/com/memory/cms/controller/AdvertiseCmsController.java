@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
+
 /**
  * @ClassName AdvertiseCmsController
  * @Descriotion TODO
@@ -180,11 +182,13 @@ public class AdvertiseCmsController extends BaseController {
      * @return Advertise 对象
      */
     @RequestMapping(value = "updOnline",method = RequestMethod.POST)
-    public Message updOnline(@RequestParam String id){
+    public Message updOnline(@RequestParam String id,@RequestParam String operator_id){
         msg = Message.success();
         try {
             Advertise  advertise = (Advertise) daoUtils.getById("Advertise", id);
             if (advertise!=null){
+                advertise.setAdvertiseUpdateId(operator_id);
+                advertise.setAdvertiseUpdateTime(new Date());
                 msg.setRecode(0);
                 msg.setMsg("修改成功");
                 msg.setData( advertiseCmsService.updOnine(advertise));

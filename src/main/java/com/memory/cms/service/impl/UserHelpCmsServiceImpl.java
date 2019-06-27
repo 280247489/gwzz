@@ -1,5 +1,6 @@
 package com.memory.cms.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.memory.cms.repository.UserHelpCmsRepository;
 import com.memory.cms.service.UserHelpCmsService;
 import com.memory.common.utils.FileUtils;
@@ -47,7 +48,7 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("helpTitle", helpTitle);
         if(!"".equals(id)){
-            sb.append(" and id!=:id ");
+            sb.append(" and id <>:id ");
             map.put("id", id);
         }
         UserHelp userHelp = (UserHelp) daoUtils.findObjectHQL(sb.toString(), map);
@@ -79,10 +80,16 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
         userHelp.setHelpSort(helpSort);
         userHelp.setUseYn(1);
 
-        String prefixLogo = "helpLogo";
         String prefixContent = "helpContent";
-        userHelp.setHelpLogo( getImgUrl(helpLogo, id, prefixLogo));
-        userHelp.setHelpContent(getImgUrl(helpLogo, id, prefixContent));
+        String prefixLogo = "helpLogo";
+
+        if(Utils.isNotNull(helpLogo)){
+            userHelp.setHelpLogo(getImgUrl(helpLogo, id, prefixLogo));
+        }
+        if(Utils.isNotNull(helpContent)){
+            userHelp.setHelpContent(getImgUrl(helpContent, id, prefixContent));
+
+        }
 
         userHelpCmsRepository.save(userHelp);
 
@@ -112,13 +119,14 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
                 if(!"".equals(helpTitle)){
                     list.add(criteriaBuilder.like(root.get("helpTitle"),"%" + helpTitle + "%"));
                 }
-                if(!"".equals(useYn)){
+                if(useYn!=null){
                     list.add(criteriaBuilder.equal(root.get("useYn"), useYn ));
                 }
 
                 Predicate[] p = new Predicate[list.size()];
                 criteriaQuery.where(criteriaBuilder.and(list.toArray(p)));
                 criteriaQuery.orderBy(criteriaBuilder.asc(root.get("helpUpdateTime")));
+
                 return criteriaQuery.getRestriction();
             }
         };
@@ -147,8 +155,14 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
         userHelp.setHelpSort(helpSort);
         String prefixLogo = "helpLogo";
         String prefixContent = "helpContent";
-        userHelp.setHelpLogo( getImgUrl(helpLogo, id, prefixLogo));
-        userHelp.setHelpContent(getImgUrl(helpLogo, id, prefixContent));
+        if(Utils.isNotNull(helpLogo)){
+            userHelp.setHelpLogo( getImgUrl(helpLogo, id, prefixLogo));
+        }
+        if(Utils.isNotNull(helpContent)){
+            userHelp.setHelpContent(getImgUrl(helpContent, id, prefixContent));
+
+        }
+
 
         userHelpCmsRepository.save(userHelp);
         return userHelp;
@@ -162,13 +176,14 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
      */
     @Override
     @Transactional
-    public UserHelp upduseYn (UserHelp userHelp){
+    public UserHelp upduseYn (UserHelp userHelp,String operatorId){
         if (userHelp.getUseYn()==1){
-            userHelp.setUseYn(1);
-        }else {
             userHelp.setUseYn(0);
+        }else {
+            userHelp.setUseYn(1);
         }
-
+        userHelp.setHelpUpdateTime(new Date());
+        userHelp.setHelpUpdateId(operatorId);
         return userHelpCmsRepository.save(userHelp);
     }
 
@@ -182,5 +197,17 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
         userHelpCmsRepository.delete(userHelp);
     }
 
+    @Override
+    public UserHelp getUserHelpById(String id) {
+        if(userHelpCmsRepository.findById(id).hashCode() != 0){
+            return userHelpCmsRepository.findById(id).get();
+        }else{
+            return null;
+        }
+    }
 
+    @Override
+    public UserHelp queryUserHelpByHelpTitle(String helpTitle) {
+        return userHelpCmsRepository.queryUserHelpByHelpTitle(helpTitle);
+    }
 }

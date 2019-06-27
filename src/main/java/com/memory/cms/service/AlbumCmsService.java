@@ -25,5 +25,9 @@ public interface AlbumCmsService {
 
     int queryAlbumByQueHqlCount();
 
+    Album queryAlbumByAlbumName(String albumName);
+
+    Album queryAlbumByAlbumNameAndId(String albumName,String id);
+
 
 }

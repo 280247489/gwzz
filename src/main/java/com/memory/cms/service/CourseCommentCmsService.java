@@ -12,9 +12,9 @@ import java.util.List;
 
 public interface CourseCommentCmsService {
 
-    List<CourseComment> queryCourseCommentByQueHql(int pageIndex,int limit,String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id, String id);
+    List<CourseComment> queryCourseCommentByQueHql(int pageIndex,int limit,String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id, String id,String courseId);
 
-    int queryCourseCommentByQueHqlCount(String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id, String id);
+    int queryCourseCommentByQueHqlCount(String key_words,String phone_number, String article_name, String user_name, Integer comment_type, String query_start_time, String query_end_time, Integer sort_role,String comment_root_id, String id,String courseId);
 
 
     com.memory.entity.jpa.CourseComment addCourseComment(com.memory.entity.jpa.CourseComment courseComment);

@@ -65,6 +65,7 @@ public class CourseExtWebController extends BaseController {
        //   msg.setData(JSON.parse(courseExtWebService.getCourseExt(courseId).toString()));
 
             String keyHash = SHARECOURSECONTENT + courseId;
+
             if( COURSEMAP.containsKey(keyHash)){
                 courseExtWebService.setCourseExtView(courseId,openId);
                 msg.setData(courseMemoryService.getCourseExtById(courseId));

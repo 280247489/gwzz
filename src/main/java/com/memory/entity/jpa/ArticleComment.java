@@ -6,7 +6,7 @@ import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/6/17 8:50
+ * @date 2019/6/19 18:03
  */
 
 @Entity
@@ -22,6 +22,7 @@ public class ArticleComment {
     private String commentParentId;
     private String commentParentUserName;
     private String commentContent;
+    private String commentParentContent;
     private String commentContentReplace;
     private Date commentCreateTime;
     private int commentTotalLike;
@@ -127,6 +128,16 @@ public class ArticleComment {
     }
 
     @Basic
+    @Column(name = "comment_parent_content")
+    public String getCommentParentContent() {
+        return commentParentContent;
+    }
+
+    public void setCommentParentContent(String commentParentContent) {
+        this.commentParentContent = commentParentContent;
+    }
+
+    @Basic
     @Column(name = "comment_content_replace")
     public String getCommentContentReplace() {
         return commentContentReplace;
@@ -172,12 +183,13 @@ public class ArticleComment {
                 Objects.equals(commentParentId, that.commentParentId) &&
                 Objects.equals(commentParentUserName, that.commentParentUserName) &&
                 Objects.equals(commentContent, that.commentContent) &&
+                Objects.equals(commentParentContent, that.commentParentContent) &&
                 Objects.equals(commentContentReplace, that.commentContentReplace) &&
                 Objects.equals(commentCreateTime, that.commentCreateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, articleId, userId, userLogo, userName, commentType, commentRootId, commentParentId, commentParentUserName, commentContent, commentContentReplace, commentCreateTime, commentTotalLike);
+        return Objects.hash(id, articleId, userId, userLogo, userName, commentType, commentRootId, commentParentId, commentParentUserName, commentContent, commentParentContent, commentContentReplace, commentCreateTime, commentTotalLike);
     }
 }

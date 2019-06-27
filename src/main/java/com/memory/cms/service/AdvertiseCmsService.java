@@ -18,4 +18,5 @@ public interface AdvertiseCmsService {
     Advertise upd(Advertise advertise, String aName, MultipartFile aLogo, String aH5Type, String aH5Url, String createId);
     Advertise updOnine(Advertise advertise);
     void del(Advertise advertise);
+
 }
