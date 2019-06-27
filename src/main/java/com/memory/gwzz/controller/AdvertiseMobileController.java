@@ -82,7 +82,4 @@ public class AdvertiseMobileController extends BaseController {
         return msg;
     }
 
-
-
-
 }
