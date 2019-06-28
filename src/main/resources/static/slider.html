@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>听会儿中医APP 后台管理系统</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<!-- Bootstrap 3.3.7 -->
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="bower_components/font/ico.css">
+	<link rel="Shortcut Icon" href="dist/img/favicon.ico">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+	<link rel="stylesheet" href="dist/css/style.css">
+	<!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+	<link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+	<!-- jQuery 3 -->
+	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="dist/js/sessionStorage.js"></script>
+	<script type="text/javascript" src="dist/js/confirm.js"></script>
+	<script type="text/javascript" src="dist/js/pages/slider.js"></script>
+	<script type="text/javascript" src="dist/js/page.js"></script>
+
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+	<!-- Site wrapper -->
+	<div class="wrapper">
+
+		<header class="main-header">
+			<!-- Logo -->
+			<a href="./index.html" class="logo">
+				<!-- mini logo for sidebar mini 50x50 pixels -->
+				<span class="logo-mini"><i class="icon-ha2"></i></span>
+				<!-- logo for regular state and mobile devices -->
+				<span class="logo-lg"><b><i class="icon-hou"></i>&nbsp;<i class="icon-ai"></i></b>&nbsp;听会儿中医</span>
+			</a>
+			<!-- Header Navbar: style can be found in header.less -->
+			<nav class="navbar navbar-static-top">
+				<!-- Sidebar toggle button-->
+				<a href="javascript:void(0);" class="sidebar-toggle" data-toggle="push-menu" role="button">
+					<span class="sr-only">导航栏</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+
+				<div class="navbar-custom-menu">
+					<ul class="nav navbar-nav">
+						<!-- Messages: style can be found in dropdown.less-->
+						<li class="messages-menu">
+							<a href="javascript:void(0);" class="dropdown-toggle" id="logout" data-toggle="dropdown">
+								<i class="icon-power-off"></i>
+							</a>
+						</li>
+						<!-- Control Sidebar Toggle Button -->
+						<li>
+							<a href="javascript:void(0);" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+
+		<!-- =============================================== -->
+
+		<!-- Left side column. contains the sidebar -->
+		<aside class="main-sidebar">
+			<!-- sidebar: style can be found in sidebar.less -->
+			<section class="sidebar">
+				<!-- Sidebar user panel -->
+				<div class="user-panel">
+					<div class="pull-left image">
+						<img src="dist/img/avatar.jpg" class="img-circle" alt="User Image">
+					</div>
+					<div class="pull-left info">
+						<p>管理员</p>
+						<a href="javascript:void(0);"><i class="fa fa-circle text-success"></i> 写点啥</a>
+					</div>
+				</div>
+				<!-- sidebar menu: : style can be found in sidebar.less -->
+				<ul class="sidebar-menu" data-widget="tree">
+					<li class="header"><a href="javascript:void(0);" class="null">&nbsp;</a></li>
+					<li><a href="index.html"><i class="fa fa-book"></i> <span>首页</span></a></li>
+					<li>
+						<a href="album.html">
+							<i class="fa fa-folder-open"></i> <span>专辑管理</span>
+						</a>
+					</li>
+					<li class="treeview">
+						<a href="javascript:void(0);">
+							<i class="fa fa-file"></i>
+							<span>课程管理</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="course.html"><i class="fa fa-circle-o"></i> 课程列表</a></li>
+							<li><a href="commentCourse.html"><i class="fa fa-circle-o"></i> 课程评论</a></li>
+						</ul>
+					</li>
+					<li class="treeview">
+						<a href="javascript:void(0);">
+							<i class="fa fa-play-circle-o"></i>
+							<span>直播管理</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="liveList.html"><i class="fa fa-circle-o"></i> 直播列表</a></li>
+							<li><a href="liveAdd.html"><i class="fa fa-circle-o"></i> 添加直播</a></li>
+							<li><a href="memory.html"><i class="fa fa-circle-o"></i> 并发管理</a></li>
+						</ul>
+					</li>
+					<li class="treeview">
+						<a href="javascript:void(0);">
+							<i class="fa fa-files-o"></i>
+							<span>文章管理</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="article.html"><i class="fa fa-circle-o"></i> 文章列表</a></li>
+							<li><a href="articleAdd.html"><i class="fa fa-circle-o"></i> 发布文章</a></li>
+							<li><a href="commentArticle.html"><i class="fa fa-circle-o"></i> 文章评论</a></li>
+						</ul>
+					</li>
+					<li class="treeview active">
+						<a href="javascript:void(0);">
+							<i class="fa fa-flag"></i>
+							<span>活动管理</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li class="active"><a href="slider.html"><i class="fa fa-circle-o"></i> 轮播管理</a></li>
+							<li><a href="ad.html"><i class="fa fa-circle-o"></i> 广告管理</a></li>
+
+						</ul>
+					</li>
+					<li class="treeview">
+						<a href="javascript:void(0);">
+							<i class="fa fa-tag"></i>
+							<span>帮助&反馈</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="help.html"><i class="fa fa-circle-o"></i> 帮助中心</a></li>
+							<li><a href="opinion.html"><i class="fa fa-circle-o"></i> 意见反馈</a></li>
+
+						</ul>
+					</li>
+					<li class="treeview">
+						<a href="javascript:void(0);">
+							<i class="fa fa-shopping-cart"></i>
+							<span>商城管理</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="mall.html"><i class="fa fa-circle-o"></i> 商城管理</a></li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<!-- /.sidebar -->
+		</aside>
+
+		<!-- =============================================== -->
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h1>
+					活动管理
+					<small>轮播管理</small>
+				</h1>
+				<ol class="breadcrumb">
+					<li><a href="javascript:void(0);"><i class="fa fa-book"></i> 首页</a></li>
+					<li class="active">活动管理</li>
+					<li class="active">轮播管理</li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box box-primary">
+							<div class="box-header">
+								<h3 class="box-title"></h3>
+							</div>
+							<!-- /.box-header -->
+							<div class="box-body">
+								<div class="col-md-12 col-lg-12 form-group">
+									<a type="button" href="javascript:void(0);"
+										class="btn btn-primary slide_list_add">添加轮播</a>
+								</div>
+								<table id="course_memory_list"
+									class="table table-bordered table-hover slide_list text-center">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>图片</th>
+											<th>排序</th>
+											<th>标题</th>
+											<th>类型</th>
+											<th>状态</th>
+											<th>操作人</th>
+											<th>更新时间</th>
+											<th>操作</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+								<div id="pagination" class="pagination"></div>
+							</div>
+							<!-- /.box-body -->
+						</div>
+						<!-- /.box -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+		<div class="slide_add">
+			<div class="mask"></div>
+			<div class="slide_add_choose box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title slide_add_box_title">轮播图添加</h3>
+				</div>
+				<form id="slide_add_choose" data-action="" enctype="multipart/form-data"
+					class="form-horizontal style-form">
+
+					<input type="hidden" class="slide_upd_id" name='id' value="">
+					<input type="hidden" class="slide_createId" name='createId' value="">
+					<div class="box-body">
+						<div class="form-group">
+							<label class="col-sm-2 col-md-2 control-label">标题：</label>
+							<div class="col-md-10 col-lg-10">
+								<input type="text" class="slide_title form-control" name="bName" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 col-md-2 control-label">图片：</label>
+							<div class="col-md-10 col-lg-10">
+								<a href="javascript:void(0);" class="slide_file_btn">
+									<img class="slide_preview" src="dist/img/add.png" />
+								</a>
+								<div class="hide">
+									<input type="file" class="slide_file" name="bLogo">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 col-md-2 control-label">类型：</label>
+							<div class="col-md-10 col-lg-10">
+								<input type="radio" class="slide_type_radio" name="typeTable"
+									value="Url">&nbsp;链接&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="radio" class="slide_type_radio" name="typeTable"
+									value="Course">&nbsp;课程&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="radio" class="slide_type_radio" name="typeTable"
+									value="Live">&nbsp;直播&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="radio" class="slide_type_radio" name="typeTable"
+									value="Article">&nbsp;文章&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="radio" class="slide_type_radio" name="typeTable" value="Goods"
+									disabled>&nbsp;商品
+							</div>
+						</div>
+						<div class="form-group type_choose type_0" data-val='' data-action="Url">
+							<label class="col-sm-2 col-md-2 control-label">链接：</label>
+							<div class="col-md-10 col-lg-10">
+								<input type="text" class="typeTableId form-control" name="" />
+							</div>
+						</div>
+						<div class="form-group type_choose type_1" data-val='' data-action="Course">
+							<label class="col-sm-2 col-md-2 control-label">课程：</label>
+							<div class="col-md-10 col-lg-10">
+								<input type="text" class="ajax_search form-control" placeholder="请输入关键词"><br />
+								<select name="" class="typeTableId form-control ajax_search_list">
+									<option value="">-</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group type_choose type_2" data-val='' data-action="Live">
+							<label class="col-sm-2 col-md-2 control-label">直播：</label>
+							<div class="col-md-10 col-lg-10">
+								<input type="text" class="ajax_search form-control" placeholder="请输入关键词"><br />
+								<select name="" class="typeTableId form-control ajax_search_list">
+									<option value="">-</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group type_choose type_3" data-val='' data-action="Article">
+							<label class="col-sm-2 col-md-2 control-label">文章：</label>
+							<div class="col-md-10 col-lg-10">
+								<input type="text" class="ajax_search form-control" placeholder="请输入关键词"><br />
+								<select name="" class="typeTableId form-control ajax_search_list">
+									<option value="">-</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group type_choose type_4" data-val='' data-action="Goods">
+							<label class="col-sm-2 col-md-2 control-label">商品：</label>
+							<div class="col-md-10 col-lg-10">
+								<input type="text" class="ajax_search form-control" placeholder="请输入关键词"><br />
+								<select name="" class="typeTableId form-control ajax_search_list">
+									<option value="">-</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 col-md-2 control-label">排序：</label>
+							<div class="col-md-3 col-lg-3">
+								<input type="number" class="form-control bannerSort" name="bannerSort" min="0"
+									max="100">
+							</div>
+							<div class="col-md-7 col-lg-7"></div>
+						</div>
+					</div>
+					<div class="box-footer">
+						<div class="form-group">
+							<div class="col-md-12 col-lg-12 text-right">
+								<button type="button"
+									class="btn btn-primary new_slide_add">添加</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-default new_slide_cancel">取消</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<footer class="main-footer">
+			<div class="pull-right hidden-xs">
+				<b>Version</b> 0.0.1
+			</div>
+			<strong>Copyright &copy; 吉林省后爱电子商务有限公司
+		</footer>
+
+		<!-- Control Sidebar -->
+		<aside class="control-sidebar control-sidebar-dark">
+			<!-- Create the tabs -->
+			<ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+			</ul>
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<!-- Home tab content -->
+				<div class="tab-pane" id="control-sidebar-home-tab">
+				</div>
+			</div>
+		</aside>
+		<!-- /.control-sidebar -->
+		<!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+		<div class="control-sidebar-bg"></div>
+	</div>
+	<!-- ./wrapper -->
+
+	<!-- Bootstrap 3.3.7 -->
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<!-- SlimScroll -->
+	<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+	<!-- FastClick -->
+	<script src="bower_components/fastclick/lib/fastclick.js"></script>
+	<!-- AdminLTE App -->
+	<script src="dist/js/adminlte.min.js"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script src="dist/js/demo.js"></script>
+	<script>
+		$(document).ready(function () {
+			$('.sidebar-menu').tree()
+		})
+	</script>
+</body>
+
+</html>
