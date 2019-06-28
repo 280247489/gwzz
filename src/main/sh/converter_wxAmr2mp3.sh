@@ -69,18 +69,20 @@ if [ ! -f "$1.pcm" ]; then
 	/usr/local/bin/ffmpeg -y -i "$1" "${1%.*}.$2" > /dev/null 2>&1 &
 	ffmpeg_pid=$!
 	while kill -0 "$ffmpeg_pid"; do sleep 1; done > /dev/null 2>&1
-	[ -f "${1%.*}.$2" ]&&echo -e "${GREEN}[Success]${RESET}"&&exit
+	[ -f "${1%.*}.$2" ]&&echo -e "$Success"&&exit
 	sed -i '1i\\#\!AMR' "$1"
 	/usr/local/bin/ffmpeg -y -i "$1" "${1%.*}.$2" > /dev/null 2>&1 &
 	ffmpeg_pid=$!
 	while kill -0 "$ffmpeg_pid"; do sleep 1; done > /dev/null 2>&1
-	[ -f "${1%.*}.$2" ]&&echo -e "${YELLOW}[Fail]${RESET}"&&exit
-	echo -e "${RED}[Fail]${RESET}"&&exit
+	[ -f "${1%.*}.$2" ]&&echo -e "Fail"&&exit
+	echo -e "Fail"&&exit
 fi
 /usr/local/bin/ffmpeg -y -f s16le -ar 24000 -ac 1 -acodec pcm_s16le -i "$1.pcm" "${1%.*}.$2" > /dev/null 2>&1
 ffmpeg_pid=$!
 while kill -0 "$ffmpeg_pid"; do sleep 1; done > /dev/null 2>&1
 rm "$1.pcm"
-[ ! -f "${1%.*}.$2" ]&&echo -e "${RED}[Fail]${RESET}"&&exit
-echo -e "${GREEN}[${1%.*}.$2]${RESET}"
+[ ! -f "${1%.*}.$2" ]&&echo -e "Fail"&&exit
+echo -e "${1%.*}.$2"
+chown memory:memory ${1%.*}.$2
+rm -rf "${1%.*}.amr"
 exit

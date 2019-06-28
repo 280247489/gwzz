@@ -87,7 +87,7 @@ public class UserHelpCmsController extends BaseController {
     @RequestMapping(value = "listUserHelp", method = RequestMethod.POST)
     public Message listUserHelp(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
                                     @RequestParam(defaultValue = "desc") String direction, @RequestParam(defaultValue = "helpUpdateTime") String sorts,
-                                    @RequestParam String heleTitle, @RequestParam Integer useYn) {
+                                    @RequestParam String heleTitle, @RequestParam Integer useYn, @RequestParam Integer helpType) {
         msg = Message.success();
         try {
             List sortList =new ArrayList();
@@ -102,7 +102,7 @@ public class UserHelpCmsController extends BaseController {
             Sort sort =new Sort(sortList);
             Pageable pageable = PageRequest.of(page, size,sort);
 
-            Page<UserHelp> list = userHelpCmsService.findUserHelp(pageable,heleTitle,useYn);
+            Page<UserHelp> list = userHelpCmsService.findUserHelp(pageable,heleTitle,useYn,helpType);
             msg.setRecode(0);
             msg.setData(list);
         } catch (Exception e) {

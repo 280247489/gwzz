@@ -85,14 +85,14 @@ public class ArticleCommentCmsController {
             articleComment.setCommentType(1);
             articleComment.setCommentRootId(parentArticleComment.getCommentRootId());
             articleComment.setCommentParentId(comment_parent_id);
-            if(parentArticleComment.getCommentType() == 1){
+       //     if(parentArticleComment.getCommentType() == 1){
                 System.out.println("parentUserName = " + "@"+parentArticleComment.getUserName());
                 articleComment.setCommentParentUserName("@"+parentArticleComment.getUserName());
                 articleComment.setCommentParentContent(parentArticleComment.getCommentContentReplace());
-            }else{
+     /*       }else{
                 articleComment.setCommentParentUserName("");
                 articleComment.setCommentParentContent("");
-            }
+            }*/
             articleComment.setCommentContent(content);
             articleComment.setCommentCreateTime(new Date());
             articleComment.setCommentTotalLike(0);

@@ -23,12 +23,13 @@ public class ArticleComment {
     private String commentParentUserName;
     private String commentContentReplace;
     private String articleId;
+    private String commentParentContent;
 
 
     public ArticleComment() {
     }
 
-    public ArticleComment(String id, String userName, String tel, String articleTitle, String commentContent,String commentRootId, int like ,long commentSum,Date createTime,int commentType,String commentParentId,String commentParentUserName,String commentContentReplace,String articleId) {
+    public ArticleComment(String id, String userName, String tel, String articleTitle, String commentContent,String commentRootId, int like ,long commentSum,Date createTime,int commentType,String commentParentId,String commentParentUserName,String commentContentReplace,String articleId,String commentParentContent) {
         this.id = id;
         this.userName = userName;
         this.tel = tel;
@@ -43,6 +44,7 @@ public class ArticleComment {
         this.commentParentUserName=commentParentUserName;
         this.commentContentReplace=commentContentReplace;
         this.articleId =articleId;
+        this.commentParentContent =commentParentContent;
 
     }
 
@@ -157,6 +159,15 @@ public class ArticleComment {
 
     public void setArticleId(String articleId) {
         this.articleId = articleId;
+    }
+
+
+    public String getCommentParentContent() {
+        return commentParentContent;
+    }
+
+    public void setCommentParentContent(String commentParentContent) {
+        this.commentParentContent = commentParentContent;
     }
 
     @Override

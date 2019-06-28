@@ -1,11 +1,9 @@
 package com.memory.cms.controller;
 import com.alibaba.fastjson.JSON;
-import com.memory.cms.service.CourseExtCmsService;
-import com.memory.cms.service.CourseMemoryService;
-import com.memory.cms.service.LiveMasterCmsService;
+import com.memory.cms.service.*;
 import com.memory.common.yml.MyFileConfig;
-import com.memory.cms.service.CourseCmsService;
 import com.memory.common.utils.*;
+import com.memory.entity.jpa.Album;
 import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.LiveMaster;
 import com.memory.redis.config.RedisUtil;
@@ -32,17 +30,10 @@ import static com.memory.redis.CacheConstantConfig.SHARECOURSECONTENT;
 @RestController
 @RequestMapping(value = "course/cms")
 public class CourseCmsController {
-
-    //private static final String fileUrl = "G:/upload";
-
-    //private static final String fileShowUrl = ""
-
     private static final Logger log = LoggerFactory.getLogger(CourseCmsController.class);
-
 
     @Autowired
     private CourseCmsService courseService;
-
 
     @Autowired
     private MyFileConfig config;
@@ -53,12 +44,14 @@ public class CourseCmsController {
     @Autowired
     private RedisUtil redisUtil;
 
-
     @Autowired
     private CourseExtCmsService courseExtCmsService;
 
     @Autowired
     private LiveMasterCmsService liveMasterCmsService;
+
+    @Autowired
+    private AlbumCmsService albumCmsService;
 
 
     /**
@@ -148,19 +141,7 @@ public class CourseCmsController {
                                    @RequestParam("course_title") String course_title, @RequestParam("course_update_id") String course_update_id,
                                    @RequestParam("course_online") Integer course_online, @RequestParam("sort_status") String sort_status,@RequestParam("course_type_id") String course_type_id,@RequestParam(value = "album_id",required = false) String album_id){
         Result result = new Result();
-     //   PageResult pageResult = new PageResult();
         try{
-          //  Pageable pageable = PageRequest.of(page, size);
-           // org.springframework.data.domain.Page pageer= courseService.queryCourseByQue(pageable,course_title,course_update_id,course_online,sort_status,course_type_id,album_id);
-          //  courseService.queryCourseByQueHql(0,10,course_title,course_update_id,course_online,sort_status,course_type_id,album_id);
-
-      /*      pageResult.setPageNumber(pageable.getPageNumber() + 1);
-            pageResult.setOffset(pageable.getOffset());
-            pageResult.setPageSize(pageable.getPageSize());
-            pageResult.setTotalPages(pageer.getTotalPages());
-            pageResult.setTotalElements(pageer.getTotalElements());
-            pageResult.setData(pageer.getContent());*/
-
             int pageIndex = page+1;
             int limit = size;
             List<com.memory.entity.bean.Course> list = courseService.queryCourseByQueHql(pageIndex,limit,course_title,course_update_id,course_online,sort_status,course_type_id,album_id);
@@ -214,10 +195,9 @@ public class CourseCmsController {
                             @RequestParam("course_describe") String course_describe,/* @RequestParam("course_live_status") Integer course_live_status,*/
                             @RequestParam("course_label") String course_label, @RequestParam("course_key_words") String course_key_words,
                             @RequestParam("course_online") Integer course_online, @RequestParam("course_create_id") String course_create_id,
-                            @RequestParam("course_update_id") String course_update_id, @RequestParam("course_release_time") String course_release_time,@RequestParam("course_number") Integer course_number,@RequestParam("liveId") String liveId){
+                            @RequestParam("course_update_id") String course_update_id, @RequestParam("course_release_time") String course_release_time,@RequestParam("course_number") Integer course_number,@RequestParam("liveId") String liveId,@RequestParam("album_id") String album_id){
            Result result = new Result();
             try {
-
 
                 if(isExistCourseTitle(course_title)){
                     return ResultUtil.error(2,"课程标题已存在!");
@@ -245,14 +225,12 @@ public class CourseCmsController {
 
                 }
 
-
-
                 Course course = init(course_type_id,course_title,
                         course_logo,course_content,
                         course_audio_url,course_video_url,
                         course_label,course_key_words,
                         course_online,course_create_id,
-                        course_update_id,id,course_recommend,course_describe,null,true,course_release_time,course_number
+                        course_update_id,id,course_recommend,course_describe,null,true,course_release_time,course_number,album_id
                         );
 
                 course = courseService.add(course);
@@ -312,11 +290,11 @@ public class CourseCmsController {
                             @RequestParam("course_label") String course_label,@RequestParam("course_key_words") String course_key_words,
                             @RequestParam("course_online") Integer course_online, @RequestParam("course_create_id") String course_create_id,
                             @RequestParam("course_update_id") String course_update_id, @RequestParam("course_audio_times") String course_audio_times,
-                               @RequestParam("course_recommend") Integer course_recommend, @RequestParam("course_release_time") String course_release_time,@RequestParam("course_number") Integer course_number){
+                               @RequestParam("course_recommend") Integer course_recommend, @RequestParam("course_release_time") String course_release_time,@RequestParam("course_number") Integer course_number,@RequestParam("liveId") String liveId,@RequestParam("album_id") String album_id){
 
         Result result = new Result();
         try {
-
+            Boolean albumIsChange =false;
             if(isExistCourseTitle(course_title,id)){
                 return ResultUtil.error(2,"课程标题已存在!");
             }
@@ -324,13 +302,44 @@ public class CourseCmsController {
             if(isExistCourseNumber(course_number,id)){
                 return ResultUtil.error(2,"课程期数已存在");
             }
-
-
             Course course = courseService.getCourseById(id);
 
             if(course == null){
               return  ResultUtil.error(-1,"非法课程！");
             }else{
+
+                String old_albumId = course.getAlbumId();
+                //判断所属专辑是否发生改变
+                //专辑发生改变
+                if(Utils.isNotNull(album_id) && !album_id.equals(old_albumId)){
+                    albumIsChange = true;
+
+                    Album old_album = albumCmsService.getAlbumById(old_albumId);
+                    Album album= albumCmsService.getAlbumById(album_id);
+                    int old_album_course_count = courseService.countCourseByAlbumId(old_albumId);
+                    int album_course_count = courseService.countCourseByAlbumId(album_id);
+                    old_album.setAlbumCourseSum(old_album_course_count - 1);
+                    album.setAlbumCourseSum(album_course_count + 1);
+                    albumCmsService.update(old_album);
+                    albumCmsService.update(album);
+                }
+
+
+
+                //课程关联直播 / 直播关联课程
+                if(Utils.isNotNull(liveId)){
+                    LiveMaster master = liveMasterCmsService.getLiveMasterById(liveId);
+                    if(master ==null || Utils.isNotNull(master.getCourseId())){
+                        return ResultUtil.error(-1,"关联课程未解绑，不可修改!");
+                    }
+                    master.setCourseId(id);
+                    //设置关联状态已关联
+                    master.setLiveMasterIsRelation(1);
+                    liveMasterCmsService.update(master);
+                }
+
+
+
                 if(titleFile!=null && !titleFile.isEmpty()){
                     course_logo = getCourseLogo(titleFile, id);
                 }
@@ -361,6 +370,10 @@ public class CourseCmsController {
 
                 if(course_online ==0){
                     courseMemoryService.clear(id);
+                }
+
+                if(albumIsChange){
+                    course.setAlbumId(album_id);
                 }
 
                 course = courseService.update(course);
@@ -394,7 +407,7 @@ public class CourseCmsController {
                         String course_audio_url, String course_video_url,
                         String course_label, String course_key_words,
                         Integer course_online, String course_create_id,
-                        String course_update_id, String id, Integer course_recommend, String course_describe, String course_create_time, Boolean isSave,String course_release_time,int course_number){
+                        String course_update_id, String id, Integer course_recommend, String course_describe, String course_create_time, Boolean isSave,String course_release_time,int course_number,String album_id){
 
                 Course course = new Course();
                 if(id != null){
@@ -430,7 +443,17 @@ public class CourseCmsController {
 
                 course.setCourseUpdateTime(new  Date());
                 course.setCourseUpdateId(course_create_id);
-                course.setAlbumId("");
+                course.setAlbumId(album_id);
+
+                //album_id
+                if(Utils.isNotNull(album_id)){
+                    Album album = albumCmsService.getAlbumById(album_id);
+                    if(Utils.isNotNull(album)){
+                        album.setAlbumCourseSum(album.getAlbumCourseSum()+1);
+                        albumCmsService.update(album);
+                    }
+                }
+
 
         return course;
     }
@@ -447,26 +470,6 @@ public class CourseCmsController {
         return result;
     }
 
-
-    @RequestMapping("album_untied")
-    public Result albumUntied(String course_id,String operator_id){
-        Result result = new Result();
-        try {
-            Course course = courseService.getCourseById(course_id);
-            if(course == null){
-                return ResultUtil.error(-1,"非法课程!");
-            }
-            course.setAlbumId("");
-            course.setCourseUpdateId(operator_id);
-            course.setCourseUpdateTime(new Date());
-            courseService.update(course);
-            result = ResultUtil.success("解绑成功");
-        }catch (Exception e){
-            e.printStackTrace();
-            log.error("route",e.getMessage());
-        }
-        return result;
-    }
 
     @RequestMapping("live_untied")
     public Result liveUntied(String course_id,String master_id,String operator_id){

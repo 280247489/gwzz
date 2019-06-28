@@ -114,7 +114,7 @@ public class LiveMasterCmsServiceImpl implements LiveMasterCmsService {
     @Override
     public List<LiveMaster> queryLiveMasterByLiveMasterIsSynthesisAudio() {
         //查询所有未被关联的课程
-        return repository.queryLiveMasterByLiveMasterIsSynthesisAudio(0);
+        return repository.queryLiveMasterByLiveMasterIsRelation(0);
     }
 
     @Override

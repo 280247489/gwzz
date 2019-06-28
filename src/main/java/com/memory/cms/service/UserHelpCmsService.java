@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface UserHelpCmsService {
     UserHelp checkHelpTitle(String helpTitle, String id);
     void add(String helpTitle, String helpSubtitle, Integer helpType, Integer helpSort, String createId, MultipartFile helpLogo,MultipartFile helpContent);
-    Page<UserHelp> findUserHelp(Pageable pageable, String helpTitle, Integer useYn);
+    Page<UserHelp> findUserHelp(Pageable pageable, String helpTitle, Integer useYn,Integer helpType);
     UserHelp upd(UserHelp userHelp, String helpTitle, String helpSubtitle, Integer helpType, Integer helpSort, String createId,MultipartFile helpLogo,MultipartFile helpContent);
     UserHelp upduseYn(UserHelp userHelp,String operatorId);
     void del(UserHelp userHelp);

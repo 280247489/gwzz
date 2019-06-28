@@ -52,6 +52,8 @@ public interface CourseCmsRepository extends JpaRepository<Course,String>, JpaSp
     @Query(value="from Course a where a.courseNumber =?1 AND a.id <> ?2")
     Course queryCourseByCourseNumber(Integer courseNumber,String id);
 
+    int  countCourseByAlbumId(String albumId);
+
 
 
 }

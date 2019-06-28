@@ -12,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author INS6+
@@ -228,6 +227,27 @@ public class AlbumCmsController {
         }catch (Exception e){
             e.printStackTrace();
             log.error("album/cms/online",e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping("options")
+    public Result options(){
+        Result result = new Result();
+        try {
+            List<Object> returnList = new ArrayList<Object>();
+            Map<String,Object> map;
+            List<Album> list = albumCmsService.queryAllAlbum();
+            for (Album album : list) {
+                map  = new HashMap<String, Object>();
+                map.put("codeType",album.getId());
+                map.put("codeName",album.getAlbumName());
+                returnList.add(map);
+            }
+            result = ResultUtil.success(returnList);
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("album/cms/options",e.getMessage());
         }
         return result;
     }

@@ -37,6 +37,8 @@ public interface LiveMasterCmsService {
 
     List<LiveMaster> queryLiveMasterByLiveMasterIsSynthesisAudio();
 
+
+
     List<LiveMaster> queryListMasterOptions();
 
     List<LiveMaster> queryLiveMasterByQueHql(int pageIndex,int limit,String live_master_name,String operator_id,Integer status );

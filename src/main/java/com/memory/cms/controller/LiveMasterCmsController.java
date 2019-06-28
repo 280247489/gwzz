@@ -6,6 +6,7 @@ import com.memory.cms.service.LiveMasterCmsService;
 import com.memory.cms.service.LiveSlaveCmsService;
 import com.memory.common.async.DemoAsyncTask;
 import com.memory.common.utils.*;
+import com.memory.common.yml.MyFileConfig;
 import com.memory.entity.bean.Ext;
 import com.memory.entity.bean.ExtModel;
 import com.memory.entity.bean.MasterModel;
@@ -48,6 +49,8 @@ public class LiveMasterCmsController {
 
     @Autowired
     private CourseMemoryService courseMemoryService;
+
+    private final String pwd="memory";
 
 
 
@@ -122,7 +125,7 @@ public class LiveMasterCmsController {
                 //存储到redis 临时
                 liveMasterCmsService.redisLive2NoExist(uuid);
 
-                asyncDownloadFromXiaoZhuShou(slaveList);
+               // asyncDownloadFromXiaoZhuShou(slaveList);
 
             }
 
@@ -172,7 +175,7 @@ public class LiveMasterCmsController {
 
                 liveMasterCmsService.upgradeLiveDb2Redis(uuid,true);
 
-                asyncDownloadFromXiaoZhuShou(returnList);
+                //asyncDownloadFromXiaoZhuShou(returnList);
                 result = ResultUtil.success(returnMap);
             }else {
                 result = ResultUtil.error(-1,"修改直播失败");
@@ -484,6 +487,47 @@ public class LiveMasterCmsController {
         return result;
     }
 
+    @RequestMapping("mergeMp3")
+    public Result mergeMp3(@RequestParam String master_id){
+        Result result = new Result();
+        try {
+            LiveMaster master = liveMasterCmsService.getLiveMasterById(master_id);
+            if(master==null){
+                return ResultUtil.error(-1,"非法直播!");
+            }
+            String mergePath ="";
+            mergePath = FileUtils.getLocalPath() +  FileUtils.getCustomCmsPath("live",master_id);
+            System.out.println("checkPath 1 = " +mergePath);
+            log.info("checkPath 2 = " +mergePath);
+            String out = cmdExceMergeMp3Shell(mergePath);
+            if(Utils.isNotNull(out) && !"Fail".equals(out)){
+                String downloadPath = "/cms/live/"+master_id+"/output.mp3";
+                downloadPath = FileUtils.getLocalShowPath() + downloadPath;
+                result = ResultUtil.success(downloadPath);
+            }else {
+                result = ResultUtil.error(-1,"音频合成失败");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("liveMaster/cms/mergeMp3",e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping("whoami")
+    public Result whoami(){
+        Result result = new Result();
+        try {
+            String out = cmdExceTestUser();
+            result = ResultUtil.success(out);
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("whoami",e.getMessage());
+        }
+        return result;
+    }
+
 
 
     private void total2Redis( String openId, String keyCourseView, String keyCourseViewOs, String keyCourseViewId) {
@@ -602,6 +646,10 @@ public class LiveMasterCmsController {
                 String customCmsPath = FileUtils.getCustomCmsPath("live",uuid);
                 audioUrl =  FileUtils.upload(audioFile,FileUtils.getLocalPath(),customCmsPath,fileName);
 
+                String localPath = FileUtils.getLocalPath();
+                String path = cmdExceAmr2Mp3Shell(localPath +"/"+audioUrl );
+                audioUrl=  path.substring(path.indexOf("/cms"),path.length());
+
 
 
         }else {
@@ -653,6 +701,67 @@ public class LiveMasterCmsController {
             flag = true;
         }
         return flag;
+   }
+
+
+    /**
+     *
+     * @param amrPath 要转换的MP3职业路径
+     * @return
+     */
+   private String cmdExceAmr2Mp3Shell(String amrPath) {
+       String out = "";
+       try {
+             out = CmdExecutorUtil.builder(pwd)
+                    .errRedirect(true)
+                     .sudoCmd("sh /home/memory/amr2mp3/silk-v3/converter_wxAmr2mp3.sh " + amrPath + " mp3")
+                    .exec();
+        }catch (Exception e){
+            e.printStackTrace();
+           out ="Fail";
+        }
+       System.out.println("cmdExceAmr2Mp3Shell out :"+out);
+       log.info("cmdExceAmr2Mp3Shell out :"+out);
+       return out;
+   }
+
+    /**
+     *
+     * @param mergePath 要合并的MP3资源路径
+     * @return
+     */
+   private String cmdExceMergeMp3Shell(String mergePath){
+        String out ="";
+        try {
+            out = CmdExecutorUtil.builder(pwd)
+                    .errRedirect(true)
+                    .sudoCmd("sh /home/memory/amr2mp3/merge_mp3/merge_mp3.sh " + mergePath+"/" )
+                    .exec();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            out ="Fail";
+        }
+       System.out.println("cmdExceMergeMp3Shell out :"+out);
+        log.info("cmdExceMergeMp3Shell out :"+out);
+        return out;
+   }
+
+   private String cmdExceTestUser(){
+       String out ="";
+       try {
+           out = CmdExecutorUtil.builder(pwd)
+                   .errRedirect(true)
+                   .sudoCmd(" whoami")
+                   .exec();
+
+       }catch (Exception e){
+           e.printStackTrace();
+           out ="Fail";
+       }
+       System.out.println("cmdExceTestUser out :"+out);
+       log.info("cmdExceTestUser out :"+out);
+       return out;
    }
 
 

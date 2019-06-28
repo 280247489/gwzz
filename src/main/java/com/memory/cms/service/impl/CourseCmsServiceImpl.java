@@ -235,5 +235,10 @@ public class CourseCmsServiceImpl implements CourseCmsService {
     public Course queryCourseByCourseNumber(Integer courseNumber, String id) {
         return repository.queryCourseByCourseNumber(courseNumber, id);
     }
+
+    @Override
+    public int countCourseByAlbumId(String albumId) {
+        return repository.countCourseByAlbumId(albumId);
+    }
 }
 

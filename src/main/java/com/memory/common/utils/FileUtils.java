@@ -321,6 +321,10 @@ public class FileUtils {
     }
 
 
+    public static String getLocalShowPath(){
+        return fileUtils.config.getShow_url();
+    }
+
 
 
 

@@ -76,14 +76,14 @@ public class CourseCommentCmsController {
             courseComment.setCommentType(1);
             courseComment.setCommentRootId(parentCourseComment.getCommentRootId());
             courseComment.setCommentParentId(comment_parent_id);
-            if(parentCourseComment.getCommentType() == 1){
+       //     if(parentCourseComment.getCommentType() == 1){
                 System.out.println("parentUserName = " + "@"+parentCourseComment.getUserName());
                 courseComment.setCommentParentUserName("@"+parentCourseComment.getUserName());
                 courseComment.setCommentParentContent(parentCourseComment.getCommentContentReplace());
-            }else{
+     /*       }else{
                 courseComment.setCommentParentUserName("");
-                courseComment.setCommentParentContent("");
-            }
+              //  courseComment.setCommentParentContent("");
+            }*/
             courseComment.setCommentContent(content);
             courseComment.setCommentContentReplace(content_replace);
             courseComment.setCommentCreateTime(new Date());

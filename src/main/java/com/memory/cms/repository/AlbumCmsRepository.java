@@ -16,4 +16,5 @@ public interface AlbumCmsRepository extends JpaRepository<Album,String> {
     @Query(value="from Album a where a.albumName =?1 AND a.id <> ?2")
     Album queryAlbumByAlbumNameAndId(String albumName,String id);
 
+
 }

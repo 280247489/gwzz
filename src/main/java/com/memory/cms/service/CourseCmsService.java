@@ -51,5 +51,6 @@ public interface CourseCmsService {
 
     Course queryCourseByCourseNumber(Integer courseNumber,String id);
 
+    int  countCourseByAlbumId(String albumId);
 
 }

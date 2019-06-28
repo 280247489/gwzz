@@ -5,6 +5,7 @@ import com.memory.cms.service.CourseExtCmsService;
 import com.memory.cms.service.CourseMemoryService;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
+import com.memory.common.utils.Utils;
 import com.memory.entity.jpa.CourseExt;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +68,13 @@ public class CourseMemoryController {
     public Result clear(String courseId){
         Result result = new Result();
         try {
-            courseMemoryService.clear(courseId);
-            result = ResultUtil.success( "移除"+courseId+"缓存成功");
+            if(Utils.isNotNull(courseId)){
+                courseMemoryService.clear(courseId);
+                result = ResultUtil.success( "移除"+courseId+"缓存成功");
+            }else{
+                result = ResultUtil.error(-1,"非法id");
+            }
+
 
         }catch (Exception e){
             e.printStackTrace();

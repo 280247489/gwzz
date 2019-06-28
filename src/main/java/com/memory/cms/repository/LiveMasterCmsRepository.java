@@ -70,6 +70,8 @@ public interface LiveMasterCmsRepository extends JpaRepository<LiveMaster,String
 
     List<LiveMaster> queryLiveMasterByLiveMasterIsSynthesisAudio(int isSynthesisAudio);
 
+    List<LiveMaster> queryLiveMasterByLiveMasterIsRelation(int isRelation);
+
     @Query("from LiveMaster l where l.liveMasterIsOnline=1 order by l.liveMasterCreateTime")
     List<LiveMaster> queryListMasterOptions();
 

@@ -110,7 +110,7 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
      * @return
      */
     @Override
-    public Page<UserHelp> findUserHelp(Pageable pageable, String helpTitle, Integer useYn){
+    public Page<UserHelp> findUserHelp(Pageable pageable, String helpTitle, Integer useYn,Integer helpType){
         Specification specification =new Specification<UserHelp>() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
@@ -121,6 +121,10 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
                 }
                 if(useYn!=null){
                     list.add(criteriaBuilder.equal(root.get("useYn"), useYn ));
+                }
+
+                if(Utils.isNotNull(helpType)){
+                    list.add(criteriaBuilder.equal(root.get("helpType"), helpType ));
                 }
 
                 Predicate[] p = new Predicate[list.size()];
