@@ -8,6 +8,7 @@ import com.memory.entity.jpa.LiveMaster;
 import com.memory.gwzz.repository.CourseLikeMobileRepository;
 import com.memory.gwzz.repository.CourseMobileRepository;
 import com.memory.gwzz.repository.LiveMasterMobileRepository;
+import com.memory.gwzz.service.CourseLikeMobileService;
 import com.memory.gwzz.service.CourseMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,7 @@ public class CourseMobileController extends BaseController {
     private LiveMasterMobileRepository liveMasterMobileRepository;
 
     @Autowired
-    private CourseLikeMobileRepository courseLikeMobileRepository;
+    private CourseLikeMobileService courseLikeMobileService;
 
 
     /**
@@ -57,28 +58,16 @@ public class CourseMobileController extends BaseController {
             Course course = courseMobileRepository.findByIdAndCourseOnline(cid,1);
             if (course!=null){
                 String isLive = "noData";
-                Integer isLike = 0;
                 String albumId = course.getAlbumId();
                 LiveMaster liveMaster =liveMasterMobileRepository.findByCourseIdAndLiveMasterIsOnline(cid,1);
                 if (liveMaster!=null){
                     isLive=liveMaster.getId();
                 }
-                CourseLike courseLike = courseLikeMobileRepository.findByCourseIdAndUserId(cid,uid);
-                if (courseLike!=null){
-                    if (courseLike.getLikeStatus()==1){
-                        isLike=1;
-                    }else{
-                        isLike=0;
-                    }
-                }else{
-                    isLike=0;
-                }
-
                 Map<String,Object> returnMap = new HashMap<>();
                 returnMap.put("course",course);
                 returnMap.put("courselist",courseMobileService.getCourseById(albumId));
                 returnMap.put("isLive",isLive);
-                returnMap.put("isLike",isLike);
+                returnMap.put("isLike",courseLikeMobileService.isCourseLike(cid, uid));
                 msg.setRecode(0);
                 msg.setMsg("成功");
                 msg.setData(returnMap);

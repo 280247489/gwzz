@@ -1,8 +1,9 @@
 package com.memory.gwzz.service;
 
 import com.memory.entity.jpa.Feedback;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @ClassName FeedbackMobileService
@@ -11,5 +12,5 @@ import javax.servlet.http.HttpServletRequest;
  * @Date 2019/6/28 11:04
  */
 public interface FeedbackMobileService {
-    Feedback add(String userId, String feedbackType, String feedbackContent, String feedbackName, String feedbackContactUs, HttpServletRequest request);
+    Feedback add(String userId, String feedbackType, String feedbackContent, String feedbackName, String feedbackContactUs, List<MultipartFile> files);
 }

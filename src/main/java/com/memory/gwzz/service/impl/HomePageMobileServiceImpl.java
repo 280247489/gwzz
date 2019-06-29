@@ -4,13 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Advertise;
 import com.memory.entity.jpa.Album;
+import com.memory.entity.jpa.ArticleLike;
+import com.memory.entity.jpa.CourseLike;
 import com.memory.gwzz.model.*;
-import com.memory.gwzz.repository.ArticleMobileRepository;
-import com.memory.gwzz.repository.CourseMobileRepository;
-import com.memory.gwzz.repository.LiveMasterMobileRepository;
-import com.memory.gwzz.service.CourseMobileService;
-import com.memory.gwzz.service.HomePageMobileService;
-import com.memory.gwzz.service.LiveMobileService;
+import com.memory.gwzz.repository.*;
+import com.memory.gwzz.service.*;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +49,12 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
 
     @Autowired
     private LiveMobileService liveMobileService;
+
+    @Autowired
+    private CourseLikeMobileService courseLikeMobileService;
+
+    @Autowired
+    private ArticleLikeMobileService articleLikeMobileService;
 
 
     @Override
@@ -105,10 +109,11 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
     }
 
     @Override
-    public Map<String, Object> getAdvertiseById(com.memory.entity.jpa.Banner banner, String openId, Integer terminal, Integer os) {
+    public Map<String, Object> getAdvertiseById(com.memory.entity.jpa.Banner banner, String userId, String openId, Integer terminal, Integer os) {
         Map<String, Object> returnMap = new HashMap<>();
         String type = banner.getTypeTable();
         String typeId = banner.getTypeTableId();
+        Integer isLike = 0;
         if ("Article".equals(type)) {
             com.memory.entity.jpa.Article article = articleMobileRepository.findByIdAndArticleOnline(typeId, 1);
             if (article != null) {
@@ -116,6 +121,8 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
                 String[] labels = label.split(",");
                 article.setArticleLabel(labels[0]);
                 returnMap.put("article", article);
+                isLike=articleLikeMobileService.isLike(article.getId(),userId);
+                returnMap.put("isLike",isLike);
             } else {
                 returnMap = null;
             }
@@ -123,11 +130,13 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
             com.memory.entity.jpa.Course course = courseMobileRepository.findByIdAndCourseOnline(typeId, 1);
             if (course != null) {
                 String isLive = "noData";
+
                 String albumId = course.getAlbumId();
                 com.memory.entity.jpa.LiveMaster liveMaster = liveMasterMobileRepository.findByCourseIdAndLiveMasterIsOnline(typeId, 1);
                 if (liveMaster != null) {
                     isLive = liveMaster.getId();
                 }
+                returnMap.put("isLike",courseLikeMobileService.isCourseLike(course.getId(),userId));
                 returnMap.put("course", course);
                 returnMap.put("isLive", isLive);
                 returnMap.put("courselist", courseMobileService.getCourseById(albumId));

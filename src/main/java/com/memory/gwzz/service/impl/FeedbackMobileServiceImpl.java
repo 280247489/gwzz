@@ -1,5 +1,6 @@
 package com.memory.gwzz.service.impl;
 
+import com.memory.common.utils.FileUploadUtil;
 import com.memory.common.utils.Utils;
 import com.memory.entity.jpa.Feedback;
 import com.memory.gwzz.repository.FeedbackMobileRepository;
@@ -8,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName FeedbackMobileServiceImpl
@@ -22,14 +26,12 @@ public class FeedbackMobileServiceImpl implements FeedbackMobileService {
     @Autowired
     private FeedbackMobileRepository feedbackMobileRepository;
 
-    @Value(value = "${filePath}")
-    private String filePath;
-    @Value(value = "${fileUrl}")
-    private String fileUrl;
+    @Autowired
+    private FileUploadUtil fileUploadUtil;
 
     @Transactional
     @Override
-    public Feedback add(String userId, String feedbackType, String feedbackContent, String feedbackName, String feedbackContactUs, HttpServletRequest request){
+    public Feedback add(String userId, String feedbackType, String feedbackContent, String feedbackName, String feedbackContactUs, List<MultipartFile> files){
         Feedback feedback = new Feedback();
         String id = Utils.generateUUIDs();
         feedback.setId(id);
@@ -38,9 +40,17 @@ public class FeedbackMobileServiceImpl implements FeedbackMobileService {
         feedback.setFeedbackContent(feedbackContent);
         feedback.setFeedbackName(feedbackName);
         feedback.setFeedbackContactUs(feedbackContactUs);
-
-
-
+        if(files != null){
+            StringBuffer stringBuffer = new StringBuffer("");
+            for (int i = 0; i < files.size(); i++) {
+                String path =fileUploadUtil .upload2PNG(i+"_"+Utils.getShortUUTimeStamp(), "gwzz_file"+ File.separator + "feedback" +File.separator + id, files.get(i));
+                stringBuffer.append(path+",");
+            }
+          feedback.setFeedbackImg(stringBuffer.substring(0, stringBuffer.length()-1));
+        }else{
+            feedback.setFeedbackImg("");
+        }
+        feedback.setFeedbackCreateTime(new Date());
         feedbackMobileRepository.save(feedback);
 
         return feedback;

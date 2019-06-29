@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -55,19 +56,20 @@ public class AdvertiseMobileController extends BaseController {
      * 根据广告查询跳转详情
      * URL:192.168.1.185:8081/gwzz/advertise/mobile/getAdvertiseById
      * @param id String 唯一标识
+     * @param userId 用户 userId
      * @param openId 用户 openId
      * @param terminal 终端  0 ：app 或  1 ：h5
      * @param os 操作系统 0：ios 或 1：android
      * @return
      */
     @RequestMapping(value = "getAdvertiseById",method = RequestMethod.POST)
-    public Message getAdvertiseById(String id,String openId,Integer terminal,Integer os){
+    public Message getAdvertiseById(@RequestParam String id, @RequestParam String userId,@RequestParam String openId,@RequestParam Integer terminal,@RequestParam Integer os){
         try {
             msg = Message.success();
             Advertise advertise = advertiseMobileRepository.findByIdAndAdvertiseOnline(id,1);
             if (advertise!=null){
                 msg.setRecode(0);
-                msg.setData(advertiseMobileService.getAdvertiseById(advertise, openId, terminal,os));
+                msg.setData(advertiseMobileService.getAdvertiseById(advertise, userId,openId, terminal,os));
                 msg.setMsg("成功");
             }else {
                 msg.setRecode(1);

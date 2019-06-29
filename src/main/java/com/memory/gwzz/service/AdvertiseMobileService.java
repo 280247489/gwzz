@@ -13,5 +13,6 @@ import java.util.Map;
  */
 public interface AdvertiseMobileService {
     List<Advertise> getAdvertiseOnline();
-    Map<String, Object> getAdvertiseById(Advertise advertise, String openId, Integer terminal, Integer os);
+
+    Map<String, Object> getAdvertiseById(Advertise advertise, String userId, String openId, Integer terminal, Integer os);
 }

@@ -98,4 +98,20 @@ public class ArticleLikeMobileServiceImpl implements ArticleLikeMobileService {
 
         return returnMap;
     }
+
+    @Override
+    public int isLike(String aid,String uid){
+        Integer isLike =0;
+        ArticleLike articleLike = articleLikeMobileRepository.findByArticleIdAndUserId(aid,uid);
+        if (articleLike==null){
+            isLike=0;
+        }else{
+            if (articleLike.getLikeStatus()==1){
+                isLike=1;
+            }else if (articleLike.getLikeStatus()==0){
+                isLike=0;
+            }
+        }
+        return isLike;
+    }
 }

@@ -5,13 +5,8 @@ import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.*;
 import com.memory.gwzz.controller.AdvertiseMobileController;
 import com.memory.gwzz.controller.ArticleMobileController;
-import com.memory.gwzz.repository.AdvertiseMobileRepository;
-import com.memory.gwzz.repository.ArticleMobileRepository;
-import com.memory.gwzz.repository.CourseMobileRepository;
-import com.memory.gwzz.repository.LiveMasterMobileRepository;
-import com.memory.gwzz.service.AdvertiseMobileService;
-import com.memory.gwzz.service.CourseMobileService;
-import com.memory.gwzz.service.LiveMobileService;
+import com.memory.gwzz.repository.*;
+import com.memory.gwzz.service.*;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +50,12 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
     @Autowired
     private LiveMobileService liveMobileService;
 
+    @Autowired
+    private ArticleLikeMobileService articleLikeMobileService;
+
+    @Autowired
+    private CourseLikeMobileService courseLikeMobileService;
+
 
     @Override
     public List<Advertise> getAdvertiseOnline() {
@@ -62,17 +63,21 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
     }
 
     @Override
-    public Map<String, Object> getAdvertiseById(Advertise advertise, String openId, Integer terminal, Integer os) {
+    public Map<String, Object> getAdvertiseById(Advertise advertise, String userId, String openId, Integer terminal, Integer os) {
         Map<String, Object> returnMap = new HashMap<>();
         String type = advertise.getAdvertiseH5Type();
         String typeId = advertise.getAdvertiseH5Url();
+        Integer isLike = 0;
         if ( "Article".equals(type)) {
             Article article = articleMobileRepository.findByIdAndArticleOnline(typeId, 1);
             if (article != null) {
                 String label = article.getArticleLabel();
                 String[] labels = label.split(",");
                 article.setArticleLabel(labels[0]);
+                isLike=articleLikeMobileService.isLike(article.getId(),userId);
+                returnMap.put("isLike",isLike);
                 returnMap.put("article", article);
+                returnMap.put("isLike",articleLikeMobileService.isLike(article.getId(),userId));
             } else {
                 returnMap = null;
             }
@@ -87,6 +92,7 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
                 }
                 returnMap.put("course", course);
                 returnMap.put("isLive", isLive);
+                returnMap.put("isLike",courseLikeMobileService.isCourseLike(course.getId(),userId));
                 returnMap.put("courseList", courseMobileService.getCourseById(albumId));
             } else {
                 returnMap = null;

@@ -41,10 +41,6 @@ public class UserMobileServiceImpl implements UserMobileService {
     @Autowired
     private FileUploadUtil fileUploadUtil;
 
-    @Value(value = "${filePath}")
-    private String filePath;
-    @Value(value = "${fileUrl}")
-    private String fileUrl;
 
 
     SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd_HHmmss");

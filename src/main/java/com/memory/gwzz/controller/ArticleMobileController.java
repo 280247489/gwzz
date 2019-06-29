@@ -7,6 +7,7 @@ import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.ArticleLike;
 import com.memory.gwzz.repository.ArticleLikeMobileRepository;
 import com.memory.gwzz.repository.ArticleMobileRepository;
+import com.memory.gwzz.service.ArticleLikeMobileService;
 import com.memory.gwzz.service.ArticleMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public class ArticleMobileController extends BaseController {
     private ArticleMobileRepository articleMobileRepository;
 
     @Autowired
-    private ArticleLikeMobileRepository articleLikeMobileRepository;
+    private ArticleLikeMobileService articleLikeMobileService;
 
     /**
      * 查询文章列表
@@ -76,20 +77,7 @@ public class ArticleMobileController extends BaseController {
                 String label = article.getArticleLabel();
                 String[] labels = label.split(",");
                 article.setArticleLabel(labels[0]);
-                Integer isLike = 0;
-
-                ArticleLike articleLike = articleLikeMobileRepository.findByArticleIdAndUserId(articleId,userId);
-                if (articleLike!=null){
-                    if (articleLike.getLikeStatus()==1){
-                        isLike=1;
-                    }else if (articleLike.getLikeStatus()==0){
-                        isLike=0;
-                    }
-                }else{
-                    isLike=0;
-                }
-
-                returnMap.put("isLike",isLike);
+                returnMap.put("isLike",articleLikeMobileService.isLike(articleId, userId));
                 returnMap.put("article",article);
                 msg.setMsg("查询成功");
                 msg.setData(returnMap);

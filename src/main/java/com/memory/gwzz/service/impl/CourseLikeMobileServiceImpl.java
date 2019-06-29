@@ -97,4 +97,20 @@ public class CourseLikeMobileServiceImpl implements CourseLikeMobileService {
 
         return returnMap;
     }
+
+    @Override
+    public int isCourseLike (String cid, String uid){
+        Integer isCLike = 0;
+        CourseLike courseLike = courseLikeMobileRepository.findByCourseIdAndUserId(cid,uid);
+        if (courseLike==null){
+            isCLike=0;
+        }else{
+            if (courseLike.getLikeStatus()==1){
+                isCLike=1;
+            }else{
+                isCLike=0;
+            }
+        }
+        return isCLike;
+    }
 }

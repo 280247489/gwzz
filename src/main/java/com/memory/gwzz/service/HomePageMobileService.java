@@ -14,5 +14,5 @@ public interface HomePageMobileService {
     Map<String,Object> HomePageOne();
     LiveMaster HomePageTwo();
 
-    Map<String, Object> getAdvertiseById(com.memory.entity.jpa.Banner banner, String openId, Integer terminal, Integer os);
+    Map<String, Object> getAdvertiseById(com.memory.entity.jpa.Banner banner, String userId, String openId, Integer terminal, Integer os);
 }

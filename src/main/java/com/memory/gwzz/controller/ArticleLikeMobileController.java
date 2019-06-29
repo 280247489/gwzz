@@ -58,7 +58,7 @@ public class ArticleLikeMobileController extends BaseController {
                     msg.setRecode(0);
                 }
             }else {
-                msg.setRecode(1);
+                msg.setRecode(2);
                 msg.setMsg("该课程不存在");
             }
         }catch (Exception e){

@@ -13,4 +13,6 @@ import java.util.Map;
 public interface ArticleLikeMobileService {
     ArticleLike like(String aid, String uid);
     Map<String,Object> ListArticleLikeByUserId(String userId, Integer start, Integer limit);
+
+    int isLike(String aid, String uid);
 }
