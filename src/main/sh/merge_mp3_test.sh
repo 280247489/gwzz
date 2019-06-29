@@ -12,19 +12,16 @@ fi
 for i in `find $cur_dir -name "*.mp3" | sort -n`
 do
     echo "file '$i'"
-done  >$train_file
-sudo sort -t ' ' -k 2.56 $train_file -o $train_file
-echo  $train_file
-cat  $train_file
-/usr/local/bin/ffmpeg -f concat -safe 0 -i $train_file -c copy ${1}${out_file} > /dev/null 2>&1
+done>${1}$train_file
+/usr/local/bin/ffmpeg -f concat -safe 0 -i ${1}$train_file -c copy ${1}${out_file} > /dev/null 2>&1
 ffmpeg_pid=$!
 while kill -0 "$ffmpeg_pid"; do sleep 1; done > /dev/null 2>&1
 #rm -rf $train_file
 if [  -f "${1}$out_file" ]; then
     #    echo  -e "${1}${out_file}"
       chown memory:memory ${1}${out_file}
-	echo ${1}${out_file}
-	# echo  -e "${1}${out_file}"
+        echo ${1}${out_file}
+        # echo  -e "${1}${out_file}"
 
 else
    echo -e "Fail"&&exit

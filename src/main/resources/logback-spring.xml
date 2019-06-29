@@ -3,7 +3,7 @@
 
     <contextName>logback-dev</contextName>
     <property name="logback.app.name" value="gwzz"/>
-    <property name="logback.log.dir" value="logback/logs"/>
+    <property name="logback.log.dir" value="/opt/tomcat8/logback-gwzz/logs"/>
 
 
     <!-- 彩色日志 -->

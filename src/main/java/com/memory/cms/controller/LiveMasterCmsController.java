@@ -497,9 +497,8 @@ public class LiveMasterCmsController {
             }
             String mergePath ="";
             mergePath = FileUtils.getLocalPath() +  FileUtils.getCustomCmsPath("live",master_id);
-            System.out.println("checkPath 1 = " +mergePath);
-            log.info("checkPath 2 = " +mergePath);
             String out = cmdExceMergeMp3Shell(mergePath);
+            System.out.println("mergeMp3 out is ....................................."+out);
             if(Utils.isNotNull(out) && !"Fail".equals(out)){
                 String downloadPath = "/cms/live/"+master_id+"/output.mp3";
                 downloadPath = FileUtils.getLocalShowPath() + downloadPath;
@@ -624,7 +623,7 @@ public class LiveMasterCmsController {
     private String uploadImg(String uuid, int sort, Ext ext) {
         String imgUrl ="";
         MultipartFile imgFile = ext.getImgFile();
-        if(imgFile!=null && !imgFile.isEmpty() ){
+        if(Utils.isNotNull(imgFile)){
                 String prefix = sort + "";
                 String fileName = FileUtils.getImgFileName(prefix);
                 String customCmsPath = FileUtils.getCustomCmsPath("live",uuid);
@@ -639,18 +638,22 @@ public class LiveMasterCmsController {
     private String uploadAudio(String uuid, int sort, Ext ext) {
         String audioUrl="";
         MultipartFile audioFile = ext.getAudioFile();
-        if(audioFile!= null &&!audioFile.isEmpty()){
+        if(Utils.isNotNull(audioFile)){
 
                 String prefix = sort + "";
                 String fileName = FileUtils.getAudioFileName(prefix,audioFile);
+                String suffix =   fileName.substring(fileName.lastIndexOf("."));
                 String customCmsPath = FileUtils.getCustomCmsPath("live",uuid);
                 audioUrl =  FileUtils.upload(audioFile,FileUtils.getLocalPath(),customCmsPath,fileName);
 
-                String localPath = FileUtils.getLocalPath();
-                String path = cmdExceAmr2Mp3Shell(localPath +"/"+audioUrl );
-                audioUrl=  path.substring(path.indexOf("/cms"),path.length());
-
-
+                //.amr 文件进行自动转换mp3
+                if(".amr".equals(suffix)){
+                    System.out.println("suffix ========================"+suffix);
+                    String localPath = FileUtils.getLocalPath();
+                    //path 会返回 文件的路径或 Fail 如果是Fail 代表文件转换失败, 需手动上传
+                    String path = cmdExceAmr2Mp3Shell(localPath +"/"+audioUrl );
+                    audioUrl=  path.substring(path.indexOf("/cms"),path.length());
+                }
 
         }else {
               audioUrl = ext.getAudioUrl();
