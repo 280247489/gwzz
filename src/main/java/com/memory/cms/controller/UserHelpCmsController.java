@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,17 +45,18 @@ public class UserHelpCmsController extends BaseController {
      * @param helpType int 类型
      * @param helpSort int 排序
      * @param createId String 创建人
-     * @param request 图片 file
+     * @param helpLogo 图片 file
+     * @param helpContent 图片 file
      * @return
      */
     @RequestMapping(value = "addUsreHelp",method = RequestMethod.POST)
     public Message addUsreHelp(@RequestParam String helpTitle, @RequestParam String helpSubtitle, @RequestParam Integer helpType,
-                               @RequestParam Integer helpSort,@RequestParam String createId, HttpServletRequest request){
+                               @RequestParam Integer helpSort,@RequestParam String createId, @RequestParam MultipartFile helpLogo,  @RequestParam MultipartFile helpContent){
         msg = Message.success();
         try {
             UserHelp userHelp = userHelpCmsService.checkHelpTitle(helpTitle,"");
             if (userHelp == null){
-                userHelpCmsService.add(helpTitle, helpSubtitle, helpType, helpSort, createId, request);
+                userHelpCmsService.add(helpTitle, helpSubtitle, helpType, helpSort, createId, helpLogo, helpContent);
                 msg.setRecode(0);
                 msg.setMsg("添加成功");
             }else {
@@ -136,12 +138,13 @@ public class UserHelpCmsController extends BaseController {
      * @param helpType String 类型
      * @param helpSort String 排序
      * @param createId String 修改人Id
-     * @param request 图片 file
+     * @param helpLogo 图片 file
+     * @param helpContent 图片 file
      * @return
      */
     @RequestMapping(value = "updUsreHelp", method = RequestMethod.POST)
-    public Message updUsreHelp(@RequestParam String id,@RequestParam String helpTitle, @RequestParam String helpSubtitle,
-                               @RequestParam Integer helpType, @RequestParam Integer helpSort,String createId, HttpServletRequest request){
+    public Message updUsreHelp(@RequestParam String id, @RequestParam String helpTitle, @RequestParam String helpSubtitle,
+                               @RequestParam Integer helpType, @RequestParam Integer helpSort,  @RequestParam String createId,  @RequestParam MultipartFile helpLogo,  @RequestParam MultipartFile helpContent){
         msg = Message.success();
         try {
             UserHelp userHelp = userHelpCmsService.checkHelpTitle(helpTitle,id);
@@ -149,7 +152,7 @@ public class UserHelpCmsController extends BaseController {
                 msg.setRecode(2);
                 msg.setMsg("该标题已存在");
             }else{
-                userHelpCmsService.upd(userHelp,helpTitle,helpSubtitle,helpType,helpSort,createId,request);
+                userHelpCmsService.upd(userHelp,helpTitle,helpSubtitle,helpType,helpSort,createId,helpLogo,helpContent);
                 msg.setRecode(0);
                 msg.setMsg("修改成功");
             }

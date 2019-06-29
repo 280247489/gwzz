@@ -5,7 +5,6 @@ import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.CourseLike;
 import com.memory.entity.jpa.User;
-import com.memory.gwzz.model.Article;
 import com.memory.gwzz.repository.CourseLikeMobileRepository;
 import com.memory.gwzz.service.CourseLikeMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,7 @@ public class CourseLikeMobileServiceImpl implements CourseLikeMobileService {
             }else {
                 if(course !=null && user != null){
                     courseLike = new CourseLike();
-                    courseLike.setId(Utils.getShortUUID());
+                    courseLike.setId(Utils.generateUUIDs());
                     courseLike.setCourseId(cid);
                     courseLike.setUserId(uid);
                     courseLike.setLikeStatus(1);

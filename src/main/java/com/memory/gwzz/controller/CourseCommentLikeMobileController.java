@@ -2,6 +2,7 @@ package com.memory.gwzz.controller;
 
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
+import com.memory.entity.jpa.CourseCommentLike;
 import com.memory.gwzz.service.CourseCommentLikeMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +38,14 @@ public class CourseCommentLikeMobileController extends BaseController {
     public Message addLike(@RequestParam String cid, @RequestParam String uid){
         try {
             msg = Message.success();
-            msg.setRecode(0);
-            msg.setData(courseCommentLikeMobileService.like(cid, uid));
+            CourseCommentLike courseCommentLike = courseCommentLikeMobileService.like(cid, uid);
+            if (courseCommentLike!=null){
+                msg.setRecode(courseCommentLike.getCommentLikeYn());
+            }else{
+                msg.setRecode(0);
+            }
+
+
         }catch (Exception e){
             logger.error("异常信息");
             msg = Message.error();

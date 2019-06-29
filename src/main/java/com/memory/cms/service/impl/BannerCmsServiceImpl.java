@@ -7,6 +7,7 @@ import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Banner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,6 +19,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
@@ -34,9 +36,11 @@ public class BannerCmsServiceImpl implements BannerCmsService {
     private BannerCmsRepository bannerCmsRepository;
 
     @Autowired
+    private FileUploadUtil fileUploadUtil;
+
+    @Autowired
     private DaoUtils daoUtils;
-    String filePath ="D:\\Tomcat 7.0\\webapps";
-    String dbUrl = "/gwzz_file/Advertise/logo/";
+
 
     /**
      * 添加
@@ -56,12 +60,7 @@ public class BannerCmsServiceImpl implements BannerCmsService {
         banner.setId(Utils.generateUUIDs());
         banner.setBannerName(bName);
         if (bLogo!=null){
-            try {
-                filePath = URLDecoder.decode("filePath","utf-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            banner.setBannerLogo(FileUploadUtil.uploadFile(bLogo,filePath,dbUrl,Utils.getShortUUTimeStamp()));
+            banner.setBannerLogo(fileUploadUtil.upload2PNG(Utils.getShortUUTimeStamp(),"gwzz_file" + File.separator +"banner" + File.separator ,bLogo));
         }
         banner.setTypeTable(typeTable);
         banner.setTypeTableId(typeTableId);
@@ -137,12 +136,7 @@ public class BannerCmsServiceImpl implements BannerCmsService {
         Date date = new Date();
         banner.setBannerName(bName);
         if (!bLogo.isEmpty()){
-            try {
-                filePath = URLDecoder.decode("filePath","utf-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            banner.setBannerLogo(FileUploadUtil.uploadFile(bLogo,filePath,dbUrl,Utils.getShortUUTimeStamp()));
+            banner.setBannerLogo(fileUploadUtil.upload2PNG(Utils.getShortUUTimeStamp(),"gwzz_file" + File.separator +"banner" + File.separator ,bLogo));
         }
         banner.setTypeTable(typeTable);
         banner.setTypeTableId(typeTableId);

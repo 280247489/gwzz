@@ -51,7 +51,7 @@ public class ArticleLikeMobileServiceImpl implements ArticleLikeMobileService {
             }else{
                 if(article !=null && user != null){
                     articleLike = new ArticleLike();
-                    articleLike.setId(Utils.getShortUUID());
+                    articleLike.setId(Utils.generateUUIDs());
                     articleLike.setArticleId(aid);
                     articleLike.setUserId(uid);
                     articleLike.setLikeStatus(1);

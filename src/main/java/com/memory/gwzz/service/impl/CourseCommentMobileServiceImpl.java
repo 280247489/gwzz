@@ -57,7 +57,7 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
                 CourseComment cc = this.getByPid(commentParentId);
                 courseComment.setCommentRootId(cc.getCommentRootId());
                 courseComment.setCommentParentId(commentParentId);
-                courseComment.setCommentParentUserName(cc.getUserName());
+                courseComment.setCommentParentUserName("@"+cc.getUserName());
                 courseComment.setCommentParentContent(cc.getCommentContentReplace());
             }
             courseComment.setCommentContent(content);
@@ -91,9 +91,9 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
         Map<String,Object> returnMap = new HashMap<>();
         //查询一级评论列表
         StringBuffer sbCourseCommentList = new StringBuffer("select id AS courseCommentId,course_id,user_id AS uid,user_logo,user_name,comment_content_replace,comment_create_time,comment_total_like," +
-                "(select count(*) from article_comment where course_id=:courseId and comment_root_id = courseCommentId and comment_type=1)," +
+                "(select count(*) from course_comment where course_id=:courseId and comment_root_id = courseCommentId and comment_type=1)," +
                 "(SELECT ccl.comment_like_yn FROM course_comment_like ccl WHERE ccl.comment_id = courseCommentId AND ccl.user_id ='"+uid+"') " +
-                "from course_comment where course_id=:courseId AND comment_type=0 order by comment_total_like desc");
+                "from course_comment where course_id=:courseId AND comment_type=0 order by comment_create_time desc");
         //查询一级评论总数
         StringBuffer sbCount = new StringBuffer("select count(*) from course_comment where course_id=:courseId AND comment_type=0 ");
         Map<String, Object> map = new HashMap<String, Object>();
@@ -107,21 +107,21 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
             Map<String, Object> objMap=new HashMap<String, Object>();
             Integer isLike = 0;
             objMap.put("id", list.get(i)[0]);
-            objMap.put("course_id", list.get(i)[1]);
+            objMap.put("courseId", list.get(i)[1]);
             objMap.put("userId", list.get(i)[2]);
-            objMap.put("user_logo", list.get(i)[3]);
-            objMap.put("user_name", list.get(i)[4]);
-            objMap.put("comment_content_replace", list.get(i)[5]);
-            objMap.put("comment_create_time", list.get(i)[6]);
-            objMap.put("comment_total_like", list.get(i)[7]);
-            objMap.put("comment_reply_sum", list.get(i)[8]);
+            objMap.put("userLogo", list.get(i)[3]);
+            objMap.put("userName", list.get(i)[4]);
+            objMap.put("commentContentReplace", list.get(i)[5]);
+            objMap.put("commentCreateTime", list.get(i)[6]);
+            objMap.put("commentTotalLike", list.get(i)[7]);
+            objMap.put("commentReplySum", list.get(i)[8]);
             Object commentLike = list.get(i)[9];
             if (commentLike==null){
                 isLike=0;
             }else{
                 isLike=(Integer) commentLike;
             }
-            objMap.put("comment_like", isLike);
+            objMap.put("commentLike", isLike);
 
             returnList.add(objMap);
         }
@@ -162,15 +162,15 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
             for (int i = 0; i < list.size(); i++) {
                 Map<String, Object> objMap=new HashMap<String, Object>();
                 objMap.put("id", list.get(i)[0]);
-                objMap.put("course_id", list.get(i)[1]);
-                objMap.put("user_id", list.get(i)[2]);
-                objMap.put("user_logo", list.get(i)[3]);
-                objMap.put("user_name", list.get(i)[4]);
-                objMap.put("comment_content_replace", list.get(i)[5]);
-                objMap.put("comment_parent_user_name", list.get(i)[6]);
-                objMap.put("comment_parent_content", list.get(i)[7]);
-                objMap.put("comment_create_time", list.get(i)[8]);
-                objMap.put("comment_total_like", list.get(i)[9]);
+                objMap.put("courseId", list.get(i)[1]);
+                objMap.put("userId", list.get(i)[2]);
+                objMap.put("userLogo", list.get(i)[3]);
+                objMap.put("userName", list.get(i)[4]);
+                objMap.put("commentContentReplace", list.get(i)[5]);
+                objMap.put("commentParentUserName", list.get(i)[6]);
+                objMap.put("commentParentContent", list.get(i)[7]);
+                objMap.put("commentCreateTime", list.get(i)[8]);
+                objMap.put("commentTotalLike", list.get(i)[9]);
 
                 twoList.add(objMap);
             }

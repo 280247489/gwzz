@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -86,12 +87,13 @@ public class HomePageMobileController extends BaseController {
      * URL:192.168.1.185:8081/gwzz/homePage/mobile/getBannerById
      * @param id String 唯一标识
      * @param openId 用户openId
+     * @param userId 用户Id
      * @param terminal 终端  0 ：app 或  1 ：h5
      * @param os 操作系统 0：ios 或 1：android
      * @return
      */
     @RequestMapping(value = "getBannerById",method = RequestMethod.POST)
-    public Message getBannerById(String id,String openId,Integer terminal,Integer os){
+    public Message getBannerById(@RequestParam String id, @RequestParam String openId, @RequestParam String userId, @RequestParam Integer terminal, @RequestParam Integer os){
         try {
             msg = Message.success();
             Banner banner = bannerMobileRepository.findByIdAndBannerOnline(id,1);

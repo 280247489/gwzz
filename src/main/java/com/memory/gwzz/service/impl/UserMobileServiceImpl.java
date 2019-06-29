@@ -10,10 +10,12 @@ import com.memory.gwzz.service.UserMobileService;
 import com.memory.redis.CacheConstantConfig;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -35,6 +37,15 @@ public class UserMobileServiceImpl implements UserMobileService {
 
     @Autowired
     private DaoUtils daoUtils;
+
+    @Autowired
+    private FileUploadUtil fileUploadUtil;
+
+    @Value(value = "${filePath}")
+    private String filePath;
+    @Value(value = "${fileUrl}")
+    private String fileUrl;
+
 
     SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
@@ -137,7 +148,7 @@ public class UserMobileServiceImpl implements UserMobileService {
      */
     @Override
     public String getSMSCode(String userPhone){
-        String msgId = Utils.sendSMSCode(164674,userPhone);
+        String msgId = daoUtils.sendSMSCode(164674,userPhone);
         if (!"".equals(msgId)){
             redisUtil.incr(CacheConstantConfig.USER_SMS_SUM+":"+userPhone,1,RedisUtil.CACHE_TIME_D_1);
         }
@@ -153,7 +164,7 @@ public class UserMobileServiceImpl implements UserMobileService {
     @Override
     public Boolean checkSmsCode(String msgId,String code){
         Boolean flag = false;
-        flag = Utils.sendValidSMSCode(msgId,code);
+        flag = daoUtils.sendValidSMSCode(msgId,code);
         return  flag;
     }
 
@@ -201,10 +212,9 @@ public class UserMobileServiceImpl implements UserMobileService {
      */
     @Override
     public User updUserLogo(User user, MultipartFile userLogo){
-        String filePath ="D:\\Tomcat 7.0\\webapps";
-        String dbUrl = "/gwzz_file/user/"+user.getId()+"/";
+
          if (userLogo!=null){
-             user.setUserLogo(FileUploadUtil.uploadFile(userLogo,filePath,dbUrl,"logo_"+Utils.getShortUUTimeStamp()));
+             user.setUserLogo(fileUploadUtil.upload2PNG(Utils.getShortUUTimeStamp(),"gwzz_file" + File.separator +"user" + File.separator +"logo"+File.separator+user.getId(),userLogo));
          }
         return userMobileRepository.save(user);
     }

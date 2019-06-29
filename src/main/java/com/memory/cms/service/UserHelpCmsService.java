@@ -3,6 +3,8 @@ package com.memory.cms.service;
 import com.memory.entity.jpa.UserHelp;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,9 +16,15 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface UserHelpCmsService {
     UserHelp checkHelpTitle(String helpTitle, String id);
-    void add(String helpTitle, String helpSubtitle, Integer helpType, Integer helpSort,String createId, HttpServletRequest request);
+
+    @Transactional
+    void add(String helpTitle, String helpSubtitle, Integer helpType, Integer helpSort, String createId, MultipartFile helpLogo, MultipartFile helpContent);
+
     Page<UserHelp> findUserHelp(Pageable pageable, String helpTitle, Integer useYn);
-    UserHelp upd(UserHelp userHelp,String helpTitle, String helpSubtitle, Integer helpType, Integer helpSort,String createId, HttpServletRequest request);
+
+    @Transactional
+    UserHelp upd(UserHelp userHelp, String helpTitle, String helpSubtitle, Integer helpType, Integer helpSort, String createId, MultipartFile helpLogo, MultipartFile helpContent);
+
     UserHelp upduseYn (UserHelp userHelp);
     void del(UserHelp userHelp);
 

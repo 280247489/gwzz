@@ -1,19 +1,11 @@
 package com.memory.common.utils;
 
-import cn.jiguang.common.resp.APIConnectionException;
-import cn.jiguang.common.resp.APIRequestException;
-import cn.jsms.api.SendSMSResult;
-import cn.jsms.api.ValidSMSResult;
-import cn.jsms.api.common.SMSClient;
-import cn.jsms.api.common.model.SMSPayload;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 /**
@@ -23,13 +15,7 @@ import java.util.UUID;
  */
 public class Utils {
 
-    @Value("${APPKEY}")
-    private  String APP_KEY;
 
-    @Value("${MASTERSECRET}")
-    private  String MASTER_SECRET;
-
-    private final static Logger logger = LoggerFactory.getLogger(Utils.class);
 
     public static final String[] chars = new String[] { "a", "b", "c", "d", "e", "f",
             "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
@@ -83,67 +69,7 @@ public class Utils {
     }
 
 
-    /**
-     * 发送短信验证码
-     * @param tempId
-     * @param phone
-     * @return
-     */
-    public static String sendSMSCode(int tempId,String phone){
-        SMSClient smsClient = new SMSClient("f68fc210a844b0acd31f0e6a","03c3145a36f490cb28b3feef");
-        SMSPayload smsPayload = SMSPayload.newBuilder()
-                .setMobileNumber(phone)
-                .setTempId(tempId)
-                .build();
-        String resule = null;
-                try {
-                    SendSMSResult sendSMSResult = smsClient.sendSMSCode(smsPayload);
-                    resule= sendSMSResult.toString();
-                    System.out.println(sendSMSResult.toString());
-                    logger.info(sendSMSResult.toString());
 
-                } catch (APIConnectionException e) {
-                    e.printStackTrace();
-                    logger.error("Connection error. Should retry later. ", e);
-                } catch (APIRequestException e) {
-                    e.printStackTrace();
-                    logger.error("Error response from JPush server. Should review and fix it. ", e);
-                    logger.info("HTTP Status: " + e.getStatus());
-                    logger.info("Error Message:" + e.getMessage());
-                }
-                return resule;
-    }
-
-    /**
-     * 验证码校验
-     * @param msg_id
-     * @param valid
-     * @return
-     */
-    public static Boolean sendValidSMSCode(String msg_id,String valid){
-        SMSClient smsClient = new SMSClient("f68fc210a844b0acd31f0e6a","03c3145a36f490cb28b3feef");
-        Boolean flag = false;
-        try {
-            ValidSMSResult validSMSResult = smsClient.sendValidSMSCode(msg_id,valid);
-            flag = validSMSResult.getIsValid();
-            System.out.println(validSMSResult.toString());
-            logger.info(validSMSResult.toString());
-        } catch (APIConnectionException e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-            logger.error("Connection error. Should retry later. ", e);
-        } catch (APIRequestException e) {
-            e.printStackTrace();
-            if (e.getErrorCode() == 50010){
-                //do something
-            }
-            System.out.println(e.getStatus() + " errorCode: " + e.getErrorCode() + " " + e.getErrorMessage());
-            logger.error("Error response from JPush server. Should review and fix it. ", e);
-            logger.info("HTTP Status: " + e.getStatus());
-            logger.info("Error Message: " + e.getMessage());
-        }
-        return flag;
-    }
 
     /**
      * 判断是否为基本类型：包括String/Integer/Double/Boolean

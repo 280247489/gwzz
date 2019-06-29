@@ -57,7 +57,7 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
                 ArticleComment articleComment1 = this.getByPid(commentParentId);
                 articleComment.setCommentRootId(articleComment1.getCommentRootId());
                 articleComment.setCommentParentId(commentParentId);
-                articleComment.setCommentParentUserName("@"+articleComment1.getUserName());
+                articleComment.setCommentParentUserName("@"+articleComment.getUserName());
                 articleComment.setCommentParentContent(articleComment1.getCommentContentReplace());
             }
             articleComment.setCommentContent(content);
@@ -102,12 +102,12 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
             objMap.put("id", list.get(i)[0]);
             objMap.put("articleId", list.get(i)[1]);
             objMap.put("userId", list.get(i)[2]);
-            objMap.put("user_logo", list.get(i)[3]);
-            objMap.put("user_name", list.get(i)[4]);
-            objMap.put("comment_content_replace", list.get(i)[5]);
-            objMap.put("comment_create_time", list.get(i)[6]);
-            objMap.put("comment_total_like", list.get(i)[7]);
-            objMap.put("comment_reply_sum", list.get(i)[8]);
+            objMap.put("userLogo", list.get(i)[3]);
+            objMap.put("userName", list.get(i)[4]);
+            objMap.put("commentContentReplace", list.get(i)[5]);
+            objMap.put("commentCreateTime", list.get(i)[6]);
+            objMap.put("commentTotalLike", list.get(i)[7]);
+            objMap.put("commentReplySum", list.get(i)[8]);
             Integer  isLike = 0;
             Object commentLike = list.get(i)[9];
             if (commentLike==null){
@@ -115,7 +115,7 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
             }else{
                 isLike=(Integer) commentLike;
             }
-            objMap.put("comment_like", isLike);
+            objMap.put("commentLike", isLike);
 
             returnList.add(objMap);
         }
@@ -142,7 +142,7 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
                 isCommentLike=articleCommentLike.getCommentLikeYn();
             }
 
-            String commentRootId = articleComment.getUserId();
+            String commentRootId = articleComment.getId();
             //查询子级评论列表
             StringBuffer sbACTWO = new StringBuffer("select id,article_id,user_id,user_logo,user_name,comment_content_replace,comment_parent_user_name,comment_parent_content," +
                     "comment_create_time,comment_total_like from article_comment where comment_root_id = '"+commentRootId+"' and comment_type=1 " +
@@ -156,15 +156,15 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
             for (int i = 0; i < list.size(); i++) {
                 Map<String, Object> objMap=new HashMap<String, Object>();
                 objMap.put("id", list.get(i)[0]);
-                objMap.put("article_id", list.get(i)[1]);
-                objMap.put("user_id", list.get(i)[2]);
-                objMap.put("user_logo", list.get(i)[3]);
-                objMap.put("user_name", list.get(i)[4]);
-                objMap.put("comment_content_replace", list.get(i)[5]);
-                objMap.put("comment_parent_user_name", list.get(i)[6]);
-                objMap.put("comment_parent_content", list.get(i)[7]);
-                objMap.put("comment_create_time", list.get(i)[8]);
-                objMap.put("comment_total_like", list.get(i)[9]);
+                objMap.put("articleId", list.get(i)[1]);
+                objMap.put("userId", list.get(i)[2]);
+                objMap.put("userLogo", list.get(i)[3]);
+                objMap.put("userName", list.get(i)[4]);
+                objMap.put("commentContentReplace", list.get(i)[5]);
+                objMap.put("commentParentUserName", list.get(i)[6]);
+                objMap.put("commentParentContent", list.get(i)[7]);
+                objMap.put("commentCreateTime", list.get(i)[8]);
+                objMap.put("commentTotalLike", list.get(i)[9]);
 
                 twoList.add(objMap);
             }

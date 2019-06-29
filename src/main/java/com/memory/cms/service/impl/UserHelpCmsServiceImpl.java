@@ -12,12 +12,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
@@ -37,8 +39,8 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
     @Autowired
     private DaoUtils daoUtils;
 
-    String filePath ="D:\\Tomcat 7.0\\webapps";
-    String dbUrl = "/gwzz_file/userHelp/img/";
+    @Autowired
+    private FileUploadUtil fileUploadUtil;
 
     /**
      * 验证标题是否存在
@@ -66,11 +68,12 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
      * @param helpType
      * @param helpSort
      * @param createId
-     * @param request
+     * @param helpLogo
+     * @param helpContent
      */
     @Transactional
     @Override
-    public void add(String helpTitle, String helpSubtitle, Integer helpType, Integer helpSort,String createId, HttpServletRequest request){
+    public void add(String helpTitle, String helpSubtitle, Integer helpType, Integer helpSort, String createId, MultipartFile helpLogo, MultipartFile helpContent){
         Date date = new Date();
         UserHelp userHelp = new UserHelp();
         String id = Utils.generateUUIDs();
@@ -84,14 +87,8 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
         userHelp.setHelpUpdateId(createId);
         userHelp.setHelpSort(helpSort);
         userHelp.setUseYn(1);
-        try {
-            filePath = URLDecoder.decode("filePath","utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        List<String> list = FileUploadUtil.uploadFiles(filePath,dbUrl+"/",id,request);
-        userHelp.setHelpLogo(list.get(0));
-        userHelp.setHelpContent(list.get(1));
+        userHelp.setHelpLogo( fileUploadUtil.upload2PNG(Utils.getShortUUTimeStamp(),"gwzz_file" + File.separator +"userHelp" + File.separator ,helpLogo));
+        userHelp.setHelpContent( fileUploadUtil.upload2PNG(Utils.getShortUUTimeStamp(),"gwzz_file" + File.separator +"userHelp" + File.separator ,helpContent));
 
         userHelpCmsRepository.save(userHelp);
 
@@ -135,11 +132,13 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
      * @param helpType
      * @param helpSort
      * @param createId
-     * @param request
+     * @param helpLogo
+     * @param helpContent
+     * @return
      */
     @Transactional
     @Override
-    public UserHelp upd(UserHelp userHelp,String helpTitle, String helpSubtitle, Integer helpType, Integer helpSort,String createId, HttpServletRequest request){
+    public UserHelp upd(UserHelp userHelp,String helpTitle, String helpSubtitle, Integer helpType, Integer helpSort,String createId, MultipartFile helpLogo,MultipartFile helpContent){
         Date date = new Date();
         String id = Utils.generateUUIDs();
         userHelp.setHelpTitle(helpTitle);
@@ -148,14 +147,8 @@ public class UserHelpCmsServiceImpl implements UserHelpCmsService {
         userHelp.setHelpUpdateTime(date);
         userHelp.setHelpUpdateId(createId);
         userHelp.setHelpSort(helpSort);
-        try {
-            filePath = URLDecoder.decode("filePath","utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        List<String> list = FileUploadUtil.uploadFiles(filePath,dbUrl+"/",id,request);
-        userHelp.setHelpLogo(list.get(0));
-        userHelp.setHelpContent(list.get(1));
+        userHelp.setHelpLogo( fileUploadUtil.upload2PNG(Utils.getShortUUTimeStamp(),"gwzz_file" + File.separator +"userHelp" + File.separator ,helpLogo));
+        userHelp.setHelpContent( fileUploadUtil.upload2PNG(Utils.getShortUUTimeStamp(),"gwzz_file" + File.separator +"userHelp" + File.separator ,helpContent));
 
         userHelpCmsRepository.save(userHelp);
         return userHelp;
