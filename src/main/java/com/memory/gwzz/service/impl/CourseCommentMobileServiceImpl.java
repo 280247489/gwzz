@@ -34,7 +34,7 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
 
     @Transactional
     @Override
-    public Map<String, Object> add(String courseId, User user, Integer commentType,String commentParentId, String content, String content_replace) {
+    public synchronized Map<String, Object> add(String courseId, User user, Integer commentType,String commentParentId, String content, String content_replace) {
         Map<String,Object> returnMap = new HashMap<>();
         Date date = new Date();
         CourseComment courseComment = new CourseComment();

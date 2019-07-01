@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
 import com.memory.domain.dao.DaoUtils;
-import com.memory.entity.jpa.LiveMaster;
+import com.memory.gwzz.model.LiveMaster;
 import com.memory.gwzz.model.LiveSlave;
 import com.memory.gwzz.service.LiveMobileService;
 import com.memory.redis.config.RedisUtil;

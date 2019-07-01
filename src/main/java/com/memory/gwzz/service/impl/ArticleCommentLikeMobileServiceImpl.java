@@ -29,7 +29,7 @@ public class ArticleCommentLikeMobileServiceImpl implements ArticleCommentLikeMo
 
     @Transactional
     @Override
-    public ArticleCommentLike like(String cid, String uid) {
+    public synchronized ArticleCommentLike like(String cid, String uid) {
         ArticleComment articleComment = (ArticleComment) daoUtils.getById("ArticleComment",cid);
         User user = (User) daoUtils.getById("User",uid);
         ArticleCommentLike articleCommentLike = null;

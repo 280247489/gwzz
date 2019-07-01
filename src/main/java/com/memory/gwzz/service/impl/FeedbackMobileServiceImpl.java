@@ -31,7 +31,7 @@ public class FeedbackMobileServiceImpl implements FeedbackMobileService {
 
     @Transactional
     @Override
-    public Feedback add(String userId, String feedbackType, String feedbackContent, String feedbackName, String feedbackContactUs, List<MultipartFile> files){
+    public synchronized Feedback add(String userId, String feedbackType, String feedbackContent, String feedbackName, String feedbackContactUs, List<MultipartFile> files){
         Feedback feedback = new Feedback();
         String id = Utils.generateUUIDs();
         feedback.setId(id);

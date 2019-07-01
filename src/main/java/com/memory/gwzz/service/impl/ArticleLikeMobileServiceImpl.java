@@ -34,7 +34,7 @@ public class ArticleLikeMobileServiceImpl implements ArticleLikeMobileService {
 
     @Transactional
     @Override
-    public ArticleLike like(String aid, String uid) {
+    public synchronized ArticleLike like(String aid, String uid) {
         Article article = (Article) daoUtils.getById("Article", aid);
         User user = (User) daoUtils.getById("User", uid);
         ArticleLike articleLike = null;

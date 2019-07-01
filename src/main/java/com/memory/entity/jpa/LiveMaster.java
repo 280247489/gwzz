@@ -1,14 +1,14 @@
 package com.memory.entity.jpa;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
  * @ClassName LiveMaster
  * @Descriotion TODO
  * @Author Ganxiqing
- * @Date 2019/6/14 15:58
+ * @Date 2019/7/1 11:25
  */
 @Entity
 @Table(name = "live_master", schema = "gwzz_db", catalog = "")
@@ -20,15 +20,15 @@ public class LiveMaster {
     private int liveMasterStatus;
     private int liveMasterLike;
     private int liveMasterIsSynthesisAudio;
-    private int liveMasterSynthesisAudioUrl;
+    private String liveMasterSynthesisAudioUrl;
     private int liveMasterIsOnline;
     private int liveMasterIsRelation;
     private int liveMasterIsPush;
     private String liveMasterStarttime;
     private String liveMasterEndtime;
-    private Date liveMasterCreateTime;
+    private Timestamp liveMasterCreateTime;
     private String liveMasterCreateId;
-    private Date liveMasterUpdateTime;
+    private Timestamp liveMasterUpdateTime;
     private String liveMasterUpdateId;
 
     @Id
@@ -103,11 +103,11 @@ public class LiveMaster {
 
     @Basic
     @Column(name = "live_master_synthesis_audio_url")
-    public int getLiveMasterSynthesisAudioUrl() {
+    public String getLiveMasterSynthesisAudioUrl() {
         return liveMasterSynthesisAudioUrl;
     }
 
-    public void setLiveMasterSynthesisAudioUrl(int liveMasterSynthesisAudioUrl) {
+    public void setLiveMasterSynthesisAudioUrl(String liveMasterSynthesisAudioUrl) {
         this.liveMasterSynthesisAudioUrl = liveMasterSynthesisAudioUrl;
     }
 
@@ -163,11 +163,11 @@ public class LiveMaster {
 
     @Basic
     @Column(name = "live_master_create_time")
-    public Date getLiveMasterCreateTime() {
+    public Timestamp getLiveMasterCreateTime() {
         return liveMasterCreateTime;
     }
 
-    public void setLiveMasterCreateTime(Date liveMasterCreateTime) {
+    public void setLiveMasterCreateTime(Timestamp liveMasterCreateTime) {
         this.liveMasterCreateTime = liveMasterCreateTime;
     }
 
@@ -183,11 +183,11 @@ public class LiveMaster {
 
     @Basic
     @Column(name = "live_master_update_time")
-    public Date getLiveMasterUpdateTime() {
+    public Timestamp getLiveMasterUpdateTime() {
         return liveMasterUpdateTime;
     }
 
-    public void setLiveMasterUpdateTime(Date liveMasterUpdateTime) {
+    public void setLiveMasterUpdateTime(Timestamp liveMasterUpdateTime) {
         this.liveMasterUpdateTime = liveMasterUpdateTime;
     }
 
@@ -209,7 +209,6 @@ public class LiveMaster {
         return liveMasterStatus == that.liveMasterStatus &&
                 liveMasterLike == that.liveMasterLike &&
                 liveMasterIsSynthesisAudio == that.liveMasterIsSynthesisAudio &&
-                liveMasterSynthesisAudioUrl == that.liveMasterSynthesisAudioUrl &&
                 liveMasterIsOnline == that.liveMasterIsOnline &&
                 liveMasterIsRelation == that.liveMasterIsRelation &&
                 liveMasterIsPush == that.liveMasterIsPush &&
@@ -217,6 +216,7 @@ public class LiveMaster {
                 Objects.equals(courseId, that.courseId) &&
                 Objects.equals(liveMasterName, that.liveMasterName) &&
                 Objects.equals(liveMasterDescribe, that.liveMasterDescribe) &&
+                Objects.equals(liveMasterSynthesisAudioUrl, that.liveMasterSynthesisAudioUrl) &&
                 Objects.equals(liveMasterStarttime, that.liveMasterStarttime) &&
                 Objects.equals(liveMasterEndtime, that.liveMasterEndtime) &&
                 Objects.equals(liveMasterCreateTime, that.liveMasterCreateTime) &&

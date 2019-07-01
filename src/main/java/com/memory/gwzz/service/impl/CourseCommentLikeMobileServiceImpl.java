@@ -29,7 +29,7 @@ public class CourseCommentLikeMobileServiceImpl implements CourseCommentLikeMobi
 
     @Transactional
     @Override
-    public CourseCommentLike like(String cid, String uid) {
+    public synchronized CourseCommentLike like(String cid, String uid) {
         CourseCommentLike courseCommentLike = null;
         CourseComment courseComment = (CourseComment) daoUtils.getById("CourseComment",cid);
         User user = (User) daoUtils.getById("User",uid);

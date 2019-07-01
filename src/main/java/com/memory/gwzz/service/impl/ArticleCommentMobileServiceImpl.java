@@ -35,7 +35,7 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
 
     @Transactional
     @Override
-    public Map<String,Object> add(String articleId, User user, Integer commentType, String commentParentId, String content, String content_replace){
+    public synchronized Map<String,Object> add(String articleId, User user, Integer commentType, String commentParentId, String content, String content_replace){
         Map<String,Object> returnMap = new HashMap<>();
         ArticleComment articleComment = new ArticleComment();
         Article article = (Article) daoUtils.getById("Article",articleId);

@@ -32,7 +32,7 @@ public class CourseLikeMobileServiceImpl implements CourseLikeMobileService {
 
     @Transactional
     @Override
-    public CourseLike like(String cid, String uid) {
+    public synchronized CourseLike like(String cid, String uid) {
         Course course = (Course) daoUtils.getById("Course",cid);
         User user = (User) daoUtils.getById("User",uid);
         CourseLike courseLike = null;
