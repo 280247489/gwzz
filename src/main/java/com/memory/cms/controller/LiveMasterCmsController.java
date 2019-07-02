@@ -6,10 +6,7 @@ import com.memory.cms.service.LiveMasterCmsService;
 import com.memory.cms.service.LiveSlaveCmsService;
 import com.memory.common.async.DemoAsyncTask;
 import com.memory.common.utils.*;
-import com.memory.common.yml.MyFileConfig;
-import com.memory.entity.bean.Ext;
-import com.memory.entity.bean.ExtModel;
-import com.memory.entity.bean.MasterModel;
+import com.memory.entity.bean.*;
 import com.memory.entity.jpa.LiveMaster;
 import com.memory.entity.jpa.LiveSlave;
 import com.memory.redis.config.RedisUtil;
@@ -111,7 +108,7 @@ public class LiveMasterCmsController {
                 return result;
             }
 
-            List<LiveSlave>  slaveList = dealData(extModel, uuid, liveMaster.getOperatorId());
+            List<LiveSlave>  slaveList = dealData(extModel, uuid, liveMaster.getOperatorId(),false,null);
 
             LiveMaster master = initMaster(uuid, liveMaster);
 
@@ -140,9 +137,10 @@ public class LiveMasterCmsController {
 
     @RequestMapping("update")
     @ResponseBody
-    public Result update(ExtModel extModel,MasterModel masterModel){
+    public Result update(ExtModel extModel, MasterModel masterModel, RemoveModel removeModel){
         Result result = new Result();
         try {
+            System.out.println("removeModel === " +JSON.toJSONString(removeModel));
 
             if(extModel == null || extModel.getExtList() == null || masterModel == null ){
                 result = ResultUtil.error(-1,"extList or liveMaster is null");
@@ -157,7 +155,7 @@ public class LiveMasterCmsController {
                 return ResultUtil.error(-1,"非法直播!");
             }
 
-            List<LiveSlave>  slaveList = dealData(extModel, uuid, liveMaster.getOperatorId());
+            List<LiveSlave>  slaveList = dealData(extModel, uuid, liveMaster.getOperatorId(),true,removeModel);
 
             master.setLiveMasterName(masterModel.getLiveMaster().getLiveMasterName());
             master.setLiveMasterDescribe(masterModel.getLiveMaster().getLiveMasterDescribe());
@@ -172,7 +170,6 @@ public class LiveMasterCmsController {
             if(returnMaster !=null && returnList != null){
                 returnMap.put("master",returnMaster);
                 returnMap.put("slave",returnList);
-
                 liveMasterCmsService.upgradeLiveDb2Redis(uuid,true);
 
                 //asyncDownloadFromXiaoZhuShou(returnList);
@@ -367,7 +364,7 @@ public class LiveMasterCmsController {
                 return ResultUtil.error(-1,"非法直播!");
             }
 
-            List<LiveSlave> list= liveSlaveCmsService.queryLiveSlaveByLiveMasterId(id);
+            List<com.memory.entity.bean.LiveSlave> list= liveSlaveCmsService.queryLiveSlaveList(id);
             map.put("master",master);
             map.put("slave",list);
             result = ResultUtil.success(map);
@@ -487,6 +484,60 @@ public class LiveMasterCmsController {
         return result;
     }
 
+    //@RequestMapping("deleteSlaveById")
+    public Result deleteSlaveById(@RequestParam  String slave_id){
+        Result result = new Result();
+        try {
+            LiveSlave slave = liveSlaveCmsService.getLiveSlaveById(slave_id);
+            if(Utils.isNotNull(slave)){
+                //音频
+                if(slave.getLiveSlaveType()==2){
+                    String audioUrl = slave.getLiveSlaveAudio();
+                    System.out.println("audioUrl ====" +audioUrl);
+                    //判断是否是网络资源
+                    //非网络资源删除服务器上的源文件
+                    if(audioUrl.indexOf("http")<1){
+                        String path = FileUtils.getLocalPath()+ audioUrl;
+                        String out = cmdRemoveFile(path);
+                        System.out.println("out ======== "+out);
+                        result = ResultUtil.success("remove path ："+path);
+                    }
+                }else{
+                    result = ResultUtil.success("没有要移除的音频");
+                }
+            }else {
+                result= ResultUtil.error(-1,"非法直播记录");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("liveMaster/cms/deleteSlaveById",e.getMessage());
+        }
+        return result;
+    }
+
+    @RequestMapping("deleteAllSlave")
+    public Result deleteAllSlave(@RequestParam  String master_id){
+        Result result = new Result();
+        try {
+            LiveMaster master = liveMasterCmsService.getLiveMasterById(master_id);
+            if(Utils.isNotNull(master)){
+                String path = FileUtils.getCustomCmsPath("live",master_id);
+               String out = cmdRemoveFile(path);
+                System.out.println("out ======== "+out);
+                result = ResultUtil.success("remove path ："+path);
+            }else {
+                result= ResultUtil.error(-1,"非法直播记录");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("liveMaster/cms/deleteAllSlave",e.getMessage());
+        }
+        return result;
+    }
+
+
     @RequestMapping("mergeMp3")
     public Result mergeMp3(@RequestParam String master_id){
         Result result = new Result();
@@ -498,21 +549,26 @@ public class LiveMasterCmsController {
             String mergePath ="";
             mergePath = FileUtils.getLocalPath() +  FileUtils.getCustomCmsPath("live",master_id);
             String out = cmdExceMergeMp3Shell(mergePath);
-            System.out.println("mergeMp3 out is ....................................."+out);
             if(Utils.isNotNull(out) && !"Fail".equals(out)){
-                String downloadPath = "/cms/live/"+master_id+"/output.mp3";
+                String  downloadPath = out/*.split(":")[1]*/.trim();
+                downloadPath =downloadPath.substring(downloadPath.indexOf("/",2),downloadPath.length());
+                System.out.println("downloadPath========="+downloadPath);
                 downloadPath = FileUtils.getLocalShowPath() + downloadPath;
+                master.setLiveMasterIsSynthesisAudio(1);
+                master.setLiveMasterSynthesisAudioUrl(downloadPath);
+                liveMasterCmsService.update(master);
                 result = ResultUtil.success(downloadPath);
             }else {
                 result = ResultUtil.error(-1,"音频合成失败");
             }
-
         }catch (Exception e){
+
             e.printStackTrace();
             log.error("liveMaster/cms/mergeMp3",e.getMessage());
         }
         return result;
     }
+
 
     @RequestMapping("whoami")
     public Result whoami(){
@@ -550,7 +606,7 @@ public class LiveMasterCmsController {
         //是否合成音频 0未合成 1合成
         master.setLiveMasterIsSynthesisAudio(0);
         //音频地址
-        // master.setLiveMasterSynthesisAudioUrl("");
+         master.setLiveMasterSynthesisAudioUrl("");
         //上下架状态(0下架 1 上架)'
         master.setLiveMasterIsOnline(0);
         //是否关联课程(0未关联，1已关联）
@@ -568,12 +624,12 @@ public class LiveMasterCmsController {
         return master;
     }
 
-    private List<LiveSlave>  dealData(ExtModel extModel, String uuid, String operatorId) {
+    private List<LiveSlave>  dealData(ExtModel extModel, String uuid, String operatorId,Boolean isUpdate,RemoveModel removeModel) {
         List<Ext> extList =   extModel.getExtList();
         int sort = 0;
         List<LiveSlave> slaveList = new ArrayList<LiveSlave>();
 
-
+        List<String> fileChangeList = new ArrayList<String>();
         for (Ext ext : extList) {
             int audioTime = 0;
             String nickname ="",logo="",words="",imgUrl="",audioUrl="";
@@ -587,15 +643,55 @@ public class LiveMasterCmsController {
             //语音
             }else if(type == 2){
                 audioTime = ext.getTimes();
-                audioUrl = uploadAudio(uuid, sort, ext);
+                if(Utils.isNotNull(ext.getAudioFile())){
+                    audioUrl = uploadAudio(uuid, sort, ext);
+                    String changeId = uuid +"_"+sort;
+                    fileChangeList.add(changeId);
+                }else {
+                    audioUrl = ext.getAudioUrl();
+                }
 
                 //图片
             }else if(type == 3){
                  imgUrl = uploadImg(uuid, sort, ext);
             }
             initSlave(uuid, operatorId, sort, slaveList, nickname, logo, words, imgUrl, audioUrl, audioTime, type);
+        }
+
+        if(isUpdate){
+            List<LiveSlave> historySlaveList = liveSlaveCmsService.queryLiveSlaveByLiveMasterId(uuid);
+
+            //更新删除掉多余文件
+            //找出要删除的文件
+            for (String changeStr : fileChangeList) {
+                for (LiveSlave liveSlave : historySlaveList) {
+                    if(changeStr.equals(liveSlave.getId())){
+                        String path = FileUtils.getLocalPath()+liveSlave.getLiveSlaveAudio();
+                        System.out.println("remove path = "+path);
+                        cmdRemoveFile(path);
+                    }
+                }
+
+            }
+
+            //删除指定文件
+            if(Utils.isNotNull(removeModel) && Utils.isNotNull(removeModel.getRemoveList())){
+                List<Slave> removeSlaveList =removeModel.getRemoveList();
+                for (Slave slave : removeSlaveList) {
+                    String slaveId = slave.getSlaveId();
+                    for (LiveSlave liveSlave : historySlaveList) {
+                        if(slaveId.equals(liveSlave.getId())){
+                            String path = FileUtils.getLocalPath()+liveSlave.getLiveSlaveAudio();
+                            System.out.println("remove ( removeModel ) path = "+path);
+                            cmdRemoveFile(path);
+                        }
+                    }
+                }
+            }
+
 
         }
+
         return slaveList;
     }
 
@@ -638,7 +734,6 @@ public class LiveMasterCmsController {
     private String uploadAudio(String uuid, int sort, Ext ext) {
         String audioUrl="";
         MultipartFile audioFile = ext.getAudioFile();
-        if(Utils.isNotNull(audioFile)){
 
                 String prefix = sort + "";
                 String fileName = FileUtils.getAudioFileName(prefix,audioFile);
@@ -655,9 +750,6 @@ public class LiveMasterCmsController {
                     audioUrl=  path.substring(path.indexOf("/cms"),path.length());
                 }
 
-        }else {
-              audioUrl = ext.getAudioUrl();
-        }
         return audioUrl;
     }
 
@@ -749,6 +841,21 @@ public class LiveMasterCmsController {
         log.info("cmdExceMergeMp3Shell out :"+out);
         return out;
    }
+
+   private String cmdRemoveFile(String filePath){
+       String out ="";
+       try {
+           out = CmdExecutorUtil.builder(pwd)
+                   .errRedirect(true)
+                   .sudoCmd(" rm -rf " +filePath)
+                   .exec();
+       }catch (Exception e){
+           e.printStackTrace();
+       }
+
+       return out;
+   }
+
 
    private String cmdExceTestUser(){
        String out ="";

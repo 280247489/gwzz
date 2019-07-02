@@ -135,16 +135,4 @@ public class CmdExecutorUtil {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            String out = CmdExecutorUtil.builder("password")
-                    .errRedirect(true)
-                    .sudoCmd("sh /home/soft/silk/converter_test.sh /home/soft/audio/test2.amr mp3")
-                    // .sudoCmd("/usr/local/bin/ffmpeg -f concat -safe 0 -i mylist.txt -c copy output.mp3")
-                    .exec();
-            System.out.println(out);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

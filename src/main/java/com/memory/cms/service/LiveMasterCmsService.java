@@ -1,7 +1,6 @@
 package com.memory.cms.service;
 
 import com.memory.entity.jpa.LiveMaster;
-import com.memory.entity.jpa.LiveSlave;
 
 import java.util.List;
 

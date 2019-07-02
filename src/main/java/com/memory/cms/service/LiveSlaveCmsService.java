@@ -25,4 +25,6 @@ public interface LiveSlaveCmsService {
 
     List<LiveSlave> queryLiveSlaveByLiveMasterId(String masterId);
 
+    LiveSlave getLiveSlaveById(String id);
+
 }

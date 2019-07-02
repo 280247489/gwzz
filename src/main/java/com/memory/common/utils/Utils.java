@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.util.List;
 import java.util.UUID;
 import java.io.IOException;
 
@@ -126,6 +127,10 @@ public class Utils {
 
     public static Boolean isNotNull(Object file){
         return file!=null;
+    }
+
+    public static Boolean isNotNull(List<?> list){
+        return list!=null && list.size()>0;
     }
 
 

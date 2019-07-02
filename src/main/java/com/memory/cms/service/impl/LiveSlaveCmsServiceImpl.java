@@ -94,4 +94,14 @@ public class LiveSlaveCmsServiceImpl implements LiveSlaveCmsService {
     public List<LiveSlave> queryLiveSlaveByLiveMasterId(String masterId) {
         return repository.queryLiveSlaveByLiveMasterId(masterId);
     }
+
+    @Override
+    public LiveSlave getLiveSlaveById(String id) {
+        if (repository.findById(id).hashCode() != 0) {
+            return repository.findById(id).get();
+        } else {
+            return null;
+        }
+    }
+
 }

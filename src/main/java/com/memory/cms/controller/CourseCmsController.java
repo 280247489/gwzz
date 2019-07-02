@@ -10,8 +10,6 @@ import com.memory.redis.config.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -329,7 +327,8 @@ public class CourseCmsController {
                 //课程关联直播 / 直播关联课程
                 if(Utils.isNotNull(liveId)){
                     LiveMaster master = liveMasterCmsService.getLiveMasterById(liveId);
-                    if(master ==null || Utils.isNotNull(master.getCourseId())){
+                    //要过滤掉自身修改，如果id和master.getCourseId 不一致提示解绑
+                    if(master ==null || (Utils.isNotNull(master.getCourseId()) && !id.equals(master.getCourseId()) )){
                         return ResultUtil.error(-1,"关联课程未解绑，不可修改!");
                     }
                     master.setCourseId(id);
@@ -342,21 +341,19 @@ public class CourseCmsController {
 
                 if(titleFile!=null && !titleFile.isEmpty()){
                     course_logo = getCourseLogo(titleFile, id);
+                    course.setCourseLogo(course_logo);
                 }
 
                 if(radioFile!=null && !radioFile.isEmpty()){
                     course_audio_url = getAudioFileUrl(radioFile, id);
+                    course.setCourseAudioUrl(course_audio_url);
                 }
-
 
                 course.setCourseTypeId(course_type_id);
                 course.setCourseTitle(course_title);
-                course.setCourseLogo(course_logo);
                 course.setCourseContent(course_content);
-                course.setCourseAudioUrl(course_audio_url);
                 course.setCourseLabel(course_label);
                 course.setCourseKeyWords(course_key_words);
-
                 course.setCourseUpdateId(course_update_id);
                 course.setCourseDescribe(course_describe);
                 course.setCourseUpdateTime(new Date());

@@ -6,7 +6,7 @@ import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/6/14 16:11
+ * @date 2019/7/1 10:37
  */
 
 @Entity
@@ -19,7 +19,7 @@ public class LiveMaster {
     private int liveMasterStatus;
     private int liveMasterLike;
     private int liveMasterIsSynthesisAudio;
-    private int liveMasterSynthesisAudioUrl;
+    private String liveMasterSynthesisAudioUrl;
     private int liveMasterIsOnline;
     private int liveMasterIsRelation;
     private int liveMasterIsPush;
@@ -102,11 +102,11 @@ public class LiveMaster {
 
     @Basic
     @Column(name = "live_master_synthesis_audio_url")
-    public int getLiveMasterSynthesisAudioUrl() {
+    public String getLiveMasterSynthesisAudioUrl() {
         return liveMasterSynthesisAudioUrl;
     }
 
-    public void setLiveMasterSynthesisAudioUrl(int liveMasterSynthesisAudioUrl) {
+    public void setLiveMasterSynthesisAudioUrl(String liveMasterSynthesisAudioUrl) {
         this.liveMasterSynthesisAudioUrl = liveMasterSynthesisAudioUrl;
     }
 
@@ -208,7 +208,6 @@ public class LiveMaster {
         return liveMasterStatus == master.liveMasterStatus &&
                 liveMasterLike == master.liveMasterLike &&
                 liveMasterIsSynthesisAudio == master.liveMasterIsSynthesisAudio &&
-                liveMasterSynthesisAudioUrl == master.liveMasterSynthesisAudioUrl &&
                 liveMasterIsOnline == master.liveMasterIsOnline &&
                 liveMasterIsRelation == master.liveMasterIsRelation &&
                 liveMasterIsPush == master.liveMasterIsPush &&
@@ -216,6 +215,7 @@ public class LiveMaster {
                 Objects.equals(courseId, master.courseId) &&
                 Objects.equals(liveMasterName, master.liveMasterName) &&
                 Objects.equals(liveMasterDescribe, master.liveMasterDescribe) &&
+                Objects.equals(liveMasterSynthesisAudioUrl, master.liveMasterSynthesisAudioUrl) &&
                 Objects.equals(liveMasterStarttime, master.liveMasterStarttime) &&
                 Objects.equals(liveMasterEndtime, master.liveMasterEndtime) &&
                 Objects.equals(liveMasterCreateTime, master.liveMasterCreateTime) &&
