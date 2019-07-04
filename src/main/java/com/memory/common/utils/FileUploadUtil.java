@@ -59,7 +59,7 @@ public class FileUploadUtil {
             }
             File destFile = new File(dir.getPath() + File.separator + fileName + ".png");
             file.transferTo(destFile);
-            db_path = dirPath + File.separator + fileName + ".png";
+            db_path = dirPath + "/" + fileName + ".png";
         } catch (Exception e) {
             e.printStackTrace();
         }

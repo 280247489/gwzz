@@ -82,7 +82,7 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
                 "FROM Article WHERE articleOnline = 1 AND typeId = 'tYmvO0Ub1558922279863' ORDER BY articleReleaseTime DESC");
         DaoUtils.Page pageArticle = new DaoUtils.Page();
         pageArticle.setPageIndex(1);
-        pageArticle.setLimit(5);
+        pageArticle.setLimit(4);
         List<Article> articleList = daoUtils.findByHQL(sbArticle.toString(),null,pageArticle);
 
         //查询专辑

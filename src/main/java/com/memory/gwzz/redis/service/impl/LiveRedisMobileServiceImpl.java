@@ -11,4 +11,7 @@ import org.springframework.stereotype.Service;
  */
 @Service(value = "liveRedisMobileService")
 public class LiveRedisMobileServiceImpl implements LiveRedisMobileService {
+
+
+
 }

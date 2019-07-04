@@ -43,7 +43,7 @@ public class FeedbackMobileServiceImpl implements FeedbackMobileService {
         if(files != null){
             StringBuffer stringBuffer = new StringBuffer("");
             for (int i = 0; i < files.size(); i++) {
-                String path =fileUploadUtil .upload2PNG(i+"_"+Utils.getShortUUTimeStamp(), "gwzz_file"+ File.separator + "feedback" +File.separator + id, files.get(i));
+                String path =fileUploadUtil .upload2PNG(i+"_"+Utils.getShortUUTimeStamp(), "gwzz_file/feedback/"+id, files.get(i));
                 stringBuffer.append(path+",");
             }
           feedback.setFeedbackImg(stringBuffer.substring(0, stringBuffer.length()-1));

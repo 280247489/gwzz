@@ -15,11 +15,11 @@ public class CacheConstantConfig {
     //课程拓展数据
     public static final String COURSERXT = "courseExt";
 
-    //用户获取验证码数据
-    public static final String USER_SMS_SUM = "userSMSSum";
+    public static final String COURSE ="course";
 
-    //用户登录状态
-    public static final String USER_LOGO = "userLogo";
+    //课程直播课程拓展数据
+    public static final String COURSEEXTHASH ="courseExt:hash:";
+
 
     /**
      * 课程直播 redis 键值存储规范 start========
@@ -118,9 +118,21 @@ public class CacheConstantConfig {
      * live 直播kv end============
      */
 
+    /**
+     * 搜索记录统计 kv start
+     */
 
+    //  key : Search:course:search_userid:
+    //  value :map==> keyword:count
+    public static final String SEARCHCOURSESEARCHAPPID="Search:course:search_userid:";
 
+    //  key : Search:article:search_userid:
+    //  value :map==> keyword:count
+    public static final String SEARCHARTICLESEARCHAPPID="Search:article:search_userid:";
 
+    /**
+     * 搜索记录统计 kv end
+     */
 
     /**
      * 微信分享 start========
@@ -132,5 +144,12 @@ public class CacheConstantConfig {
     /**
      * 微信分享 end========
      */
+
+
+    //用户获取验证码数据
+    public static final String USER_SMS_SUM = "userSMSSum";
+
+    //用户登录状态
+    public static final String USER_LOGIN = "userLogin";
 
 }

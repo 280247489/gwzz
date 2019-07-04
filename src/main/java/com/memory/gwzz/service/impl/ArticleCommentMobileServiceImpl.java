@@ -87,7 +87,7 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
         StringBuffer sbAC = new StringBuffer("select id AS articleCommentId,article_id,user_id,user_logo,user_name,comment_content_replace,comment_create_time,comment_total_like," +
                 "(select count(*) from article_comment where article_id=:articleId and comment_root_id = articleCommentId and comment_type=1), " +
                 "(SELECT comment_like_yn FROM article_comment_like WHERE comment_id = articleCommentId AND user_id = '"+uid+"') " +
-                "from article_comment where article_id=:articleId AND comment_type=0 order by comment_total_like desc");
+                "from article_comment where article_id=:articleId AND comment_type=0 order by comment_create_time  desc");
         //查询一级评论总数
         StringBuffer sbCount = new StringBuffer("select count(*) from article_comment where article_id=:articleId AND comment_type=0 ");
         Map<String, Object> map = new HashMap<String, Object>();

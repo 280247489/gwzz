@@ -208,9 +208,9 @@ public class UserMobileServiceImpl implements UserMobileService {
      */
     @Override
     public User updUserLogo(User user, MultipartFile userLogo){
-
          if (userLogo!=null){
-             user.setUserLogo(fileUploadUtil.upload2PNG(Utils.getShortUUTimeStamp(),"gwzz_file" + File.separator +"user" + File.separator +"logo"+File.separator+user.getId(),userLogo));
+//             user.setUserLogo(fileUploadUtil.upload2PNG(Utils.getShortUUTimeStamp(),"gwzz_file" + File.separator +"user" + File.separator +"logo"+File.separator+user.getId(),userLogo));
+             user.setUserLogo(fileUploadUtil.upload2PNG(Utils.getShortUUTimeStamp(),"gwzz_file/user/logo/"+user.getId(),userLogo));
          }
         return userMobileRepository.save(user);
     }
