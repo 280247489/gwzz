@@ -10,4 +10,6 @@ import java.util.Map;
  */
 public interface ArticleMobileService {
     Map<String,Object> findArticleByKey(Integer start, Integer limit, String key);
+
+    Map<String,Object> listArticleByKey(Integer start, Integer limit, String key);
 }
