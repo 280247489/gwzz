@@ -21,6 +21,6 @@ public class CourseRedisMobileServiceImpl implements CourseRedisMobileService {
     @Override
     public void searchCourse(String userId, String searchKey){
         String keyIncr = SEARCHCOURSESEARCHAPPID + userId;
-        redisUtil.hincr(keyIncr,userId,1);
+        redisUtil.hincr(keyIncr,searchKey,1);
     }
 }

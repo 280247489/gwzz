@@ -60,16 +60,9 @@ public class ArticleMobileServiceImpl implements ArticleMobileService {
         StringBuffer sbArticleCount = new StringBuffer( "SELECT COUNT(*) FROM article WHERE article_online = 1 AND type_id = 'tYmvO0Ub1558922279863' ");
         Map<String, Object> map = new HashMap<String, Object>();
         if (!"".equals(key)&& key!=null){
-            sbArticle.append(" OR article_title LIKE :article_title");
-            sbArticle.append(" OR article_label LIKE :article_label");
-            sbArticle.append(" OR article_key_words LIKE :article_key_words");
-
-            sbArticleCount.append(" OR article_title LIKE :article_title");
-            sbArticleCount.append(" OR article_label LIKE :article_label");
-            sbArticleCount.append(" OR article_key_words LIKE :article_key_words");
-            map.put("article_title", "%"+key+"%");
-            map.put("article_label", "%"+key+"%");
-            map.put("article_key_words", "%"+key+"%");
+            sbArticle.append(" AND CONCAT(article_title,article_label,article_key_words) LIKE :key");
+            sbArticleCount.append(" AND CONCAT(article_title,article_label,article_key_words) LIKE :key");
+            map.put("key", "%"+key+"%");
         }
         sbArticle.append(" ORDER BY article_release_time DESC");
         DaoUtils.Page pageArticle = new DaoUtils.Page();

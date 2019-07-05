@@ -58,9 +58,6 @@ public class AlbumMobileServiceImpl implements AlbumMobileService {
         Map<String,Object> returnMap = new HashMap<>();
         Album album = (Album) daoUtils.getById("Album",albumId);
         Integer limit = album.getAlbumCourseLimit();
-//        if (limit<0){
-//            limit=20;
-//        }
         if (album!=null){
             StringBuffer sbCourse = new StringBuffer( "SELECT NEW com.memory.gwzz.model.Course( id, courseNumber,courseTitle, courseLogo, courseLabel,courseOnline,courseTotalComment,courseTotalView,courseReleaseTime) " +
                     " FROM Course WHERE  albumId=:albumId AND courseOnline=1 ORDER BY courseReleaseTime DESC");

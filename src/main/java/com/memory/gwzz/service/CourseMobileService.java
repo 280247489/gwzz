@@ -14,4 +14,5 @@ import java.util.Map;
 public interface CourseMobileService {
     List<Course> getCourseById(String albumId);
 
+    Map<String,Object> fandCourseByKey(String albumId, Integer start, Integer limit, String key);
 }

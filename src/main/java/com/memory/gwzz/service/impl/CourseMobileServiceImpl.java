@@ -6,6 +6,7 @@ import com.memory.gwzz.service.CourseMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,5 +36,51 @@ public class CourseMobileServiceImpl  implements CourseMobileService {
         map.put("albumId", albumId);
         List<Course> courseList = daoUtils.findByHQL(sbCourse.toString(),map,null);
         return courseList;
+    }
+
+    @Override
+    public Map<String,Object> fandCourseByKey(String albumId,Integer start,Integer limit ,String key){
+        Map<String,Object> returnMap = new HashMap<>();
+            StringBuffer sbCourse = new StringBuffer( "SELECT  id, album_id,course_number,course_title, course_logo, course_label,course_key_words,course_online,course_total_comment,course_total_view,course_release_time " +
+                    " FROM course WHERE  album_id=:albumId AND course_online=1 " );
+            StringBuffer sbCount = new StringBuffer("SELECT COUNT(*) FROM course WHERE  album_id=:albumId AND course_online=1");
+//            StringBuffer stringBuffer = new StringBuffer("SELECT course_number FROM course where album_id=:albumId AND course_online=1 ORDER BY course_number ASC");
+            Map<String,Object> map = new HashMap<>();
+            map.put("albumId", albumId);
+            if (!"".equals(key)&& key!=null){
+                sbCourse.append(" AND CONCAT(course_title,course_label,course_key_words) LIKE :key");
+                sbCount.append(" AND CONCAT(course_title,course_label,course_key_words) LIKE :key");
+                map.put("key", "%"+key+"%");
+            }
+            sbCourse.append(" ORDER BY course_release_time DESC");
+
+            DaoUtils.Page page = new DaoUtils.Page();
+            page.setPageIndex(start);
+            page.setLimit(limit);
+            List<Object[]> courseList = daoUtils.findBySQL(sbCourse.toString(),map,page,null);
+            Integer count = daoUtils.getTotalBySQL(sbCount.toString(),map);
+            List<Map<String, Object>> returnList=new ArrayList<Map<String,Object>>();
+            for (int i = 0; i < courseList.size(); i++) {
+                Map<String, Object> objMap=new HashMap<String, Object>();
+                objMap.put("id", courseList.get(i)[0]);
+                objMap.put("albumId", courseList.get(i)[1]);
+                objMap.put("courseNumber", courseList.get(i)[2]);
+                objMap.put("courseTitle", courseList.get(i)[3]);
+                objMap.put("courseLogo", courseList.get(i)[4]);
+                objMap.put("courseLabel", courseList.get(i)[5]);
+                objMap.put("courseKeyWords", courseList.get(i)[6]);
+                objMap.put("courseOnline", courseList.get(i)[7]);
+                objMap.put("courseTotalComment", courseList.get(i)[8]);
+                objMap.put("courseTotalView", courseList.get(i)[9]);
+                objMap.put("courseReleaseTime", courseList.get(i)[10]);
+
+                returnList.add(objMap);
+            }
+//            Object objectList = daoUtils.findBySQL(stringBuffer.toString(),map,null,null);
+//            returnMap.put("anthology",objectList);
+            returnMap.put("courseList",returnList);
+            returnMap.put("count",count);
+
+        return returnMap;
     }
 }

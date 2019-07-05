@@ -113,7 +113,9 @@ public class ArticleMobileController extends BaseController {
             //替换空格中英文符号
             String p = "(?i)[^a-zA-Z0-9\u4E00-\u9FA5]";
             String strKey = key.replaceAll(p, "");
-            articleRedisMobileService.searchArticle(userId,strKey);
+            if (!"".equals(strKey)){
+                articleRedisMobileService.searchArticle(userId,strKey);
+            }
             msg.setMsg("查询成功");
             msg.setData(articleMobileService.listArticleByKey(start, limit, strKey));
         }catch (Exception e){
