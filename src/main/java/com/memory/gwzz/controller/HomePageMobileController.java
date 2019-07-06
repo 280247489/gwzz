@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 
 /**
  * @ClassName HomePageMobileController
@@ -43,10 +45,10 @@ public class HomePageMobileController extends BaseController {
     public Message homePageOne(){
         try {
             msg = Message.success();
+            Map<String,Object> returnMap = homePageMobileService.HomePageOne();
+            msg.setData(returnMap);
             msg.setRecode(0);
             msg.setMsg("查询成功");
-            msg.setData(homePageMobileService.HomePageOne());
-
         }catch (Exception e){
             msg = Message.error();
             e.printStackTrace();

@@ -94,7 +94,9 @@ public class CourseCommentMobileController extends BaseController {
             if (course!=null){
                 msg.setRecode(0);
                 msg.setMsg("成功");
-                msg.setData(courseCommentMobileService.listComByCid(courseId, start, limit,uid));
+                Map<String, Object> returnMap = courseCommentMobileService.listComByCid(courseId, start, limit,uid);
+                msg.setData(returnMap);
+                //msg.setData(courseCommentMobileService.listComByCid(courseId, start, limit,uid));
             }else{
                 msg.setRecode(2);
                 msg.setMsg("无此课程");
