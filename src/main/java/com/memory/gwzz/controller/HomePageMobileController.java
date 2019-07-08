@@ -103,8 +103,9 @@ public class HomePageMobileController extends BaseController {
                 msg.setRecode(1);
                 msg.setMsg("该轮播不存在");
             }else {
+                Map<String,Object> returnMap = homePageMobileService.getAdvertiseById(banner, userId,openId, terminal,os);
                 msg.setRecode(0);
-                msg.setData(homePageMobileService.getAdvertiseById(banner, userId,openId, terminal,os));
+                msg.setData(returnMap);
                 msg.setMsg("成功");
             }
         }catch (Exception e){

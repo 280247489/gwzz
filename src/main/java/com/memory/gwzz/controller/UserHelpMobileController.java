@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 /**
  * @ClassName UserHelpMobileController
  * @Descriotion TODO
@@ -35,8 +37,9 @@ public class UserHelpMobileController extends BaseController {
 
         try {
             msg = Message.success();
+            Map<String,Object> map = userHelpMobileService.listUserHelp();
             msg.setRecode(0);
-            msg.setData(userHelpMobileService.listUserHelp());
+            msg.setData(map);
 
         }catch (Exception e){
             msg = Message.error();

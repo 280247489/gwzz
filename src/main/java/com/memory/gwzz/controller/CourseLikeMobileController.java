@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 /**
  * @ClassName CourseLikeMobileController
  * @Descriotion TODO
@@ -83,8 +85,9 @@ public class CourseLikeMobileController extends BaseController {
             msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user != null){
+                Map<String,Object> returnMap = courseLikeMobileService.ListCourseLikeByUserId(userId, start, limit);
                 msg.setRecode(0);
-                msg.setData(courseLikeMobileService.ListCourseLikeByUserId(userId, start, limit));
+                msg.setData(returnMap);
             }else {
                 msg.setRecode(1);
                 msg.setMsg("该用户不存在");

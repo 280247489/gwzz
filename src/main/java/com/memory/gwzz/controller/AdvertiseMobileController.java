@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @ClassName AdvertiseMobileController
  * @Descriotion TODO
@@ -41,9 +44,10 @@ public class AdvertiseMobileController extends BaseController {
     public Message getAdvertiseOnline(){
         try {
             msg = Message.success();
+            List<Advertise> list = advertiseMobileService.getAdvertiseOnline();
             msg.setRecode(0);
             msg.setMsg("查询成功");
-            msg.setData(advertiseMobileService.getAdvertiseOnline());
+            msg.setData(list);
         }catch (Exception e){
             msg = Message.error();
             logger.error("异常信息");
@@ -68,8 +72,9 @@ public class AdvertiseMobileController extends BaseController {
             msg = Message.success();
             Advertise advertise = advertiseMobileRepository.findByIdAndAdvertiseOnline(id,1);
             if (advertise!=null){
+                Map<String,Object> returnMap = advertiseMobileService.getAdvertiseById(advertise, userId,openId, terminal,os);
                 msg.setRecode(0);
-                msg.setData(advertiseMobileService.getAdvertiseById(advertise, userId,openId, terminal,os));
+                msg.setData(returnMap);
                 msg.setMsg("成功");
             }else {
                 msg.setRecode(1);

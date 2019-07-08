@@ -61,7 +61,8 @@ public class ArticleCommentMobileController extends BaseController {
                 User user = (User) daoUtils.getById("User",userId);
                 if (user!=null){
                     msg.setRecode(0);
-                    msg.setData(articleCommentMobileService.add(articleId,user,commentType,commentParentId,content,content_replace));
+                    Map<String,Object> returnMap = articleCommentMobileService.add(articleId,user,commentType,commentParentId,content,content_replace);
+                    msg.setData(returnMap);
                 }else {
                     msg.setRecode(2);
                     msg.setMsg("无此用户信息");
@@ -93,9 +94,10 @@ public class ArticleCommentMobileController extends BaseController {
             msg = Message.success();
             Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
             if (article!=null){
+                Map<String,Object> returnMap = articleCommentMobileService.listArtComByAid(articleId, uid, start, limit);
                 msg.setRecode(0);
                 msg.setMsg("成功");
-                msg.setData(articleCommentMobileService.listArtComByAid(articleId, uid, start, limit));
+                msg.setData(returnMap);
             }else{
                 msg.setRecode(2);
                 msg.setMsg("无此文章");

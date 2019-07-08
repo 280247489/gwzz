@@ -105,8 +105,9 @@ public class CourseMobileController extends BaseController {
             if (!"".equals(strKey)){
                 courseRedisMobileService.searchCourse(userId,strKey);
             }
+            Map<String,Object> returnMap = courseMobileService.fandCourseByKey(albumId, start, limit, strKey);
             msg.setMsg("查询成功");
-            msg.setData(courseMobileService.fandCourseByKey(albumId, start, limit, strKey));
+            msg.setData(returnMap);
         }catch (Exception e){
             e.printStackTrace();
             msg = Message.error();

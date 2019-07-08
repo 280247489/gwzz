@@ -2,6 +2,7 @@ package com.memory.gwzz.controller;
 
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
+import com.memory.entity.jpa.ShareUrl;
 import com.memory.gwzz.service.ShareUrlMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +36,9 @@ public class ShareUrlMobileController extends BaseController {
     public Message getShareUrlByName(@RequestParam  String name){
         try {
             msg = Message.success();
+            ShareUrl shareUrl = shareUrlMobileService.getShareUrlByName(name);
             msg.setRecode(0);
-            msg.setData(shareUrlMobileService.getShareUrlByName(name));
+            msg.setData(shareUrl);
         }catch (Exception e){
             msg = Message.error();
             e.printStackTrace();

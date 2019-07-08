@@ -104,9 +104,10 @@ public class UserMobileController extends BaseController {
         try {
             msg = Message.success();
             if (userMobileService.checkSmsCode(msgId,code)){
+                User user = userMobileService.registerPhone(phone,userPwd);
                 msg.setMsg("成功");
                 msg.setRecode(0);
-                msg.setData(userMobileService.registerPhone(phone,userPwd));
+                msg.setData(user);
             }else {
                 msg.setRecode(1);
                 msg.setMsg("验证码失效");

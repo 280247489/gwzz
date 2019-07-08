@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 /**
  * @ClassName AlbumMobileController
  * @Descriotion TODO
@@ -41,9 +43,10 @@ public class AlbumMobileController extends BaseController {
     public Message findAlbum(@RequestParam Integer start, @RequestParam Integer limit){
         try {
             msg = Message.success();
+            Map<String,Object> returnMap = albumMobileService.fandAlbum(start,limit);
             msg.setMsg("成功");
             msg.setRecode(0);
-            msg.setData(albumMobileService.fandAlbum(start,limit));
+            msg.setData(returnMap);
         }catch (Exception e){
             e.printStackTrace();
             msg = Message.error();
@@ -64,9 +67,10 @@ public class AlbumMobileController extends BaseController {
             msg = Message.success();
             Album album = (Album) daoUtils.getById("Album",id);
             if (album!=null){
+                Map<String,Object> returnMap =albumMobileService.fandById(id);
                 msg.setMsg("成功");
                 msg.setRecode(0);
-                msg.setData(albumMobileService.fandById(id));
+                msg.setData(returnMap);
             }else {
                 msg.setMsg("无此数据");
                 msg.setRecode(2);
@@ -91,9 +95,10 @@ public class AlbumMobileController extends BaseController {
     public Message fandCourseByAlbunmId(@RequestParam String id,@RequestParam Integer start){
         try {
             msg = Message.success();
+            Map<String,Object> returnMap = albumMobileService.fandCourseByAlbunmId(id, start);
             msg.setMsg("成功");
             msg.setRecode(0);
-            msg.setData(albumMobileService.fandCourseByAlbunmId(id, start));
+            msg.setData(returnMap);
         }catch (Exception e){
             e.printStackTrace();
             msg = Message.error();

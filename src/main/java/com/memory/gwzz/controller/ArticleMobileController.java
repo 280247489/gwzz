@@ -116,8 +116,9 @@ public class ArticleMobileController extends BaseController {
             if (!"".equals(strKey)){
                 articleRedisMobileService.searchArticle(userId,strKey);
             }
+            Map<String,Object> returnMap = articleMobileService.listArticleByKey(start, limit, strKey);
             msg.setMsg("查询成功");
-            msg.setData(articleMobileService.listArticleByKey(start, limit, strKey));
+            msg.setData(returnMap);
         }catch (Exception e){
             e.printStackTrace();
             msg = Message.error();

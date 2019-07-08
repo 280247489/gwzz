@@ -64,8 +64,10 @@ public class CourseCommentMobileController extends BaseController {
                     msg.setRecode(2);
                     msg.setMsg("无此用户信息");
                 }else {
+
+                    Map<String,Object> returnMap = courseCommentMobileService.add(courseId,user,commentType,commentParentId,content,content_replace);
                     msg.setRecode(0);
-                    msg.setData(courseCommentMobileService.add(courseId,user,commentType,commentParentId,content,content_replace));
+                    msg.setData(returnMap);
                 }
             }
 
@@ -96,7 +98,6 @@ public class CourseCommentMobileController extends BaseController {
                 msg.setMsg("成功");
                 Map<String, Object> returnMap = courseCommentMobileService.listComByCid(courseId, start, limit,uid);
                 msg.setData(returnMap);
-                //msg.setData(courseCommentMobileService.listComByCid(courseId, start, limit,uid));
             }else{
                 msg.setRecode(2);
                 msg.setMsg("无此课程");

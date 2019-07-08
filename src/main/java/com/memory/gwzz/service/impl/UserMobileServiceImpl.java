@@ -58,7 +58,7 @@ public class UserMobileServiceImpl implements UserMobileService {
         Date date = new Date();
         if (user==null){
             user = new User(Utils.generateUUIDs(), Utils.md5Password(userPwd), "", "",  phone,
-                    "","", "", "", "", "",
+                    "TH_"+System.currentTimeMillis(),"", "", "", "", "",
                     "", "", "", date, 0, 0, 0, 0);
             userMobileRepository.save(user);
 
@@ -209,7 +209,6 @@ public class UserMobileServiceImpl implements UserMobileService {
     @Override
     public User updUserLogo(User user, MultipartFile userLogo){
          if (userLogo!=null){
-//             user.setUserLogo(fileUploadUtil.upload2PNG(Utils.getShortUUTimeStamp(),"gwzz_file" + File.separator +"user" + File.separator +"logo"+File.separator+user.getId(),userLogo));
              user.setUserLogo(fileUploadUtil.upload2PNG(Utils.getShortUUTimeStamp(),"gwzz_file/user/logo/"+user.getId(),userLogo));
          }
         return userMobileRepository.save(user);
