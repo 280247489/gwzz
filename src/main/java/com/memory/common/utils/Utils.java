@@ -129,9 +129,7 @@ public class Utils {
         return file!=null;
     }
 
-    public static Boolean isNotNull(List<?> list){
-        return list!=null && list.size()>0;
-    }
+    public static Boolean isNotNull(List<?> list){ return list!=null && list.size()>0; }
 
 
 

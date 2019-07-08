@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-import static com.memory.redis.CacheConstantConfig.COURSEEXTHASH;
 import static com.memory.redis.CacheConstantConfig.SHARECOURSECONTENT;
 
 /**

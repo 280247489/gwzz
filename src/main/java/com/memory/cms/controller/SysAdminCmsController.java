@@ -37,7 +37,7 @@ public class SysAdminCmsController {
      * @param pwd
      * @return
      */
-    @RequestMapping(value = "login", method = RequestMethod.POST)
+    @RequestMapping(value = "login")
     public Result login(@RequestParam("loginName") String loginName,@RequestParam("pwd") String pwd){
         Result result = new Result();
         try {

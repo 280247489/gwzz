@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
 import java.util.*;
 
 import static com.memory.redis.CacheConstantConfig.*;
@@ -548,19 +549,37 @@ public class LiveMasterCmsController {
             }
             String mergePath ="";
             mergePath = FileUtils.getLocalPath() +  FileUtils.getCustomCmsPath("live",master_id);
-            String out = cmdExceMergeMp3Shell(mergePath);
-            if(Utils.isNotNull(out) && !"Fail".equals(out)){
-                String  downloadPath = out/*.split(":")[1]*/.trim();
-                downloadPath =downloadPath.substring(downloadPath.indexOf("/",2),downloadPath.length());
-                System.out.println("downloadPath========="+downloadPath);
-                downloadPath = FileUtils.getLocalShowPath() + downloadPath;
-                master.setLiveMasterIsSynthesisAudio(1);
-                master.setLiveMasterSynthesisAudioUrl(downloadPath);
-                liveMasterCmsService.update(master);
-                result = ResultUtil.success(downloadPath);
-            }else {
-                result = ResultUtil.error(-1,"音频合成失败");
+            File folder = new File(mergePath);
+            //文件目录不存在
+            if (!folder.exists() && !folder.isDirectory()) {
+                result = ResultUtil.error(-1,"没有要合成的音频");
+                //文件目录存在
+            }else{
+
+                List<com.memory.entity.bean.LiveSlave> list = liveSlaveCmsService.queryLiveSlaveList(master_id);
+
+                String txtFilePath =  writeFile2Txt(list,mergePath,"filelist.txt");
+
+                String out = cmdExceMergeMp3Shell(mergePath,txtFilePath);
+                System.out.println("out =================================" + out);
+                if(Utils.isNotNull(out) && !"Fail".equals(out) &&  !"[sudo] password for memory: Fail".equals(out)){
+                    String  downloadPath = out/*.split(":")[1]*/.trim();
+                    if(downloadPath.indexOf("sudo")>= 0){
+                        downloadPath = out.split(":")[1];
+                    }
+                    System.out.println("downloadPath 11111=========="+downloadPath);
+                    downloadPath =downloadPath.substring(downloadPath.indexOf("/",2),downloadPath.length());
+                    System.out.println("downloadPath 2222=========="+downloadPath);
+                    downloadPath = FileUtils.getLocalShowPath() + downloadPath;
+                    master.setLiveMasterIsSynthesisAudio(1);
+                    master.setLiveMasterSynthesisAudioUrl(downloadPath);
+                    liveMasterCmsService.update(master);
+                    result = ResultUtil.success(downloadPath);
+                }else {
+                    result = ResultUtil.error(-1,"音频合成失败");
+                }
             }
+
         }catch (Exception e){
 
             e.printStackTrace();
@@ -568,6 +587,15 @@ public class LiveMasterCmsController {
         }
         return result;
     }
+
+
+    public static void main(String[] args) {
+        //  /test.jlgwzz.com/cms/live/kWRty0jN1561772072044/merge_20190705162751.mp3
+        String downloadPath = "/test.jlgwzz.com/cms/live/kWRty0jN1561772072044/merge_20190705162751.mp3";
+        downloadPath =downloadPath.substring(downloadPath.indexOf("/",2),downloadPath.length());
+        System.out.println(downloadPath);
+    }
+
 
 
     @RequestMapping("whoami")
@@ -668,7 +696,10 @@ public class LiveMasterCmsController {
                     if(changeStr.equals(liveSlave.getId())){
                         String path = FileUtils.getLocalPath()+liveSlave.getLiveSlaveAudio();
                         System.out.println("remove path = "+path);
-                        cmdRemoveFile(path);
+                        path = path.trim().replace("/r/n","").replace("/r","");
+                        FileUtils.deleteFile(path);
+                        //String out=    cmdRemoveFile(path);
+                       // System.out.println("remove update out is ..." +out);
                     }
                 }
 
@@ -683,7 +714,10 @@ public class LiveMasterCmsController {
                         if(slaveId.equals(liveSlave.getId())){
                             String path = FileUtils.getLocalPath()+liveSlave.getLiveSlaveAudio();
                             System.out.println("remove ( removeModel ) path = "+path);
-                            cmdRemoveFile(path);
+                            path = path.trim().replace("/r/n","").replace("/r","");
+                            FileUtils.deleteFile(path);
+                           // String out =cmdRemoveFile(path);
+                          //  System.out.println("remove out is ..." +out);
                         }
                     }
                 }
@@ -747,6 +781,7 @@ public class LiveMasterCmsController {
                     String localPath = FileUtils.getLocalPath();
                     //path 会返回 文件的路径或 Fail 如果是Fail 代表文件转换失败, 需手动上传
                     String path = cmdExceAmr2Mp3Shell(localPath +"/"+audioUrl );
+                    path = path.trim().replace("/r/n","").replace("/r","");
                     audioUrl=  path.substring(path.indexOf("/cms"),path.length());
                 }
 
@@ -825,12 +860,12 @@ public class LiveMasterCmsController {
      * @param mergePath 要合并的MP3资源路径
      * @return
      */
-   private String cmdExceMergeMp3Shell(String mergePath){
+   private String cmdExceMergeMp3Shell(String mergePath,String readTxtPath){
         String out ="";
         try {
             out = CmdExecutorUtil.builder(pwd)
                     .errRedirect(true)
-                    .sudoCmd("sh /home/memory/amr2mp3/merge_mp3/merge_mp3.sh " + mergePath+"/" )
+                    .sudoCmd("sh /home/memory/amr2mp3/merge_mp3/merge_mp3.sh " + mergePath+"/ "+readTxtPath )
                     .exec();
 
         }catch (Exception e){
@@ -847,7 +882,7 @@ public class LiveMasterCmsController {
        try {
            out = CmdExecutorUtil.builder(pwd)
                    .errRedirect(true)
-                   .sudoCmd(" rm -rf " +filePath)
+                   .sudoCmd("rm -rf " +filePath)
                    .exec();
        }catch (Exception e){
            e.printStackTrace();
@@ -873,6 +908,61 @@ public class LiveMasterCmsController {
        log.info("cmdExceTestUser out :"+out);
        return out;
    }
+
+    /**
+     *
+     * @param path
+     * @return
+     */
+    private String cmdExceCheckPathShell(String path){
+        String out ="";
+        try {
+            out = CmdExecutorUtil.builder(pwd)
+                    .errRedirect(true)
+                    .sudoCmd("sh /home/memory/amr2mp3/merge_mp3/check_path.sh " + path+"/" )
+                    .exec();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            out ="Fail";
+        }
+        System.out.println("cmdExceCheckPathShell out :"+out);
+        log.info("cmdExceCheckPathShell out :"+out);
+        return out;
+    }
+
+    private String writeFile2Txt(List<com.memory.entity.bean.LiveSlave> list,String filePath,String fileName) throws IOException{
+        String txtFilePath = filePath+"/"+fileName;
+
+        File folder = new File(txtFilePath);
+        if(folder.exists()){
+            FileUtils.deleteFile(txtFilePath);
+        }
+
+        File file = new File(txtFilePath);
+        FileOutputStream fos = new FileOutputStream(file);
+        OutputStreamWriter osw=new OutputStreamWriter(fos, "UTF-8");
+        BufferedWriter bw=new BufferedWriter(osw);
+
+        int i=0;
+        for (com.memory.entity.bean.LiveSlave liveSlave : list) {
+            i++;
+            if(liveSlave.getLiveSlaveType() == 2 && liveSlave.getLiveSlaveAudio().trim().indexOf("http") < 0){
+                StringBuffer sb =new StringBuffer();
+                sb.append("file \'"+FileUtils.getLocalPath()+liveSlave.getLiveSlaveAudio().trim().replace("/r/n","").replace("/r","")+"\'");
+                bw.write(sb.toString());
+                if(i!=list.size()){
+                    bw.newLine();
+                }
+
+            }
+        }
+
+        bw.close();
+        osw.close();
+        fos.close();
+        return txtFilePath;
+    }
 
 
 

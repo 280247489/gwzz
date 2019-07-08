@@ -127,6 +127,25 @@ public class CacheConstantConfig {
      */
 
 
+    /**
+     * 搜索记录统计 kv start
+     */
+
+    //  key : Search:course:search_userid:
+    //  value :map==> keyword:count
+    public static final String SEARCHCOURSESEARCHAPPID="Search:course:search_userid:";
+
+    //  key : Search:article:search_userid:
+    //  value :map==> keyword:count
+    public static final String SEARCHARTICLESEARCHAPPID="Search:article:search_userid:";
+
+    /**
+     * 搜索记录统计 kv end
+     */
+
+
+
+
 
 
 
@@ -141,6 +160,12 @@ public class CacheConstantConfig {
      * 微信分享 end========
      */
 
+
+    //用户获取验证码数据
+    public static final String USER_SMS_SUM = "userSMSSum";
+
+    //用户登录状态
+    public static final String USER_LOGIN = "userLogin";
 
 
 }

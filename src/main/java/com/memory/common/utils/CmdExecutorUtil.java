@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-/** * linux命令行执行器 * @author guyadong * */
+/** * linux命令行执行器  */
 public class CmdExecutorUtil {
     private static final Logger logger = Logger.getLogger(CmdExecutorUtil.class.getSimpleName());
     private static final String SUDO_CMD = "sudo -S";

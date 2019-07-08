@@ -39,15 +39,10 @@ public class JoditConrtoller {
     public JoditImg  uploadImg(HttpServletRequest request,MultipartFileArrayModel model){
         JoditImg joditImg = new JoditImg();
         try{
-            System.out.println("11111111111");
             String uploadFilePath = config.getJodit().get("path");
             String baseUrl = config.getJodit().get("base_url");
-
             System.out.println("json ====" + JSON.toJSONString(config));
-           // System.out.println("upload_local_path ====" + JSON.toJSONString(upload_local_path));
 
-            System.out.println(model);
-            System.out.println(model.getFiles());
             String course_logo = "";
             List<MultipartFile> list =  model.getFiles();
             ArrayList<String> fileStr =new ArrayList<String>();
@@ -67,8 +62,6 @@ public class JoditConrtoller {
                 String fileUploadedPath = "",fileName="";
 
                 String imgName = uploadFile.getOriginalFilename();
-                System.out.println(imgName);
-                System.out.println(uploadFile.getName());
                 Pattern pattern = Pattern.compile(reg);
                 Matcher matcher = pattern.matcher(imgName);
                 if(matcher.find()){
@@ -95,8 +88,6 @@ public class JoditConrtoller {
                     System.out.println("course_logo === "+course_logo);
 
                     joditImg.setTime(DateUtils.getCurrentDate());
-                    //joditImg.setData();
-
                     joditImg.toString();
                 }
                 i++;
