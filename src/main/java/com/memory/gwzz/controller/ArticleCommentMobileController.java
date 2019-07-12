@@ -2,6 +2,7 @@ package com.memory.gwzz.controller;
 
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
+import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.User;
@@ -61,7 +62,7 @@ public class ArticleCommentMobileController extends BaseController {
                 User user = (User) daoUtils.getById("User",userId);
                 if (user!=null){
                     msg.setRecode(0);
-                    Map<String,Object> returnMap = articleCommentMobileService.add(articleId,user,commentType,commentParentId,content,content_replace);
+                    Map<String,Object> returnMap = articleCommentMobileService.add(articleId,user,commentType,commentParentId, Utils.filterEmoji(content),Utils.filterEmoji(content_replace));
                     msg.setData(returnMap);
                 }else {
                     msg.setRecode(2);

@@ -89,12 +89,20 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
         StringBuffer sbAlbum = new StringBuffer( " FROM Album WHERE albumIsOnline = 1 AND albumIsHomePage = 1 ORDER BY albumSort ASC");
         List<Album> albumList = daoUtils.findByHQL(sbAlbum.toString(),null,null);
 
+        StringBuffer sbNewCourse = new StringBuffer( "SELECT NEW com.memory.gwzz.model.Course( id, courseNumber,courseTitle, courseLogo, courseLabel,courseOnline,courseTotalComment,courseTotalView,courseReleaseTime)  " +
+                "FROM Course WHERE courseOnline =1 ORDER BY courseReleaseTime DESC");
+        DaoUtils.Page pageNewCourse = new DaoUtils.Page();
+        pageNewCourse.setPageIndex(1);
+        pageNewCourse.setLimit(1);
+        List<Course> newCourseList = daoUtils.findByHQL(sbNewCourse.toString(),null,pageNewCourse);
+
 
         returnMap.put("bannerList",bannerList);
 //        returnMap.put("liveMaster",liveMaster);
         returnMap.put("courseList",courseList);
         returnMap.put("articleList",articleList);
         returnMap.put("albumList",albumList);
+        returnMap.put("newCourseList",newCourseList);
 
         return returnMap;
     }

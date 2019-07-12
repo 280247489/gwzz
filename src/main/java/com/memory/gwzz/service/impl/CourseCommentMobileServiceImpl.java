@@ -89,6 +89,8 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
     @Override
     public Map<String, Object> listComByCid(String courseId,Integer start,Integer limit,String uid) {
         Map<String,Object> returnMap = new HashMap<>();
+        Course course = (Course) daoUtils.getById("Course",courseId);
+
         //查询一级评论列表
         StringBuffer sbCourseCommentList = new StringBuffer("select id AS courseCommentId,course_id,user_id AS uid,user_logo,user_name,comment_content_replace,comment_create_time,comment_total_like," +
                 "(select count(*) from course_comment where course_id=:courseId and comment_root_id = courseCommentId and comment_type=1)," +
@@ -130,6 +132,7 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
 
         returnMap.put("listCouCom",returnList);
         returnMap.put("commentCount",commentCount);
+        returnMap.put("count",course.getCourseTotalComment());
 
 
         return returnMap;

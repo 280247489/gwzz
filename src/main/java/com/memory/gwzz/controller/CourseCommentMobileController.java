@@ -2,6 +2,7 @@ package com.memory.gwzz.controller;
 
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
+import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.User;
@@ -65,7 +66,7 @@ public class CourseCommentMobileController extends BaseController {
                     msg.setMsg("无此用户信息");
                 }else {
 
-                    Map<String,Object> returnMap = courseCommentMobileService.add(courseId,user,commentType,commentParentId,content,content_replace);
+                    Map<String,Object> returnMap = courseCommentMobileService.add(courseId,user,commentType,commentParentId, Utils.filterEmoji(content),Utils.filterEmoji(content_replace));
                     msg.setRecode(0);
                     msg.setData(returnMap);
                 }

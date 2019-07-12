@@ -12,6 +12,6 @@ import java.util.List;
  * @Date 2019/5/31 9:10
  */
 public interface AdvertiseMobileRepository extends JpaRepository<Advertise,String> {
-    List<Advertise> findByAdvertiseOnline(Integer advertiseOnline);
+    List<Advertise> findByAdvertiseOnlineAndAdvertiseType(Integer advertiseOnline,Integer type);
     Advertise findByIdAndAdvertiseOnline(String id,Integer online);
 }

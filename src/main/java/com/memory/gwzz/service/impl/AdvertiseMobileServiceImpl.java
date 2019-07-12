@@ -59,7 +59,7 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
 
     @Override
     public List<Advertise> getAdvertiseOnline() {
-        return advertiseMobileRepository.findByAdvertiseOnline(1);
+        return advertiseMobileRepository.findByAdvertiseOnlineAndAdvertiseType(1,1);
     }
 
     @Override

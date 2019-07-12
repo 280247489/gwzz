@@ -83,6 +83,7 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
     @Override
     public Map<String, Object> listArtComByAid(String articleId, String uid, Integer start, Integer limit) {
         Map<String,Object> returnMap = new HashMap<>();
+        Article article = (Article) daoUtils.getById("Article",articleId);
         //查询一级评论列表
         StringBuffer sbAC = new StringBuffer("select id AS articleCommentId,article_id,user_id,user_logo,user_name,comment_content_replace,comment_create_time,comment_total_like," +
                 "(select count(*) from article_comment where article_id=:articleId and comment_root_id = articleCommentId and comment_type=1), " +
@@ -124,6 +125,7 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
 
         returnMap.put("listArtCom",returnList);
         returnMap.put("commentCount",commentCount);
+        returnMap.put("count",article.getArticleTotalComment());
 
         return returnMap;
     }
