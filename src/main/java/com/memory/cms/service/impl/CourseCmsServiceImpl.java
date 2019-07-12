@@ -238,7 +238,7 @@ public class CourseCmsServiceImpl implements CourseCmsService {
 
     @Override
     public int countCourseByAlbumId(String albumId) {
-        return repository.countCourseByAlbumId(albumId);
+        return repository.countCourseByAlbumIdAndCourseOnline(albumId,1);
     }
 }
 

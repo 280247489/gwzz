@@ -135,7 +135,7 @@ public class AdvertiseCmsServiceImpl implements AdvertiseCmsService {
      */
     @Override
     @Transactional
-    public Advertise upd(Advertise advertise, String aName, MultipartFile aLogo, String aH5Type, String aH5Url, String createId) {
+    public Advertise upd(Advertise advertise, String aName, MultipartFile aLogo, String aH5Type, String aH5Url, String createId,Integer aType) {
         Date date = new Date();
         advertise.setAdvertiseName(aName);
         if (!aLogo.isEmpty()){
@@ -143,6 +143,7 @@ public class AdvertiseCmsServiceImpl implements AdvertiseCmsService {
             String customCmsPath = FileUtils.getCustomCmsPath("advertise",advertise.getId());
             advertise.setAdvertiseLogo(FileUtils.upload(aLogo,FileUtils.getLocalPath(),customCmsPath,fileName));
         }
+        advertise.setAdvertiseType(aType);
         advertise.setAdvertiseH5Type(aH5Type);
         advertise.setAdvertiseH5Url(aH5Url);
         advertise.setAdvertiseUpdateId(createId);

@@ -117,14 +117,19 @@ public class AlbumCmsController {
             if(albumInit == null){
                 return ResultUtil.error(-1,"非法专辑id");
             }
-            albumInit.setAlbumIsOnline(album.getAlbum_is_online());
-            albumInit.setAlbumUpdateId(album.getOperator_id());
-            albumInit.setAlbumUpdateTime(new Date());
-            albumInit= albumCmsService.update(albumInit);
-            if(albumInit!=null){
-                result = ResultUtil.success(albumInit);
-            }else {
-                result = ResultUtil.error(-1,"系统异常!");
+
+            if(albumInit.getAlbumCourseSum() >0){
+                albumInit.setAlbumIsOnline(album.getAlbum_is_online());
+                albumInit.setAlbumUpdateId(album.getOperator_id());
+                albumInit.setAlbumUpdateTime(new Date());
+                albumInit= albumCmsService.update(albumInit);
+                if(albumInit!=null){
+                    result = ResultUtil.success(albumInit);
+                }else {
+                    result = ResultUtil.error(-1,"系统异常!");
+                }
+            }else{
+                result = ResultUtil.error(-1,"专辑下没有课程，请添加课程!");
             }
         }catch (Exception e){
             e.printStackTrace();

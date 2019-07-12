@@ -29,7 +29,18 @@ public class FeedbackCmsServiceImpl implements FeedbackCmsService {
     @Override
     public List<Feedback> queryFeedbackByQue(Integer pageIndex, Integer limit, String feedbackName, String feedbackContactUs, String feedbackType) {
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(" FROM Feedback f where 1=1 ");
+        //private String id;
+        //    private String userId;
+        //    private String feedbackType;
+        //    private String feedbackContent;
+        //    private String feedbackName;
+        //    private String feedbackContactUs;
+        //    private String feedbackImg;
+        //    private Date feedbackCreateTime;
+        //    private String userName;
+        //FROM Course c LEFT JOIN LiveMaster l ON c.id = l.courseId
+        stringBuffer.append("SELECT new com.memory.entity.bean.Feedback (f.id,f.userId,f.feedbackType,f.feedbackContent,f.feedbackName,f.feedbackContactUs,f.feedbackImg," +
+                "f.feedbackCreateTime,u.userNickName) FROM Feedback f LEFT JOIN User u  ON f.userId = u.id where 1=1 ");
         Map<String,Object> whereClause = getWhereClause(feedbackName,feedbackContactUs,feedbackType);
         stringBuffer.append(whereClause.get("where"));
         Map<String,Object> map = (  Map<String,Object>) whereClause.get("param");
@@ -42,7 +53,7 @@ public class FeedbackCmsServiceImpl implements FeedbackCmsService {
     @Override
     public int queryFeedbackCountByQue(String feedbackName, String feedbackContactUs, String feedbackType) {
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(" SELECT count(*) FROM Feedback f where 1=1 ");
+        stringBuffer.append(" SELECT count(*) FROM  Feedback f LEFT JOIN User u  ON f.userId = u.id  where 1=1 ");
         Map<String,Object> whereClause = getWhereClause(feedbackName,feedbackContactUs,feedbackType);
         stringBuffer.append(whereClause.get("where"));
         Map<String,Object> map = (  Map<String,Object>) whereClause.get("param");

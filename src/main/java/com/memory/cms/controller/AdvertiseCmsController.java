@@ -146,16 +146,18 @@ public class AdvertiseCmsController extends BaseController {
      */
     @RequestMapping(value = "upd", method = RequestMethod.POST)
     public Message upd (@RequestParam String id, @RequestParam String aName, @RequestParam MultipartFile aLogo,@RequestParam String aH5Type,
-                        @RequestParam String aH5Url, @RequestParam String createId){
+                        @RequestParam String aH5Url, @RequestParam String createId,@RequestParam Integer aType){
         msg = Message.success();
         try {
+            System.out.println("aH5Type ===================="+aH5Type);
+
            Advertise advertise =  advertiseCmsService.checkAdvertiseName(aName,id);
            if (advertise==null){
                advertise = (Advertise) daoUtils.getById("Advertise", id);
                if (advertise!=null){
                    msg.setRecode(0);
                    msg.setMsg("修改成功");
-                   msg.setData(advertiseCmsService.upd(advertise,aName,aLogo,aH5Type,aH5Url,createId));
+                   msg.setData(advertiseCmsService.upd(advertise,aName,aLogo,aH5Type,aH5Url,createId,aType));
                }else{
                    msg.setRecode(2);
                    msg.setMsg("无此信息");

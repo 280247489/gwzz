@@ -70,6 +70,10 @@ public class CourseCmsController {
                 course.setCourseUpdateId(operator_id);
              //  int status =  courseService.updateCourseOnlineById(online,id);
                 Course returnCourse = courseService.update(course);
+
+
+
+
                 String str ="上线";
                 if(online == 0){
                     str = "下线";
@@ -85,6 +89,18 @@ public class CourseCmsController {
                     courseExtCmsService.updateCourseExtDb2Redis(id,course.getCourseTitle());
 
                 }
+
+                //变更上下线状态时同步专辑数量
+                if(Utils.isNotNull(course.getAlbumId())){
+                    Album album = albumCmsService.getAlbumById(course.getAlbumId());
+                    if(Utils.isNotNull(album)){
+                        int album_course_count = courseService.countCourseByAlbumId(course.getAlbumId());
+
+                        album.setAlbumCourseSum(album_course_count);
+                        albumCmsService.update(album);
+                    }
+                }
+
                 result.setCode(0);
                 result.setMsg("变更"+str+"状态成功！");
                 result.setData(online);

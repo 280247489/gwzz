@@ -15,7 +15,7 @@ public interface AdvertiseCmsService {
     void addAdvertise(String aName, MultipartFile aLogo, Integer aType, String aH5Type, String aH5Url, String createId);
     Advertise checkAdvertiseName(String aName, String id);
     Page<Advertise> findAdvertise(Pageable pageable, String aName, Integer aType);
-    Advertise upd(Advertise advertise, String aName, MultipartFile aLogo, String aH5Type, String aH5Url, String createId);
+    Advertise upd(Advertise advertise, String aName, MultipartFile aLogo, String aH5Type, String aH5Url, String createId,Integer aType);
     Advertise updOnine(Advertise advertise);
     void del(Advertise advertise);
 
