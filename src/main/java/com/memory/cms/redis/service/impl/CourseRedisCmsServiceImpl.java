@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-import static com.memory.redis.CacheConstantConfig.SHARECOURSECONTENT;
-
 /**
  * @author INS6+
  * @date 2019/5/14 11:00
@@ -26,16 +24,17 @@ public class CourseRedisCmsServiceImpl  implements CourseRedisCmsService {
     @Override
     public Boolean delAndHashSet(String courseId, Map<Object,Object> value) {
 
-        String keyHash =SHARECOURSECONTENT +courseId;
-        return redisUtil.delAndHashSet(keyHash,value);
+      //  String keyHash =SHARECOURSECONTENT +courseId;
+      //  return redisUtil.delAndHashSet(keyHash,value);
+        return null;
     }
 
     @Override
     public Map<Object,Object> setHashAndIncr(String courseId,Map<Object,Object> value) {
 
-        String keyHash =SHARECOURSECONTENT +courseId;
-        redisUtil.hset(keyHash,"courseExt",JSON.toJSONString(value));
-        redisUtil.hset(keyHash,"course","爱中医第328课：肺癌的拯救");
+      //  String keyHash =SHARECOURSECONTENT +courseId;
+       // redisUtil.hset(keyHash,"courseExt",JSON.toJSONString(value));
+      //  redisUtil.hset(keyHash,"course","爱中医第328课：肺癌的拯救");
       //  redisUtil.set(keyHash,JSON.toJSONString(value));
         return value;
 

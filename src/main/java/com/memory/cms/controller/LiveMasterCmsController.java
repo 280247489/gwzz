@@ -1,7 +1,7 @@
 package com.memory.cms.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.memory.cms.service.CourseMemoryService;
+import com.memory.cms.service.LiveMemoryService;
 import com.memory.cms.service.LiveMasterCmsService;
 import com.memory.cms.service.LiveSlaveCmsService;
 import com.memory.common.async.DemoAsyncTask;
@@ -46,7 +46,7 @@ public class LiveMasterCmsController {
 
 
     @Autowired
-    private CourseMemoryService courseMemoryService;
+    private LiveMemoryService LIveMemoryService;
 
     private final String pwd="memory";
 
@@ -389,39 +389,39 @@ public class LiveMasterCmsController {
         Result result = new Result();
         try {
 
-            String keyCourseView = COURSEVIEW + id;
+            String keyCourseView = LIVEVIEW + id;
             String keyCourseViewOs ="";
-            String keyCourseViewComment = COURSECOMMENT + id;
-            String keyCourseViewId= COURSEVIEWID +id;
+            String keyCourseViewComment = LIVECOMMENT + id;
+            String keyCourseViewId= LIVEVIEWID +id;
 
             // ios
             if(os == 0){
                 //app
                 if(terminal == 0){
-                    keyCourseViewOs = COURSEVIEWIOSAPP + id;
+                    keyCourseViewOs = LIVEVIEWIOSIN + id;
                 //h5
                 }else {
-                    keyCourseViewOs = COURSEVIEWIOSH5 +id;
+                    keyCourseViewOs = LIVEVIEWIOSOUT +id;
                 }
             // android
             }else {
 
                 //app
                 if(terminal == 0){
-                    keyCourseViewOs = COURSEVIEWANDROIDAPP + id;
+                    keyCourseViewOs = LIVEVIEWANDROIDIN + id;
                     //h5
                 }else {
-                    keyCourseViewOs = COURSEVIEWANDROIDH5 +id;
+                    keyCourseViewOs = LIVEVIEWANDROIDOUT +id;
                 }
             }
 
             //内存
-            if(COURSEMAP.containsKey(keyCourseViewComment)){
+            if(LIVEMAP.containsKey(keyCourseViewComment)){
 
                 total2Redis(openId, keyCourseView, keyCourseViewOs, keyCourseViewId);
 
                 System.out.println("内存==============================="+keyCourseViewComment);
-                return ResultUtil.success(COURSEMAP.get(keyCourseViewComment));
+                return ResultUtil.success(LIVEMAP.get(keyCourseViewComment));
 
             }else {
 

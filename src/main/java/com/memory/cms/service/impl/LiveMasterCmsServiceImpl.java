@@ -2,7 +2,7 @@ package com.memory.cms.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.memory.cms.repository.LiveMasterCmsRepository;
-import com.memory.cms.service.CourseMemoryService;
+import com.memory.cms.service.LiveMemoryService;
 import com.memory.cms.service.LiveMasterCmsService;
 import com.memory.cms.service.LiveSlaveCmsService;
 import com.memory.common.utils.Utils;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.memory.redis.CacheConstantConfig.SHARECOURSECONTENT;
+import static com.memory.redis.CacheConstantConfig.SHARELIVECONTENT;
 
 /**
  * @author INS6+
@@ -38,7 +38,7 @@ public class LiveMasterCmsServiceImpl implements LiveMasterCmsService {
     private RedisUtil redisUtil;
 
     @Autowired
-    private CourseMemoryService courseMemoryService;
+    private LiveMemoryService LIveMemoryService;
 
     @Autowired
     private LiveMasterCmsService liveMasterCmsService;
@@ -186,14 +186,14 @@ public class LiveMasterCmsServiceImpl implements LiveMasterCmsService {
 
 
     public void redisLive2NoExist(String uuid) {
-        String keyHash = SHARECOURSECONTENT + uuid;
+        String keyHash = SHARELIVECONTENT + uuid;
         redisUtil.hset(keyHash, "master", "notExist");
         redisUtil.hset(keyHash, "slave", JSON.toJSONString("notExist"));
     }
 
     public void  upgradeLiveDb2Redis(String masterId,boolean isAddMemory){
         com.memory.entity.bean.LiveSlave liveSlave = new  com.memory.entity.bean.LiveSlave();
-        String keyHash = SHARECOURSECONTENT + masterId;
+        String keyHash = SHARELIVECONTENT + masterId;
         List<com.memory.entity.bean.LiveSlave> list = liveSlaveCmsService.queryLiveSlaveList(masterId);
         List<Map<String,Object>> showList = liveSlave.refactorData(list);
         LiveMaster master = liveMasterCmsService.getLiveMasterById(masterId);
@@ -201,9 +201,9 @@ public class LiveMasterCmsServiceImpl implements LiveMasterCmsService {
         redisUtil.hset(keyHash, "slave", JSON.toJSONString(showList));
 
         if(isAddMemory){
-            Object obj = courseMemoryService.getLiveSlaveById(masterId);
+            Object obj = LIveMemoryService.getLiveSlaveById(masterId);
             if(obj != null){
-                courseMemoryService.addLiveMemory(masterId);
+                LIveMemoryService.addLiveMemory(masterId);
             }
         }
 

@@ -1,10 +1,8 @@
 package com.memory.gwzz.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.memory.cms.service.CourseMemoryService;
+import com.memory.cms.service.LiveMemoryService;
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
-import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.CourseExt;
 import com.memory.gwzz.service.CourseExtWebService;
 import com.memory.gwzz.service.CourseWebService;
@@ -18,8 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.memory.redis.CacheConstantConfig.*;
 
 
 /**
@@ -37,7 +33,7 @@ public class CourseExtWebController extends BaseController {
     private CourseExtWebService courseExtWebService;
 
     @Autowired
-    private CourseMemoryService courseMemoryService;
+    private LiveMemoryService LIveMemoryService;
 
 
     @Autowired
@@ -60,7 +56,7 @@ public class CourseExtWebController extends BaseController {
             msg = Message.success();
             msg.setRecode(0);
 
-            msg.setData(courseId);
+ /*           msg.setData(courseId);
          //  msg.setData(JSON.parseObject(JSON.toJSONString(courseExtWebService.getCourseExt(courseId)),HashMap.class) );
        //   msg.setData(JSON.parse(courseExtWebService.getCourseExt(courseId).toString()));
 
@@ -68,7 +64,7 @@ public class CourseExtWebController extends BaseController {
 
             if( COURSEMAP.containsKey(keyHash)){
                 courseExtWebService.setCourseExtView(courseId,openId);
-                msg.setData(courseMemoryService.getCourseExtById(courseId));
+                msg.setData(LiveMemoryService.getCourseExtById(courseId));
                 System.out.println("内存===============================");
             }else {
 
@@ -126,7 +122,7 @@ public class CourseExtWebController extends BaseController {
                     }
 
                 }
-            }
+            }*/
 
         }catch (Exception e){
             e.printStackTrace();

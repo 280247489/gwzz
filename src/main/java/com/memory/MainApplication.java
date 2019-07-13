@@ -1,9 +1,9 @@
 package com.memory;
 
-import com.memory.cms.service.CourseMemoryLoadService;
-import com.memory.cms.service.CourseMemoryService;
+import com.memory.cms.service.LiveMemoryLoadService;
+import com.memory.cms.service.LiveMemoryService;
 import com.memory.common.yml.MyRedisConfig;
-import com.memory.entity.jpa.CourseMemoryLoad;
+import com.memory.entity.jpa.LiveMemoryLoad;
 import com.memory.common.utils.BadWordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -23,10 +23,10 @@ public class MainApplication extends SpringBootServletInitializer {
     private MyRedisConfig myRedisConfig;
 
     @Autowired
-    private CourseMemoryLoadService courseMemoryLoadService;
+    private LiveMemoryLoadService liveMemoryLoadService;
 
     @Autowired
-    private CourseMemoryService courseMemoryService;
+    private LiveMemoryService LIveMemoryService;
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
@@ -42,7 +42,7 @@ public class MainApplication extends SpringBootServletInitializer {
     @PostConstruct
     public void init(){
 
-        load_course_memory();
+        load_live_memory();
         load_illegalWord_2_memory();
 
     }
@@ -51,12 +51,12 @@ public class MainApplication extends SpringBootServletInitializer {
     /**
      * 重启服务，内存加载并发缓存课程
      */
-    public void load_course_memory(){
+    public void load_live_memory(){
         //获取数据加载状态为0的课程
-        List<CourseMemoryLoad>   loadList = courseMemoryLoadService.queryAllCourseMemoryLoadByLoadStatus(0);
-        for (CourseMemoryLoad courseMemoryLoad : loadList) {
-            String course_id = courseMemoryLoad.getCourseId();
-            courseMemoryService.addMemory(course_id);
+        List<LiveMemoryLoad>   loadList = liveMemoryLoadService.queryAllLiveMemoryLoadByLoadStatus(0);
+        for (LiveMemoryLoad courseMemoryLoad : loadList) {
+            String master_id = courseMemoryLoad.getId();
+            LIveMemoryService.addLiveMemory(master_id);
         }
     }
 

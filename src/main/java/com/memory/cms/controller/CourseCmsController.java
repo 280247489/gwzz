@@ -1,5 +1,4 @@
 package com.memory.cms.controller;
-import com.alibaba.fastjson.JSON;
 import com.memory.cms.service.*;
 import com.memory.common.yml.MyFileConfig;
 import com.memory.common.utils.*;
@@ -18,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.memory.redis.CacheConstantConfig.SHARECOURSECONTENT;
 
 /**
  * @author INS6+
@@ -37,13 +35,12 @@ public class CourseCmsController {
     private MyFileConfig config;
 
     @Autowired
-    private CourseMemoryService courseMemoryService;
+    private LiveMemoryService LIveMemoryService;
 
     @Autowired
     private RedisUtil redisUtil;
 
-    @Autowired
-    private CourseExtCmsService courseExtCmsService;
+
 
     @Autowired
     private LiveMasterCmsService liveMasterCmsService;
@@ -77,16 +74,16 @@ public class CourseCmsController {
                 String str ="上线";
                 if(online == 0){
                     str = "下线";
-                    courseMemoryService.clear(id);
+                    LIveMemoryService.clear(id);
 
                     //将redis中的数据赋值为notExist状态.
-                    String keyHash = SHARECOURSECONTENT + id;
-                    redisUtil.hset(keyHash, "course", "notExist");
-                    redisUtil.hset(keyHash, "courseExt", JSON.toJSONString("notExist"));
+                  //  String keyHash = SHARECOURSECONTENT + id;
+                 //   redisUtil.hset(keyHash, "course", "notExist");
+                 //   redisUtil.hset(keyHash, "courseExt", JSON.toJSONString("notExist"));
 
                 }else{
                     //上线状态，同步db2redis
-                    courseExtCmsService.updateCourseExtDb2Redis(id,course.getCourseTitle());
+              //      courseExtCmsService.updateCourseExtDb2Redis(id,course.getCourseTitle());
 
                 }
 
@@ -382,7 +379,7 @@ public class CourseCmsController {
                 course.setCourseNumber(course_number);
 
                 if(course_online ==0){
-                    courseMemoryService.clear(id);
+                    LIveMemoryService.clear(id);
                 }
 
                 if(albumIsChange){

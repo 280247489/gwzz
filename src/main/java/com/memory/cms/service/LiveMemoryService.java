@@ -7,13 +7,10 @@ import java.util.Map;
  * @date 2019/5/28 16:03
  */
 
-public interface CourseMemoryService {
+public interface LiveMemoryService {
 
-    void addMemory(String courseId);
 
-    Object getCourseExtById(String courseId);
-
-    void clear(String courseId);
+    void clear(String masterId);
 
     void clearAll();
 

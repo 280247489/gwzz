@@ -36,9 +36,9 @@ public class CourseExtWebServiceImpl implements CourseExtWebService {
     public boolean delCourseExt (String courseId){
         boolean flag = false;
         try {
-            String keyHash = SHARECOURSECONTENT + courseId;
+       /*     String keyHash = SHARECOURSECONTENT + courseId;
             redisUtil.del(keyHash);
-            flag = true;
+            flag = true;*/
         }catch (Exception e){
             throw e;
         }
@@ -57,18 +57,18 @@ public class CourseExtWebServiceImpl implements CourseExtWebService {
     @Override
     public Map<String,Object> getCourseExt (String courseId){
         Map<String,Object> map =new HashMap<String, Object>();
-        String keyHash = SHARECOURSECONTENT + courseId;
+     /*   String keyHash = SHARECOURSECONTENT + courseId;
         System.out.println("keyHash ===========" +keyHash);
         map.put(COURSE,  redisUtil.hget(keyHash,COURSE));
-        map.put(COURSEEXT,  redisUtil.hget(keyHash,COURSEEXT));
+        map.put(COURSEEXT,  redisUtil.hget(keyHash,COURSEEXT));*/
         return map;
     }
 
     @Override
     public void setCourseExtView(String courseId,String openId) {
-        String key = SHARECOURSEVIEW + courseId;
+  /*      String key = SHARECOURSEVIEW + courseId;
         String keyIncr = SHARECOURSEVIEWOPENID + courseId;
         redisUtil.hincr(keyIncr,openId,1);
-        redisUtil.incr(key,1);
+        redisUtil.incr(key,1);*/
     }
 }
