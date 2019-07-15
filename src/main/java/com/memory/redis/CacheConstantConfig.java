@@ -22,10 +22,6 @@ public class CacheConstantConfig {
     /**
      * 课程直播 redis 键值存储规范 start========
      */
-
-   //课程直播内容信息
-    public static final String SHARELIVECONTENT ="share:course:content:";
-
     //课程直播内存信息
     public static Map<String,Object> LIVEMAP = new HashMap<String,Object>();
     /**
@@ -107,6 +103,13 @@ public class CacheConstantConfig {
     /**
      * course 课程kv start============
      */
+
+    //阅读量============================================
+    //阅读量 (后台操作添加的阅读量)
+    //key ：  Course:view:manager
+    //value ：count
+    public static final String COURSEVIEWMANAGER = "Course:view:manager:";
+
 
     //阅读量
     //uuid : courseId
@@ -221,7 +224,7 @@ public class CacheConstantConfig {
     //阅读量 (后台操作添加的阅读量)
     //key ：  Article:view:manager:uuid
     //value ：count
-    public static final String ARTICLEVIEWMANAGER = "Article:view:manager";
+    public static final String ARTICLEVIEWMANAGER = "Article:view:manager:";
 
     //阅读量 实际有多少个用户看过
     // uuid : articleId
@@ -303,7 +306,7 @@ public class CacheConstantConfig {
     // uuid:appid
     //  key : Article:like:detail:uuid
     //  value :map==> articleId: int 1/0
-    public static final String ARTICLELIKEIOS = "Article:like:detail:";
+    public static final String ARTICLELIKEDETAIL = "Article:like:detail:";
 
     //评论点赞============================================
     //评论点赞列表 以文章为纬度

@@ -223,4 +223,20 @@ public class ArticleCommentCmsServiceImpl implements ArticleCommentCmsService {
     public void delete(String id) {
 
     }
+
+    @Override
+    public List<com.memory.entity.jpa.ArticleComment> queryArticleCommentByCommentParentId(String commentParentId) {
+        return repository.queryArticleCommentByCommentParentId(commentParentId);
+    }
+
+    @Override
+    public int getArticleTotalCommentByArticleId(String articleId) {
+        StringBuffer stringBuffer = new StringBuffer();
+        Map<String,Object> map = new HashMap<String, Object>();
+
+        stringBuffer.append("SELECT count(*) FROM ArticleComment ac where ac.articleId = :articleId ");
+        map.put("articleId",articleId);
+
+        return daoUtils.getTotalByHQL(stringBuffer.toString(),map);
+    }
 }

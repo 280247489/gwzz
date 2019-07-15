@@ -23,12 +23,6 @@ public class LiveMemoryController {
     private LiveMemoryService LIveMemoryService;
 
 
-
-    @Autowired
-    private RedisUtil redisUtil;
-
-
-
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Result addMemory(String masterId){
         Result result = new Result();

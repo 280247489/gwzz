@@ -1,6 +1,7 @@
 package com.memory.cms.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.memory.cms.service.CourseCmsService;
 import com.memory.cms.service.CourseCommentCmsService;
 import com.memory.cms.service.SysAdminCmsService;
 import com.memory.common.utils.PageResult;
@@ -8,6 +9,7 @@ import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.common.utils.Utils;
 import com.memory.entity.bean.CourseComment;
+import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.SysAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,8 @@ public class CourseCommentCmsController {
     @Autowired
     private SysAdminCmsService sysAdminCmsService;
 
+    @Autowired
+    private CourseCmsService courseCmsService;
 
     @RequestMapping(value = "list")
     public Result queryArticleCommentByQue(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
@@ -89,6 +93,16 @@ public class CourseCommentCmsController {
             courseComment.setCommentCreateTime(new Date());
             courseComment.setCommentTotalLike(0);
             com.memory.entity.jpa.CourseComment courseComment1 = courseCommentCmsService.addCourseComment(courseComment );
+
+
+            Course course = courseCmsService.getCourseById(parentCourseComment.getCourseId());
+            //查询当前课程的评论数量
+            int courseTotalComment = courseCommentCmsService.getCourseTotalCommentByCourseId(parentCourseComment.getCourseId());
+            System.out.println("now 评论数量 =="+courseTotalComment);
+            //同步课程评论数
+            course.setCourseTotalComment(courseTotalComment);
+            courseCmsService.update(course);
+
             result = ResultUtil.success(courseComment1);
         }catch (Exception e){
             e.printStackTrace();
@@ -105,29 +119,27 @@ public class CourseCommentCmsController {
             List<com.memory.entity.jpa.CourseComment> removeList = new ArrayList<>();
 
             com.memory.entity.jpa.CourseComment courseComment = courseCommentCmsService.queryCourseCommentById(comment_id);
-
+            Course course = courseCmsService.getCourseById(courseComment.getCourseId());
             if(courseComment == null){
                 return ResultUtil.error(-1,"非法id");
             }
             String comment_root_id = courseComment.getCommentRootId();
 
 
-            if(comment_id.equals(comment_root_id)){
+            if(courseComment.getCommentType() == 0){
                 courseCommentCmsService.deleteCourseCommentByCommentRootId(comment_root_id);
             }else{
-                Date comment_create_time = courseComment.getCommentCreateTime();
-                List< com.memory.entity.jpa.CourseComment> list = courseCommentCmsService.queryCourseCommentList(comment_root_id,comment_create_time);
-
-                if(list.size()<=100){
-                    removeComment(list, comment_id,removeList);
-                    removeList.add(courseComment);
-                }else{
-                    removeList.add(courseComment);
-                    result = ResultUtil.error(-1,"递归删除长度大于100，只删除当前评论!");
-                }
-
+                removeList = courseCommentCmsService.queryCourseCommentByCommentParentId(courseComment.getId());
+                removeList.add(courseComment);
+                System.out.println("removeList ==============="+JSON.toJSONString(removeList));
+                courseCommentCmsService.deleteAll(removeList);
             }
-            courseCommentCmsService.deleteAll(removeList);
+
+            //查询当前课程的评论数量
+            int courseTotalComment = courseCommentCmsService.getCourseTotalCommentByCourseId(course.getId());
+            //同步课程评论数
+            course.setCourseTotalComment(courseTotalComment);
+            courseCmsService.update(course);
             result = ResultUtil.success("删除成功");
 
         }catch (Exception e){

@@ -38,4 +38,9 @@ public interface ArticleCommentCmsService {
 
     void delete(String id);
 
+    List<com.memory.entity.jpa.ArticleComment> queryArticleCommentByCommentParentId(String commentParentId);
+
+    int getArticleTotalCommentByArticleId(String articleId);
+
+
 }

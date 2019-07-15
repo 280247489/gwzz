@@ -2,6 +2,7 @@ package com.memory.cms.redis.service;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,13 +11,8 @@ import java.util.Map;
  */
 
 public interface CourseRedisCmsService {
-
-
-    Boolean delAndHashSet(String courseId,Map<Object,Object> value);
-
-    Map<Object,Object> setHashAndIncr(String courseId,Map<Object,Object> value);
-
-
+    //redis 初始化course 的后台阅读数
+    void initCourseRedisTotal(String courseId);
 
 
 

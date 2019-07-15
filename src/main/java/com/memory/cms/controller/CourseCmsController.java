@@ -1,17 +1,15 @@
 package com.memory.cms.controller;
+import com.memory.cms.redis.service.CourseRedisCmsService;
 import com.memory.cms.service.*;
-import com.memory.common.yml.MyFileConfig;
 import com.memory.common.utils.*;
 import com.memory.entity.jpa.Album;
 import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.LiveMaster;
-import com.memory.redis.config.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,15 +30,7 @@ public class CourseCmsController {
     private CourseCmsService courseService;
 
     @Autowired
-    private MyFileConfig config;
-
-    @Autowired
-    private LiveMemoryService LIveMemoryService;
-
-    @Autowired
-    private RedisUtil redisUtil;
-
-
+    private LiveMemoryService liveMemoryService;
 
     @Autowired
     private LiveMasterCmsService liveMasterCmsService;
@@ -48,6 +38,8 @@ public class CourseCmsController {
     @Autowired
     private AlbumCmsService albumCmsService;
 
+    @Autowired
+    private CourseRedisCmsService courseRedisCmsService;
 
     /**
      * 变更上线下线状态
@@ -65,16 +57,13 @@ public class CourseCmsController {
                 course.setCourseOnline(online);
                 course.setCourseUpdateTime(new Date());
                 course.setCourseUpdateId(operator_id);
-             //  int status =  courseService.updateCourseOnlineById(online,id);
                 Course returnCourse = courseService.update(course);
-
-
-
-
                 String str ="上线";
+                LiveMaster liveMaster = liveMasterCmsService.getLiveMasterByCourseId(id);
+                LiveMaster master=  liveMasterCmsService.getLiveMasterById(id);
                 if(online == 0){
                     str = "下线";
-                    LIveMemoryService.clear(id);
+                    liveMemoryService.clear(id);
 
                     //将redis中的数据赋值为notExist状态.
                   //  String keyHash = SHARECOURSECONTENT + id;
@@ -84,6 +73,15 @@ public class CourseCmsController {
                 }else{
                     //上线状态，同步db2redis
               //      courseExtCmsService.updateCourseExtDb2Redis(id,course.getCourseTitle());
+
+                }
+                master.setLiveMasterIsOnline(online);
+                master.setLiveMasterUpdateId(operator_id);
+                master.setLiveMasterUpdateTime(new Date());
+                LiveMaster returnLiveMaster =liveMasterCmsService.update(master);
+                if(Utils.isNotNull(returnLiveMaster)){
+                    //根据上下线状态同步redis数据
+                    liveMasterCmsService.syncOnline2Redis(liveMaster.getId(), online);
 
                 }
 
@@ -255,7 +253,11 @@ public class CourseCmsController {
                     liveMasterCmsService.update(master);
                 }
 
+
+
                 if(course != null){
+                    //初始化course redis 后台管理阅读数
+                    courseRedisCmsService.initCourseRedisTotal(course.getId());
                     result.setCode(0);
                     result.setMsg("添加课程成功");
                     result.setData(course);
@@ -379,7 +381,7 @@ public class CourseCmsController {
                 course.setCourseNumber(course_number);
 
                 if(course_online ==0){
-                    LIveMemoryService.clear(id);
+                    liveMemoryService.clear(id);
                 }
 
                 if(albumIsChange){

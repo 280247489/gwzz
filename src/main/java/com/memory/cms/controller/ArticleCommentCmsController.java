@@ -1,6 +1,7 @@
 package com.memory.cms.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.memory.cms.service.ArticleCmsService;
 import com.memory.cms.service.ArticleCommentCmsService;
 import com.memory.cms.service.SysAdminCmsService;
 import com.memory.common.utils.PageResult;
@@ -8,6 +9,7 @@ import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.common.utils.Utils;
 import com.memory.entity.bean.ArticleComment;
+import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.SysAdmin;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class ArticleCommentCmsController {
 
     @Autowired
     private SysAdminCmsService sysAdminCmsService;
+
+    @Autowired
+    private ArticleCmsService articleCmsService;
 
 
 
@@ -98,6 +103,14 @@ public class ArticleCommentCmsController {
             articleComment.setCommentTotalLike(0);
             articleComment.setCommentContentReplace(content_replace);
             com.memory.entity.jpa.ArticleComment articleComment1 =   articleCommentCmsService.addArticleComment(articleComment);
+
+            Article  article = articleCmsService.getArticleById(parentArticleComment.getArticleId());
+            //查询当前文章的评论数量
+            int articleTotalComment = articleCommentCmsService.getArticleTotalCommentByArticleId(parentArticleComment.getArticleId());
+            //同步文章评论数
+            article.setArticleTotalComment(articleTotalComment);
+            articleCmsService.update(article);
+
             result = ResultUtil.success(articleComment1);
         }catch (Exception e){
             e.printStackTrace();
@@ -114,37 +127,28 @@ public class ArticleCommentCmsController {
         Result result = new Result();
         try{
 
-
             List<com.memory.entity.jpa.ArticleComment> removeList = new ArrayList<>();
 
             com.memory.entity.jpa.ArticleComment articleComment = articleCommentCmsService.getArticleCommentById(comment_id);
 
-            if(articleComment == null){
+            Article  article = articleCmsService.getArticleById(articleComment.getArticleId());
+            if(articleComment == null || article == null){
                 return ResultUtil.error(-1,"非法id");
             }
             String comment_root_id = articleComment.getCommentRootId();
 
-
-            if(comment_id.equals(comment_root_id)){
+            if(articleComment.getCommentType() == 0){
                 articleCommentCmsService.deleteArticleCommentByCommentRootId(comment_root_id);
             }else{
-                Date comment_create_time = articleComment.getCommentCreateTime();
-                List<com.memory.entity.jpa.ArticleComment> list = articleCommentCmsService.queryArticleCommentList(comment_root_id,comment_create_time);
-                System.out.println("query msg = " );
-                System.out.println(JSON.toJSONString(list));
-
-                if(list.size()<=100){
-                    removeComment(list, comment_id,removeList);
-                    removeList.add(articleComment);
-                }else{
-                 //   removeList.add(articleComment);
-                    result = ResultUtil.error(-1,"递归删除长度大于100,禁止删除!");
-                }
-
+                removeList = articleCommentCmsService.queryArticleCommentByCommentParentId(articleComment.getId());
+                removeList.add(articleComment);
+                articleCommentCmsService.deleteAll(removeList);
             }
-           // System.out.println("remove list size ================== " +removeList.size());
-          //  System.out.println("remove list = " + JSON.toJSONString(removeList));
-            articleCommentCmsService.deleteAll(removeList);
+            //查询当前文章的评论数量
+            int articleTotalComment = articleCommentCmsService.getArticleTotalCommentByArticleId(article.getId());
+            //同步文章评论数
+            article.setArticleTotalComment(articleTotalComment);
+            articleCmsService.update(article);
             result = ResultUtil.success("删除成功");
 
         }catch (Exception e){

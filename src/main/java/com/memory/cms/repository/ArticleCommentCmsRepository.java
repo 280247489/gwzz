@@ -24,5 +24,7 @@ public interface ArticleCommentCmsRepository extends JpaRepository<ArticleCommen
 
     void deleteArticleCommentByCommentRootId(String root_id);
 
+    List<ArticleComment> queryArticleCommentByCommentParentId(String commentParentId);
+
 
 }

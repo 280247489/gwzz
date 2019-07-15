@@ -63,6 +63,23 @@ public class LiveMaster {
     }
 
 
+    public LiveMaster(String id, String liveMasterName, String liveMasterDescribe, String operatorId, String startTime, String endTime) {
+        this.id = id;
+        this.liveMasterName = liveMasterName;
+        this.liveMasterDescribe = liveMasterDescribe;
+        this.operatorId = operatorId;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public LiveMaster() {
+    }
+
+    public LiveMaster(String id, String liveMasterName) {
+        this.id = id;
+        this.liveMasterName = liveMasterName;
+    }
+
     @Override
     public String toString() {
         return "LiveMaster{" +

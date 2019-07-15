@@ -1,6 +1,7 @@
 package com.memory.cms.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.memory.cms.redis.service.LiveRedisCmsService;
 import com.memory.cms.service.LiveMemoryService;
 import com.memory.cms.service.LiveMasterCmsService;
 import com.memory.cms.service.LiveSlaveCmsService;
@@ -9,13 +10,11 @@ import com.memory.common.utils.*;
 import com.memory.entity.bean.*;
 import com.memory.entity.jpa.LiveMaster;
 import com.memory.entity.jpa.LiveSlave;
-import com.memory.redis.config.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.*;
 import java.util.*;
 
@@ -31,7 +30,6 @@ public class LiveMasterCmsController {
 
     private static final Logger log = LoggerFactory.getLogger(CourseTypeCmsController.class);
 
-
     @Autowired
     private LiveMasterCmsService liveMasterCmsService;
 
@@ -39,14 +37,13 @@ public class LiveMasterCmsController {
     private LiveSlaveCmsService liveSlaveCmsService;
 
     @Autowired
-    private RedisUtil redisUtil;
-
-    @Autowired
     private DemoAsyncTask task;
 
+    @Autowired
+    private LiveMemoryService LiveMemoryService;
 
     @Autowired
-    private LiveMemoryService LIveMemoryService;
+    private LiveRedisCmsService liveRedisCmsService;
 
     private final String pwd="memory";
 
@@ -99,7 +96,6 @@ public class LiveMasterCmsController {
     public Result add(ExtModel extModel,MasterModel masterModel){
         Result result = new Result();
         try {
-            //live_master_endtime
             Map<String,Object> returnMap = new HashMap<String, Object>();
             String uuid = Utils.getShortUUTimeStamp();
             com.memory.entity.bean.LiveMaster liveMaster = masterModel.getLiveMaster();
@@ -121,8 +117,9 @@ public class LiveMasterCmsController {
                 returnMap.put("master",returnMaster);
                 returnMap.put("slave",returnList);
                 //存储到redis 临时
-                liveMasterCmsService.redisLive2NoExist(uuid);
-
+                //liveMasterCmsService.redisLive2NoExist(uuid);
+                //设置redis初始值 （master 和slave）为 notExist
+                liveRedisCmsService.live2RedisNotExist(uuid);
                // asyncDownloadFromXiaoZhuShou(slaveList);
 
             }
@@ -171,14 +168,17 @@ public class LiveMasterCmsController {
             if(returnMaster !=null && returnList != null){
                 returnMap.put("master",returnMaster);
                 returnMap.put("slave",returnList);
-                liveMasterCmsService.upgradeLiveDb2Redis(uuid,true);
 
-                //asyncDownloadFromXiaoZhuShou(returnList);
+                //根据上下线状态同步redis数据
+                liveMasterCmsService.syncOnline2Redis(uuid, returnMaster.getLiveMasterIsOnline());
+
+
+
+                //asyncDownloadFromXiaoZhuShou(returnList);live_redis_key
                 result = ResultUtil.success(returnMap);
             }else {
                 result = ResultUtil.error(-1,"修改直播失败");
             }
-
 
         }catch (Exception e){
             e.printStackTrace();
@@ -262,8 +262,8 @@ public class LiveMasterCmsController {
                 return ResultUtil.error(-1,"变更状态失败");
             }
 
-            //下线
-            syncOnline2Redis(id, online);
+            //根据上下线状态同步redis数据
+            liveMasterCmsService.syncOnline2Redis(id, online);
             result = ResultUtil.success(online);
         }catch (Exception e){
             e.printStackTrace();
@@ -272,14 +272,7 @@ public class LiveMasterCmsController {
         return result;
     }
 
-    private void syncOnline2Redis( String id, int online) {
-        if(online == 0){
-            liveMasterCmsService.redisLive2NoExist(id);
-        }else{
-            //上线状态，同步db2redis
-            liveMasterCmsService.upgradeLiveDb2Redis(id,false);
-        }
-    }
+
 
 
     /**
@@ -388,54 +381,24 @@ public class LiveMasterCmsController {
     public Result getLiveById(@RequestParam("id") String id,@RequestParam("openId") String openId,Integer terminal,Integer os){
         Result result = new Result();
         try {
-
-            String keyCourseView = LIVEVIEW + id;
-            String keyCourseViewOs ="";
-            String keyCourseViewComment = LIVECOMMENT + id;
-            String keyCourseViewId= LIVEVIEWID +id;
-
-            // ios
-            if(os == 0){
-                //app
-                if(terminal == 0){
-                    keyCourseViewOs = LIVEVIEWIOSIN + id;
-                //h5
-                }else {
-                    keyCourseViewOs = LIVEVIEWIOSOUT +id;
-                }
-            // android
-            }else {
-
-                //app
-                if(terminal == 0){
-                    keyCourseViewOs = LIVEVIEWANDROIDIN + id;
-                    //h5
-                }else {
-                    keyCourseViewOs = LIVEVIEWANDROIDOUT +id;
-                }
-            }
-
+            String keyCourseViewComment = liveRedisCmsService.getKey(id);
             //内存
             if(LIVEMAP.containsKey(keyCourseViewComment)){
-
-                total2Redis(openId, keyCourseView, keyCourseViewOs, keyCourseViewId);
-
+                liveRedisCmsService.total2Redis(id, openId, terminal, os);
                 System.out.println("内存==============================="+keyCourseViewComment);
                 return ResultUtil.success(LIVEMAP.get(keyCourseViewComment));
 
             }else {
-
-                Object object = redisUtil.hget(keyCourseViewComment,"slave");
+                Object object = liveRedisCmsService.getSlaveById(id);
 
                 //判断redis中是否含有此次课程数据
                 //有课程数据
                 if(object != null){
                     if(!"notExist".equals(object)){
                         Map<String,Object> map = new HashMap<>();
-                        map.put("master",redisUtil.hget(keyCourseViewComment,"master"));
+                        map.put("master",liveRedisCmsService.getMasterNameById(id));
                         map.put("slave",JSON.parse(object.toString()));
-
-                        total2Redis(openId, keyCourseView, keyCourseViewOs, keyCourseViewId);
+                        liveRedisCmsService.total2Redis(id, openId, terminal, os);
                         return ResultUtil.success(map);
 
                     }else {
@@ -454,20 +417,17 @@ public class LiveMasterCmsController {
                             List<com.memory.entity.bean.LiveSlave> list = liveSlaveCmsService.queryLiveSlaveList(id);
                             com.memory.entity.bean.LiveSlave liveSlave = new  com.memory.entity.bean.LiveSlave();
                             List<Map<String,Object>> showList = liveSlave.refactorData(list);
-
-                            redisUtil.hset(keyCourseViewComment,"master",master.getLiveMasterName());
-                            redisUtil.hset(keyCourseViewComment,"slave",showList);
+                            liveRedisCmsService.live2Redis(id,master.getLiveMasterName(),showList);
 
                             Map<String,Object> map = new HashMap<>();
                             map.put("master",master.getLiveMasterName());
                             map.put("slave",showList);
-                            total2Redis(openId, keyCourseView, keyCourseViewOs, keyCourseViewId);
+                            liveRedisCmsService.total2Redis(id, openId, terminal, os);
                             return ResultUtil.success(map);
                         //下线
                         }else {
                             System.out.println("redis没有课程数据，数据库中有数据，但是课程是下线状态=============================="+keyCourseViewComment);
-                            redisUtil.hset(keyCourseViewComment,"master","notExist");
-                            redisUtil.hset(keyCourseViewComment,"slave","notExist");
+                            liveRedisCmsService.live2RedisNotExist(id);
                             result.setCode(1);
                             result.setMsg("notExist");
                         }
@@ -589,15 +549,6 @@ public class LiveMasterCmsController {
     }
 
 
-    public static void main(String[] args) {
-        //  /test.jlgwzz.com/cms/live/kWRty0jN1561772072044/merge_20190705162751.mp3
-        String downloadPath = "/test.jlgwzz.com/cms/live/kWRty0jN1561772072044/merge_20190705162751.mp3";
-        downloadPath =downloadPath.substring(downloadPath.indexOf("/",2),downloadPath.length());
-        System.out.println(downloadPath);
-    }
-
-
-
     @RequestMapping("whoami")
     public Result whoami(){
         Result result = new Result();
@@ -611,13 +562,6 @@ public class LiveMasterCmsController {
         return result;
     }
 
-
-
-    private void total2Redis( String openId, String keyCourseView, String keyCourseViewOs, String keyCourseViewId) {
-        redisUtil.incr(keyCourseView,1);
-        redisUtil.incr(keyCourseViewOs,1);
-        redisUtil.hincr(keyCourseViewId,openId,1);
-    }
 
 
 
@@ -963,6 +907,12 @@ public class LiveMasterCmsController {
         fos.close();
         return txtFilePath;
     }
+
+
+
+
+
+
 
 
 

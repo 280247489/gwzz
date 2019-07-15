@@ -216,4 +216,19 @@ public class CourseCommentCmsServiceImpl implements CourseCommentCmsService {
     public List<com.memory.entity.jpa.CourseComment> queryCourseCommentList(String comment_root_id, Date comment_create_time) {
         return repository.queryCourseCommentList(comment_root_id,comment_create_time);
     }
+
+    @Override
+    public int getCourseTotalCommentByCourseId(String courseId) {
+        StringBuffer sb = new StringBuffer();
+        Map<String,Object> map = new HashMap<String,Object>();
+        sb.append("select count(*) from CourseComment cc where cc.courseId = :courseId ");
+        map.put("courseId",courseId);
+
+        return daoUtils.getTotalByHQL(sb.toString(),map);
+    }
+
+    @Override
+    public List<com.memory.entity.jpa.CourseComment> queryCourseCommentByCommentParentId(String commentParentId) {
+        return repository.queryCourseCommentByCommentParentId(commentParentId);
+    }
 }

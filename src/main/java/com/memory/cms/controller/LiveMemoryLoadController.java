@@ -1,11 +1,9 @@
 package com.memory.cms.controller;
 
-import com.memory.cms.service.CourseCmsService;
 import com.memory.cms.service.LiveMemoryLoadService;
 import com.memory.cms.service.LiveMasterCmsService;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
-import com.memory.entity.bean.Course;
 import com.memory.entity.jpa.LiveMemoryLoad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,10 +27,6 @@ public class LiveMemoryLoadController {
     private LiveMemoryLoadService liveMemoryLoadService;
 
     @Autowired
-    private CourseCmsService courseService;
-
-
-    @Autowired
     private LiveMasterCmsService liveMasterCmsService;
 
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
@@ -42,15 +36,15 @@ public class LiveMemoryLoadController {
             List<Map<String,Object>> returnMap = new ArrayList<Map<String,Object>>();
             Map<String ,Object> mapper = new HashMap<String ,Object>();
             //List<LiveMaster> options = liveMasterCmsService.queryListMasterOptions();
-            List<com.memory.entity.bean.Course>  optionsList = courseService.queryCourseOptions();
-            for (Course course : optionsList) {
-                mapper.put(course.getId(),course.getCourseTitle());
+            List<com.memory.entity.bean.LiveMaster>  optionsList = liveMasterCmsService.queryLiveMasterOptions();
+            for (com.memory.entity.bean.LiveMaster master : optionsList) {
+                mapper.put(master.getId(),master.getLiveMasterName());
             }
 
             List<LiveMemoryLoad> list=  liveMemoryLoadService.queryAllLiveMemoryLoadByLoadStatus(0);
             for (LiveMemoryLoad liveMemoryLoad : list) {
                 Map<String,Object> map = new HashMap<>();
-                map.put("courseId",liveMemoryLoad.getId());
+                map.put("liveId",liveMemoryLoad.getId());
                 map.put("content",liveMemoryLoad.getContent());
                 map.put("operator",liveMemoryLoad.getOperator());
                 map.put("loadStatus",liveMemoryLoad.getLoadStatus());

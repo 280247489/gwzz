@@ -78,6 +78,10 @@ public interface LiveMasterCmsRepository extends JpaRepository<LiveMaster,String
 
     LiveMaster getLiveMasterByCourseId(String courseId);
 
+    @Query(value = "select  new com.memory.entity.bean.LiveMaster(l.id,l.liveMasterName ) " +
+            "from LiveMaster l  where 1=1 ")
+    List<com.memory.entity.bean.LiveMaster> queryLiveMasterOptions();
+
 
 
 }

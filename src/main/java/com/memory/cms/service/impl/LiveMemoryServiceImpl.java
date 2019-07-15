@@ -1,6 +1,7 @@
 package com.memory.cms.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.memory.cms.redis.service.LiveRedisCmsService;
 import com.memory.cms.service.*;
 import com.memory.entity.jpa.LiveMemoryLoad;
 import com.memory.entity.jpa.LiveMaster;
@@ -18,8 +19,6 @@ import static com.memory.redis.CacheConstantConfig.*;
 @Service
 public class LiveMemoryServiceImpl implements LiveMemoryService {
 
-
-
     @Autowired
     private LiveMemoryLoadService liveMemoryLoadService;
 
@@ -29,13 +28,12 @@ public class LiveMemoryServiceImpl implements LiveMemoryService {
     @Autowired
     private LiveMasterCmsService liveMasterCmsService;
 
-
-
+    @Autowired
+    private LiveRedisCmsService liveRedisCmsService;
 
     public void clear(String masterId){
-            String keyHash = SHARELIVECONTENT + masterId;
+            String keyHash = liveRedisCmsService.getKey(masterId);
             LIVEMAP.remove(keyHash);
-
             LiveMemoryLoad liveMemoryLoad = liveMemoryLoadService.getLiveMemoryLoadById(masterId);
             if(liveMemoryLoad != null && liveMemoryLoad.getLoadStatus() != 1){
                 liveMemoryLoad.setId(masterId);
@@ -59,7 +57,6 @@ public class LiveMemoryServiceImpl implements LiveMemoryService {
                     liveMemoryLoadService.updateLiveMemoryLoadById(liveMemoryLoad);
 
                 }
-
             }
 
             LIVEMAP.clear();
@@ -75,8 +72,7 @@ public class LiveMemoryServiceImpl implements LiveMemoryService {
     @Override
     public void addLiveMemory(String masterId) {
         com.memory.entity.bean.LiveSlave liveSlave = new  com.memory.entity.bean.LiveSlave();
-        String keyHash = SHARELIVECONTENT + masterId;
-        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        String keyHash = liveRedisCmsService.getKey(masterId);
         Map<String,Object> returnMap = new HashMap<String, Object>();
 
         List<com.memory.entity.bean.LiveSlave> list = liveSlaveCmsService.queryLiveSlaveList(masterId);
@@ -106,7 +102,7 @@ public class LiveMemoryServiceImpl implements LiveMemoryService {
 
     @Override
     public Object getLiveSlaveById(String masterId) {
-        String keyHash = SHARELIVECONTENT + masterId;
+        String keyHash = liveRedisCmsService.getKey(masterId);
         if( !LIVEMAP.containsKey(keyHash)){
             return null;
         }

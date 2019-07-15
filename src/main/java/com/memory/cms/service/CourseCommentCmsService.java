@@ -29,7 +29,9 @@ public interface CourseCommentCmsService {
 
     List<com.memory.entity.jpa.CourseComment> queryCourseCommentList(String  comment_root_id, Date comment_create_time );
 
+    int getCourseTotalCommentByCourseId(String courseId);
 
+    List<com.memory.entity.jpa.CourseComment> queryCourseCommentByCommentParentId(String commentParentId);
 
 
 }

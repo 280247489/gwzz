@@ -26,6 +26,7 @@ public interface CourseCommentCmsRepository extends JpaRepository<CourseComment,
     void  deleteCourseCommentByCommentRootIds(String root_id);
 
 
+    List<CourseComment> queryCourseCommentByCommentParentId(String commentParentId);
 
 
 

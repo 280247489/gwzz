@@ -1,4 +1,5 @@
 package com.memory.cms.controller;
+import com.memory.cms.redis.service.ArticleRedisCmsService;
 import com.memory.cms.service.ArticleCmsService;
 import com.memory.common.utils.*;
 import com.memory.entity.jpa.Article;
@@ -29,6 +30,9 @@ public class ArticleCmsController {
 
     @Autowired
     private ArticleCmsService articleService;
+
+    @Autowired
+    private ArticleRedisCmsService articleRedisCmsService;
 
     /**
      * 变更上线下线状态
@@ -182,6 +186,8 @@ public class ArticleCmsController {
             article = articleService.add(article);
 
             if (article != null) {
+                //初始化article 的 后台管理阅读量
+                articleRedisCmsService.initArticleRedisTotal(article.getId());
                 result.setCode(0);
                 result.setMsg("添加文章成功");
                 result.setData(article);

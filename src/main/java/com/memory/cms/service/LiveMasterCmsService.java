@@ -46,11 +46,13 @@ public interface LiveMasterCmsService {
 
     int changeAllStatus2close(String id);
 
-    void redisLive2NoExist(String uuid);
-
-    void  upgradeLiveDb2Redis(String masterId,boolean isAddMemory);
-
     LiveMaster getLiveMasterByCourseId(String courseId);
+
+    void syncOnline2Redis( String id, int online);
+
+    List<com.memory.entity.bean.LiveMaster> queryLiveMasterOptions();
+
+
 
 
 
