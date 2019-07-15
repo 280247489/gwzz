@@ -103,7 +103,7 @@ public class LiveMobileController extends BaseController {
                     }
                     //redis没有课程数据
                 }else {
-                    LiveMaster master = (LiveMaster) daoUtils.getById("LiveMaster",id);
+                    com.memory.entity.jpa.LiveMaster master = (com.memory.entity.jpa.LiveMaster) daoUtils.getById("LiveMaster",id);
                     if(master!=null){
                         //上线
                         if(master.getLiveMasterIsOnline() ==1){

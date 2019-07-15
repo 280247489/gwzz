@@ -4,7 +4,6 @@ import com.memory.cms.redis.service.CourseRedisCmsService;
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
 import com.memory.common.yml.MyRedisConfig;
-import com.memory.gwzz.service.CourseExtMobileService;
 import com.memory.redis.CacheConstantConfig;
 import com.memory.redis.config.RedisUtil;
 import org.slf4j.Logger;
@@ -29,8 +28,7 @@ public class DemoController extends BaseController {
     @Autowired
     private CourseRedisCmsService courseRedisCmsService;
 
-    @Autowired
-    private CourseExtMobileService courseExtWebService;
+
 
     @Autowired
     private MyRedisConfig myRedisConfig;
