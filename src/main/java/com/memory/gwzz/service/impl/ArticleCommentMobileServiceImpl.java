@@ -4,7 +4,6 @@ import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.ArticleComment;
-import com.memory.entity.jpa.ArticleCommentLike;
 import com.memory.entity.jpa.User;
 import com.memory.gwzz.redis.service.ArticleCommentRedisMobileService;
 import com.memory.gwzz.repository.ArticleCommentMobileRepository;
@@ -26,8 +25,7 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
 
     @Autowired
     private ArticleCommentMobileRepository articleCommentMobileRepository;
-
-
+    
     @Autowired
     private DaoUtils daoUtils;
 
