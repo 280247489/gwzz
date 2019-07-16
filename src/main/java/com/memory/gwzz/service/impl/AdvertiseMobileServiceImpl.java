@@ -5,6 +5,7 @@ import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.*;
 import com.memory.gwzz.controller.AdvertiseMobileController;
 import com.memory.gwzz.controller.ArticleMobileController;
+import com.memory.gwzz.redis.service.ArticleRedisMobileService;
 import com.memory.gwzz.repository.*;
 import com.memory.gwzz.service.*;
 import com.memory.redis.config.RedisUtil;
@@ -56,6 +57,9 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
     @Autowired
     private CourseLikeMobileService courseLikeMobileService;
 
+    @Autowired
+    private ArticleRedisMobileService articleRedisMobileService;
+
 
     @Override
     public List<Advertise> getAdvertiseOnline() {
@@ -74,10 +78,10 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
                 String label = article.getArticleLabel();
                 String[] labels = label.split(",");
                 article.setArticleLabel(labels[0]);
-                isLike=articleLikeMobileService.isLike(article.getId(),userId);
+                isLike=articleRedisMobileService.isLike(article.getId(),userId);
                 returnMap.put("isLike",isLike);
                 returnMap.put("article", article);
-                returnMap.put("isLike",articleLikeMobileService.isLike(article.getId(),userId));
+                returnMap.put("isLike",articleRedisMobileService.isLike(article.getId(),userId));
             } else {
                 returnMap = null;
             }

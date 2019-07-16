@@ -47,12 +47,13 @@ public class RedisUtil {
 
 
     public static   Map<String,String>  getByKey(String courseId,JedisPool jedis){
-        String keyHash =CacheConstantConfig.COURSERXT + ":hash:" +courseId;
-        String keySum =CacheConstantConfig.COURSERXT + ":sum:"+courseId;
-        RedisAPI redisHandler = new RedisAPI(RedisUtil.getDialStatsPool());
-        redisHandler.incrBy(keySum,1);
-
-        return  redisHandler.hgetAll(keyHash);
+//        String keyHash =CacheConstantConfig.COURSERXT + ":hash:" +courseId;
+//        String keySum =CacheConstantConfig.COURSERXT + ":sum:"+courseId;
+//        RedisAPI redisHandler = new RedisAPI(RedisUtil.getDialStatsPool());
+//        redisHandler.incrBy(keySum,1);
+//
+//        return  redisHandler.hgetAll(keyHash);
+        return  null;
 
     }
 

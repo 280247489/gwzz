@@ -7,6 +7,7 @@ import com.memory.entity.jpa.Album;
 import com.memory.entity.jpa.ArticleLike;
 import com.memory.entity.jpa.CourseLike;
 import com.memory.gwzz.model.*;
+import com.memory.gwzz.redis.service.ArticleRedisMobileService;
 import com.memory.gwzz.repository.*;
 import com.memory.gwzz.service.*;
 import com.memory.redis.config.RedisUtil;
@@ -54,7 +55,7 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
     private CourseLikeMobileService courseLikeMobileService;
 
     @Autowired
-    private ArticleLikeMobileService articleLikeMobileService;
+    private ArticleRedisMobileService articleRedisMobileService;
 
 
     @Override
@@ -84,6 +85,12 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
         pageArticle.setPageIndex(1);
         pageArticle.setLimit(4);
         List<Article> articleList = daoUtils.findByHQL(sbArticle.toString(),null,pageArticle);
+        //重写文章阅读量
+        for (int i = 0;i<articleList.size();i++){
+            String articleId = articleList.get(i).getId();
+            articleList.get(i).setArticleTotalView(articleRedisMobileService.getArticleView(articleId));
+        }
+
 
         //查询专辑
         StringBuffer sbAlbum = new StringBuffer( " FROM Album WHERE albumIsOnline = 1 AND albumIsHomePage = 1 ORDER BY albumSort ASC");
@@ -129,7 +136,7 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
                 String[] labels = label.split(",");
                 article.setArticleLabel(labels[0]);
                 returnMap.put("article", article);
-                isLike=articleLikeMobileService.isLike(article.getId(),userId);
+                isLike=articleRedisMobileService.isLike(article.getId(),userId);
                 returnMap.put("isLike",isLike);
             } else {
                 returnMap = null;

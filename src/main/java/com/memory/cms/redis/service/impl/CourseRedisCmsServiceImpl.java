@@ -23,8 +23,9 @@ public class CourseRedisCmsServiceImpl  implements CourseRedisCmsService {
     @Override
     public Boolean delAndHashSet(String courseId, Map<Object,Object> value) {
 
-        String keyHash = CacheConstantConfig.COURSERXT + ":hash:"+courseId;
-        return redisUtil.delAndHashSet(keyHash,value);
+//        String keyHash = CacheConstantConfig.COURSERXT + ":hash:"+courseId;
+//        return redisUtil.delAndHashSet(keyHash,value);
+        return null;
     }
 
     @Override

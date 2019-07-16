@@ -2,6 +2,7 @@ package com.memory.gwzz.service.impl;
 
 import com.memory.domain.dao.DaoUtils;
 import com.memory.gwzz.model.Article;
+import com.memory.gwzz.redis.service.ArticleRedisMobileService;
 import com.memory.gwzz.service.ArticleMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,12 @@ public class ArticleMobileServiceImpl implements ArticleMobileService {
     @Autowired
     private DaoUtils daoUtils;
 
+    @Autowired
+    private ArticleRedisMobileService articleRedisMobileService;
+
     public Map<String,Object> findArticleByKey(Integer start,Integer limit, String key){
         Map<String,Object> returnMap = new HashMap<>();
-        //查询最新5篇养生文章  文章类型Id：tYmvO0Ub1558922279863
+        // 文章类型Id：tYmvO0Ub1558922279863
         StringBuffer sbArticle = new StringBuffer( "SELECT NEW com.memory.gwzz.model.Article( id, typeId, articleTitle, articleLogo1, articleLogo2, articleLogo3, " +
                 "articleLabel, articleOnline, articleTotalComment, articleTotalView, articleReleaseTime)  " +
                 "FROM Article WHERE articleOnline = 1 AND typeId = 'tYmvO0Ub1558922279863' ");
@@ -42,6 +46,10 @@ public class ArticleMobileServiceImpl implements ArticleMobileService {
         pageArticle.setPageIndex(start);
         pageArticle.setLimit(limit);
         List<Article> articleList = daoUtils.findByHQL(sbArticle.toString(),map,pageArticle);
+        for (int i = 0;i<articleList.size();i++){
+            String articleId = articleList.get(i).getId();
+            articleList.get(i).setArticleTotalView(articleRedisMobileService.getArticleView(articleId));
+        }
         Integer articleCount = daoUtils.getTotalBySQL(sbArticleCount.toString(),map);
 
         returnMap.put("articleList",articleList);
@@ -72,7 +80,9 @@ public class ArticleMobileServiceImpl implements ArticleMobileService {
         List<Map<String, Object>> returnList=new ArrayList<Map<String,Object>>();
         for (int i = 0; i < articleList.size(); i++) {
             Map<String, Object> objMap=new HashMap<String, Object>();
-            objMap.put("id", articleList.get(i)[0]);
+            String articleId = (String) articleList.get(i)[0];
+            Integer articleTotalView = articleRedisMobileService.getArticleView(articleId);
+            objMap.put("id", articleId);
             objMap.put("typeId", articleList.get(i)[1]);
             objMap.put("article_title", articleList.get(i)[2]);
             objMap.put("article_logo1", articleList.get(i)[3]);
@@ -82,7 +92,7 @@ public class ArticleMobileServiceImpl implements ArticleMobileService {
             objMap.put("article_key_words", articleList.get(i)[7]);
             objMap.put("article_online", articleList.get(i)[8]);
             objMap.put("article_total_comment", articleList.get(i)[9]);
-            objMap.put("article_total_view", articleList.get(i)[10]);
+            objMap.put("article_total_view", articleTotalView);
             objMap.put("article_release_time", articleList.get(i)[11]);
 
             returnList.add(objMap);

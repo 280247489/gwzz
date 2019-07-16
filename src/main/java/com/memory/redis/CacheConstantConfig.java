@@ -9,17 +9,6 @@ import java.util.Map;
  * @Description:
  */
 public class CacheConstantConfig {
-    //APP数据Hash
-    public static final String SYSAPPDATA = "sysAppData";
-
-    //课程拓展数据
-    public static final String COURSERXT = "courseExt";
-
-    public static final String COURSE ="course";
-
-    //课程直播课程拓展数据
-    public static final String COURSEEXTHASH ="courseExt:hash:";
-
 
     /**
      * 课程直播 redis 键值存储规范 start========
@@ -151,5 +140,115 @@ public class CacheConstantConfig {
 
     //用户登录状态
     public static final String USER_LOGIN = "userLogin";
+
+    /**
+     * article 文章kv start============
+     */
+
+    //阅读量============================================
+    //阅读量 (后台操作添加的阅读量)
+    //key ：  Article:view:manager:uuid
+    //value ：count
+    public static final String ARTICLEVIEWMANAGER = "Article:view:manager";
+
+    //阅读量 实际有多少个用户看过
+    // uuid : articleId
+    //  key :Article:view_id:uuid;
+    //  value :map==> appid/openid/noExist:count
+    public static final String ARTICLEVIEWID = "Article:view_id:";
+
+    //实际阅读量（真实用户的阅读量）
+    //key ： Article:view:real
+    //value ：count
+    public static final String ARTICLEVIEW = "Article:view:";
+
+
+    //ios app 内部实际阅读量（真实用户的阅读量）
+    //uuid  :  articleId
+    //key ： Article:view:ios:in:uuid
+    //value ：count
+    public static final String ARTICLEVIEWIOSIN = "Article:view:ios:in:";
+
+
+    //ios app 外部实际阅读量（真实用户的阅读量）
+    //uuid:articleId
+    //key ： Article:view:ios:out:uuid
+    //value ：count
+    public static final String ARTICLEVIEWIOSOUT = "Article:view:ios:out:";
+
+
+
+    //android app 内部实际阅读量（真实用户的阅读量）
+    //uuid:articleId
+    //key ： Article:view:android:in:uuid
+    //value ：count
+    public static final String ARTICLEVIEWANDROIDIN = "Article:view:android:in:";
+
+
+    //android app 外部实际阅读量（真实用户的阅读量）
+    //uuid:articleId
+    //key ： Article:view:android:out:uuid
+    //value ：count
+    public static final String ARTICLEVIEWANDROIDOUT = "Article:view:android:out:";
+
+
+    //分享次数============================================
+    //分享次数(总的)
+    //uuid:articleId
+    //key ：  Article:share: uuid
+    //value ：count
+    public static final String ARTICLESHARE = "Article:share:";
+
+    //分享用户统计去重 （以人为单位）
+    // uuid ：articleId
+    //  key : Article:share_id:uuid;
+    //  value :map==> appid:count
+    public static final String ARTICLESHAREID="Article:share_id:";
+
+
+    //ios分享次数
+    //uuid:articleId
+    //key ： Article:share:ios: uuid
+    //value ：count
+    public static final String ARTICLESHAREIOS = "Article:share:ios:";
+
+    //android分享次数
+    //uuid:articleId
+    //key ： Article:share:android: uuid
+    //value ：count
+    public static final String ARTICLESHAREANDROID = "Article:share:android:";
+
+
+    //点赞次数============================================
+    //点赞次数(总的)
+    //uuid:articleId
+    //key ： Article:like: uuid
+    //value ：count
+    public static final String ARTICLELIKE = "Article:like:";
+
+    //点赞数量 详情
+    //注意： 是以 用户为单位，map key 是 articleId，value 是 1/0(点赞/取消点赞)
+    // uuid:appid
+    //  key : Article:like:detail:uuid
+    //  value :map==> articleId: int 1/0
+    public static final String ARTICLELIKEDETAIL = "Article:like:detail:";
+
+    //评论点赞============================================
+    //评论点赞列表 以文章为纬度
+    //uuid : articleId
+    //  key :Article:comment_like:uuid
+    //  value :map==> commentId: count
+    public static final String ARTICLECOMMENTLIKE = "Article:comment_like:";
+
+    //评论点赞详情
+    //注意： 是以 用户为单位，map key 是 articleId，value 是 1/0(点赞/取消点赞)
+    // uuid:appid
+    //  key : Article:comment_like:detail:uuid
+    //  value :map==> comment_like: int 1/0
+    public static final String ARTICLECOMMENTLIKEDEATIL = "Article:comment_like:detail:";
+
+    /**
+     * article 文章kv end============
+     */
 
 }

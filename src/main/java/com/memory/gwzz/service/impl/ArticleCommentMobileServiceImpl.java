@@ -6,7 +6,7 @@ import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.ArticleComment;
 import com.memory.entity.jpa.ArticleCommentLike;
 import com.memory.entity.jpa.User;
-import com.memory.gwzz.repository.ArticleCommentLikeMobileRepository;
+import com.memory.gwzz.redis.service.ArticleCommentRedisMobileService;
 import com.memory.gwzz.repository.ArticleCommentMobileRepository;
 import com.memory.gwzz.service.ArticleCommentMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,12 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
     @Autowired
     private ArticleCommentMobileRepository articleCommentMobileRepository;
 
-    @Autowired
-    private ArticleCommentLikeMobileRepository articleCommentLikeMobileRepository;
 
     @Autowired
     private DaoUtils daoUtils;
+
+    @Autowired
+    private ArticleCommentRedisMobileService articleCommentRedisMobileService;
 
     @Transactional
     @Override
@@ -65,7 +66,7 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
             articleComment.setCommentCreateTime(new Date());
             articleComment.setCommentTotalLike(0);
 
-            article.setArticleTotalComment(article.getArticleTotalComment()+1);
+            article.setArticleTotalComment(articleCommentMobileRepository.countAllByArticleId(articleId));
         }
 
         daoUtils.save(article);
@@ -85,9 +86,9 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
         Map<String,Object> returnMap = new HashMap<>();
         Article article = (Article) daoUtils.getById("Article",articleId);
         //查询一级评论列表
-        StringBuffer sbAC = new StringBuffer("select id AS articleCommentId,article_id,user_id,user_logo,user_name,comment_content_replace,comment_create_time,comment_total_like," +
-                "(select count(*) from article_comment where article_id=:articleId and comment_root_id = articleCommentId and comment_type=1), " +
-                "(SELECT comment_like_yn FROM article_comment_like WHERE comment_id = articleCommentId AND user_id = '"+uid+"') " +
+        StringBuffer sbAC = new StringBuffer("select id AS articleCommentId, article_id, user_id, user_logo, user_name, comment_content_replace, comment_create_time, comment_total_like," +
+                "(select count(*) from article_comment where article_id=:articleId and comment_root_id = articleCommentId and comment_type=1) " +
+//                "(SELECT comment_like_yn FROM article_comment_like WHERE comment_id = articleCommentId AND user_id = '"+uid+"') " +
                 "from article_comment where article_id=:articleId AND comment_type=0 order by comment_create_time  desc");
         //查询一级评论总数
         StringBuffer sbCount = new StringBuffer("select count(*) from article_comment where article_id=:articleId AND comment_type=0 ");
@@ -100,7 +101,8 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
         List<Map<String, Object>> returnList=new ArrayList<Map<String,Object>>();
         for (int i = 0; i < list.size(); i++) {
             Map<String, Object> objMap=new HashMap<String, Object>();
-            objMap.put("id", list.get(i)[0]);
+            String articleCommentId = list.get(i)[0].toString();
+            objMap.put("id", articleCommentId);
             objMap.put("articleId", list.get(i)[1]);
             objMap.put("userId", list.get(i)[2]);
             objMap.put("userLogo", list.get(i)[3]);
@@ -109,14 +111,8 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
             objMap.put("commentCreateTime", list.get(i)[6]);
             objMap.put("commentTotalLike", list.get(i)[7]);
             objMap.put("commentReplySum", list.get(i)[8]);
-            Integer  isLike = 0;
-            Object commentLike = list.get(i)[9];
-            if (commentLike==null){
-                isLike=0;
-            }else{
-                isLike=(Integer) commentLike;
-            }
-            objMap.put("commentLike", isLike);
+           //redis 中查询当前用户是否点赞
+            objMap.put("commentLike", articleCommentRedisMobileService.isLike(articleCommentId,uid));
 
             returnList.add(objMap);
         }
@@ -136,13 +132,8 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
         //查询一级评论对象
         ArticleComment articleComment = (ArticleComment) daoUtils.getById("ArticleComment",commentId);
         if (articleComment!=null){
-            ArticleCommentLike articleCommentLike = articleCommentLikeMobileRepository.findByCommentIdAndUserId(commentId,uid);
-            Integer isCommentLike = 0;
-            if (articleCommentLike==null){
-                isCommentLike=0;
-            }else {
-                isCommentLike=articleCommentLike.getCommentLikeYn();
-            }
+            //redis 中查询当前用户是否点赞
+            Integer isCommentLike = articleCommentRedisMobileService.isLike(commentId,uid);
 
             String commentRootId = articleComment.getId();
             //查询子级评论列表

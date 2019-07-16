@@ -2,7 +2,6 @@ package com.memory.gwzz.controller;
 
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
-import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.ArticleLike;
 import com.memory.entity.jpa.User;
@@ -40,6 +39,8 @@ public class ArticleLikeMobileController extends BaseController {
     @Autowired
     private UserMobileRepository userMobileRepository;
 
+
+
     /**
      * 添加文章点赞
      * URL：192.168.1.185:8081/gwzz/articleLike/mobile/addLike
@@ -53,8 +54,8 @@ public class ArticleLikeMobileController extends BaseController {
             msg = Message.success();
             Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
             if (article != null){
-                ArticleLike articleLike = articleLikeMobileService.like(articleId,userId);
-                if (articleLike.getLikeStatus()==1){
+                Integer articleLike = articleLikeMobileService.like(articleId,userId);
+                if (articleLike==1){
                     msg.setRecode(1);
                 }else{
                     msg.setRecode(0);

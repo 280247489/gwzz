@@ -1,17 +1,16 @@
 package com.memory.gwzz.service.impl;
 
-import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.ArticleLike;
 import com.memory.entity.jpa.User;
+import com.memory.gwzz.redis.service.ArticleRedisMobileService;
 import com.memory.gwzz.repository.ArticleLikeMobileRepository;
 import com.memory.gwzz.service.ArticleLikeMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,39 +30,53 @@ public class ArticleLikeMobileServiceImpl implements ArticleLikeMobileService {
     @Autowired
     private ArticleLikeMobileRepository articleLikeMobileRepository;
 
+    @Autowired
+    private ArticleRedisMobileService articleRedisMobileService;
+
+
+//    @Transactional
+//    @Override
+//    public ArticleLike like(String aid, String uid) {
+//        Article article = (Article) daoUtils.getById("Article", aid);
+//        User user = (User) daoUtils.getById("User", uid);
+//        ArticleLike articleLike = null;
+//        if(article != null && user != null){
+//            articleLike = this.getByAidUid(aid, uid);
+//            if(articleLike != null){
+//                if(articleLike.getLikeStatus()==1){
+//                    articleLike.setLikeStatus(0);
+//                    article.setArticleTotalLike(article.getArticleTotalLike()-1);
+//                }else{
+//                    articleLike.setLikeStatus(1);
+//                    article.setArticleTotalLike(article.getArticleTotalLike()+1);
+//                }
+//            }else{
+//                if(article !=null && user != null){
+//                    articleLike = new ArticleLike();
+//                    articleLike.setId(Utils.generateUUIDs());
+//                    articleLike.setArticleId(aid);
+//                    articleLike.setUserId(uid);
+//                    articleLike.setLikeStatus(1);
+//                    articleLike.setCreateTime(new Date());
+//
+//                    article.setArticleTotalLike(article.getArticleTotalLike()+1);
+//                }
+//            }
+//            daoUtils.save(article);
+//            daoUtils.save(articleLike);
+//        }
+//        return articleLike;
+//    }
 
     @Transactional
     @Override
-    public synchronized ArticleLike like(String aid, String uid) {
+    public int like(String aid, String uid) {
         Article article = (Article) daoUtils.getById("Article", aid);
         User user = (User) daoUtils.getById("User", uid);
-        ArticleLike articleLike = null;
         if(article != null && user != null){
-            articleLike = this.getByAidUid(aid, uid);
-            if(articleLike != null){
-                if(articleLike.getLikeStatus()==1){
-                    articleLike.setLikeStatus(0);
-                    article.setArticleTotalLike(article.getArticleTotalLike()-1);
-                }else{
-                    articleLike.setLikeStatus(1);
-                    article.setArticleTotalLike(article.getArticleTotalLike()+1);
-                }
-            }else{
-                if(article !=null && user != null){
-                    articleLike = new ArticleLike();
-                    articleLike.setId(Utils.generateUUIDs());
-                    articleLike.setArticleId(aid);
-                    articleLike.setUserId(uid);
-                    articleLike.setLikeStatus(1);
-                    articleLike.setCreateTime(new Date());
-
-                    article.setArticleTotalLike(article.getArticleTotalLike()+1);
-                }
-            }
-            daoUtils.save(article);
-            daoUtils.save(articleLike);
+            articleRedisMobileService.articleLike(aid,uid);
         }
-        return articleLike;
+        return articleRedisMobileService.isLike(aid,uid);
     }
 
     public ArticleLike getByAidUid(String aid, String uid){
@@ -99,19 +112,19 @@ public class ArticleLikeMobileServiceImpl implements ArticleLikeMobileService {
         return returnMap;
     }
 
-    @Override
-    public int isLike(String aid,String uid){
-        Integer isLike =0;
-        ArticleLike articleLike = articleLikeMobileRepository.findByArticleIdAndUserId(aid,uid);
-        if (articleLike==null){
-            isLike=0;
-        }else{
-            if (articleLike.getLikeStatus()==1){
-                isLike=1;
-            }else if (articleLike.getLikeStatus()==0){
-                isLike=0;
-            }
-        }
-        return isLike;
-    }
+//    @Override
+//    public int isLike(String aid,String uid){
+//        Integer isLike =0;
+//        ArticleLike articleLike = articleLikeMobileRepository.findByArticleIdAndUserId(aid,uid);
+//        if (articleLike==null){
+//            isLike=0;
+//        }else{
+//            if (articleLike.getLikeStatus()==1){
+//                isLike=1;
+//            }else if (articleLike.getLikeStatus()==0){
+//                isLike=0;
+//            }
+//        }
+//        return isLike;
+//    }
 }

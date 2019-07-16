@@ -29,20 +29,20 @@ public class ArticleCommentLikemobileController extends BaseController {
     /**
      * 添加评论点赞
      * URL：192.168.1.185:8081/gwzz/articleCommentLike/mobile/addLike
-     * @param cid String 评论Id
-     * @param uid String 用户Id
-     * @return ArticleCommentLike 对象 评论点赞对象
+     * @param articleId String 文章id
+     * @param articleCommentId String 评论Id
+     * @param userId String 用户Id
+     * @return
      */
     @RequestMapping(value = "addLike")
-    public Message add(@RequestParam String cid, @RequestParam String uid){
-
+    public Message add(@RequestParam String articleId, @RequestParam String articleCommentId, @RequestParam String userId){
         try {
             msg = Message.success();
-            ArticleCommentLike articleCommentLike = articleCommentLikeMobileService.like(cid,uid);
-            if (articleCommentLike==null){
+            Integer articleCommentLike = articleCommentLikeMobileService.like(articleId,articleCommentId,userId);
+            if (articleCommentLike==1){
+                msg.setRecode(1);
+            }else{
                 msg.setRecode(0);
-            }else {
-                msg.setRecode(articleCommentLike.getCommentLikeYn());
             }
         }catch (Exception e){
             msg = Message.error();

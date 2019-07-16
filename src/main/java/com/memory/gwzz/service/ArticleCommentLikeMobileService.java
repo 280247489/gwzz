@@ -10,5 +10,8 @@ import com.memory.entity.jpa.ArticleCommentLike;
  */
 public interface ArticleCommentLikeMobileService {
 
-    ArticleCommentLike like(String cid,String uid);
+//    ArticleCommentLike like(String cid,String uid);
+
+    int like(String articleId,String articleCommentId, String userId);
 }
+
