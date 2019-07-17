@@ -11,8 +11,10 @@ import java.util.Map;
  * @Date 2019/6/4 17:16
  */
 public interface CourseLikeMobileService {
-    CourseLike like(String cid,String uid);
+//    CourseLike like(String cid,String uid);
     Map<String,Object> ListCourseLikeByUserId(String userId, Integer start, Integer limit);
 
     int isCourseLike(String cid, String uid);
+
+    int like(String cid, String uid);
 }

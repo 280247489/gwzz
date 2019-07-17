@@ -3,6 +3,8 @@ package com.memory.gwzz.service.impl;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Album;
 import com.memory.entity.jpa.Course;
+import com.memory.gwzz.redis.service.AlbumRedisMobileService;
+import com.memory.gwzz.redis.service.CourseRedisMobileService;
 import com.memory.gwzz.service.AlbumMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,12 @@ public class AlbumMobileServiceImpl implements AlbumMobileService {
 
     @Autowired
     private DaoUtils daoUtils;
+
+    @Autowired
+    private AlbumRedisMobileService albumRedisMobileService;
+
+    @Autowired
+    private CourseRedisMobileService courseRedisMobileService;
 
 
 
@@ -58,6 +66,7 @@ public class AlbumMobileServiceImpl implements AlbumMobileService {
         Map<String,Object> returnMap = new HashMap<>();
         Album album = (Album) daoUtils.getById("Album",albumId);
         Integer limit = album.getAlbumCourseLimit();
+        album.setAlbumTotalView(albumRedisMobileService.getAlbumView(albumId));
         if (album!=null){
             StringBuffer sbCourse = new StringBuffer( "SELECT NEW com.memory.gwzz.model.Course( id, courseNumber,courseTitle, courseLogo, courseLabel,courseOnline,courseTotalComment,courseTotalView,courseReleaseTime) " +
                     " FROM Course WHERE  albumId=:albumId AND courseOnline=1 ORDER BY courseReleaseTime DESC");
@@ -68,6 +77,11 @@ public class AlbumMobileServiceImpl implements AlbumMobileService {
             page.setPageIndex(start);
             page.setLimit(limit);
             List<Course> courseList = daoUtils.findByHQL(sbCourse.toString(),map,page);
+            //重写课程阅读量
+            for (int j = 0;j<courseList.size();j++){
+                String courseId = courseList.get(j).getId();
+                courseList.get(j).setCourseTotalView(courseRedisMobileService.getCourseView(courseId));
+            }
             Object objectList = daoUtils.findBySQL(stringBuffer.toString(),map,null,null);
             returnMap.put("anthology",objectList);
             returnMap.put("courseList",courseList);

@@ -2,6 +2,7 @@ package com.memory.gwzz.service.impl;
 
 import com.memory.domain.dao.DaoUtils;
 import com.memory.gwzz.model.Course;
+import com.memory.gwzz.redis.service.CourseRedisMobileService;
 import com.memory.gwzz.service.CourseMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class CourseMobileServiceImpl  implements CourseMobileService {
     @Autowired
     private DaoUtils daoUtils;
 
+    @Autowired
+    private CourseRedisMobileService courseRedisMobileService;
+
     /**
      * 根据详情查询播放列表
      * @param albumId
@@ -35,6 +39,11 @@ public class CourseMobileServiceImpl  implements CourseMobileService {
         Map<String,Object> map = new HashMap<>();
         map.put("albumId", albumId);
         List<Course> courseList = daoUtils.findByHQL(sbCourse.toString(),map,null);
+        //重写课程阅读量
+        for (int j = 0;j<courseList.size();j++){
+            String courseId = courseList.get(j).getId();
+            courseList.get(j).setCourseTotalView(courseRedisMobileService.getCourseView(courseId));
+        }
         return courseList;
     }
 
@@ -61,8 +70,10 @@ public class CourseMobileServiceImpl  implements CourseMobileService {
             Integer count = daoUtils.getTotalBySQL(sbCount.toString(),map);
             List<Map<String, Object>> returnList=new ArrayList<Map<String,Object>>();
             for (int i = 0; i < courseList.size(); i++) {
+                String courseId = (String) courseList.get(i)[0];
+                Integer courseTotalView = courseRedisMobileService.getCourseView(courseId);
                 Map<String, Object> objMap=new HashMap<String, Object>();
-                objMap.put("id", courseList.get(i)[0]);
+                objMap.put("id", courseId);
                 objMap.put("albumId", courseList.get(i)[1]);
                 objMap.put("courseNumber", courseList.get(i)[2]);
                 objMap.put("courseTitle", courseList.get(i)[3]);
@@ -71,7 +82,7 @@ public class CourseMobileServiceImpl  implements CourseMobileService {
                 objMap.put("courseKeyWords", courseList.get(i)[6]);
                 objMap.put("courseOnline", courseList.get(i)[7]);
                 objMap.put("courseTotalComment", courseList.get(i)[8]);
-                objMap.put("courseTotalView", courseList.get(i)[9]);
+                objMap.put("courseTotalView", courseTotalView);
                 objMap.put("courseReleaseTime", courseList.get(i)[10]);
 
                 returnList.add(objMap);

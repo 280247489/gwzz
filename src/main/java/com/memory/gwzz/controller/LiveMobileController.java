@@ -6,6 +6,7 @@ import com.memory.common.utils.Message;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.gwzz.model.LiveMaster;
 import com.memory.gwzz.model.LiveSlave;
+import com.memory.gwzz.redis.service.LiveRedisMobileService;
 import com.memory.gwzz.service.LiveMobileService;
 import com.memory.redis.config.RedisUtil;
 import org.slf4j.Logger;
@@ -42,6 +43,9 @@ public class LiveMobileController extends BaseController {
     @Autowired
     private LiveMobileService liveMobileService;
 
+    @Autowired
+    private LiveRedisMobileService liveRedisMobileService;
+
     /**
      * 查询直播详情
      * URL:192.168.1.185:8081/gwzz/live/mobile/getLiveById
@@ -55,38 +59,13 @@ public class LiveMobileController extends BaseController {
     public Message getLiveById(String id, String openId,Integer terminal,Integer os){
         try {
             msg = Message.success();
-            String keyCourseView = COURSEVIEW + id;
-            String keyCourseViewOs ="";
-            String keyCourseViewComment = COURSECOMMENT + id;
-            String keyCourseViewId= COURSEVIEWID +id;
-
-            // ios
-            if(os == 0){
-                //app
-                if(terminal == 0){
-                    keyCourseViewOs = COURSEVIEWIOSAPP + id;
-                    //h5
-                }else {
-                    keyCourseViewOs = COURSEVIEWIOSH5 +id;
-                }
-                // android
-            }else {
-                //app
-                if(terminal == 0){
-                    keyCourseViewOs = COURSEVIEWANDROIDAPP + id;
-                    //h5
-                }else {
-                    keyCourseViewOs = COURSEVIEWANDROIDH5 +id;
-                }
-            }
-
+            String keyCourseViewComment = SHARELIVECONTENT + id;
             //内存
-            if(COURSEMAP.containsKey(keyCourseViewComment)){
-                total2Redis(openId, keyCourseView, keyCourseViewOs, keyCourseViewId);
+            if(LIVEMAP.containsKey(keyCourseViewComment)){
                 System.out.println("内存==============================="+keyCourseViewComment);
-                msg.setData(COURSEMAP.get(keyCourseViewComment));
+                msg.setData(LIVEMAP.get(keyCourseViewComment));
             }else {
-                Object object = redisUtil.hget(keyCourseViewComment,"slave");
+                Object object = liveRedisMobileService.getSlaveById(id);
                 //判断redis中是否含有此次课程数据
                 //有课程数据
                 if(object != null){
@@ -94,7 +73,7 @@ public class LiveMobileController extends BaseController {
                         Map<String,Object> map = new HashMap<>();
                         map.put("master",redisUtil.hget(keyCourseViewComment,"master"));
                         map.put("slave", JSON.parse(object.toString()));
-                        total2Redis(openId, keyCourseView, keyCourseViewOs, keyCourseViewId);
+                        liveRedisMobileService.liveView(id, openId, terminal, os);
                         System.out.println("redis==============================="+keyCourseViewComment);
                         msg.setData(map);
                     }else {
@@ -118,7 +97,7 @@ public class LiveMobileController extends BaseController {
                             Map<String,Object> map = new HashMap<>();
                             map.put("master",master.getLiveMasterName());
                             map.put("slave",showList);
-                            total2Redis(openId, keyCourseView, keyCourseViewOs, keyCourseViewId);
+                            liveRedisMobileService.liveView(id, openId, terminal, os);
                             msg.setData(map);
                             //下线
                         }else {
@@ -143,9 +122,4 @@ public class LiveMobileController extends BaseController {
         return msg;
     }
 
-    private void total2Redis( String openId, String keyCourseView, String keyCourseViewOs, String keyCourseViewId) {
-        redisUtil.incr(keyCourseView,1);
-        redisUtil.incr(keyCourseViewOs,1);
-        redisUtil.hincr(keyCourseViewId,openId,1);
-    }
 }

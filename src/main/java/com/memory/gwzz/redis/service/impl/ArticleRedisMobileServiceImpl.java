@@ -2,7 +2,9 @@ package com.memory.gwzz.redis.service.impl;
 
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
+import com.memory.entity.jpa.ArticleLike;
 import com.memory.gwzz.redis.service.ArticleRedisMobileService;
+import com.memory.gwzz.repository.ArticleLikeMobileRepository;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,9 @@ public class ArticleRedisMobileServiceImpl implements ArticleRedisMobileService 
     @Autowired
     private DaoUtils daoUtils;
 
+    @Autowired
+    private ArticleLikeMobileRepository articleLikeMobileRepository;
+
     /**
      * 搜索文章
      * @param userId
@@ -32,8 +37,13 @@ public class ArticleRedisMobileServiceImpl implements ArticleRedisMobileService 
      */
     @Override
     public void searchArticle(String userId, String searchKey) {
-        String keyIncr = SEARCHARTICLESEARCHAPPID + userId;
-        redisUtil.hincr(keyIncr, searchKey, 1);
+        try {
+            String keyIncr = SEARCHARTICLESEARCHAPPID + userId;
+            redisUtil.hincr(keyIncr, searchKey, 1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -51,16 +61,20 @@ public class ArticleRedisMobileServiceImpl implements ArticleRedisMobileService 
         String articleViewIosIn = ARTICLEVIEWIOSIN + articleId;
         String articleViewAndroidIn = ARTICLEVIEWANDROIDIN + articleId;
         String articleViewAndroidOut = ARTICLEVIEWANDROIDOUT + articleId;
-        redisUtil.incr(articleView,1);
-        redisUtil.hincr(articleViewId,userId,1);
-        if (terminal==1){
-            redisUtil.incr(articleViewAndroidOut,1);
-        }else{
-            if (os==0){
-                redisUtil.incr(articleViewIosIn,1);
+        try {
+            redisUtil.incr(articleView,1);
+            redisUtil.hincr(articleViewId,userId,1);
+            if (terminal==1){
+                redisUtil.incr(articleViewAndroidOut,1);
             }else{
-                redisUtil.incr(articleViewAndroidIn,1);
+                if (os==0){
+                    redisUtil.incr(articleViewIosIn,1);
+                }else{
+                    redisUtil.incr(articleViewAndroidIn,1);
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
     }
@@ -77,14 +91,18 @@ public class ArticleRedisMobileServiceImpl implements ArticleRedisMobileService 
         String articleShareId = ARTICLESHAREID + articleId;
         String articleShareIos = ARTICLESHAREIOS + articleId;
         String articleShareAndroid = ARTICLESHAREANDROID + articleId;
-
-        redisUtil.incr(articleShare,1);
-        redisUtil.hincr(articleShareId,userId,1);
-        if (os==1){
-            redisUtil.incr(articleShareAndroid,1);
-        }else {
-            redisUtil.incr(articleShareIos,1);
+        try {
+            redisUtil.incr(articleShare,1);
+            redisUtil.hincr(articleShareId,userId,1);
+            if (os==1){
+                redisUtil.incr(articleShareAndroid,1);
+            }else {
+                redisUtil.incr(articleShareIos,1);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     /**
@@ -96,21 +114,26 @@ public class ArticleRedisMobileServiceImpl implements ArticleRedisMobileService 
     public void articleLike(String articleId, String userId){
         String articleLike = ARTICLELIKE + articleId;
         String articleLikeDetail = ARTICLELIKEDETAIL + userId;
-        //判断用户是否存在点赞数据
-        Object isLike =  redisUtil.hget(articleLikeDetail,articleId);
-        if (isLike != null){
-            Integer like = Integer.valueOf(isLike.toString());
-            if (like==0){
+        try {
+            //判断用户是否存在点赞数据
+            Object isLike =  redisUtil.hget(articleLikeDetail,articleId);
+            if (isLike != null){
+                Integer like = Integer.valueOf(isLike.toString());
+                if (like==0){
+                    redisUtil.incr(articleLike,1);
+                    redisUtil.hset(articleLikeDetail,articleId,"1");
+                }else{
+                    redisUtil.decr(articleLike,1);
+                    redisUtil.hset(articleLikeDetail,articleId,"0");
+                }
+            }else{
                 redisUtil.incr(articleLike,1);
                 redisUtil.hset(articleLikeDetail,articleId,"1");
-            }else{
-                redisUtil.decr(articleLike,1);
-                redisUtil.hset(articleLikeDetail,articleId,"0");
             }
-        }else{
-            redisUtil.incr(articleLike,1);
-            redisUtil.hset(articleLikeDetail,articleId,"1");
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     /**
@@ -121,31 +144,35 @@ public class ArticleRedisMobileServiceImpl implements ArticleRedisMobileService 
     @Override
     public Integer getArticleView(String articleId){
         Integer view = 0;
-         Object v1 =  null;
-         Object v2 = null;
-        v1 = redisUtil.get(ARTICLEVIEW + articleId);
-        v2 = redisUtil.get(ARTICLEVIEWMANAGER + articleId);
-         if ( v1 != null){
-             v1 = redisUtil.get(ARTICLEVIEW + articleId);
-             v2 = redisUtil.get(ARTICLEVIEWMANAGER + articleId);
-             view = Integer.valueOf(v1.toString());
-             if ( v2 != null){
-                 view = Integer.valueOf(v1.toString()) +Integer.valueOf(v2.toString());
-             }else {
-                 redisUtil.set(ARTICLEVIEWMANAGER + articleId,"0");
-             }
-         }else{
-             Article article = (Article) daoUtils.getById("Article",articleId);
-             redisUtil.set(ARTICLEVIEW + articleId,article.getArticleTotalView()+"");
-             v1 = redisUtil.get(ARTICLEVIEW + articleId);
-             v2 = redisUtil.get(ARTICLEVIEWMANAGER + articleId);
-             view = Integer.valueOf(v1.toString());
-             if ( v2 != null){
-                 view = Integer.valueOf(v1.toString()) +Integer.valueOf(v2.toString());
-             }else {
-                 redisUtil.set(ARTICLEVIEWMANAGER + articleId,"0");
-             }
-         }
+        Integer articleView = 0;
+        Integer articleViewManager = 0;
+        Object v1 =  null;
+        Object v2 = null;
+        try {
+            v1 = redisUtil.get(ARTICLEVIEW + articleId);
+            v2 = redisUtil.get(ARTICLEVIEWMANAGER + articleId);
+            if (v1 != null){
+                articleView = Integer.valueOf(v1.toString());
+            }else{
+                Article article = (Article) daoUtils.getById("Article",articleId);
+                redisUtil.set(ARTICLEVIEW + articleId,article.getArticleTotalView()+"");
+                v1 = redisUtil.get(ARTICLEVIEW + articleId);
+                if (v1==null){
+                    articleView = article.getArticleTotalView();
+                }else {
+                    articleView = Integer.valueOf(v1.toString());
+                }
+            }
+            if (v2 != null){
+                articleViewManager = Integer.valueOf(v2.toString());
+            }else{
+                redisUtil.set(ARTICLEVIEWMANAGER + articleId,"0");
+                articleViewManager = 0;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        view = articleView + articleViewManager;
         return view;
     }
 
@@ -158,14 +185,22 @@ public class ArticleRedisMobileServiceImpl implements ArticleRedisMobileService 
     public Integer getArticleShare(String articleId){
         Integer share = 0;
         Object s =  null;
-        s = redisUtil.get(ARTICLESHARE + articleId);
-        if ( s != null){
-            share = Integer.valueOf(s.toString()) ;
-        }else{
-            Article article = (Article) daoUtils.getById("Article",articleId);
-            redisUtil.set(ARTICLESHARE + articleId,article.getArticleTotalShare()+"");
-            s =  redisUtil.get(ARTICLESHARE + articleId);
-            share = Integer.valueOf(s.toString()) ;
+        try {
+            s = redisUtil.get(ARTICLESHARE + articleId);
+            if ( s != null){
+                share = Integer.valueOf(s.toString()) ;
+            }else{
+                Article article = (Article) daoUtils.getById("Article",articleId);
+                redisUtil.set(ARTICLESHARE + articleId,article.getArticleTotalShare()+"");
+                s =  redisUtil.get(ARTICLESHARE + articleId);
+                if (s!=null){
+                    share = Integer.valueOf(s.toString()) ;
+                }else{
+                    share = article.getArticleTotalShare();
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return share;
     }
@@ -179,15 +214,24 @@ public class ArticleRedisMobileServiceImpl implements ArticleRedisMobileService 
     public Integer getArticleLike(String articleId){
         Integer like = 0;
         Object l = null;
-        l = redisUtil.get(ARTICLELIKE + articleId);
-        if (l != null){
-            like = Integer.valueOf(l.toString());
-        }else{
-            Article article = (Article) daoUtils.getById("Article",articleId);
-            redisUtil.set(ARTICLELIKE + articleId,article.getArticleTotalLike()+"");
+        try {
             l = redisUtil.get(ARTICLELIKE + articleId);
-            like = Integer.valueOf(l.toString());
+            if (l != null){
+                like = Integer.valueOf(l.toString());
+            }else{
+                Article article = (Article) daoUtils.getById("Article",articleId);
+                redisUtil.set(ARTICLELIKE + articleId,article.getArticleTotalLike()+"");
+                l = redisUtil.get(ARTICLELIKE + articleId);
+                if (l == null){
+                    like = article.getArticleTotalLike();
+                }else {
+                    like = Integer.valueOf(l.toString());
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         return like;
     }
 
@@ -202,15 +246,19 @@ public class ArticleRedisMobileServiceImpl implements ArticleRedisMobileService 
     public int isLike(String aid, String uid){
         Integer isLike =0;
         Object userLike = redisUtil.hget(ARTICLELIKEDETAIL+ uid,aid);
-        if (userLike==null){
-            isLike=0;
-        }else{
-            Integer like = Integer.valueOf(userLike.toString());
-            if (like==1){
-                isLike=1;
-            }else if (like==0){
-                isLike=0;
+        try {
+            if (userLike==null){
+                ArticleLike  articleLike = articleLikeMobileRepository.findByArticleIdAndUserId(aid, uid);
+                if (articleLike!=null){
+                    isLike = articleLike.getLikeStatus();
+                }else {
+                    isLike=0;
+                }
+            }else{
+                isLike  = Integer.valueOf(userLike.toString());
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return isLike;
     }

@@ -52,12 +52,8 @@ public class CourseLikeMobileController extends BaseController {
             msg = Message.success();
             Course course = courseMobileRepository.findByIdAndCourseOnline(cid,1);
             if (course!=null){
-                CourseLike courseLike = courseLikeMobileService.like(cid,uid);
-                if (courseLike.getLikeStatus()==0){
-                    msg.setRecode(0);
-                }else {
-                    msg.setRecode(1);
-                }
+                Integer courseLike = courseLikeMobileService.like(cid,uid);
+                    msg.setRecode(courseLike);
             }else {
                 msg.setRecode(1);
                 msg.setMsg("课程已存在！");

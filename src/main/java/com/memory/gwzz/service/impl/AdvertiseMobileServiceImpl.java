@@ -6,6 +6,7 @@ import com.memory.entity.jpa.*;
 import com.memory.gwzz.controller.AdvertiseMobileController;
 import com.memory.gwzz.controller.ArticleMobileController;
 import com.memory.gwzz.redis.service.ArticleRedisMobileService;
+import com.memory.gwzz.redis.service.LiveRedisMobileService;
 import com.memory.gwzz.repository.*;
 import com.memory.gwzz.service.*;
 import com.memory.redis.config.RedisUtil;
@@ -52,7 +53,7 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
     private LiveMobileService liveMobileService;
 
     @Autowired
-    private ArticleLikeMobileService articleLikeMobileService;
+    private LiveRedisMobileService liveRedisMobileService;
 
     @Autowired
     private CourseLikeMobileService courseLikeMobileService;
@@ -104,25 +105,10 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
         } else if ( "Live".equals(type)) {
             LiveMaster liveMaster1 = liveMasterMobileRepository.findByCourseIdAndLiveMasterIsOnline(typeId, 1);
             if (liveMaster1 != null) {
-                String keyCourseView = COURSEVIEW + typeId;
-                String keyCourseViewOs = "";
-                String keyCourseViewComment = COURSECOMMENT + typeId;
-                String keyCourseViewId = COURSEVIEWID + typeId;
-                if (os == 1) {
-                    if (terminal == 0) {
-                        keyCourseViewOs = COURSEVIEWANDROIDAPP + typeId;
-                    } else {
-                        keyCourseViewOs = COURSEVIEWANDROIDH5 + typeId;
-                    }
-                } else {
-                    if (terminal == 0) {
-                        keyCourseViewOs = COURSEVIEWIOSAPP + typeId;
-                    } else {
-                        keyCourseViewOs = COURSEVIEWIOSH5 + typeId;
-                    }
-                }
-                if (COURSEMAP.containsKey(keyCourseViewComment)) {
-                    this.total2Redis(openId, keyCourseView, keyCourseViewOs, keyCourseViewId);
+                String keyCourseViewComment = SHARELIVECONTENT + typeId;
+
+                if (LIVEMAP.containsKey(keyCourseViewComment)) {
+                    liveRedisMobileService.liveView(typeId,userId,terminal,os);
                 } else {
                     Object object = redisUtil.hget(keyCourseViewComment,"slave");
                     if (object!=null){
@@ -142,7 +128,7 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
 
                                 redisUtil.hset(keyCourseViewComment,"master",master.getLiveMasterName());
                                 redisUtil.hset(keyCourseViewComment,"slave",JSON.toJSONString(showList));
-                                total2Redis(openId, keyCourseView, keyCourseViewOs, keyCourseViewId);
+                                liveRedisMobileService.liveView(typeId,userId,terminal,os);
                                 returnMap.put("master",master.getLiveMasterName());
                                 returnMap.put("slave",showList);
                             }else {
@@ -166,10 +152,6 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
         return returnMap;
     }
 
-    private void total2Redis(String openId, String keyCourseView, String keyCourseViewOs, String keyCourseViewId) {
-        redisUtil.incr(keyCourseView, 1);
-        redisUtil.incr(keyCourseViewOs, 1);
-        redisUtil.hincr(keyCourseViewId, openId, 1);
-    }
+
 
 }

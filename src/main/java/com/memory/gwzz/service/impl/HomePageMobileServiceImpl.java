@@ -7,7 +7,11 @@ import com.memory.entity.jpa.Album;
 import com.memory.entity.jpa.ArticleLike;
 import com.memory.entity.jpa.CourseLike;
 import com.memory.gwzz.model.*;
+import com.memory.gwzz.redis.service.AlbumRedisMobileService;
 import com.memory.gwzz.redis.service.ArticleRedisMobileService;
+import com.memory.gwzz.redis.service.CourseRedisMobileService;
+import com.memory.gwzz.redis.service.LiveRedisMobileService;
+import com.memory.gwzz.redis.service.impl.AlbumRedisMobileServiceImpl;
 import com.memory.gwzz.repository.*;
 import com.memory.gwzz.service.*;
 import com.memory.redis.config.RedisUtil;
@@ -19,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.memory.redis.CacheConstantConfig.*;
-import static com.memory.redis.CacheConstantConfig.COURSEMAP;
 
 /**
  * @ClassName HomePageMobileServiceImpl
@@ -57,6 +60,15 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
     @Autowired
     private ArticleRedisMobileService articleRedisMobileService;
 
+    @Autowired
+    private CourseRedisMobileService courseRedisMobileService;
+
+    @Autowired
+    private LiveRedisMobileService liveRedisMobileService;
+
+    @Autowired
+    private AlbumRedisMobileService albumRedisMobileService;
+
 
     @Override
     public Map<String, Object> HomePageOne() {
@@ -69,6 +81,7 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
 //        StringBuffer sbliveMaster = new StringBuffer(" SELECT NEW com.memory.gwzz.model.LiveMaster(id,liveMasterName,liveMasterDescribe,liveMasterStatus,liveMasterIsOnline,liveMasterStarttime) " +
 //                "FROM LiveMaster WHERE liveMasterIsOnline = 1 AND liveMasterIsOnline = 1 ");
 //        LiveMaster liveMaster = (LiveMaster) daoUtils.findObjectHQL(sbliveMaster.toString(),null);
+
         //查询最新两期课程
         StringBuffer sbCourse = new StringBuffer( "SELECT NEW com.memory.gwzz.model.Course( id, courseNumber,courseTitle, courseLogo, courseLabel,courseOnline,courseTotalComment,courseTotalView,courseReleaseTime)  " +
                 "FROM Course WHERE courseOnline =1 ORDER BY courseReleaseTime DESC");
@@ -76,6 +89,11 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
         pageCourse.setPageIndex(1);
         pageCourse.setLimit(2);
         List<Course> courseList = daoUtils.findByHQL(sbCourse.toString(),null,pageCourse);
+        //重写课程阅读量
+        for (int j = 0;j<courseList.size();j++){
+            String courseId = courseList.get(j).getId();
+            courseList.get(j).setCourseTotalView(courseRedisMobileService.getCourseView(courseId));
+        }
 
         //查询最新5篇养生文章  文章类型Id：tYmvO0Ub1558922279863
         StringBuffer sbArticle = new StringBuffer( "SELECT NEW com.memory.gwzz.model.Article( id, typeId, articleTitle, articleLogo1, articleLogo2, articleLogo3, " +
@@ -95,6 +113,11 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
         //查询专辑
         StringBuffer sbAlbum = new StringBuffer( " FROM Album WHERE albumIsOnline = 1 AND albumIsHomePage = 1 ORDER BY albumSort ASC");
         List<Album> albumList = daoUtils.findByHQL(sbAlbum.toString(),null,null);
+        //重写专辑阅读量
+        for (int k = 0; k<albumList.size(); k++){
+            String albumId = albumList.get(k).getId();
+            albumList.get(k).setAlbumTotalView(albumRedisMobileService.getAlbumView(albumId));
+        }
 
         StringBuffer sbNewCourse = new StringBuffer( "SELECT NEW com.memory.gwzz.model.Course( id, courseNumber,courseTitle, courseLogo, courseLabel,courseOnline,courseTotalComment,courseTotalView,courseReleaseTime)  " +
                 "FROM Course WHERE courseOnline =1 ORDER BY courseReleaseTime DESC");
@@ -102,6 +125,7 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
         pageNewCourse.setPageIndex(1);
         pageNewCourse.setLimit(1);
         List<Course> newCourseList = daoUtils.findByHQL(sbNewCourse.toString(),null,pageNewCourse);
+
 
 
         returnMap.put("bannerList",bannerList);
@@ -132,11 +156,17 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
         if ("Article".equals(type)) {
             com.memory.entity.jpa.Article article = articleMobileRepository.findByIdAndArticleOnline(typeId, 1);
             if (article != null) {
+                articleRedisMobileService.articleView(typeId,userId,os,terminal);
                 String label = article.getArticleLabel();
                 String[] labels = label.split(",");
                 article.setArticleLabel(labels[0]);
+                //重写文章阅读量、点赞量、分享量
+                article.setArticleTotalView(articleRedisMobileService.getArticleView(typeId));
+                article.setArticleTotalLike(articleRedisMobileService.getArticleLike(typeId));
+                article.setArticleTotalShare(articleRedisMobileService.getArticleShare(typeId));
+
                 returnMap.put("article", article);
-                isLike=articleRedisMobileService.isLike(article.getId(),userId);
+                isLike = articleRedisMobileService.isLike(typeId,userId);
                 returnMap.put("isLike",isLike);
             } else {
                 returnMap = null;
@@ -145,13 +175,19 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
             com.memory.entity.jpa.Course course = courseMobileRepository.findByIdAndCourseOnline(typeId, 1);
             if (course != null) {
                 String isLive = "noData";
+                courseRedisMobileService.courseView(typeId,userId,os,terminal);
+                //重写课程阅读量、点赞量、分享量
+                course.setCourseTotalView(courseRedisMobileService.getCourseView(typeId));
+                course.setCourseTotalLike(courseRedisMobileService.getCourseLike(typeId));
+                course.setCourseTotalShare(courseRedisMobileService.getCourseShare(typeId));
 
                 String albumId = course.getAlbumId();
                 com.memory.entity.jpa.LiveMaster liveMaster = liveMasterMobileRepository.findByCourseIdAndLiveMasterIsOnline(typeId, 1);
                 if (liveMaster != null) {
                     isLive = liveMaster.getId();
                 }
-                returnMap.put("isLike",courseLikeMobileService.isCourseLike(course.getId(),userId));
+                Integer isCourseLike = courseRedisMobileService.getUserCourseLike(typeId,userId);
+                returnMap.put("isLike",isCourseLike);
                 returnMap.put("course", course);
                 returnMap.put("isLive", isLive);
                 returnMap.put("courselist", courseMobileService.getCourseById(albumId));
@@ -161,25 +197,10 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
         } else if ("Live".equals(type)) {
             com.memory.entity.jpa.LiveMaster liveMaster1 = liveMasterMobileRepository.findByCourseIdAndLiveMasterIsOnline(typeId, 1);
             if (liveMaster1 != null) {
-                String keyCourseView = COURSEVIEW + typeId;
-                String keyCourseViewOs = "";
-                String keyCourseViewComment = COURSECOMMENT + typeId;
-                String keyCourseViewId = COURSEVIEWID + typeId;
-                if (os == 1) {
-                    if (terminal == 1) {
-                        keyCourseViewOs = COURSEVIEWANDROIDH5 + typeId;
-                    } else {
-                        keyCourseViewOs = COURSEVIEWANDROIDAPP + typeId;
-                    }
-                } else {
-                    if (terminal == 0) {
-                        keyCourseViewOs = COURSEVIEWIOSAPP + typeId;
-                    } else {
-                        keyCourseViewOs = COURSEVIEWIOSH5 + typeId;
-                    }
-                }
-                if (COURSEMAP.containsKey(keyCourseViewComment)) {
-                    this.total2Redis(openId, keyCourseView, keyCourseViewOs, keyCourseViewId);
+                String liveId = liveMaster1.getId();
+                String keyCourseViewComment = SHARELIVECONTENT + liveId;
+                if (LIVEMAP.containsKey(keyCourseViewComment)) {
+                    liveRedisMobileService.liveView(liveId,userId,terminal,os);
                 } else {
                     Object object = redisUtil.hget(keyCourseViewComment,"slave");
                     if (object!=null){
@@ -202,7 +223,7 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
                                 List<Map<String,Object>> showList = liveSlave.refactorData(list);
                                 redisUtil.hset(keyCourseViewComment,"master",master.getLiveMasterName());
                                 redisUtil.hset(keyCourseViewComment,"slave",JSON.toJSONString(showList));
-                                total2Redis(openId, keyCourseView, keyCourseViewOs, keyCourseViewId);
+                                liveRedisMobileService.liveView(liveId,userId,terminal,os);
                                 returnMap.put("master",master.getLiveMasterName());
                                 returnMap.put("slave",showList);
                             }
@@ -222,9 +243,4 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
         return returnMap;
     }
 
-    private void total2Redis(String openId, String keyCourseView, String keyCourseViewOs, String keyCourseViewId) {
-        redisUtil.incr(keyCourseView, 1);
-        redisUtil.incr(keyCourseViewOs, 1);
-        redisUtil.hincr(keyCourseViewId, openId, 1);
-    }
 }

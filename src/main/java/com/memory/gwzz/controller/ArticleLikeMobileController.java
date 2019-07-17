@@ -55,11 +55,7 @@ public class ArticleLikeMobileController extends BaseController {
             Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
             if (article != null){
                 Integer articleLike = articleLikeMobileService.like(articleId,userId);
-                if (articleLike==1){
-                    msg.setRecode(1);
-                }else{
-                    msg.setRecode(0);
-                }
+                    msg.setRecode(articleLike);
             }else {
                 msg.setRecode(2);
                 msg.setMsg("该课程不存在");

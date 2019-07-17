@@ -6,6 +6,8 @@ import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.CourseComment;
 import com.memory.entity.jpa.CourseCommentLike;
 import com.memory.entity.jpa.User;
+import com.memory.gwzz.redis.service.CourseCommentRedisMobileService;
+import com.memory.gwzz.redis.service.CourseRedisMobileService;
 import com.memory.gwzz.repository.CourseCommentLikeMobileRepository;
 import com.memory.gwzz.repository.CourseCommentMobileRepository;
 import com.memory.gwzz.service.CourseCommentMobileService;
@@ -24,7 +26,7 @@ import java.util.*;
 @Service("courseCommentMobileService")
 public class CourseCommentMobileServiceImpl implements CourseCommentMobileService {
     @Autowired
-    private CourseCommentMobileRepository courseCommentMobileRepository;
+    private CourseCommentRedisMobileService courseCommentRedisMobileService;
 
     @Autowired
     private CourseCommentLikeMobileRepository courseCommentLikeMobileRepository;
@@ -92,9 +94,9 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
         Course course = (Course) daoUtils.getById("Course",courseId);
 
         //查询一级评论列表
-        StringBuffer sbCourseCommentList = new StringBuffer("select id AS courseCommentId,course_id,user_id AS uid,user_logo,user_name,comment_content_replace,comment_create_time,comment_total_like," +
-                "(select count(*) from course_comment where course_id=:courseId and comment_root_id = courseCommentId and comment_type=1)," +
-                "(SELECT ccl.comment_like_yn FROM course_comment_like ccl WHERE ccl.comment_id = courseCommentId AND ccl.user_id ='"+uid+"') " +
+        StringBuffer sbCourseCommentList = new StringBuffer("select id AS courseCommentId, course_id, user_id AS uid, user_logo, user_name, comment_content_replace, comment_create_time, comment_total_like," +
+                "(select count(*) from course_comment where course_id=:courseId and comment_root_id = courseCommentId and comment_type=1) " +
+//                "(SELECT ccl.comment_like_yn FROM course_comment_like ccl WHERE ccl.comment_id = courseCommentId AND ccl.user_id ='"+uid+"') " +
                 "from course_comment where course_id=:courseId AND comment_type=0 order by comment_create_time desc");
         //查询一级评论总数
         StringBuffer sbCount = new StringBuffer("select count(*) from course_comment where course_id=:courseId AND comment_type=0 ");
@@ -107,8 +109,10 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
         List<Map<String, Object>> returnList=new ArrayList<Map<String,Object>>();
         for (int i = 0; i < list.size(); i++) {
             Map<String, Object> objMap=new HashMap<String, Object>();
-            Integer isLike = 0;
-            objMap.put("id", list.get(i)[0]);
+            String courseCommentId = list.get(i)[0].toString();
+            Integer isLike = courseCommentRedisMobileService.isLike(courseCommentId,uid);
+
+            objMap.put("id", courseCommentId);
             objMap.put("courseId", list.get(i)[1]);
             objMap.put("userId", list.get(i)[2]);
             objMap.put("userLogo", list.get(i)[3]);
@@ -117,12 +121,8 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
             objMap.put("commentCreateTime", list.get(i)[6]);
             objMap.put("commentTotalLike", list.get(i)[7]);
             objMap.put("commentReplySum", list.get(i)[8]);
-            Object commentLike = list.get(i)[9];
-            if (commentLike==null){
-                isLike=0;
-            }else{
-                isLike=(Integer) commentLike;
-            }
+
+
             objMap.put("commentLike", isLike);
 
             returnList.add(objMap);
@@ -144,13 +144,9 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
         //查询一级评论对象
         CourseComment courseComment = (CourseComment) daoUtils.getById("CourseComment",commentId);
         if (courseComment!=null){
-            CourseCommentLike courseCommentLike =courseCommentLikeMobileRepository.findByCommentIdAndUserId(commentId,uid);
-            Integer isCommentLike = 0;
-            if (courseCommentLike==null){
-                isCommentLike=0;
-            }else {
-                isCommentLike=courseCommentLike.getCommentLikeYn();
-            }
+//            CourseCommentLike courseCommentLike =courseCommentLikeMobileRepository.findByCommentIdAndUserId(commentId,uid);
+            Integer isCommentLike = courseCommentRedisMobileService.isLike(commentId,uid);
+
             String commentRootId = courseComment.getCommentRootId();
             //查询子级评论列表
             StringBuffer sbCCTWO = new StringBuffer("select id,course_id,user_id,user_logo,user_name,comment_content_replace,comment_parent_user_name,comment_parent_content," +

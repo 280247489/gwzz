@@ -11,4 +11,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface LiveMasterMobileRepository extends JpaRepository<LiveMaster,String> {
     LiveMaster findByCourseIdAndLiveMasterIsOnline(String cid,Integer isOnline);
+    LiveMaster findByCourseId(String cid);
 }

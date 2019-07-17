@@ -60,7 +60,6 @@ public class HomePageMobileController extends BaseController {
     /**
      * 查询直播
      * URL:192.168.1.185:8081/gwzz/homePage/mobile/homePageTwo
-     *
      * @return liveMaster对象
      */
     @RequestMapping(value = "homePageTwo",method = RequestMethod.POST)

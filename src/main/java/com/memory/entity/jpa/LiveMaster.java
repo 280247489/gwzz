@@ -1,14 +1,14 @@
 package com.memory.entity.jpa;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 /**
  * @ClassName LiveMaster
  * @Descriotion TODO
  * @Author Ganxiqing
- * @Date 2019/7/1 11:25
+ * @Date 2019/7/17 10:35
  */
 @Entity
 @Table(name = "live_master", schema = "gwzz_db", catalog = "")
@@ -18,6 +18,8 @@ public class LiveMaster {
     private String liveMasterName;
     private String liveMasterDescribe;
     private int liveMasterStatus;
+    private int liveMasterShare;
+    private int liveMasterView;
     private int liveMasterLike;
     private int liveMasterIsSynthesisAudio;
     private String liveMasterSynthesisAudioUrl;
@@ -26,9 +28,9 @@ public class LiveMaster {
     private int liveMasterIsPush;
     private String liveMasterStarttime;
     private String liveMasterEndtime;
-    private Timestamp liveMasterCreateTime;
+    private Date liveMasterCreateTime;
     private String liveMasterCreateId;
-    private Timestamp liveMasterUpdateTime;
+    private Date liveMasterUpdateTime;
     private String liveMasterUpdateId;
 
     @Id
@@ -79,6 +81,26 @@ public class LiveMaster {
 
     public void setLiveMasterStatus(int liveMasterStatus) {
         this.liveMasterStatus = liveMasterStatus;
+    }
+
+    @Basic
+    @Column(name = "live_master_share")
+    public int getLiveMasterShare() {
+        return liveMasterShare;
+    }
+
+    public void setLiveMasterShare(int liveMasterShare) {
+        this.liveMasterShare = liveMasterShare;
+    }
+
+    @Basic
+    @Column(name = "live_master_view")
+    public int getLiveMasterView() {
+        return liveMasterView;
+    }
+
+    public void setLiveMasterView(int liveMasterView) {
+        this.liveMasterView = liveMasterView;
     }
 
     @Basic
@@ -163,11 +185,11 @@ public class LiveMaster {
 
     @Basic
     @Column(name = "live_master_create_time")
-    public Timestamp getLiveMasterCreateTime() {
+    public Date getLiveMasterCreateTime() {
         return liveMasterCreateTime;
     }
 
-    public void setLiveMasterCreateTime(Timestamp liveMasterCreateTime) {
+    public void setLiveMasterCreateTime(Date liveMasterCreateTime) {
         this.liveMasterCreateTime = liveMasterCreateTime;
     }
 
@@ -183,11 +205,11 @@ public class LiveMaster {
 
     @Basic
     @Column(name = "live_master_update_time")
-    public Timestamp getLiveMasterUpdateTime() {
+    public Date getLiveMasterUpdateTime() {
         return liveMasterUpdateTime;
     }
 
-    public void setLiveMasterUpdateTime(Timestamp liveMasterUpdateTime) {
+    public void setLiveMasterUpdateTime(Date liveMasterUpdateTime) {
         this.liveMasterUpdateTime = liveMasterUpdateTime;
     }
 
@@ -207,6 +229,8 @@ public class LiveMaster {
         if (o == null || getClass() != o.getClass()) return false;
         LiveMaster that = (LiveMaster) o;
         return liveMasterStatus == that.liveMasterStatus &&
+                liveMasterShare == that.liveMasterShare &&
+                liveMasterView == that.liveMasterView &&
                 liveMasterLike == that.liveMasterLike &&
                 liveMasterIsSynthesisAudio == that.liveMasterIsSynthesisAudio &&
                 liveMasterIsOnline == that.liveMasterIsOnline &&
@@ -227,6 +251,6 @@ public class LiveMaster {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, courseId, liveMasterName, liveMasterDescribe, liveMasterStatus, liveMasterLike, liveMasterIsSynthesisAudio, liveMasterSynthesisAudioUrl, liveMasterIsOnline, liveMasterIsRelation, liveMasterIsPush, liveMasterStarttime, liveMasterEndtime, liveMasterCreateTime, liveMasterCreateId, liveMasterUpdateTime, liveMasterUpdateId);
+        return Objects.hash(id, courseId, liveMasterName, liveMasterDescribe, liveMasterStatus, liveMasterShare, liveMasterView, liveMasterLike, liveMasterIsSynthesisAudio, liveMasterSynthesisAudioUrl, liveMasterIsOnline, liveMasterIsRelation, liveMasterIsPush, liveMasterStarttime, liveMasterEndtime, liveMasterCreateTime, liveMasterCreateId, liveMasterUpdateTime, liveMasterUpdateId);
     }
 }

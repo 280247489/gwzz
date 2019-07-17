@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,25 +52,35 @@ public class CourseMobileController extends BaseController {
      * URL:192.168.1.185:8081/gwzz/course/mobile/getCourseById
      * @param cid String 唯一标识ID
      * @param uid String 用户Id
+     * @param os 操作系统 0 ios， 1 android
+     * @param terminal 类型 0 app， 1分享
      * @return
      */
     @RequestMapping(value = "getCourseById",method = RequestMethod.POST)
-    public Message getCourseById(@RequestParam String cid,@RequestParam String uid){
+    public Message getCourseById(@RequestParam String cid,@RequestParam String uid,@RequestParam Integer os, @RequestParam Integer terminal){
         try {
             msg = Message.success();
             Course course = courseMobileRepository.findByIdAndCourseOnline(cid,1);
             if (course!=null){
+                courseRedisMobileService.courseView(cid,uid,os,terminal);
+                //重写课程阅读量、点赞量、分享量
+                String id = course.getId();
+                course.setCourseTotalView(courseRedisMobileService.getCourseView(id));
+                course.setCourseTotalLike(courseRedisMobileService.getCourseLike(id));
+                course.setCourseTotalShare(courseRedisMobileService.getCourseShare(id));
                 String isLive = "noData";
                 String albumId = course.getAlbumId();
                 LiveMaster liveMaster =liveMasterMobileRepository.findByCourseIdAndLiveMasterIsOnline(cid,1);
                 if (liveMaster!=null){
                     isLive=liveMaster.getId();
                 }
+                Integer isCourseLike = courseRedisMobileService.getUserCourseLike(cid,uid);
+                List<com.memory.gwzz.model.Course> courseList = courseMobileService.getCourseById(albumId);
                 Map<String,Object> returnMap = new HashMap<>();
                 returnMap.put("course",course);
-                returnMap.put("courselist",courseMobileService.getCourseById(albumId));
+                returnMap.put("courselist",courseList);
                 returnMap.put("isLive",isLive);
-                returnMap.put("isLike",courseLikeMobileService.isCourseLike(cid, uid));
+                returnMap.put("isLike",isCourseLike);
                 msg.setRecode(0);
                 msg.setMsg("成功");
                 msg.setData(returnMap);

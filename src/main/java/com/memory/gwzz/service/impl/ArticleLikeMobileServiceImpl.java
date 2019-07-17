@@ -103,6 +103,11 @@ public class ArticleLikeMobileServiceImpl implements ArticleLikeMobileService {
         stringBuffer.append(" ORDER BY al.createTime DESC");
 
         List<com.memory.gwzz.model.Article> articleList = daoUtils.findByHQL(stringBuffer.toString(),map,pageArticle);
+        //重写文章阅读量
+        for (int i = 0;i<articleList.size();i++){
+            String articleId = articleList.get(i).getId();
+            articleList.get(i).setArticleTotalView(articleRedisMobileService.getArticleView(articleId));
+        }
 
         Integer articleCount = daoUtils.getTotalBySQL(stringBuffer1.toString(),map);
 

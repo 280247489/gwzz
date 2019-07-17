@@ -5,6 +5,7 @@ import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.CourseLike;
 import com.memory.entity.jpa.User;
+import com.memory.gwzz.redis.service.CourseRedisMobileService;
 import com.memory.gwzz.repository.CourseLikeMobileRepository;
 import com.memory.gwzz.service.CourseLikeMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,43 +31,56 @@ public class CourseLikeMobileServiceImpl implements CourseLikeMobileService {
     @Autowired
     private CourseLikeMobileRepository courseLikeMobileRepository;
 
-    @Transactional
-    @Override
-    public synchronized CourseLike like(String cid, String uid) {
-        Course course = (Course) daoUtils.getById("Course",cid);
-        User user = (User) daoUtils.getById("User",uid);
-        CourseLike courseLike = null;
-        if (course !=null && user!=null){
-            courseLike = this.getBycidAndUid(cid, uid);
-            if (courseLike != null){
-                if (courseLike.getLikeStatus()==1){
-                    courseLike.setLikeStatus(0);
-                    course.setCourseTotalLike(course.getCourseTotalLike()-1);
-                }else{
-                    courseLike.setLikeStatus(1);
-                    course.setCourseTotalLike(course.getCourseTotalLike()+1);
-                }
-            }else {
-                if(course !=null && user != null){
-                    courseLike = new CourseLike();
-                    courseLike.setId(Utils.generateUUIDs());
-                    courseLike.setCourseId(cid);
-                    courseLike.setUserId(uid);
-                    courseLike.setLikeStatus(1);
-                    courseLike.setCreateTime(new Date());
+    @Autowired
+    private CourseRedisMobileService courseRedisMobileService;
 
-                    course.setCourseTotalLike(course.getCourseTotalLike()+1);
-                }
-            }
-            daoUtils.save(course);
-            daoUtils.save(courseLike);
-        }
-
-        return courseLike;
-    }
+//    @Transactional
+//    @Override
+//    public synchronized CourseLike like(String cid, String uid) {
+//        Course course = (Course) daoUtils.getById("Course",cid);
+//        User user = (User) daoUtils.getById("User",uid);
+//        CourseLike courseLike = null;
+//        if (course !=null && user!=null){
+//            courseLike = this.getBycidAndUid(cid, uid);
+//            if (courseLike != null){
+//                if (courseLike.getLikeStatus()==1){
+//                    courseLike.setLikeStatus(0);
+//                    course.setCourseTotalLike(course.getCourseTotalLike()-1);
+//                }else{
+//                    courseLike.setLikeStatus(1);
+//                    course.setCourseTotalLike(course.getCourseTotalLike()+1);
+//                }
+//            }else {
+//                if(course !=null && user != null){
+//                    courseLike = new CourseLike();
+//                    courseLike.setId(Utils.generateUUIDs());
+//                    courseLike.setCourseId(cid);
+//                    courseLike.setUserId(uid);
+//                    courseLike.setLikeStatus(1);
+//                    courseLike.setCreateTime(new Date());
+//
+//                    course.setCourseTotalLike(course.getCourseTotalLike()+1);
+//                }
+//            }
+//            daoUtils.save(course);
+//            daoUtils.save(courseLike);
+//        }
+//
+//        return courseLike;
+//    }
 
     public CourseLike getBycidAndUid(String cid,String uid){
         return courseLikeMobileRepository.findByCourseIdAndUserId(cid, uid);
+    }
+    @Transactional
+    @Override
+    public int like(String cid, String uid) {
+        Course course = (Course) daoUtils.getById("Course",cid);
+        User user = (User) daoUtils.getById("User",uid);
+        if (course !=null && user!=null){
+            courseRedisMobileService.courseLike(cid, uid);
+        }
+        return courseRedisMobileService.getUserCourseLike(cid,uid);
     }
 
     @Override
@@ -89,6 +103,11 @@ public class CourseLikeMobileServiceImpl implements CourseLikeMobileService {
         stringBuffer.append(" ORDER BY cl.createTime DESC");
 
         List<Course> courseList = daoUtils.findByHQL(stringBuffer.toString(),map,pageArticle);
+        //重写课程阅读量
+        for (int j = 0;j<courseList.size();j++){
+            String courseId = courseList.get(j).getId();
+            courseList.get(j).setCourseTotalView(courseRedisMobileService.getCourseView(courseId));
+        }
 
         Integer courseCount = daoUtils.getTotalBySQL(stringBuffer1.toString(),map);
 
