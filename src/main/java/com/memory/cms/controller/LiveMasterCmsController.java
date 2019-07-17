@@ -93,7 +93,7 @@ public class LiveMasterCmsController {
      */
     @RequestMapping("add")
     @ResponseBody
-    public Result add(ExtModel extModel,MasterModel masterModel){
+    public Result add(ExtModel extModel, MasterModel masterModel){
         Result result = new Result();
         try {
             Map<String,Object> returnMap = new HashMap<String, Object>();
@@ -159,6 +159,11 @@ public class LiveMasterCmsController {
             master.setLiveMasterDescribe(masterModel.getLiveMaster().getLiveMasterDescribe());
             master.setLiveMasterUpdateTime(new Date());
             master.setLiveMasterUpdateId(masterModel.getLiveMaster().getOperatorId());
+            //更新直播期数
+            if(Utils.isNotNull(masterModel.getLiveMaster().getLiveNumber())){
+                master.setLiveNumber(masterModel.getLiveMaster().getLiveNumber());
+            }
+
             LiveMaster  returnMaster = liveMasterCmsService.update(master);
 
             List<LiveSlave> removeList = liveSlaveCmsService.queryLiveSlaveByLiveMasterId(liveMaster.getId());
@@ -569,12 +574,15 @@ public class LiveMasterCmsController {
         LiveMaster master = new LiveMaster();
         master.setId(uuid);
         master.setCourseId("");
+        master.setLiveNumber(liveMaster.getLiveNumber());
         master.setLiveMasterName(liveMaster.getLiveMasterName());
         master.setLiveMasterDescribe(liveMaster.getLiveMasterDescribe());
         //直播状态(0 未直播 1上线 2直播完毕)
         master.setLiveMasterStatus(0);
         //点赞数
         master.setLiveMasterLike(0);
+        master.setLiveMasterView(0);
+        master.setLiveMasterShare(0);
         //是否合成音频 0未合成 1合成
         master.setLiveMasterIsSynthesisAudio(0);
         //音频地址

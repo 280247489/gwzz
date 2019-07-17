@@ -1,4 +1,5 @@
 package com.memory.cms.controller;
+import com.memory.cms.redis.service.AlbumRedisCmsService;
 import com.memory.cms.redis.service.CourseRedisCmsService;
 import com.memory.cms.service.*;
 import com.memory.common.utils.*;
@@ -40,6 +41,9 @@ public class CourseCmsController {
 
     @Autowired
     private CourseRedisCmsService courseRedisCmsService;
+
+    @Autowired
+    private AlbumRedisCmsService albumRedisCmsService;
 
     /**
      * 变更上线下线状态
@@ -83,6 +87,8 @@ public class CourseCmsController {
                     //根据上下线状态同步redis数据
                     liveMasterCmsService.syncOnline2Redis(liveMaster.getId(), online);
 
+
+
                 }
 
                 //变更上下线状态时同步专辑数量
@@ -94,6 +100,9 @@ public class CourseCmsController {
                         album.setAlbumCourseSum(album_course_count);
                         albumCmsService.update(album);
                     }
+
+                    //获取专辑总的阅读数 同时 同步 到redis中 (课程上下线状态发生改变，课程阅读数发生改变，需要同步)
+                    albumRedisCmsService.getAlbumAllViewTotal(course.getAlbumId());
                 }
 
                 result.setCode(0);
@@ -154,7 +163,24 @@ public class CourseCmsController {
             int pageIndex = page+1;
             int limit = size;
             List<com.memory.entity.bean.Course> list = courseService.queryCourseByQueHql(pageIndex,limit,course_title,course_update_id,course_online,sort_status,course_type_id,album_id);
+            for (com.memory.entity.bean.Course course : list) {
+
+                Integer courseTotalView = courseRedisCmsService.getCourseRedisAllViewTotal(course.getId());
+
+                Integer courseTotalShare = courseRedisCmsService.getCourseRedisShareTotal(course.getId());
+
+                Integer courseTotalLike = courseRedisCmsService.getCourseRedisLikeTotal(course.getId());
+
+                course.setCourseTotalView(courseTotalView);
+                course.setCourseTotalShare(courseTotalShare);
+                course.setCourseTotalLike(courseTotalLike);
+
+
+            }
+
             int totalElements = courseService.queryCourseCountByQueHql(course_title,course_update_id,course_online,sort_status,course_type_id,album_id);
+
+
             PageResult pageResult = PageResult.getPageResult(page, size, list, totalElements);
             result = ResultUtil.success(pageResult);
 
@@ -251,13 +277,17 @@ public class CourseCmsController {
                     //设置关联状态已关联
                     master.setLiveMasterIsRelation(1);
                     liveMasterCmsService.update(master);
+
+                    //获取专辑总的阅读数 同时 同步 到redis中 (课程关联直播，直播阅读数发生改变，需要同步)
+                    albumRedisCmsService.getAlbumAllViewTotal(course.getAlbumId());
+
                 }
 
 
 
                 if(course != null){
                     //初始化course redis 后台管理阅读数
-                    courseRedisCmsService.initCourseRedisTotal(course.getId());
+                    courseRedisCmsService.initCourseRedisViewTotal(course.getId());
                     result.setCode(0);
                     result.setMsg("添加课程成功");
                     result.setData(course);
@@ -335,6 +365,13 @@ public class CourseCmsController {
                     album.setAlbumCourseSum(album_course_count + 1);
                     albumCmsService.update(old_album);
                     albumCmsService.update(album);
+
+                    //获取专辑总的阅读数 同时 同步 到redis中 (课程专辑发生改变，课程阅读数发生改变，需要同步)
+                    albumRedisCmsService.getAlbumAllViewTotal(old_album.getId());
+                    //获取专辑总的阅读数 同时 同步 到redis中 (课程专辑发生改变，课程阅读数发生改变，需要同步)
+                    albumRedisCmsService.getAlbumAllViewTotal(album.getId());
+
+
                 }
 
 
@@ -350,6 +387,9 @@ public class CourseCmsController {
                     //设置关联状态已关联
                     master.setLiveMasterIsRelation(1);
                     liveMasterCmsService.update(master);
+                    //获取专辑总的阅读数 同时 同步 到redis中 (直播关联课程，直播的阅读数发生改变需要同步)
+                    albumRedisCmsService.getAlbumAllViewTotal(course.getAlbumId());
+
                 }
 
 
@@ -458,11 +498,14 @@ public class CourseCmsController {
                 course.setAlbumId(album_id);
 
                 //album_id
+                //更新专辑数量
                 if(Utils.isNotNull(album_id)){
                     Album album = albumCmsService.getAlbumById(album_id);
                     if(Utils.isNotNull(album)){
                         album.setAlbumCourseSum(album.getAlbumCourseSum()+1);
                         albumCmsService.update(album);
+                        //获取专辑总的阅读数 同时 同步 到redis中
+                        albumRedisCmsService.getAlbumAllViewTotal(album_id);
                     }
                 }
 
@@ -498,6 +541,9 @@ public class CourseCmsController {
 
             LiveMaster master = liveMasterCmsService.getLiveMasterByCourseId(course_id);
             if(Utils.isNotNull(master) && Utils.isNotNull(master.getCourseId()) && course_id.equals(master.getCourseId())){
+                //获取专辑总的阅读数 同时 同步 到redis中 (课程解绑直播，直播阅读数发生改变，需要同步)
+                albumRedisCmsService.getAlbumAllViewTotal(course.getAlbumId());
+
                 master.setCourseId("");
                 liveMasterCmsService.update(master);
                 course.setCourseUpdateId(operator_id);

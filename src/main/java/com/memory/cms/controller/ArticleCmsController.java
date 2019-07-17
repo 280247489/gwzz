@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author INS6+
@@ -33,6 +34,7 @@ public class ArticleCmsController {
 
     @Autowired
     private ArticleRedisCmsService articleRedisCmsService;
+
 
     /**
      * 变更上线下线状态
@@ -103,7 +105,24 @@ public class ArticleCmsController {
             pageResult.setOffset(pageable.getOffset());
             pageResult.setTotalPages(pageer.getTotalPages());
             pageResult.setTotalElements(pageer.getTotalElements());
-            pageResult.setData(pageer.getContent());
+
+            List<Article> articleList = pageer.getContent();
+            for (Article article : articleList) {
+                String articleId = article.getId();
+
+                Integer articleTotalView =  articleRedisCmsService.getArticleRedisAllViewTotal(articleId);
+
+                Integer articleTotalShare = articleRedisCmsService.getArticleRedisShareTotal(articleId);
+
+                Integer articleTotalLike = articleRedisCmsService.getArticleRedisLikeTotal(articleId);
+
+                article.setArticleTotalView(articleTotalView);
+                article.setArticleTotalShare(articleTotalShare);
+                article.setArticleTotalLike(articleTotalLike);
+
+            }
+
+            pageResult.setData(articleList);
 
 
             result = ResultUtil.success(pageResult);

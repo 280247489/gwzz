@@ -1,5 +1,6 @@
 package com.memory.cms.service;
 
+import com.memory.entity.jpa.Album;
 import com.memory.entity.jpa.Course;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,5 +53,7 @@ public interface CourseCmsService {
     Course queryCourseByCourseNumber(Integer courseNumber,String id);
 
     int  countCourseByAlbumId(String albumId);
+
+    List<Course> queryCourseByAlbumIdAndCourseOnline(String albumId,Integer online);
 
 }

@@ -13,6 +13,7 @@ public class LiveMaster {
     private String operatorId;
     private String startTime;
     private String endTime;
+    private Integer liveNumber;
 
     public String getId() {
         return id;
@@ -62,14 +63,22 @@ public class LiveMaster {
         this.endTime = endTime;
     }
 
+    public Integer getLiveNumber() {
+        return liveNumber;
+    }
 
-    public LiveMaster(String id, String liveMasterName, String liveMasterDescribe, String operatorId, String startTime, String endTime) {
+    public void setLiveNumber(Integer liveNumber) {
+        this.liveNumber = liveNumber;
+    }
+
+    public LiveMaster(String id, String liveMasterName, String liveMasterDescribe, String operatorId, String startTime, String endTime,Integer liveNumber) {
         this.id = id;
         this.liveMasterName = liveMasterName;
         this.liveMasterDescribe = liveMasterDescribe;
         this.operatorId = operatorId;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.liveNumber = liveNumber;
     }
 
     public LiveMaster() {

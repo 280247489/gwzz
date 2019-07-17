@@ -1,6 +1,7 @@
 package com.memory.cms.redis.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.memory.cms.redis.service.LiveRedisCmsService;
+import com.memory.common.utils.Utils;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class LiveRedisCmsServiceImpl implements LiveRedisCmsService {
 
     @Autowired
     private RedisUtil redisUtil;
+
 
     @Override
     public void live2RedisNotExist(String uuid) {
@@ -80,5 +82,28 @@ public class LiveRedisCmsServiceImpl implements LiveRedisCmsService {
     public Object getMasterNameById(String uuid) {
         String keyHash = getKey(uuid);
         return redisUtil.hget(keyHash,"master");
+    }
+
+    @Override
+    public Integer getLiveRedisViewTotal(String uuid) {
+        //获取直播阅读数
+        String liveViewTotalKey = LIVEVIEW + uuid;
+
+        Integer liveViewTotal = (Utils.isNotNull(redisUtil.get(liveViewTotalKey)))?(Integer.valueOf(redisUtil.get(liveViewTotalKey).toString())):0;
+
+        return liveViewTotal;
+    }
+
+    @Override
+    public Integer getLiveRedisShareTotal(String uuid) {
+        //获取直播分享量
+        String liveShareTotalKey = LIVESHARE + uuid;
+        Integer liveShareTotal =(Utils.isNotNull(redisUtil.get(liveShareTotalKey)))?(Integer.valueOf(redisUtil.get(liveShareTotalKey).toString())):0;
+        return liveShareTotal;
+    }
+
+    @Override
+    public Integer getLiveRedisLikeTotal(String uuid) {
+        return 0;
     }
 }

@@ -22,4 +22,16 @@ public interface LiveRedisCmsService {
     Object getSlaveById(String uuid);
     //获取redis hash key master 的值
     Object getMasterNameById(String uuid);
+
+    //获取直播阅读数
+    Integer getLiveRedisViewTotal(String uuid);
+
+    //获取直播分享量
+    Integer getLiveRedisShareTotal(String uuid);
+
+    //获取直播点赞量
+    Integer getLiveRedisLikeTotal(String uuid);
+
+
+
 }

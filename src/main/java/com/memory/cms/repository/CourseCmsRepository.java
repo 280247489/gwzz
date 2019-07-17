@@ -56,6 +56,8 @@ public interface CourseCmsRepository extends JpaRepository<Course,String>, JpaSp
 
     int countCourseByAlbumIdAndCourseOnline(String albumId,Integer courseOnline);
 
+    List<Course> queryCourseByAlbumIdAndCourseOnline(String albumId,Integer courseOnline);
+
 
 
 }

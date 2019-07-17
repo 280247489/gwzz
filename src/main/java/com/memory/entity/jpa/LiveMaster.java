@@ -6,7 +6,7 @@ import java.util.Objects;
 
 /**
  * @author INS6+
- * @date 2019/7/1 10:37
+ * @date 2019/7/17 10:42
  */
 
 @Entity
@@ -17,6 +17,8 @@ public class LiveMaster {
     private String liveMasterName;
     private String liveMasterDescribe;
     private int liveMasterStatus;
+    private int liveMasterShare;
+    private int liveMasterView;
     private int liveMasterLike;
     private int liveMasterIsSynthesisAudio;
     private String liveMasterSynthesisAudioUrl;
@@ -29,6 +31,7 @@ public class LiveMaster {
     private String liveMasterCreateId;
     private Date liveMasterUpdateTime;
     private String liveMasterUpdateId;
+    private int liveNumber;
 
     @Id
     @Column(name = "id")
@@ -78,6 +81,26 @@ public class LiveMaster {
 
     public void setLiveMasterStatus(int liveMasterStatus) {
         this.liveMasterStatus = liveMasterStatus;
+    }
+
+    @Basic
+    @Column(name = "live_master_share")
+    public int getLiveMasterShare() {
+        return liveMasterShare;
+    }
+
+    public void setLiveMasterShare(int liveMasterShare) {
+        this.liveMasterShare = liveMasterShare;
+    }
+
+    @Basic
+    @Column(name = "live_master_view")
+    public int getLiveMasterView() {
+        return liveMasterView;
+    }
+
+    public void setLiveMasterView(int liveMasterView) {
+        this.liveMasterView = liveMasterView;
     }
 
     @Basic
@@ -200,12 +223,24 @@ public class LiveMaster {
         this.liveMasterUpdateId = liveMasterUpdateId;
     }
 
+    @Basic
+    @Column(name = "live_number")
+    public int getLiveNumber() {
+        return liveNumber;
+    }
+
+    public void setLiveNumber(int liveNumber) {
+        this.liveNumber = liveNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LiveMaster master = (LiveMaster) o;
         return liveMasterStatus == master.liveMasterStatus &&
+                liveMasterShare == master.liveMasterShare &&
+                liveMasterView == master.liveMasterView &&
                 liveMasterLike == master.liveMasterLike &&
                 liveMasterIsSynthesisAudio == master.liveMasterIsSynthesisAudio &&
                 liveMasterIsOnline == master.liveMasterIsOnline &&
@@ -226,6 +261,6 @@ public class LiveMaster {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, courseId, liveMasterName, liveMasterDescribe, liveMasterStatus, liveMasterLike, liveMasterIsSynthesisAudio, liveMasterSynthesisAudioUrl, liveMasterIsOnline, liveMasterIsRelation, liveMasterIsPush, liveMasterStarttime, liveMasterEndtime, liveMasterCreateTime, liveMasterCreateId, liveMasterUpdateTime, liveMasterUpdateId);
+        return Objects.hash(id, courseId, liveMasterName, liveMasterDescribe, liveMasterStatus, liveMasterShare, liveMasterView, liveMasterLike, liveMasterIsSynthesisAudio, liveMasterSynthesisAudioUrl, liveMasterIsOnline, liveMasterIsRelation, liveMasterIsPush, liveMasterStarttime, liveMasterEndtime, liveMasterCreateTime, liveMasterCreateId, liveMasterUpdateTime, liveMasterUpdateId);
     }
 }

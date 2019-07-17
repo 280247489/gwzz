@@ -30,6 +30,31 @@ public class CacheConstantConfig {
 
 
     /**
+     * album 专辑ke start=============
+     */
+
+    //阅读量
+    //uuid : albumId
+    //key ：  Album:view:uuid
+    //value ：count
+    public static final String ALBUMVIEW = "Album:view:";
+
+
+    //阅读量 (后台操作添加的阅读量)
+    //key ：  Album:view:manager:uuid
+    //value ：count
+    public static final String ALBUMVIEWMANAGER = "Album:view:manager";
+
+        //阅读量 (用户去重)
+    // uuid ：albumId
+    //  key : Album:view_id:uuid;
+    //  value :map==> appid:count
+    public static final String ALBUMVIEWID="Album:view_id:";
+
+    /**
+     * album 专辑ke end=============
+
+    /**
      * live 直播kv start============
      */
 
@@ -233,7 +258,7 @@ public class CacheConstantConfig {
     public static final String ARTICLEVIEWID = "Article:view_id:";
 
     //实际阅读量（真实用户的阅读量）
-    //key ： Article:view:real
+    //key ： Article:view:
     //value ：count
     public static final String ARTICLEVIEW = "Article:view:";
 

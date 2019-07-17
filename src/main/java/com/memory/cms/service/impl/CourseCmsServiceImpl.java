@@ -240,5 +240,10 @@ public class CourseCmsServiceImpl implements CourseCmsService {
     public int countCourseByAlbumId(String albumId) {
         return repository.countCourseByAlbumIdAndCourseOnline(albumId,1);
     }
+
+    @Override
+    public List<Course> queryCourseByAlbumIdAndCourseOnline(String albumId, Integer online) {
+        return repository.queryCourseByAlbumIdAndCourseOnline(albumId, online);
+    }
 }
 

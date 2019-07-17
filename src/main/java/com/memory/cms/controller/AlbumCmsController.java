@@ -1,6 +1,7 @@
 package com.memory.cms.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.memory.cms.redis.service.AlbumRedisCmsService;
 import com.memory.cms.service.AlbumCmsService;
 import com.memory.cms.service.CourseCmsService;
 import com.memory.common.utils.*;
@@ -29,6 +30,9 @@ public class AlbumCmsController {
 
     @Autowired
     private CourseCmsService courseCmsService;
+
+    @Autowired
+    private AlbumRedisCmsService albumRedisCmsService;
 
     @RequestMapping("add")
     public Result add(@ModelAttribute com.memory.entity.bean.Album album){
@@ -226,6 +230,12 @@ public class AlbumCmsController {
             int pageIndex = page+1;
             int limit = size;
             List<Album> list = albumCmsService.queryAlbumByQueHql(pageIndex,limit);
+            for (Album album : list) {
+
+               Integer albumTotalView = albumRedisCmsService.getAlbumAllViewTotalByKey(album.getId());
+               album.setAlbumTotalView(albumTotalView);
+
+            }
             int totalElements = albumCmsService.queryAlbumByQueHqlCount();
             PageResult pageResult = PageResult.getPageResult(page, size, list, totalElements);
             result = ResultUtil.success(pageResult);
