@@ -41,6 +41,31 @@ public interface CourseRedisCmsService {
 
 
 
+    //获取所有阅读量
+    List<Object> getCourseAndLiveRedisAllViewTotal(List<String> courseIds);
+
+    //获取真实阅读量
+    List<Object> getCourseAndLiveRedisRealViewTotal(List<String> courseIds);
+
+    //获取课程伪阅读量
+    List<Object> getCourseManagerViewTotal(List<String> courseIds);
+
+    //获取课程所有阅读量
+    List<Object> getCourseRedisAllViewTotal(List<String> courseIds);
+
+    //获取课程实际阅读量
+    List<Object> getCourseRedisRealViewTotal(List<String> courseIds);
+
+
+    //获取分享量
+    List<Object> getCourseRedisShareTotal(List<String> courseIds);
+
+    //获取点赞量
+    List<Object> getCourseRedisLikeTotal(List<String> courseIds);
+
+
+   // List<Object> getMulti(String keyLabel ,List<String> keys);
+
 
 
 }

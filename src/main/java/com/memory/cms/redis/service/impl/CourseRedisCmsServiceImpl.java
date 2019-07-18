@@ -1,5 +1,6 @@
 package com.memory.cms.redis.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.memory.cms.redis.service.CourseRedisCmsService;
 import com.memory.cms.redis.service.LiveRedisCmsService;
 import com.memory.cms.service.LiveMasterCmsService;
@@ -8,6 +9,9 @@ import com.memory.entity.jpa.LiveMaster;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.memory.redis.CacheConstantConfig.*;
 
@@ -34,7 +38,7 @@ public class CourseRedisCmsServiceImpl  implements CourseRedisCmsService {
         //后台添加阅读量数据初始化
         String key = COURSEVIEWMANAGER + courseId;
         //默认设置成0
-        redisUtil.set(key,0);
+        redisUtil.set(key,0+"");
     }
 
     @Override
@@ -42,7 +46,7 @@ public class CourseRedisCmsServiceImpl  implements CourseRedisCmsService {
         //后台添加阅读量数据初始化
         String key = COURSEVIEWMANAGER + courseId;
         //设置阅读量
-        redisUtil.set(key,cumulativeValue);
+        redisUtil.set(key,cumulativeValue+"");
     }
 
     @Override
@@ -136,4 +140,52 @@ public class CourseRedisCmsServiceImpl  implements CourseRedisCmsService {
         Integer courseManagerViewTotal = (Utils.isNotNull(redisUtil.get(courseManagerViewTotalKey)))?((Integer.valueOf(redisUtil.get(courseManagerViewTotalKey).toString()))):0;
         return courseManagerViewTotal;
     }
+
+
+    @Override
+    public List<Object> getCourseAndLiveRedisAllViewTotal(List<String> courseIds) {
+        return null;
+    }
+
+    @Override
+    public List<Object> getCourseAndLiveRedisRealViewTotal(List<String> courseIds) {
+        return null;
+    }
+
+    @Override
+    public List<Object> getCourseManagerViewTotal(List<String> courseIds) {
+        return getMulti(COURSEVIEWMANAGER,courseIds);
+    }
+
+    @Override
+    public List<Object> getCourseRedisAllViewTotal(List<String> courseIds) {
+        return null;
+    }
+
+    @Override
+    public List<Object> getCourseRedisRealViewTotal(List<String> courseIds) {
+        return getMulti(COURSEVIEW,courseIds);
+    }
+
+    @Override
+    public List<Object> getCourseRedisShareTotal(List<String> courseIds) {
+        return getMulti(COURSESHARE,courseIds);
+    }
+
+    @Override
+    public List<Object> getCourseRedisLikeTotal(List<String> courseIds) {
+        return getMulti(COURSELIKE,courseIds);
+
+    }
+
+
+    public List<Object> getMulti(String keyLabel , List<String> keys) {
+        List<String> finalKeys =new ArrayList<String>();
+        for (String key : keys) {
+            String queryKey = keyLabel + key;
+            finalKeys.add(queryKey);
+        }
+        return (List<Object>) redisUtil.getMulti(finalKeys);
+    }
+
 }

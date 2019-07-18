@@ -43,6 +43,8 @@ public class Course {
     private String masterTitle;
     private String courseId;
 
+    private Integer courseTotalManagerView;
+
 
     public String getId() {
         return id;
@@ -260,6 +262,14 @@ public class Course {
 
     public void setCourseId(String courseId) {
         this.courseId = courseId;
+    }
+
+    public Integer getCourseTotalManagerView() {
+        return courseTotalManagerView;
+    }
+
+    public void setCourseTotalManagerView(Integer courseTotalManagerView) {
+        this.courseTotalManagerView = courseTotalManagerView;
     }
 
     public Course() {

@@ -143,6 +143,16 @@ public class RedisUtil {
         return key == null ? null : redisTemplate.opsForValue().get(key);
     }
 
+
+    /**
+     * 批量获取value
+     * @param keys
+     * @return
+     */
+    public List<?> getMulti(List<String> keys){
+        return redisTemplate.opsForValue().multiGet(keys);
+    }
+
     /**
      * 普通缓存放入
      *

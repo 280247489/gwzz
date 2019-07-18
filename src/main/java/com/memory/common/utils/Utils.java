@@ -1,5 +1,6 @@
 package com.memory.common.utils;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.MultiValueMap;
@@ -131,6 +132,9 @@ public class Utils {
 
     public static Boolean isNotNull(List<?> list){ return list!=null && list.size()>0; }
 
+    public static Integer getIntVal(Object obj){
+        return (Utils.isNotNull(obj)&&!("null").equals(obj))?(Integer.valueOf(obj.toString())):0;
+    }
 
 
 

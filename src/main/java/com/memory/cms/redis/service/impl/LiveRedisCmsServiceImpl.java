@@ -5,6 +5,8 @@ import com.memory.common.utils.Utils;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import static com.memory.redis.CacheConstantConfig.*;
@@ -106,4 +108,22 @@ public class LiveRedisCmsServiceImpl implements LiveRedisCmsService {
     public Integer getLiveRedisLikeTotal(String uuid) {
         return 0;
     }
+
+
+    @Override
+    public List<Object> getLiveRedisViewTotal(List<String> uuids) {
+
+        return getMulti(LIVEVIEW,uuids);
+    }
+
+    public List<Object> getMulti(String keyLabel , List<String> keys) {
+        List<String> finalKeys =new ArrayList<String>();
+        for (String key : keys) {
+            String queryKey = keyLabel + key;
+            finalKeys.add(queryKey);
+        }
+
+        return (List<Object>) redisUtil.getMulti(finalKeys);
+    }
+
 }

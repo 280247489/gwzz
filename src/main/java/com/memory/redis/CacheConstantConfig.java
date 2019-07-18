@@ -43,7 +43,7 @@ public class CacheConstantConfig {
     //阅读量 (后台操作添加的阅读量)
     //key ：  Album:view:manager:uuid
     //value ：count
-    public static final String ALBUMVIEWMANAGER = "Album:view:manager";
+    public static final String ALBUMVIEWMANAGER = "Album:view:manager:";
 
         //阅读量 (用户去重)
     // uuid ：albumId

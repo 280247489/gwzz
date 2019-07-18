@@ -1,6 +1,8 @@
 package com.memory.cms.controller;
+import com.alibaba.fastjson.JSON;
 import com.memory.cms.redis.service.AlbumRedisCmsService;
 import com.memory.cms.redis.service.CourseRedisCmsService;
+import com.memory.cms.redis.service.LiveRedisCmsService;
 import com.memory.cms.service.*;
 import com.memory.common.utils.*;
 import com.memory.entity.jpa.Album;
@@ -11,10 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 
 /**
@@ -44,6 +44,9 @@ public class CourseCmsController {
 
     @Autowired
     private AlbumRedisCmsService albumRedisCmsService;
+
+    @Autowired
+    private LiveRedisCmsService liveRedisCmsService;
 
     /**
      * 变更上线下线状态
@@ -163,18 +166,47 @@ public class CourseCmsController {
             int pageIndex = page+1;
             int limit = size;
             List<com.memory.entity.bean.Course> list = courseService.queryCourseByQueHql(pageIndex,limit,course_title,course_update_id,course_online,sort_status,course_type_id,album_id);
+            List<String> courseIds = new ArrayList<String >();
             for (com.memory.entity.bean.Course course : list) {
+                courseIds.add(course.getId());
+            }
 
-                Integer courseTotalView = courseRedisCmsService.getCourseRedisAllViewTotal(course.getId());
+            //绑定了课程的直播列表
+            List<LiveMaster> bindMasterList = liveMasterCmsService.queryLiveMasterByInCourseId(courseIds);
+            //课程course实际阅读数列表
+            List<Object> redisRealViewValues = courseRedisCmsService.getCourseRedisRealViewTotal(courseIds);
+            //伪阅读数列表
+            List<Object> redisManagerViewValues = courseRedisCmsService.getCourseManagerViewTotal(courseIds);
+            //分享数列表
+            List<Object> redisShareValues = courseRedisCmsService.getCourseRedisShareTotal(courseIds);
+           //点赞数列表
+            List<Object> redisLikeValues = courseRedisCmsService.getCourseRedisLikeTotal(courseIds);
 
-                Integer courseTotalShare = courseRedisCmsService.getCourseRedisShareTotal(course.getId());
+            for(int i=0; i<list.size();i++){
+                com.memory.entity.bean.Course course = list.get(i);
+                Integer liveRealView = 0;
+                //找出绑定课程的直播，并从redis中获取直播live的阅读数
+                for (LiveMaster master : bindMasterList) {
+                    if(course.getId().equals(master.getCourseId())){
+                        liveRealView = liveRedisCmsService.getLiveRedisViewTotal(master.getId());
+                    }
+                }
 
-                Integer courseTotalLike = courseRedisCmsService.getCourseRedisLikeTotal(course.getId());
+                //实际阅读数（包含course 和live 的实际阅读数两部分）
+                Integer realView = Utils.getIntVal(redisRealViewValues.get(i));
+                course.setCourseTotalView((realView + liveRealView));
 
-                course.setCourseTotalView(courseTotalView);
-                course.setCourseTotalShare(courseTotalShare);
-                course.setCourseTotalLike(courseTotalLike);
+                //伪阅读数(只有course 有，live不能设置伪阅读数）
+                Integer managerView = Utils.getIntVal(redisManagerViewValues.get(i));
+                course.setCourseTotalManagerView(managerView);
 
+                //分享数
+                Integer share = Utils.getIntVal(redisShareValues.get(i));
+                course.setCourseTotalShare(share);
+
+                //点赞数
+                Integer like = Utils.getIntVal(redisLikeValues.get(i));
+                course.setCourseTotalLike(like);
 
             }
 
@@ -557,10 +589,36 @@ public class CourseCmsController {
 
         }catch (Exception e){
             e.printStackTrace();
-            log.error("route",e.getMessage());
+            log.error("live_untied",e.getMessage());
         }
         return result;
     }
+
+    @RequestMapping("managerView")
+    public Result managerView(@RequestParam String courseId,Integer changeNum){
+        Result result = new Result();
+        try {
+            Course course = courseService.getCourseById(courseId);
+
+            if(changeNum==null){
+                changeNum = 0;
+            }
+
+            if(Utils.isNotNull(course)){
+                courseRedisCmsService.setCourseRedisViewTotal(courseId,changeNum);
+
+                result = ResultUtil.success(changeNum);
+            }else {
+                result = ResultUtil.error(-1,"非法课程id!");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("managerView",e.getMessage());
+        }
+        return result;
+    }
+
 
     private Boolean isExistCourseTitle(String courseTitle){
         Boolean flag = false;

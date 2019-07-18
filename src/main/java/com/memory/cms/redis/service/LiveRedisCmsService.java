@@ -26,6 +26,9 @@ public interface LiveRedisCmsService {
     //获取直播阅读数
     Integer getLiveRedisViewTotal(String uuid);
 
+    //获取直播阅读数
+    List<Object> getLiveRedisViewTotal(List<String> uuids);
+
     //获取直播分享量
     Integer getLiveRedisShareTotal(String uuid);
 

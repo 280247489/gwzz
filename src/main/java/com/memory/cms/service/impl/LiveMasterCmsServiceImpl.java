@@ -214,4 +214,20 @@ public class LiveMasterCmsServiceImpl implements LiveMasterCmsService {
     public List<com.memory.entity.bean.LiveMaster> queryLiveMasterOptions() {
         return repository.queryLiveMasterOptions();
     }
+
+    @Override
+    public List<LiveMaster> queryLiveMasterByInCourseId(List<String> courseIds) {
+
+        List<LiveMaster> list =new ArrayList<LiveMaster>();
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(" FROM LiveMaster lm where lm.courseId in (:courseIds)");
+
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("courseIds",courseIds);
+
+        list= daoUtils.findByHQL(stringBuffer.toString(), map, null);
+
+
+        return list;
+    }
 }

@@ -52,6 +52,8 @@ public interface LiveMasterCmsService {
 
     List<com.memory.entity.bean.LiveMaster> queryLiveMasterOptions();
 
+    List<LiveMaster> queryLiveMasterByInCourseId(List<String> courseIds);
+
 
 
 

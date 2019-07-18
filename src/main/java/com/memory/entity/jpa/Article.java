@@ -37,6 +37,7 @@ public class Article {
     private String articleUpdateId;
     private int articleRecommend;
     private String articleDescribe;
+    private int articleTotalManagerView;
 
     @Id
     @Column(name = "id")
@@ -266,6 +267,14 @@ public class Article {
 
     public void setArticleDescribe(String articleDescribe) {
         this.articleDescribe = articleDescribe;
+    }
+
+    public int getArticleTotalManagerView() {
+        return articleTotalManagerView;
+    }
+
+    public void setArticleTotalManagerView(int articleTotalManagerView) {
+        this.articleTotalManagerView = articleTotalManagerView;
     }
 
     @Override

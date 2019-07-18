@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -107,10 +108,15 @@ public class ArticleCmsController {
             pageResult.setTotalElements(pageer.getTotalElements());
 
             List<Article> articleList = pageer.getContent();
+            List<String> articleIds = new ArrayList<String>();
             for (Article article : articleList) {
                 String articleId = article.getId();
 
-                Integer articleTotalView =  articleRedisCmsService.getArticleRedisAllViewTotal(articleId);
+                articleIds.add(articleId);
+            /*
+                Integer articleTotalView =  articleRedisCmsService.getArticleRedisRealViewTotal(articleId);
+
+                Integer articleTotalManagerView = articleRedisCmsService.getArticleRedisManagerViewTotal(articleId);
 
                 Integer articleTotalShare = articleRedisCmsService.getArticleRedisShareTotal(articleId);
 
@@ -119,8 +125,43 @@ public class ArticleCmsController {
                 article.setArticleTotalView(articleTotalView);
                 article.setArticleTotalShare(articleTotalShare);
                 article.setArticleTotalLike(articleTotalLike);
+                article.setArticleTotalManagerView(articleTotalManagerView);*/
 
             }
+
+            //文章真实阅读量列表
+            List<Object> redisViewValues = articleRedisCmsService.getArticleRedisRealViewTotal(articleIds);
+
+            //文章伪阅读量列表
+            List<Object> redisManagerViewValues= articleRedisCmsService.getArticleRedisManagerViewTotal(articleIds);
+
+            //文章分享量列表
+            List<Object> redisShareValues = articleRedisCmsService.getArticleRedisShareTotal(articleIds);
+
+            //文章点在列表
+            List<Object> redisLikeValues= articleRedisCmsService.getArticleRedisLikeTotal(articleIds);
+
+            for(int i=0; i<articleList.size();i++){
+                Article article = articleList.get(i);
+
+                //真实阅读数
+                Integer realView = Utils.getIntVal(redisViewValues.get(i));
+                article.setArticleTotalView(realView);
+
+                //伪阅读数
+                Integer managerView = Utils.getIntVal(redisManagerViewValues.get(i));
+                article.setArticleTotalManagerView(managerView);
+
+                //分享数
+                Integer share = Utils.getIntVal(redisShareValues.get(i));
+                article.setArticleTotalShare(share);
+
+                //分享数
+                Integer like = Utils.getIntVal(redisLikeValues.get(i));
+                article.setArticleTotalLike(like);
+
+            }
+
 
             pageResult.setData(articleList);
 
@@ -309,6 +350,34 @@ public class ArticleCmsController {
         }
         return result;
     }
+
+
+    @RequestMapping("managerView")
+    public Result managerView(@RequestParam String articleId,Integer changeNum){
+        Result result = new Result();
+        try {
+            Article article = articleService.getArticleById(articleId);
+
+            if(changeNum==null){
+                changeNum = 0;
+            }
+
+            if(Utils.isNotNull(article)){
+                articleRedisCmsService.setArticleRedisTotal(articleId,changeNum);
+
+                result = ResultUtil.success(changeNum);
+            }else {
+                result = ResultUtil.error(-1,"非法文章id!");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("course/cms/managerView",e.getMessage());
+        }
+        return result;
+    }
+
+
 
 
     private Article init(String type_id, String article_title,

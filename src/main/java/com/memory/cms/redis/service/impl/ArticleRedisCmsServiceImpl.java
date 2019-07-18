@@ -1,10 +1,14 @@
 package com.memory.cms.redis.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.memory.cms.redis.service.ArticleRedisCmsService;
 import com.memory.common.utils.Utils;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.memory.redis.CacheConstantConfig.*;
 
@@ -23,15 +27,17 @@ public class ArticleRedisCmsServiceImpl implements ArticleRedisCmsService {
         //后台添加阅读量
         String key = ARTICLEVIEWMANAGER + articleId;
         //默认设置成0
-        redisUtil.set(key,0);
+        redisUtil.set(key,0+"");
     }
 
     @Override
     public void setArticleRedisTotal(String articleId,Integer cumulativeValue) {
         //后台添加阅读量
         String key = ARTICLEVIEWMANAGER + articleId;
+        System.out.println("keys =========="+key);
         //设置指定阅读量
-        redisUtil.set(key,cumulativeValue);
+       boolean flag =  redisUtil.set(key,cumulativeValue+"");
+        System.out.println("flag ==="+flag);
     }
 
     @Override
@@ -39,8 +45,7 @@ public class ArticleRedisCmsServiceImpl implements ArticleRedisCmsService {
         //文章实际阅读量
         Integer realViewTotal = getArticleRedisRealViewTotal(articleId);
 
-        String managerViewTotalKey = ARTICLEVIEWMANAGER + articleId;
-        Integer managerViewTotal = (Utils.isNotNull(redisUtil.get(managerViewTotalKey)))?((Integer) redisUtil.get(managerViewTotalKey)):0;
+        Integer managerViewTotal =getArticleRedisManagerViewTotal(articleId);
 
         //总阅读数 = 实际阅读数 + 管理阅读数
         Integer allViewTotal = realViewTotal + managerViewTotal;
@@ -73,4 +78,41 @@ public class ArticleRedisCmsServiceImpl implements ArticleRedisCmsService {
 
         return articleLikeTotal;
     }
+
+    @Override
+    public Integer getArticleRedisManagerViewTotal(String articleId) {
+        String managerViewTotalKey = ARTICLEVIEWMANAGER + articleId;
+        Integer managerViewTotal = (Utils.isNotNull(redisUtil.get(managerViewTotalKey)))?(Integer.valueOf(redisUtil.get(managerViewTotalKey).toString())):0;
+        return managerViewTotal;
+    }
+
+    @Override
+    public List<Object> getArticleRedisRealViewTotal(List<String> articleIds) {
+        return getMulti(ARTICLEVIEW,articleIds);
+    }
+
+    @Override
+    public List<Object> getArticleRedisShareTotal(List<String> articleIds) {
+        return getMulti(ARTICLESHARE,articleIds);
+    }
+
+    @Override
+    public List<Object> getArticleRedisLikeTotal(List<String> articleIds) {
+        return getMulti(ARTICLELIKE,articleIds);
+    }
+
+    @Override
+    public List<Object> getArticleRedisManagerViewTotal(List<String> articleIds) {
+        return getMulti(ARTICLEVIEWMANAGER,articleIds);
+    }
+
+    public List<Object> getMulti(String keyLabel , List<String> keys) {
+        List<String> finalKeys =new ArrayList<String>();
+        for (String key : keys) {
+            String queryKey = keyLabel + key;
+            finalKeys.add(queryKey);
+        }
+        return (List<Object>) redisUtil.getMulti(finalKeys);
+    }
+
 }
