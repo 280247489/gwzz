@@ -66,7 +66,7 @@ public class CacheConstantConfig {
     //阅读量 (后台操作添加的阅读量)
     //key ：  Article:view:manager:uuid
     //value ：count
-    public static final String ARTICLEVIEWMANAGER = "Article:view:manager";
+    public static final String ARTICLEVIEWMANAGER = "Article:view:manager:";
 
     //阅读量 实际有多少个用户看过
     // uuid : articleId
@@ -183,7 +183,7 @@ public class CacheConstantConfig {
     //阅读量 (后台操作添加的阅读量)
     //key ：  Course:view:manager:uuid
     //value ：count
-    public static final String COURSEVIEWMANAGER = "Course:view:manager";
+    public static final String COURSEVIEWMANAGER = "Course:view:manager:";
 
     //阅读用户统计
     //uuid : courseId
@@ -288,7 +288,7 @@ public class CacheConstantConfig {
     //阅读量 (后台操作添加的阅读量)
     //key ：  Album:view:manager:uuid
     //value ：count
-    public static final String ALBUMVIEWMANAGER = "Album:view:manager";
+    public static final String ALBUMVIEWMANAGER = "Album:view:manager:";
 
     //阅读量 (用户去重)
     // uuid ：albumId

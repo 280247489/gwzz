@@ -7,10 +7,7 @@ import com.memory.entity.jpa.Album;
 import com.memory.entity.jpa.ArticleLike;
 import com.memory.entity.jpa.CourseLike;
 import com.memory.gwzz.model.*;
-import com.memory.gwzz.redis.service.AlbumRedisMobileService;
-import com.memory.gwzz.redis.service.ArticleRedisMobileService;
-import com.memory.gwzz.redis.service.CourseRedisMobileService;
-import com.memory.gwzz.redis.service.LiveRedisMobileService;
+import com.memory.gwzz.redis.service.*;
 import com.memory.gwzz.redis.service.impl.AlbumRedisMobileServiceImpl;
 import com.memory.gwzz.repository.*;
 import com.memory.gwzz.service.*;
@@ -55,9 +52,6 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
     private LiveMobileService liveMobileService;
 
     @Autowired
-    private CourseLikeMobileService courseLikeMobileService;
-
-    @Autowired
     private ArticleRedisMobileService articleRedisMobileService;
 
     @Autowired
@@ -68,6 +62,9 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
 
     @Autowired
     private AlbumRedisMobileService albumRedisMobileService;
+
+    @Autowired
+    private StatisticsRedisMobileService statisticsRedisMobileService;
 
 
     @Override
@@ -140,7 +137,7 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
     @Override
     public LiveMaster HomePageTwo() {
         //查询直播
-        StringBuffer sbliveMaster = new StringBuffer(" SELECT NEW com.memory.gwzz.model.LiveMaster(id,liveMasterName,liveMasterDescribe,liveMasterStatus,liveMasterIsOnline,liveMasterStarttime) " +
+        StringBuffer sbliveMaster = new StringBuffer(" SELECT NEW com.memory.gwzz.model.LiveMaster(id,liveMasterName,liveMasterDescribe,liveMasterStatus,liveMasterIsOnline,liveMasterStarttime,liveNumber) " +
                 "FROM LiveMaster WHERE liveMasterIsOnline = 1 AND liveMasterStatus = 1 ");
         LiveMaster liveMaster = (LiveMaster) daoUtils.findObjectHQL(sbliveMaster.toString(),null);
 
@@ -241,6 +238,15 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
             returnMap = null;
         }
         return returnMap;
+    }
+
+    @Override
+    public void setVV(String userId,Integer os){
+        if ("".equals(userId)){
+            userId = "notExist";
+        }
+        statisticsRedisMobileService.SetVv(userId,os);
+
     }
 
 }

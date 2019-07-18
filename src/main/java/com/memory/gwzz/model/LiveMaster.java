@@ -15,6 +15,7 @@ public class LiveMaster {
     private int liveMasterStatus;
     private int liveMasterIsOnline;
     private String liveMasterStarttime;
+    private int liveNumber;
 
     public String getId() {
         return id;
@@ -64,6 +65,10 @@ public class LiveMaster {
         this.liveMasterStarttime = liveMasterStarttime;
     }
 
+    public int getLiveNumber() { return liveNumber;}
+
+    public void setLiveNumber(int liveNumber) {this.liveNumber = liveNumber; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -71,6 +76,7 @@ public class LiveMaster {
         LiveMaster that = (LiveMaster) o;
         return liveMasterStatus == that.liveMasterStatus &&
                 liveMasterIsOnline == that.liveMasterIsOnline &&
+                liveNumber == that.liveNumber &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(liveMasterName, that.liveMasterName) &&
                 Objects.equals(liveMasterDescribe, that.liveMasterDescribe) &&
@@ -79,18 +85,19 @@ public class LiveMaster {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, liveMasterName, liveMasterDescribe, liveMasterStatus, liveMasterIsOnline, liveMasterStarttime);
+        return Objects.hash(id, liveMasterName, liveMasterDescribe, liveMasterStatus, liveMasterIsOnline, liveMasterStarttime, liveNumber);
     }
 
     public LiveMaster() {
     }
 
-    public LiveMaster(String id, String liveMasterName, String liveMasterDescribe, int liveMasterStatus, int liveMasterIsOnline, String liveMasterStarttime) {
+    public LiveMaster(String id, String liveMasterName, String liveMasterDescribe, int liveMasterStatus, int liveMasterIsOnline, String liveMasterStarttime, int liveNumber) {
         this.id = id;
         this.liveMasterName = liveMasterName;
         this.liveMasterDescribe = liveMasterDescribe;
         this.liveMasterStatus = liveMasterStatus;
         this.liveMasterIsOnline = liveMasterIsOnline;
         this.liveMasterStarttime = liveMasterStarttime;
+        this.liveNumber = liveNumber;
     }
 }

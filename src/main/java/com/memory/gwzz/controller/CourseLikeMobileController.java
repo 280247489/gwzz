@@ -56,7 +56,7 @@ public class CourseLikeMobileController extends BaseController {
                     msg.setRecode(courseLike);
             }else {
                 msg.setRecode(1);
-                msg.setMsg("课程已存在！");
+                msg.setMsg("课程不存在！");
             }
 
         }catch (Exception e){

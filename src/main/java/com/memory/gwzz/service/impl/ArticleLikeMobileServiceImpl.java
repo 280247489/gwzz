@@ -1,5 +1,6 @@
 package com.memory.gwzz.service.impl;
 
+import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.ArticleLike;
@@ -7,10 +8,12 @@ import com.memory.entity.jpa.User;
 import com.memory.gwzz.redis.service.ArticleRedisMobileService;
 import com.memory.gwzz.repository.ArticleLikeMobileRepository;
 import com.memory.gwzz.service.ArticleLikeMobileService;
+import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +35,9 @@ public class ArticleLikeMobileServiceImpl implements ArticleLikeMobileService {
 
     @Autowired
     private ArticleRedisMobileService articleRedisMobileService;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
 
 //    @Transactional
@@ -73,10 +79,31 @@ public class ArticleLikeMobileServiceImpl implements ArticleLikeMobileService {
     public int like(String aid, String uid) {
         Article article = (Article) daoUtils.getById("Article", aid);
         User user = (User) daoUtils.getById("User", uid);
+        ArticleLike articleLike = null;
+        Integer isLike = 0;
         if(article != null && user != null){
             articleRedisMobileService.articleLike(aid,uid);
+            articleLike = this.getByAidUid(aid, uid);
+            isLike = articleRedisMobileService.isLike(aid,uid);
+            if (articleLike!=null){
+                if(articleLike.getLikeStatus()==1){
+                    articleLike.setLikeStatus(0);
+                }else{
+                    articleLike.setLikeStatus(1);
+                }
+            }else {
+                articleLike = new ArticleLike();
+                articleLike.setId(Utils.generateUUIDs());
+                articleLike.setArticleId(aid);
+                articleLike.setUserId(uid);
+                articleLike.setLikeStatus(1);
+                articleLike.setCreateTime(new Date());
+            }
+
+            daoUtils.save(articleLike);
         }
-        return articleRedisMobileService.isLike(aid,uid);
+
+        return isLike;
     }
 
     public ArticleLike getByAidUid(String aid, String uid){
@@ -86,6 +113,14 @@ public class ArticleLikeMobileServiceImpl implements ArticleLikeMobileService {
     @Override
     public Map<String,Object> ListArticleLikeByUserId(String userId, Integer start, Integer limit){
         Map<String,Object> returnMap = new HashMap<>();
+//        Map<Object,Object> articleLikeMap = new HashMap<>();
+//        articleLikeMap = articleRedisMobileService.userLike(userId);
+//        for(Object value : articleLikeMap.values()){
+//            if (value.toString() == "1"){
+//                System.out.println("keys is "+ articleLikeMap.keySet());
+//            }
+//            System.out.println("value is "+ value);
+//        }
 
         StringBuffer stringBuffer = new StringBuffer(" SELECT NEW com.memory.gwzz.model.Article(a.id, a.typeId, a.articleTitle, a.articleLogo1, a.articleLogo2, a.articleLogo3, " +
                 "a.articleLabel, a.articleOnline, a.articleTotalComment, a.articleTotalView, a.articleReleaseTime) FROM Article a, ArticleLike al WHERE a.id=al.articleId AND al.likeStatus = 1 ");

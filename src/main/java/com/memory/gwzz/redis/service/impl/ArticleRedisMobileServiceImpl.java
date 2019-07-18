@@ -9,6 +9,9 @@ import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.memory.redis.CacheConstantConfig.*;
 
 
@@ -262,6 +265,19 @@ public class ArticleRedisMobileServiceImpl implements ArticleRedisMobileService 
         }
         return isLike;
     }
+
+    @Override
+    public Map<Object,Object> userLike(String userId){
+      Map<Object,Object> map = new HashMap<>();
+        String articleLikeDetail = ARTICLELIKEDETAIL + userId;
+        try {
+            map = redisUtil.hget(articleLikeDetail);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return map;
+    }
+
 
 
 

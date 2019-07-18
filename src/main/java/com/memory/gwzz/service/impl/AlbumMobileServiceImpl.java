@@ -44,6 +44,10 @@ public class AlbumMobileServiceImpl implements AlbumMobileService {
         page.setPageIndex(start);
         page.setLimit(limit);
         List<Album> albumList = daoUtils.findByHQL(sbAlbum.toString(),null,page);
+        for (int k = 0; k<albumList.size(); k++){
+            String albumId = albumList.get(k).getId();
+            albumList.get(k).setAlbumTotalView(albumRedisMobileService.getAlbumView(albumId));
+        }
         Integer albumCount = daoUtils.getTotalBySQL(sbAlbumCount.toString(),null);
 
         returnMap.put("albumList",albumList);
@@ -57,6 +61,7 @@ public class AlbumMobileServiceImpl implements AlbumMobileService {
     public Map<String,Object> fandById(String id){
         Map<String,Object> returnMap = new HashMap<>();
         Album album = (Album) daoUtils.getById("Album",id);
+        album.setAlbumTotalView(albumRedisMobileService.getAlbumView(id));
         returnMap.put("album",album);
         return returnMap;
     }
@@ -76,7 +81,7 @@ public class AlbumMobileServiceImpl implements AlbumMobileService {
             DaoUtils.Page page = new DaoUtils.Page();
             page.setPageIndex(start);
             page.setLimit(limit);
-            List<Course> courseList = daoUtils.findByHQL(sbCourse.toString(),map,page);
+            List<com.memory.gwzz.model.Course> courseList = daoUtils.findByHQL(sbCourse.toString(),map,page);
             //重写课程阅读量
             for (int j = 0;j<courseList.size();j++){
                 String courseId = courseList.get(j).getId();

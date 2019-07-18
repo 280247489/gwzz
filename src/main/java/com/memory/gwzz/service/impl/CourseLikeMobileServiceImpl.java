@@ -69,7 +69,7 @@ public class CourseLikeMobileServiceImpl implements CourseLikeMobileService {
 //        return courseLike;
 //    }
 
-    public CourseLike getBycidAndUid(String cid,String uid){
+    public CourseLike getByCidAndUid(String cid,String uid){
         return courseLikeMobileRepository.findByCourseIdAndUserId(cid, uid);
     }
     @Transactional
@@ -77,10 +77,30 @@ public class CourseLikeMobileServiceImpl implements CourseLikeMobileService {
     public int like(String cid, String uid) {
         Course course = (Course) daoUtils.getById("Course",cid);
         User user = (User) daoUtils.getById("User",uid);
+        Integer islike = 0 ;
+        CourseLike courseLike = null;
         if (course !=null && user!=null){
             courseRedisMobileService.courseLike(cid, uid);
+            islike = courseRedisMobileService.getUserCourseLike(cid,uid);
+            courseLike = getByCidAndUid(cid, uid);
+            if (courseLike != null){
+                if (courseLike.getLikeStatus()==1){
+                    courseLike.setLikeStatus(0);
+                }else{
+                    courseLike.setLikeStatus(1);
+                }
+            }else {
+                    courseLike = new CourseLike();
+                    courseLike.setId(Utils.generateUUIDs());
+                    courseLike.setCourseId(cid);
+                    courseLike.setUserId(uid);
+                    courseLike.setLikeStatus(1);
+                    courseLike.setCreateTime(new Date());
+            }
+            daoUtils.save(courseLike);
+
         }
-        return courseRedisMobileService.getUserCourseLike(cid,uid);
+        return islike;
     }
 
     @Override
@@ -102,7 +122,7 @@ public class CourseLikeMobileServiceImpl implements CourseLikeMobileService {
 
         stringBuffer.append(" ORDER BY cl.createTime DESC");
 
-        List<Course> courseList = daoUtils.findByHQL(stringBuffer.toString(),map,pageArticle);
+        List<com.memory.gwzz.model.Course> courseList = daoUtils.findByHQL(stringBuffer.toString(),map,pageArticle);
         //重写课程阅读量
         for (int j = 0;j<courseList.size();j++){
             String courseId = courseList.get(j).getId();

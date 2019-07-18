@@ -1,18 +1,14 @@
 package com.memory;
 
-import com.alibaba.fastjson.JSON;
 import com.memory.common.utils.BadWordUtil;
 import com.memory.common.yml.MyRedisConfig;
-import com.memory.redis.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import redis.clients.jedis.JedisPool;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 
 @SpringBootApplication
 public class MainApplication extends SpringBootServletInitializer {

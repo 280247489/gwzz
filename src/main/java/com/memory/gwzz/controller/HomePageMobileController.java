@@ -115,4 +115,26 @@ public class HomePageMobileController extends BaseController {
         }
         return msg;
     }
+
+    /**
+     * 日活跃量统计
+     * URL:192.168.1.185:8081/gwzz/homePage/mobile/setVV
+     * @param userId String 用户ID
+     * @param os 操作系统 0：ios 或 1：android
+     * @return
+     */
+    @RequestMapping(value = "setVV",method = RequestMethod.POST)
+    public Message setVV(@RequestParam String userId,@RequestParam Integer os){
+        try {
+            msg = Message.success();
+            homePageMobileService.setVV(userId, os);
+            msg.setRecode(0);
+            msg.setMsg("成功");
+        }catch (Exception e){
+            msg = Message.error();
+            e.printStackTrace();
+            logger.error("信息");
+        }
+        return msg;
+    }
 }

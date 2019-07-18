@@ -1,5 +1,7 @@
 package com.memory.gwzz.redis.service;
 
+import java.util.Map;
+
 /**
  * @ClassName ArticleRedisMobileService
  * @Descriotion TODO
@@ -23,4 +25,6 @@ public interface ArticleRedisMobileService {
     Integer getArticleLike(String articleId);
 
     int isLike(String aid, String uid);
+
+    Map<Object,Object> userLike(String userId);
 }

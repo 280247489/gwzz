@@ -8,13 +8,14 @@ import java.util.Objects;
  * @ClassName LiveMaster
  * @Descriotion TODO
  * @Author Ganxiqing
- * @Date 2019/7/17 10:35
+ * @Date 2019/7/18 9:21
  */
 @Entity
 @Table(name = "live_master", schema = "gwzz_db", catalog = "")
 public class LiveMaster {
     private String id;
     private String courseId;
+    private int liveNumber;
     private String liveMasterName;
     private String liveMasterDescribe;
     private int liveMasterStatus;
@@ -51,6 +52,16 @@ public class LiveMaster {
 
     public void setCourseId(String courseId) {
         this.courseId = courseId;
+    }
+
+    @Basic
+    @Column(name = "live_number")
+    public int getLiveNumber() {
+        return liveNumber;
+    }
+
+    public void setLiveNumber(int liveNumber) {
+        this.liveNumber = liveNumber;
     }
 
     @Basic
@@ -228,7 +239,8 @@ public class LiveMaster {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LiveMaster that = (LiveMaster) o;
-        return liveMasterStatus == that.liveMasterStatus &&
+        return liveNumber == that.liveNumber &&
+                liveMasterStatus == that.liveMasterStatus &&
                 liveMasterShare == that.liveMasterShare &&
                 liveMasterView == that.liveMasterView &&
                 liveMasterLike == that.liveMasterLike &&
@@ -251,6 +263,6 @@ public class LiveMaster {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, courseId, liveMasterName, liveMasterDescribe, liveMasterStatus, liveMasterShare, liveMasterView, liveMasterLike, liveMasterIsSynthesisAudio, liveMasterSynthesisAudioUrl, liveMasterIsOnline, liveMasterIsRelation, liveMasterIsPush, liveMasterStarttime, liveMasterEndtime, liveMasterCreateTime, liveMasterCreateId, liveMasterUpdateTime, liveMasterUpdateId);
+        return Objects.hash(id, courseId, liveNumber, liveMasterName, liveMasterDescribe, liveMasterStatus, liveMasterShare, liveMasterView, liveMasterLike, liveMasterIsSynthesisAudio, liveMasterSynthesisAudioUrl, liveMasterIsOnline, liveMasterIsRelation, liveMasterIsPush, liveMasterStarttime, liveMasterEndtime, liveMasterCreateTime, liveMasterCreateId, liveMasterUpdateTime, liveMasterUpdateId);
     }
 }

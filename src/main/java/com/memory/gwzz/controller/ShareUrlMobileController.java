@@ -2,7 +2,6 @@ package com.memory.gwzz.controller;
 
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
-import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.Course;
 import com.memory.entity.jpa.LiveMaster;

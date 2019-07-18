@@ -15,4 +15,6 @@ public interface HomePageMobileService {
     LiveMaster HomePageTwo();
 
     Map<String, Object> getAdvertiseById(com.memory.entity.jpa.Banner banner, String userId, String openId, Integer terminal, Integer os);
+
+    void setVV(String userId, Integer os);
 }

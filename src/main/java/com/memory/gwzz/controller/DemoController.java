@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * @Auther: cui.Memory
  * @Date: 2018/11/1
@@ -22,15 +26,37 @@ public class DemoController extends BaseController {
         msg = Message.success();
         return msg;
     }
-    public static   void main(String[] args) {
-//        String msgId ="{\"msg_id\":\"770920259755\"}";
-//        Utils.sendSMSCode(1,"15844064331");
-//        Utils.sendValidSMSCode("769585791451","730440");
-//        Utils.sendValidSMSCode("769584789081","496507");
-//        System.out.println();769584332810
-//      RedisUtil redisUtil = new RedisUtil();
-//        redisUtil.incr(CacheConstantConfig.USER_SMS_SUM+":"+,RedisUtil.CACHE_TIME_D_1,1);
-
+    private static Map<String,String> map = new HashMap<String,String>();
+    public static void main(String[] args) {
+        map.put("name", "李四");
+        map.put("age", "30");
+        map.put("sex", "male");
+        map.put("code", "3010");
+        //方法一：通过key取值
+        /*for(String key:map.keySet()){
+            System.out.printf("map key is %s and value is %s",key,map.get(key));
+            System.out.println();
+        }*/
+        //方法二：通过迭代器取值
+        Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
+        Map.Entry<String, String> entry = null;
+        while(iterator.hasNext()){
+            entry = iterator.next();
+//            System.out.printf("key is %s and value is %s",entry.getKey(),entry.getValue());
+            if (entry.getValue()=="李四"){
+                System.out.printf("key is %s and value is %s",entry.getKey(),entry.getValue());
+            }
+            System.out.println();
+        }
+            //通过entryset
+        /*for(Entry<String, String> entry:map.entrySet()){
+            System.out.printf("key is %s and value is %s",entry.getKey(),entry.getValue());
+            System.out.println();
+        }*/
+        //通过map的value方法实现
+        /*for(String value : map.values()){
+            System.out.println("value is "+value);
+        }*/
     }
 
 }
