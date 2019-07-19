@@ -37,6 +37,7 @@ public class LiveMasterCmsServiceImpl implements LiveMasterCmsService {
     @Autowired
     private LiveRedisCmsService liveRedisCmsService;
 
+    @Autowired
     private LiveSlaveCmsService liveSlaveCmsService;
 
     @Autowired

@@ -20,6 +20,8 @@ public class Ext {
     private int  times;
     //昵称
     private String name;
+    //用户头像
+    private String userLogo;
     //音频文件
     private MultipartFile audioFile;
     //图片文件
@@ -108,6 +110,14 @@ public class Ext {
 
     public void setOperateId(String operateId) {
         this.operateId = operateId;
+    }
+
+    public String getUserLogo() {
+        return userLogo;
+    }
+
+    public void setUserLogo(String userLogo) {
+        this.userLogo = userLogo;
     }
 
     @Override
