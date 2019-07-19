@@ -51,11 +51,15 @@ public class CourseMobileServiceImpl  implements CourseMobileService {
     public Map<String,Object> fandCourseByKey(String albumId,Integer start,Integer limit ,String key){
         Map<String,Object> returnMap = new HashMap<>();
             StringBuffer sbCourse = new StringBuffer( "SELECT  id, album_id,course_number,course_title, course_logo, course_label,course_key_words,course_online,course_total_comment,course_total_view,course_release_time " +
-                    " FROM course WHERE  album_id=:albumId AND course_online=1 " );
-            StringBuffer sbCount = new StringBuffer("SELECT COUNT(*) FROM course WHERE  album_id=:albumId AND course_online=1");
+                    " FROM course WHERE course_online=1  " );
+            StringBuffer sbCount = new StringBuffer("SELECT COUNT(*) FROM course WHERE  course_online=1");
 //            StringBuffer stringBuffer = new StringBuffer("SELECT course_number FROM course where album_id=:albumId AND course_online=1 ORDER BY course_number ASC");
             Map<String,Object> map = new HashMap<>();
-            map.put("albumId", albumId);
+            if (!"".equals(albumId)&& albumId!=null){
+                sbCourse.append( "AND album_id =:albumId ");
+                sbCount.append( " AND album_id =:albumId ");
+                map.put("albumId", albumId);
+            }
             if (!"".equals(key)&& key!=null){
                 sbCourse.append(" AND CONCAT(course_title,course_label,course_key_words) LIKE :key");
                 sbCount.append(" AND CONCAT(course_title,course_label,course_key_words) LIKE :key");

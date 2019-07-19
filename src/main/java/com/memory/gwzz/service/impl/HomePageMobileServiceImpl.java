@@ -2,13 +2,9 @@ package com.memory.gwzz.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.memory.domain.dao.DaoUtils;
-import com.memory.entity.jpa.Advertise;
 import com.memory.entity.jpa.Album;
-import com.memory.entity.jpa.ArticleLike;
-import com.memory.entity.jpa.CourseLike;
 import com.memory.gwzz.model.*;
 import com.memory.gwzz.redis.service.*;
-import com.memory.gwzz.redis.service.impl.AlbumRedisMobileServiceImpl;
 import com.memory.gwzz.repository.*;
 import com.memory.gwzz.service.*;
 import com.memory.redis.config.RedisUtil;
