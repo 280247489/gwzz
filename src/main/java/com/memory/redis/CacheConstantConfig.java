@@ -35,7 +35,7 @@ public class CacheConstantConfig {
     //课程当日搜索统计
     // key  : Search:course:yyyy-MM-dd
     //value : map==> keyword:count
-    public static final String searchCourseDate =  "Search:course:";
+    public static final String SEARCHCOURSEDATE =  "Search:course:";
 
     //文章搜索统计
     //  key : Search:article:search_userid:
@@ -45,7 +45,7 @@ public class CacheConstantConfig {
     //文章当日搜索统计
     // key  : Search:article:yyyy-MM-dd
     //value : map==> keyword:count
-    public static final String searchArticleDate = "Search:article:";
+    public static final String SEARCHARTICLEDATE = "Search:article:";
 
     /**
      * 搜索记录统计 kv end

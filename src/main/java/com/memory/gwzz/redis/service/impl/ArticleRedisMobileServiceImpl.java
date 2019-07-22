@@ -1,5 +1,6 @@
 package com.memory.gwzz.redis.service.impl;
 
+import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
 import com.memory.entity.jpa.ArticleLike;
@@ -9,6 +10,8 @@ import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +36,8 @@ public class ArticleRedisMobileServiceImpl implements ArticleRedisMobileService 
     @Autowired
     private ArticleLikeMobileRepository articleLikeMobileRepository;
 
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
     /**
      * 搜索文章
      * @param userId
@@ -42,7 +47,9 @@ public class ArticleRedisMobileServiceImpl implements ArticleRedisMobileService 
     public void searchArticle(String userId, String searchKey) {
         try {
             String keyIncr = SEARCHARTICLESEARCHAPPID + userId;
+            String searchArticle = SEARCHARTICLEDATE + formatter.format(new Date());
             redisUtil.hincr(keyIncr, searchKey, 1);
+            redisUtil.hincr(searchArticle, searchKey ,1);
         }catch (Exception e){
             e.printStackTrace();
         }

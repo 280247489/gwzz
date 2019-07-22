@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "articleComment/mobile")
-public class ArticleCommentMobileController extends BaseController {
+public class  ArticleCommentMobileController extends BaseController {
 
     private final static Logger logger = LoggerFactory.getLogger(ArticleCommentMobileController.class);
 

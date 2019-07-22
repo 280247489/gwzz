@@ -11,6 +11,9 @@ import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static com.memory.redis.CacheConstantConfig.*;
 
 
@@ -34,6 +37,8 @@ public class CourseRedisMobileServiceImpl implements CourseRedisMobileService {
     @Autowired
     private CourseLikeMobileRepository courseLikeMobileRepository;
 
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
     /**
      * 搜索课程
      * @param userId
@@ -42,7 +47,9 @@ public class CourseRedisMobileServiceImpl implements CourseRedisMobileService {
     @Override
     public void searchCourse(String userId, String searchKey){
         String keyIncr = SEARCHCOURSESEARCHAPPID + userId;
+        String searchCourse = SEARCHCOURSEDATE + formatter.format(new Date());
         redisUtil.hincr(keyIncr,searchKey,1);
+        redisUtil.hincr(searchCourse,searchKey,1);
     }
 
     /**
