@@ -1,6 +1,6 @@
 package com.memory.gwzz.service;
 
-import com.memory.entity.jpa.CourseCommentLike;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @ClassName CourseCommentLikeMobileService
@@ -9,5 +9,7 @@ import com.memory.entity.jpa.CourseCommentLike;
  * @Date 2019/6/5 10:17
  */
 public interface CourseCommentLikeMobileService {
-    CourseCommentLike like(String cid,String uid);
+
+    @Transactional
+    int like(String courseId, String courseCommentId, String userId);
 }

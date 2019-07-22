@@ -100,14 +100,16 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
         for (int i = 0; i < list.size(); i++) {
             Map<String, Object> objMap=new HashMap<String, Object>();
             String articleCommentId = list.get(i)[0].toString();
+            Integer commentTotalLike = articleCommentRedisMobileService.getArticleCommentLike(articleId,articleCommentId);
             objMap.put("id", articleCommentId);
-            objMap.put("articleId", list.get(i)[1]);
+            objMap.put("articleId",list.get(i)[1]);
             objMap.put("userId", list.get(i)[2]);
             objMap.put("userLogo", list.get(i)[3]);
             objMap.put("userName", list.get(i)[4]);
             objMap.put("commentContentReplace", list.get(i)[5]);
             objMap.put("commentCreateTime", list.get(i)[6]);
-            objMap.put("commentTotalLike", list.get(i)[7]);
+
+            objMap.put("commentTotalLike", commentTotalLike);
             objMap.put("commentReplySum", list.get(i)[8]);
            //redis 中查询当前用户是否点赞
             objMap.put("commentLike", articleCommentRedisMobileService.isLike(articleCommentId,uid));
@@ -132,6 +134,8 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
         if (articleComment!=null){
             //redis 中查询当前用户是否点赞
             Integer isCommentLike = articleCommentRedisMobileService.isLike(commentId,uid);
+            Integer conmmentLikeSum = articleCommentRedisMobileService.getArticleCommentLike(articleComment.getArticleId(),commentId);
+            articleComment.setCommentTotalLike(conmmentLikeSum);
 
             String commentRootId = articleComment.getId();
             //查询子级评论列表

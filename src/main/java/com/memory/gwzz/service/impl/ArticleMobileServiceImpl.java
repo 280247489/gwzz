@@ -84,16 +84,16 @@ public class ArticleMobileServiceImpl implements ArticleMobileService {
             Integer articleTotalView = articleRedisMobileService.getArticleView(articleId);
             objMap.put("id", articleId);
             objMap.put("typeId", articleList.get(i)[1]);
-            objMap.put("article_title", articleList.get(i)[2]);
-            objMap.put("article_logo1", articleList.get(i)[3]);
-            objMap.put("article_logo2", articleList.get(i)[4]);
-            objMap.put("article_logo3", articleList.get(i)[5]);
-            objMap.put("article_label", articleList.get(i)[6]);
-            objMap.put("article_key_words", articleList.get(i)[7]);
-            objMap.put("article_online", articleList.get(i)[8]);
-            objMap.put("article_total_comment", articleList.get(i)[9]);
-            objMap.put("article_total_view", articleTotalView);
-            objMap.put("article_release_time", articleList.get(i)[11]);
+            objMap.put("articleTitle", articleList.get(i)[2]);
+            objMap.put("articleLogo1", articleList.get(i)[3]);
+            objMap.put("articleLogo2", articleList.get(i)[4]);
+            objMap.put("articleLogo3", articleList.get(i)[5]);
+            objMap.put("articleLabel", articleList.get(i)[6]);
+            objMap.put("articleKeyWords", articleList.get(i)[7]);
+            objMap.put("articleOnline", articleList.get(i)[8]);
+            objMap.put("articleTotalComment", articleList.get(i)[9]);
+            objMap.put("articleTotalView", articleTotalView);
+            objMap.put("articleReleaseTime", articleList.get(i)[11]);
 
             returnList.add(objMap);
         }

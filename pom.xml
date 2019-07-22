@@ -113,7 +113,7 @@
 
     <build>
         <!-- 打包名称 -->
-        <finalName>gwzz</finalName>
+        <finalName>gwzzapp</finalName>
 
         <plugins>
             <plugin>

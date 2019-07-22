@@ -30,22 +30,21 @@ public class CourseCommentLikeMobileController extends BaseController {
     /**
      * 添加评论点赞
      * URL：192.168.1.185:8081/gwzz/courseCommentLike/mobile/addLike
-     * @param cid String 评论id
-     * @param uid String 用户id
-     * @return 评论点赞对象
+     * @param courseId String 课程id
+     * @param courseCommentId String 评论id
+     * @param userId String 用户id
+     * @return
      */
     @RequestMapping(value = "addLike", method = RequestMethod.POST)
-    public Message addLike(@RequestParam String cid, @RequestParam String uid){
+    public Message addLike(@RequestParam String courseId, @RequestParam String courseCommentId, @RequestParam String userId){
         try {
             msg = Message.success();
-            CourseCommentLike courseCommentLike = courseCommentLikeMobileService.like(cid, uid);
-            if (courseCommentLike!=null){
-                msg.setRecode(courseCommentLike.getCommentLikeYn());
+            Integer courseCommentLike = courseCommentLikeMobileService.like(courseId, courseCommentId, userId);
+            if (courseCommentLike==1){
+                msg.setRecode(1);
             }else{
                 msg.setRecode(0);
             }
-
-
         }catch (Exception e){
             logger.error("异常信息");
             msg = Message.error();
