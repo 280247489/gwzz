@@ -27,14 +27,25 @@ public class CacheConstantConfig {
     /**
      * 搜索记录统计 kv start
      */
-
+    //课程搜索统计
     //  key : Search:course:search_userid:
     //  value :map==> keyword:count
     public static final String SEARCHCOURSESEARCHAPPID="Search:course:search_userid:";
 
+    //课程当日搜索统计
+    // key  : Search:course:yyyy-MM-dd
+    //value : map==> keyword:count
+    public static final String searchCourseDate =  "Search:course:";
+
+    //文章搜索统计
     //  key : Search:article:search_userid:
     //  value :map==> keyword:count
     public static final String SEARCHARTICLESEARCHAPPID="Search:article:search_userid:";
+
+    //文章当日搜索统计
+    // key  : Search:article:yyyy-MM-dd
+    //value : map==> keyword:count
+    public static final String searchArticleDate = "Search:article:";
 
     /**
      * 搜索记录统计 kv end

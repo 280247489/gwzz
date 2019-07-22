@@ -86,11 +86,7 @@ public class ArticleLikeMobileServiceImpl implements ArticleLikeMobileService {
             articleLike = this.getByAidUid(aid, uid);
             isLike = articleRedisMobileService.isLike(aid,uid);
             if (articleLike!=null){
-                if(articleLike.getLikeStatus()==1){
-                    articleLike.setLikeStatus(0);
-                }else{
-                    articleLike.setLikeStatus(1);
-                }
+               articleLike.setLikeStatus(isLike);
             }else {
                 articleLike = new ArticleLike();
                 articleLike.setId(Utils.generateUUIDs());
@@ -99,7 +95,6 @@ public class ArticleLikeMobileServiceImpl implements ArticleLikeMobileService {
                 articleLike.setLikeStatus(1);
                 articleLike.setCreateTime(new Date());
             }
-
             daoUtils.save(articleLike);
         }
 

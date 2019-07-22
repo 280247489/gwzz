@@ -84,11 +84,7 @@ public class CourseLikeMobileServiceImpl implements CourseLikeMobileService {
             islike = courseRedisMobileService.getUserCourseLike(cid,uid);
             courseLike = getByCidAndUid(cid, uid);
             if (courseLike != null){
-                if (courseLike.getLikeStatus()==1){
-                    courseLike.setLikeStatus(0);
-                }else{
-                    courseLike.setLikeStatus(1);
-                }
+                courseLike.setLikeStatus(islike);
             }else {
                     courseLike = new CourseLike();
                     courseLike.setId(Utils.generateUUIDs());
