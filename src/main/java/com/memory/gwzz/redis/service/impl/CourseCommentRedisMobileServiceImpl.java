@@ -41,7 +41,8 @@ public class CourseCommentRedisMobileServiceImpl implements CourseCommentRedisMo
         String courseCommentLike = COURSECOMMENTLIKE + courseId;
         String courseCommentLikeDetail = COURSECOMMENTLIKEDETAIL + userId;
         try {
-            Object isLike = redisUtil.hget(courseCommentLike,courseCommentId);
+            //查询当前用户是否点赞
+            Object isLike = redisUtil.hget(courseCommentLikeDetail,courseCommentId);
             if (isLike != null){
                 Integer like = Integer.valueOf(isLike.toString());
                 if (like==1){

@@ -37,7 +37,7 @@ public class ArticleCommentRedisMobileServiceImpl implements ArticleCommentRedis
         String articleCommentLike = ARTICLECOMMENTLIKE + articleId;
         String articleCommentLikeDetail =ARTICLECOMMENTLIKEDEATIL +userId;
         try {
-            Object isLike = redisUtil.hget(articleCommentLike,articleCommentId);
+            Object isLike = redisUtil.hget(articleCommentLikeDetail,articleCommentId);
             if (isLike != null){
                 Integer like = Integer.valueOf(isLike.toString());
                 if (like==0){
