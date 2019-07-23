@@ -1,6 +1,7 @@
 package com.memory.gwzz.service;
 
 import com.memory.entity.jpa.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -16,4 +17,7 @@ public interface ArticleCommentMobileService {
     Map<String, Object> listArtComByAid(String articleId, String uid, Integer start, Integer limit);
 
     Map<String, Object> listArtComByRid(String commentId, String uid, Integer start, Integer limit);
+
+    @Transactional
+    void delArticleComment(String articleCommentId);
 }

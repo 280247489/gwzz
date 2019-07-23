@@ -67,7 +67,8 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
             courseComment.setCommentCreateTime(date);
             courseComment.setCommentTotalLike(0);
 
-            course.setCourseTotalComment(course.getCourseTotalComment()+1);
+//            course.setCourseTotalComment(course.getCourseTotalComment()+1);
+            course.setCourseTotalComment(this.getCommentCount(courseId));
         }
 
         daoUtils.save(course);
@@ -187,5 +188,39 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
             returnMap.put("null",null);
         }
         return returnMap;
+    }
+
+    @Transactional
+    @Override
+    public void delCourseComment(String courseCommentId){
+        try {
+            CourseComment courseComment = (CourseComment) daoUtils.getById("CourseComment",courseCommentId);
+            Integer type = courseComment.getCommentType();
+            String  courseId = courseComment.getCourseId();
+            Course course = (Course) daoUtils.getById("Course",courseId);
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("courseCommentId", courseCommentId);
+            if (type==0){//删除所有 rootId = articleCommentId
+                StringBuffer sb1= new StringBuffer(" delete from course_comment  where comment_root_id=:courseCommentId ");
+                daoUtils.excuteSQL(sb1.toString(),map);
+            }else{//删除当前 以及 comment_parent_id = articleCommentId
+                StringBuffer sb2 = new StringBuffer(" delete from course_comment  where id=:courseCommentId ");
+                StringBuffer sb3 = new StringBuffer(" delete from course_comment  where comment_parent_id=:courseCommentId ");
+                daoUtils.excuteSQL(sb2.toString(),map);
+                daoUtils.excuteSQL(sb3.toString(),map);
+            }
+            course.setCourseTotalComment(this.getCommentCount(courseId));
+            daoUtils.save(course);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //查询评论条数
+    public int getCommentCount(String courseId){
+        Integer count = 0;
+        StringBuffer stringBuffer = new StringBuffer(" select count(*) from course_comment where course_id = '"+courseId+"' ");
+        count = daoUtils.getTotalBySQL(stringBuffer.toString(),null);
+        return count;
     }
 }

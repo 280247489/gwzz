@@ -5,6 +5,7 @@ import com.memory.common.utils.Message;
 import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Course;
+import com.memory.entity.jpa.CourseComment;
 import com.memory.entity.jpa.User;
 import com.memory.gwzz.repository.CourseMobileRepository;
 import com.memory.gwzz.service.CourseCommentMobileService;
@@ -140,6 +141,33 @@ public class CourseCommentMobileController extends BaseController {
                     msg.setMsg("无此评论");
                 }
 
+            }
+        }catch (Exception e){
+            msg = Message.error();
+            logger.error("异常信息");
+            e.printStackTrace();
+        }
+        return msg;
+    }
+
+
+    /**
+     * 删除课程评论
+     * URL:192.168.1.185:8081/gwzz/courseComment/mobile/delCourseComment
+     * @param courseCommentId
+     * @return
+     */
+    @RequestMapping(value = "delCourseComment", method = RequestMethod.POST)
+    public Message delCourseComment(@RequestParam String courseCommentId){
+        try {
+            msg = Message.success();
+            CourseComment courseComment = (CourseComment) daoUtils.getById("CourseComment",courseCommentId);
+            if (courseComment!=null){
+                courseCommentMobileService.delCourseComment(courseCommentId);
+                msg.setRecode(0);
+            }else {
+                msg.setRecode(1);
+                msg.setMsg("无此评论");
             }
         }catch (Exception e){
             msg = Message.error();

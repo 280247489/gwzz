@@ -77,7 +77,7 @@ public class CourseCommentRedisMobileServiceImpl implements CourseCommentRedisMo
             if (ccl != null){
                 courseCommentLike = Integer.valueOf(ccl.toString());
             }else {
-                CourseComment courseComment = (CourseComment) daoUtils.getById("ArticleComment",courseCommentId);
+                CourseComment courseComment = (CourseComment) daoUtils.getById("CourseComment",courseCommentId);
                 redisUtil.hset(COURSECOMMENTLIKE +courseId,courseCommentId,courseComment.getCommentTotalLike()+"");
                 ccl = redisUtil.hget(COURSECOMMENTLIKE + courseId,courseCommentId);
                 if (ccl!=null){

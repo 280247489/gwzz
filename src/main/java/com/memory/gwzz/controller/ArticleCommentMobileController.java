@@ -5,6 +5,7 @@ import com.memory.common.utils.Message;
 import com.memory.common.utils.Utils;
 import com.memory.domain.dao.DaoUtils;
 import com.memory.entity.jpa.Article;
+import com.memory.entity.jpa.ArticleComment;
 import com.memory.entity.jpa.User;
 import com.memory.gwzz.repository.ArticleMobileRepository;
 import com.memory.gwzz.service.ArticleCommentMobileService;
@@ -140,6 +141,32 @@ public class  ArticleCommentMobileController extends BaseController {
                     msg.setData(map);
                 }
 
+            }
+        }catch (Exception e){
+            msg = Message.error();
+            logger.error("异常信息");
+            e.printStackTrace();
+        }
+        return msg;
+    }
+
+    /**
+     * 删除文章评论
+     * URL:192.168.1.185:8081/gwzz/articleComment/mobile/del
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "del", method = RequestMethod.POST)
+    public Message add(@RequestParam String id){
+        try {
+            msg = Message.success();
+            ArticleComment articleComment = (ArticleComment) daoUtils.getById("ArticleComment",id);
+            if (articleComment!=null){
+                articleCommentMobileService.delArticleComment(id);
+                msg.setRecode(0);
+            }else {
+                msg.setRecode(1);
+                msg.setMsg("无此评论");
             }
         }catch (Exception e){
             msg = Message.error();

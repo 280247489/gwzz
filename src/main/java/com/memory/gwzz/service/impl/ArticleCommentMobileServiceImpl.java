@@ -175,4 +175,32 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
         }
         return returnMap;
     }
+
+    @Transactional
+    @Override
+    public void delArticleComment(String articleCommentId){
+        try {
+            ArticleComment articleComment = (ArticleComment) daoUtils.getById("ArticleComment",articleCommentId);
+            Integer type = articleComment.getCommentType();
+            String articleId = articleComment.getArticleId();
+            Article article = (Article) daoUtils.getById("Article",articleId);
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("articleCommentId", articleCommentId);
+            if (type==0){//删除所有 rootId = articleCommentId
+                StringBuffer sb1= new StringBuffer(" delete from article_comment  where comment_root_id=:articleCommentId ");
+                daoUtils.excuteSQL(sb1.toString(),map);
+            }else{//删除当前 以及 comment_parent_id = articleCommentId
+                StringBuffer sb2 = new StringBuffer(" delete from article_comment  where id=:articleCommentId ");
+                StringBuffer sb3 = new StringBuffer(" delete from article_comment  where comment_parent_id=:articleCommentId ");
+                daoUtils.excuteSQL(sb2.toString(),map);
+                daoUtils.excuteSQL(sb3.toString(),map);
+            }
+            article.setArticleTotalComment(articleCommentMobileRepository.countAllByArticleId(articleId));
+            daoUtils.save(article);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }
