@@ -2,6 +2,7 @@ package com.memory.cms.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.memory.cms.redis.service.LiveRedisCmsService;
+import com.memory.cms.service.LiveMemoryLoadService;
 import com.memory.cms.service.LiveMemoryService;
 import com.memory.cms.service.LiveMasterCmsService;
 import com.memory.cms.service.LiveSlaveCmsService;
@@ -9,6 +10,7 @@ import com.memory.common.async.DemoAsyncTask;
 import com.memory.common.utils.*;
 import com.memory.entity.bean.*;
 import com.memory.entity.jpa.LiveMaster;
+import com.memory.entity.jpa.LiveMemoryLoad;
 import com.memory.entity.jpa.LiveSlave;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +48,9 @@ public class LiveMasterCmsController {
     private LiveRedisCmsService liveRedisCmsService;
 
     private final String pwd="memory";
+
+    @Autowired
+    private LiveMemoryLoadService liveMemoryLoadService;
 
 
 
@@ -210,7 +215,7 @@ public class LiveMasterCmsController {
             int nowStatus = master.getLiveMasterStatus();
 
             if(nowStatus == 2){
-                return ResultUtil.error(-1,"fail","直播已关闭!不能修改");
+                return ResultUtil.error(-1,"直播已关闭!不能修改");
             }
 
             nowStatus +=1;
@@ -450,6 +455,35 @@ public class LiveMasterCmsController {
         return result;
     }
 
+
+    @RequestMapping("options")
+    public Result options(){
+        Result result = new Result();
+        try {
+            List<com.memory.entity.bean.LiveMaster>  optionsList = liveMasterCmsService.queryLiveMasterOptions();
+            List<LiveMemoryLoad> memoryLoadList=  liveMemoryLoadService.queryAllLiveMemoryLoadByLoadStatus(0);
+
+
+            for(int i=0;i<optionsList.size();i++){
+                if(memoryLoadList.size()>0){
+                    com.memory.entity.bean.LiveMaster liveMaster = optionsList.get(i);
+
+                    for (LiveMemoryLoad liveMemoryLoad : memoryLoadList) {
+                        if(liveMaster.getId().equals(liveMemoryLoad.getId())){
+                            optionsList.remove(i);
+                        }
+                    }
+                }
+            }
+
+            result = ResultUtil.success(optionsList);
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("options",e.getMessage());
+        }
+        return result;
+    }
+
     //@RequestMapping("deleteSlaveById")
     public Result deleteSlaveById(@RequestParam  String slave_id){
         Result result = new Result();
@@ -616,6 +650,12 @@ public class LiveMasterCmsController {
             sort ++ ;
             int type = ext.getType();
             nickname = ext.getName();
+
+            if(Utils.isNotNull(ext.getUserLogo())){
+                logo = ext.getUserLogo();
+            }
+
+
 
             //文字
             if(type == 1){

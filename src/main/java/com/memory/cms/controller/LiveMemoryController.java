@@ -1,9 +1,11 @@
 package com.memory.cms.controller;
 
+import com.memory.cms.service.LiveMasterCmsService;
 import com.memory.cms.service.LiveMemoryService;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.common.utils.Utils;
+import com.memory.entity.jpa.LiveMaster;
 import com.memory.redis.config.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,13 +24,24 @@ public class LiveMemoryController {
     @Autowired
     private LiveMemoryService LIveMemoryService;
 
+    @Autowired
+    private LiveMasterCmsService liveMasterCmsService;
+
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Result addMemory(String masterId){
         Result result = new Result();
         try{
-            LIveMemoryService.addLiveMemory(masterId);
-            result = ResultUtil.success( "课程缓存成功!");
+
+            LiveMaster master = liveMasterCmsService.getLiveMasterById(masterId);
+            if(Utils.isNotNull(master)){
+                LIveMemoryService.addLiveMemory(masterId);
+                result = ResultUtil.success( "课程缓存成功!");
+            }else {
+                result = ResultUtil.error(-1,"非法直播!" );
+            }
+
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -48,12 +61,12 @@ public class LiveMemoryController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public Result clear(String courseId){
+    public Result clear(String masterId){
         Result result = new Result();
         try {
-            if(Utils.isNotNull(courseId)){
-                LIveMemoryService.clear(courseId);
-                result = ResultUtil.success( "移除"+courseId+"缓存成功");
+            if(Utils.isNotNull(masterId)){
+                LIveMemoryService.clear(masterId);
+                result = ResultUtil.success( "移除"+masterId+"缓存成功");
             }else{
                 result = ResultUtil.error(-1,"非法id");
             }

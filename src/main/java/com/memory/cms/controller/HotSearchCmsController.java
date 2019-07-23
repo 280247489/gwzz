@@ -38,7 +38,7 @@ public class HotSearchCmsController {
 
                 HotSearch hotSearch1 = new HotSearch();
                 hotSearch1.setId(Utils.getShortUUTimeStamp());
-                hotSearch1.setSearchType(hotSearch.getSearchType());
+                hotSearch1.setSearchType(""/*hotSearch.getSearchType()*/);
                 hotSearch1.setStatus(hotSearch.getStatus());
                 hotSearch1.setSort(hotSearch.getSort());
                 hotSearch1.setKeyWord(hotSearch.getKeyWord().trim());

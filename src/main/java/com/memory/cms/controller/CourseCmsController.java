@@ -60,37 +60,38 @@ public class CourseCmsController {
         try{
 
             Course course = courseService.getCourseById(id);
-            if(course != null){
+            if(Utils.isNotNull(course)){
                 course.setCourseOnline(online);
                 course.setCourseUpdateTime(new Date());
                 course.setCourseUpdateId(operator_id);
                 Course returnCourse = courseService.update(course);
                 String str ="上线";
-                LiveMaster liveMaster = liveMasterCmsService.getLiveMasterByCourseId(id);
-                LiveMaster master=  liveMasterCmsService.getLiveMasterById(id);
-                if(online == 0){
-                    str = "下线";
-                    liveMemoryService.clear(id);
+                LiveMaster master = liveMasterCmsService.getLiveMasterByCourseId(id);
+               // LiveMaster master=  liveMasterCmsService.getLiveMasterById(id);
+                //如果课程绑定了直播，同步更新直播数据
+                if(Utils.isNotNull(master)){
+                    if(online == 0){
+                        str = "下线";
+                        liveMemoryService.clear(id);
 
-                    //将redis中的数据赋值为notExist状态.
-                  //  String keyHash = SHARECOURSECONTENT + id;
-                 //   redisUtil.hset(keyHash, "course", "notExist");
-                 //   redisUtil.hset(keyHash, "courseExt", JSON.toJSONString("notExist"));
+                        //将redis中的数据赋值为notExist状态.
+                        //  String keyHash = SHARECOURSECONTENT + id;
+                        //   redisUtil.hset(keyHash, "course", "notExist");
+                        //   redisUtil.hset(keyHash, "courseExt", JSON.toJSONString("notExist"));
 
-                }else{
-                    //上线状态，同步db2redis
-              //      courseExtCmsService.updateCourseExtDb2Redis(id,course.getCourseTitle());
+                    }else{
+                        //上线状态，同步db2redis
+                        //      courseExtCmsService.updateCourseExtDb2Redis(id,course.getCourseTitle());
 
-                }
-                master.setLiveMasterIsOnline(online);
-                master.setLiveMasterUpdateId(operator_id);
-                master.setLiveMasterUpdateTime(new Date());
-                LiveMaster returnLiveMaster =liveMasterCmsService.update(master);
-                if(Utils.isNotNull(returnLiveMaster)){
-                    //根据上下线状态同步redis数据
-                    liveMasterCmsService.syncOnline2Redis(liveMaster.getId(), online);
-
-
+                    }
+                    master.setLiveMasterIsOnline(online);
+                    master.setLiveMasterUpdateId(operator_id);
+                    master.setLiveMasterUpdateTime(new Date());
+                    LiveMaster returnLiveMaster =liveMasterCmsService.update(master);
+                    if(Utils.isNotNull(returnLiveMaster)){
+                        //根据上下线状态同步redis数据
+                        liveMasterCmsService.syncOnline2Redis(master.getId(), online);
+                    }
 
                 }
 
@@ -111,6 +112,8 @@ public class CourseCmsController {
                 result.setCode(0);
                 result.setMsg("变更"+str+"状态成功！");
                 result.setData(online);
+
+
             }else{
                 result.setCode(0);
                 result.setMsg("非法请求.当前课程不存在！");
@@ -171,50 +174,59 @@ public class CourseCmsController {
                 courseIds.add(course.getId());
             }
 
-            //绑定了课程的直播列表
-            List<LiveMaster> bindMasterList = liveMasterCmsService.queryLiveMasterByInCourseId(courseIds);
-            //课程course实际阅读数列表
-            List<Object> redisRealViewValues = courseRedisCmsService.getCourseRedisRealViewTotal(courseIds);
-            //伪阅读数列表
-            List<Object> redisManagerViewValues = courseRedisCmsService.getCourseManagerViewTotal(courseIds);
-            //分享数列表
-            List<Object> redisShareValues = courseRedisCmsService.getCourseRedisShareTotal(courseIds);
-           //点赞数列表
-            List<Object> redisLikeValues = courseRedisCmsService.getCourseRedisLikeTotal(courseIds);
+            if(list.size()>0){
 
-            for(int i=0; i<list.size();i++){
-                com.memory.entity.bean.Course course = list.get(i);
-                Integer liveRealView = 0;
-                //找出绑定课程的直播，并从redis中获取直播live的阅读数
-                for (LiveMaster master : bindMasterList) {
-                    if(course.getId().equals(master.getCourseId())){
-                        liveRealView = liveRedisCmsService.getLiveRedisViewTotal(master.getId());
+                //绑定了课程的直播列表
+                List<LiveMaster> bindMasterList = liveMasterCmsService.queryLiveMasterByInCourseId(courseIds);
+                //课程course实际阅读数列表
+                List<Object> redisRealViewValues = courseRedisCmsService.getCourseRedisRealViewTotal(courseIds);
+                //伪阅读数列表
+                List<Object> redisManagerViewValues = courseRedisCmsService.getCourseManagerViewTotal(courseIds);
+                //分享数列表
+                List<Object> redisShareValues = courseRedisCmsService.getCourseRedisShareTotal(courseIds);
+                //点赞数列表
+                List<Object> redisLikeValues = courseRedisCmsService.getCourseRedisLikeTotal(courseIds);
+
+                for(int i=0; i<list.size();i++){
+                    com.memory.entity.bean.Course course = list.get(i);
+                    Integer liveRealView = 0;
+                    //找出绑定课程的直播，并从redis中获取直播live的阅读数
+                    for (LiveMaster master : bindMasterList) {
+                        if(course.getId().equals(master.getCourseId())){
+                            liveRealView = liveRedisCmsService.getLiveRedisViewTotal(master.getId());
+                        }
                     }
+
+                    //实际阅读数（包含course 和live 的实际阅读数两部分）
+                    Integer realView = Utils.getIntVal(redisRealViewValues.get(i));
+                    course.setCourseTotalView((realView + liveRealView));
+
+                    //伪阅读数(只有course 有，live不能设置伪阅读数）
+                    Integer managerView = Utils.getIntVal(redisManagerViewValues.get(i));
+                    course.setCourseTotalManagerView(managerView);
+
+                    //分享数
+                    Integer share = Utils.getIntVal(redisShareValues.get(i));
+                    course.setCourseTotalShare(share);
+
+                    //点赞数
+                    Integer like = Utils.getIntVal(redisLikeValues.get(i));
+                    course.setCourseTotalLike(like);
+
                 }
 
-                //实际阅读数（包含course 和live 的实际阅读数两部分）
-                Integer realView = Utils.getIntVal(redisRealViewValues.get(i));
-                course.setCourseTotalView((realView + liveRealView));
+                int totalElements = courseService.queryCourseCountByQueHql(course_title,course_update_id,course_online,sort_status,course_type_id,album_id);
 
-                //伪阅读数(只有course 有，live不能设置伪阅读数）
-                Integer managerView = Utils.getIntVal(redisManagerViewValues.get(i));
-                course.setCourseTotalManagerView(managerView);
 
-                //分享数
-                Integer share = Utils.getIntVal(redisShareValues.get(i));
-                course.setCourseTotalShare(share);
-
-                //点赞数
-                Integer like = Utils.getIntVal(redisLikeValues.get(i));
-                course.setCourseTotalLike(like);
-
+                PageResult pageResult = PageResult.getPageResult(page, size, list, totalElements);
+                result = ResultUtil.success(pageResult);
+            }else{
+                PageResult pageResult = PageResult.getPageResult(page, size, list, 0);
+                result = ResultUtil.success(pageResult);
             }
 
-            int totalElements = courseService.queryCourseCountByQueHql(course_title,course_update_id,course_online,sort_status,course_type_id,album_id);
 
 
-            PageResult pageResult = PageResult.getPageResult(page, size, list, totalElements);
-            result = ResultUtil.success(pageResult);
 
         }catch (Exception e){
             e.printStackTrace();

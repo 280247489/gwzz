@@ -129,7 +129,7 @@ public class AlbumRedisCmsServiceImpl implements AlbumRedisCmsService {
         //同步 专辑 实际阅读量到redis
         redisUtil.set(albumRedisRealViewTotalKey, JSON.toJSON(albumRealViewTotal+""));
 
-        return null;
+        return albumRealViewTotal;
     }
 
     @Override

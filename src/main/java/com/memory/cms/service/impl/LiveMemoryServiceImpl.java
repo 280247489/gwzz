@@ -3,6 +3,7 @@ package com.memory.cms.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.memory.cms.redis.service.LiveRedisCmsService;
 import com.memory.cms.service.*;
+import com.memory.common.utils.Utils;
 import com.memory.entity.jpa.LiveMaster;
 import com.memory.entity.jpa.LiveMemoryLoad;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,11 +80,16 @@ public class LiveMemoryServiceImpl implements LiveMemoryService {
         List<Map<String,Object>> showList = liveSlave.refactorData(list);
         LiveMaster master = liveMasterCmsService.getLiveMasterById(masterId);
 
-        returnMap.put("master",master.getLiveMasterName());
-        returnMap.put("slave",showList);
-        LIVEMAP.put(keyHash,returnMap);
+        if(Utils.isNotNull(master)){
+            returnMap.put("master",master.getLiveMasterName());
+            returnMap.put("slave",showList);
+            LIVEMAP.put(keyHash,returnMap);
 
-        initMemoryLoad(masterId, keyHash, returnMap);
+            initMemoryLoad(masterId, keyHash, returnMap);
+        }
+
+
+
 
 
     }
