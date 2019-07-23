@@ -152,17 +152,17 @@ public class  ArticleCommentMobileController extends BaseController {
 
     /**
      * 删除文章评论
-     * URL:192.168.1.185:8081/gwzz/articleComment/mobile/del
-     * @param id
+     * URL:192.168.1.185:8081/gwzz/articleComment/mobile/delArticleComment
+     * @param articleCommentId
      * @return
      */
-    @RequestMapping(value = "del", method = RequestMethod.POST)
-    public Message add(@RequestParam String id){
+    @RequestMapping(value = "delArticleComment", method = RequestMethod.POST)
+    public Message delArticleComment(@RequestParam String articleCommentId){
         try {
             msg = Message.success();
-            ArticleComment articleComment = (ArticleComment) daoUtils.getById("ArticleComment",id);
+            ArticleComment articleComment = (ArticleComment) daoUtils.getById("ArticleComment",articleCommentId);
             if (articleComment!=null){
-                articleCommentMobileService.delArticleComment(id);
+                articleCommentMobileService.delArticleComment(articleCommentId);
                 msg.setRecode(0);
             }else {
                 msg.setRecode(1);
