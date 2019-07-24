@@ -51,12 +51,12 @@ public class ArticleMobileController extends BaseController {
     @RequestMapping(value = "findArticleByKey",method = RequestMethod.POST)
     public Message findArticleByKey(@RequestParam Integer start, @RequestParam Integer limit, @RequestParam String key){
         try {
-//            Map<String,Object> returnMap = new HashMap<>();
-//            returnMap.put("articleList",articleMobileService.findArticleByKey(start, limit, key));
-//            returnMap.put("fileUrl",fileUrl);
+            Map<String,Object> returnMap = new HashMap<>();
+            returnMap.put("articleList",articleMobileService.findArticleByKey(start, limit, key));
+            returnMap.put("fileUrl",fileUrl);
             msg = Message.success();
             msg.setMsg("查询成功");
-            msg.setData(articleMobileService.findArticleByKey(start, limit, key));
+            msg.setData(returnMap);
         }catch (Exception e){
             e.printStackTrace();
             msg = Message.error();
@@ -128,10 +128,8 @@ public class ArticleMobileController extends BaseController {
             if (!"".equals(strKey)){
                 articleRedisMobileService.searchArticle(userId,strKey);
             }
-//            Map<String,Object> returnMap = new HashMap<>();
-//            returnMap.put("articleList",articleMobileService.listArticleByKey(start, limit, strKey));
-//            returnMap.put("fileUrl",fileUrl);
             Map<String,Object> returnMap = articleMobileService.listArticleByKey(start, limit, strKey);
+            returnMap.put("fileUrl",fileUrl);
             msg.setMsg("查询成功");
             msg.setData(returnMap);
         }catch (Exception e){

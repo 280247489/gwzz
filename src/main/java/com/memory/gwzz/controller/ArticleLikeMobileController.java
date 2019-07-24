@@ -11,6 +11,7 @@ import com.memory.gwzz.service.ArticleLikeMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +39,9 @@ public class ArticleLikeMobileController extends BaseController {
 
     @Autowired
     private UserMobileRepository userMobileRepository;
+
+    @Value(value = "${fileUrl}")
+    private String fileUrl;
 
 
 
@@ -83,6 +87,7 @@ public class ArticleLikeMobileController extends BaseController {
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user != null){
                 Map<String,Object> returnMap = articleLikeMobileService.ListArticleLikeByUserId(userId, start, limit);
+                returnMap.put("fileUrl",fileUrl);
                 msg.setRecode(0);
                 msg.setData(returnMap);
             }else {

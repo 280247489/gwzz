@@ -64,7 +64,7 @@ public class CacheConstantConfig {
 
 
     //用户获取验证码数据
-    public static final String USER_SMS_SUM = "userSMSSum";
+    public static final String USER_SMS_SUM = "User:sms:sum:";
 
     //用户登录状态
     public static final String USER_LOGIN = "userLogin";

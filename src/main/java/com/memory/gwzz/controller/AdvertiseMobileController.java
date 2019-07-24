@@ -9,11 +9,13 @@ import com.memory.gwzz.service.AdvertiseMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +37,9 @@ public class AdvertiseMobileController extends BaseController {
     @Autowired
     private AdvertiseMobileRepository advertiseMobileRepository;
 
+    @Value(value = "${fileUrl}")
+    private String fileUrl;
+
     /**
      * 查询广告页
      * URL：192.168.1.185:8081/gwzz/advertise/mobile/advertiseInit
@@ -44,10 +49,13 @@ public class AdvertiseMobileController extends BaseController {
     public Message getAdvertiseOnline(){
         try {
             msg = Message.success();
+            Map<String,Object> map = new HashMap<>();
             List<Advertise> list = advertiseMobileService.getAdvertiseOnline();
+            map.put("list",list);
+            map.put("fileUrl",fileUrl);
             msg.setRecode(0);
             msg.setMsg("查询成功");
-            msg.setData(list);
+            msg.setData(map);
         }catch (Exception e){
             msg = Message.error();
             logger.error("异常信息");
@@ -73,6 +81,7 @@ public class AdvertiseMobileController extends BaseController {
             Advertise advertise = advertiseMobileRepository.findByIdAndAdvertiseOnline(id,1);
             if (advertise!=null){
                 Map<String,Object> returnMap = advertiseMobileService.getAdvertiseById(advertise, userId,openId, terminal,os);
+                returnMap.put("fileUrl",fileUrl);
                 msg.setRecode(0);
                 msg.setData(returnMap);
                 msg.setMsg("成功");

@@ -47,9 +47,6 @@ public class CourseMobileController extends BaseController {
     @Value(value = "${fileUrl}")
     private String fileUrl;
 
-
-
-
     /**
      * 根据Id查询课程详情
      * URL:192.168.1.185:8081/gwzz/course/mobile/getCourseById
@@ -121,9 +118,7 @@ public class CourseMobileController extends BaseController {
                 courseRedisMobileService.searchCourse(userId,strKey);
             }
             Map<String,Object> returnMap = courseMobileService.fandCourseByKey(albumId, start, limit, strKey);
-//            Map<String,Object> returnMap = new HashMap<>();
-//            returnMap.put("courseList",courseMobileService.fandCourseByKey(albumId, start, limit, strKey));
-//            returnMap.put("fileUrl",fileUrl);
+            returnMap.put("fileUrl",fileUrl);
 
             msg.setMsg("查询成功");
             msg.setData(returnMap);

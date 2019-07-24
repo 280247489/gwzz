@@ -43,17 +43,7 @@ public class MainApplication extends SpringBootServletInitializer {
         load_live_memory();
         load_illegalWord_2_memory();
     }
-    /**
-     * 重启服务，内存加载并发缓存课程
-     */
-//    public void load_course_memory(){
-//        //获取数据加载状态为0的课程
-//        List<CourseMemoryLoad>   loadList = courseMemoryLoadService.queryAllCourseMemoryLoadByLoadStatus(0);
-//        for (CourseMemoryLoad courseMemoryLoad : loadList) {
-//            String course_id = courseMemoryLoad.getCourseId();
-//            courseMemoryService.addMemory(course_id);
-//        }
-//    }
+
 
 
     /**

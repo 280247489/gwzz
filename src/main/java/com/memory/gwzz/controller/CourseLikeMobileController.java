@@ -11,6 +11,7 @@ import com.memory.gwzz.service.CourseLikeMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +39,9 @@ public class CourseLikeMobileController extends BaseController {
     @Autowired
     private UserMobileRepository userMobileRepository;
 
+    @Value(value = "${fileUrl}")
+    private String fileUrl;
+
     /**
      * 添加课程点赞
      * URL：192.168.1.185:8081/gwzz/courseLike/mobile/addLike
@@ -53,7 +57,7 @@ public class CourseLikeMobileController extends BaseController {
             Course course = courseMobileRepository.findByIdAndCourseOnline(cid,1);
             if (course!=null){
                 Integer courseLike = courseLikeMobileService.like(cid,uid);
-                    msg.setRecode(courseLike);
+                msg.setRecode(courseLike);
             }else {
                 msg.setRecode(1);
                 msg.setMsg("课程不存在！");
@@ -82,6 +86,7 @@ public class CourseLikeMobileController extends BaseController {
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user != null){
                 Map<String,Object> returnMap = courseLikeMobileService.ListCourseLikeByUserId(userId, start, limit);
+                returnMap.put("fileUrl",fileUrl);
                 msg.setRecode(0);
                 msg.setData(returnMap);
             }else {

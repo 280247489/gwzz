@@ -6,6 +6,7 @@ import com.memory.gwzz.service.UserHelpMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,9 @@ public class UserHelpMobileController extends BaseController {
     @Autowired
     private UserHelpMobileService userHelpMobileService;
 
+    @Value(value = "${fileUrl}")
+    private String fileUrl;
+
     /**
      * 查询帮助中心内容
      * URL:192.168.1.185:8081/gwzz/userHelp/mobile/listUserHelp
@@ -38,6 +42,7 @@ public class UserHelpMobileController extends BaseController {
         try {
             msg = Message.success();
             Map<String,Object> map = userHelpMobileService.listUserHelp();
+            map.put("fileUrl",fileUrl);
             msg.setRecode(0);
             msg.setData(map);
 

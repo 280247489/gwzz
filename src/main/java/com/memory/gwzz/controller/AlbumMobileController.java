@@ -8,6 +8,7 @@ import com.memory.gwzz.service.AlbumMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +32,9 @@ public class AlbumMobileController extends BaseController {
     @Autowired
     private DaoUtils daoUtils;
 
+    @Value(value = "${fileUrl}")
+    private String fileUrl;
+
 
     /**
      * 查询课程列表
@@ -44,6 +48,7 @@ public class AlbumMobileController extends BaseController {
         try {
             msg = Message.success();
             Map<String,Object> returnMap = albumMobileService.fandAlbum(start,limit);
+            returnMap.put("fileUrl",fileUrl);
             msg.setMsg("成功");
             msg.setRecode(0);
             msg.setData(returnMap);
@@ -68,6 +73,7 @@ public class AlbumMobileController extends BaseController {
             Album album = (Album) daoUtils.getById("Album",id);
             if (album!=null){
                 Map<String,Object> returnMap =albumMobileService.fandById(id);
+                returnMap.put("fileUrl",fileUrl);
                 msg.setMsg("成功");
                 msg.setRecode(0);
                 msg.setData(returnMap);
@@ -96,6 +102,7 @@ public class AlbumMobileController extends BaseController {
         try {
             msg = Message.success();
             Map<String,Object> returnMap = albumMobileService.fandCourseByAlbunmId(id, start);
+            returnMap.put("fileUrl",fileUrl);
             msg.setMsg("成功");
             msg.setRecode(0);
             msg.setData(returnMap);

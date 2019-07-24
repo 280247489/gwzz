@@ -12,11 +12,17 @@ import com.memory.redis.config.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.memory.redis.CacheConstantConfig.USER_SMS_SUM;
 
 /**
  * @ClassName UserMobileController
@@ -27,7 +33,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping(value = "user/mobile")
 public class UserMobileController extends BaseController {
+    @Value(value = "${fileUrl}")
+    private String fileUrl;
+
     private final static Logger logger = LoggerFactory.getLogger(UserMobileController.class);
+
 
     @Autowired
     private UserMobileService userMobileService;
@@ -40,46 +50,80 @@ public class UserMobileController extends BaseController {
 
     /**
      * 获取短信验证码
-     * URL:192.168.1.185:8081/gwzz/user/mobile/getSMSCode
+     * URL:192.168.1.185:8081/gwzz/user/mobile/getSMSCodeByRegister
      * @param phone
-     * @param type 1注册 2修改密码
      * @return
      */
-    @RequestMapping(value = "getSMSCode", method = RequestMethod.POST)
-    public Message getSMSCode(@RequestParam String phone,@RequestParam Integer type){
+    @RequestMapping(value = "getSMSCodeByRegister", method = RequestMethod.POST)
+    public Message getSMSCodeByRegister(@RequestParam String phone){
         try {
             msg = Message.success();
             User user = userMobileService.checkPhone(phone);
-            String userSMSSum = String.valueOf(redisUtil.get(CacheConstantConfig.USER_SMS_SUM+":"+phone));
-            if (!"null".equals(userSMSSum)){
-                Integer smsSum = Integer.valueOf(userSMSSum);
-                if (smsSum>=5){
-                    msg.setRecode(1);
-                    msg.setMsg("获取次数超出");
-                }else{
-                    if (type==1&&user!=null){
+            Object object = redisUtil.get(USER_SMS_SUM+phone);
+            if (user==null){
+                if (object==null){
+                    String msgId = userMobileService.getSMSCode(phone);
+                    msg.setRecode(0);
+                    msg.setMsg("成功");
+                    msg.setData(JSON.parse(msgId));
+                }else {
+                    Integer smsSum = Integer.valueOf(object.toString());
+                    if (smsSum>=5){
                         msg.setRecode(1);
-                        msg.setMsg("此号码已经存在！");
-                    }else if(type==2&&user==null){
-                        msg.setRecode(1);
-                        msg.setMsg("此号码不存在！");
-                    }else{
+                        msg.setMsg("获取次数超出");
+                    }else {
                         String msgId = userMobileService.getSMSCode(phone);
                         msg.setRecode(0);
                         msg.setMsg("成功");
                         msg.setData(JSON.parse(msgId));
                     }
                 }
-            }else if (type==1&&user!=null){
+            }else{
                 msg.setRecode(1);
                 msg.setMsg("此号码已经存在！");
-            }else if (type==2&&user==null){
+            }
+        }catch (Exception e){
+            msg = Message.error();
+            e.printStackTrace();
+            logger.error("异常信息");
+        }
+
+        return msg;
+    }
+
+    /**
+     * 获取短信验证码
+     * URL:192.168.1.185:8081/gwzz/user/mobile/getSMSCodeByUpdPwd
+     * @param phone
+     * @return
+     */
+    @RequestMapping(value = "getSMSCodeByUpdPwd", method = RequestMethod.POST)
+    public Message getSMSCodeByUpdPwd(@RequestParam String phone){
+        try {
+            msg = Message.success();
+            User user = userMobileService.checkPhone(phone);
+            Object object = redisUtil.get(USER_SMS_SUM + phone);
+            if (user!=null){
+                if (object!=null){
+                    Integer smsSum = Integer.valueOf(object.toString());
+                    if (smsSum>=5){
+                        msg.setRecode(1);
+                        msg.setMsg("获取次数超出");
+                    }else {
+                        String msgId = userMobileService.getSMSCode(phone);
+                        msg.setRecode(0);
+                        msg.setMsg("成功");
+                        msg.setData(JSON.parse(msgId));
+                    }
+                }else {
+                    String msgId = userMobileService.getSMSCode(phone);
+                    msg.setRecode(0);
+                    msg.setMsg("成功");
+                    msg.setData(JSON.parse(msgId));
+                }
+            }else{
                 msg.setRecode(1);
                 msg.setMsg("此号码不存在！");
-            }else{
-                msg.setRecode(0);
-                msg.setMsg("成功");
-                msg.setData(JSON.parse(userMobileService.getSMSCode(phone)));
             }
         }catch (Exception e){
             msg = Message.error();
@@ -105,9 +149,12 @@ public class UserMobileController extends BaseController {
             msg = Message.success();
             if (userMobileService.checkSmsCode(msgId,code)){
                 User user = userMobileService.registerPhone(phone,userPwd);
+                Map<String,Object> map = new HashMap<>();
+                map.put("user",user);
+                map.put("fileUrl",fileUrl);
                 msg.setMsg("成功");
                 msg.setRecode(0);
-                msg.setData(user);
+                msg.setData(map);
             }else {
                 msg.setRecode(1);
                 msg.setMsg("验证码失效");
@@ -138,9 +185,12 @@ public class UserMobileController extends BaseController {
         try {
             msg = Message.success();
             User user = userMobileService.registerWeChat(userId, userUnionId, userOpenId, userNickName, userSex, userLogo);
+            Map<String,Object> map = new HashMap<>();
+            map.put("user",user);
+            map.put("fileUrl",fileUrl);
             msg.setMsg("注册成功");
             msg.setRecode(0);
-            msg.setData(user);
+            msg.setData(map);
         }catch (Exception e){
             msg = Message.error();
             e.printStackTrace();
@@ -168,9 +218,12 @@ public class UserMobileController extends BaseController {
                 msg.setRecode(2);
                 msg.setMsg("登录失败");
             }else{
+                Map<String,Object> map = new HashMap<>();
+                map.put("user",user);
+                map.put("fileUrl",fileUrl);
                 msg.setRecode(0);
                 msg.setMsg("登录成功");
-                msg.setData(user);
+                msg.setData(map);
             }
         }catch (Exception e){
             msg = Message.error();
@@ -196,9 +249,12 @@ public class UserMobileController extends BaseController {
             User user = userMobileService.checkPhone(phone);
             if (user!=null){
                 if (userMobileService.checkSmsCode(msgId,code)){
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("user",userMobileService.setUserPwd(phone, userPwd));
+                    map.put("fileUrl",fileUrl);
                     msg.setRecode(0);
                     msg.setMsg("修改成功");
-                    msg.setData(userMobileService.setUserPwd(phone, userPwd));
+                    msg.setData(map);
                 }else {
                     msg.setRecode(1);
                     msg.setMsg("验证码失效");
@@ -229,8 +285,11 @@ public class UserMobileController extends BaseController {
             msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
+                Map<String,Object> map = new HashMap<>();
+                map.put("user",userMobileService.updUserName(user,userName));
+                map.put("fileUrl",fileUrl);
                 msg.setRecode(0);
-                msg.setData(userMobileService.updUserName(user,userName));
+                msg.setData(map);
             }else{
                 msg.setRecode(1);
                 msg.setMsg("无此用户");
@@ -256,8 +315,11 @@ public class UserMobileController extends BaseController {
             msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
+                Map<String,Object> map = new HashMap<>();
+                map.put("user",userMobileService.updUserSex(user,userSex));
+                map.put("fileUrl",fileUrl);
                 msg.setRecode(0);
-                msg.setData(userMobileService.updUserSex(user,userSex));
+                msg.setData(map);
             }else{
                 msg.setRecode(1);
                 msg.setMsg("无此用户");
@@ -283,8 +345,11 @@ public class UserMobileController extends BaseController {
             msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
+                Map<String,Object> map = new HashMap<>();
+                map.put("user",userMobileService.updUserBirthday(user,userBirthday));
+                map.put("fileUrl",fileUrl);
                 msg.setRecode(0);
-                msg.setData(userMobileService.updUserBirthday(user,userBirthday));
+                msg.setData(map);
             }else{
                 msg.setRecode(1);
                 msg.setMsg("无此用户");
@@ -310,8 +375,11 @@ public class UserMobileController extends BaseController {
             msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
+                Map<String,Object> map = new HashMap<>();
+                map.put("user",userMobileService.updUserLogo(user,UserLogo));
+                map.put("fileUrl",fileUrl);
                 msg.setRecode(0);
-                msg.setData(userMobileService.updUserLogo(user,UserLogo));
+                msg.setData(map);
             }else{
                 msg.setRecode(1);
                 msg.setMsg("无此用户");
@@ -342,8 +410,11 @@ public class UserMobileController extends BaseController {
             msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
+                Map<String,Object> map = new HashMap<>();
+                map.put("user",userMobileService.updAddress(user,userProvince,userCity,userArea,userAddress));
+                map.put("fileUrl",fileUrl);
                 msg.setRecode(0);
-                msg.setData(userMobileService.updAddress(user,userProvince,userCity,userArea,userAddress));
+                msg.setData(map);
             }else{
                 msg.setRecode(1);
                 msg.setMsg("无此用户");
@@ -369,8 +440,11 @@ public class UserMobileController extends BaseController {
             msg = Message.success();
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
+                Map<String,Object> map = new HashMap<>();
+                map.put("user",userMobileService.updUserNickName(user,userNickName));
+                map.put("fileUrl",fileUrl);
                 msg.setRecode(0);
-                msg.setData(userMobileService.updUserNickName(user,userNickName));
+                msg.setData(map);
             }else{
                 msg.setRecode(1);
                 msg.setMsg("无此用户");
@@ -399,8 +473,11 @@ public class UserMobileController extends BaseController {
             if (user != null){
                 String oldPwd = Utils.md5Password(oldPassword);
                 if (user.getPassword().equals(oldPwd) ){
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("user",userMobileService.updPassWord(user,newPassWord));
+                    map.put("fileUrl",fileUrl);
                     msg.setRecode(0);
-                    msg.setData(userMobileService.updPassWord(user,newPassWord));
+                    msg.setData(map);
                 }else{
                     msg.setRecode(2);
                     msg.setMsg("旧密码错误");
@@ -462,9 +539,12 @@ public class UserMobileController extends BaseController {
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
                 if (userMobileService.checkSmsCode(msgId,code)){
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("user",userMobileService.updPhone(user,phone));
+                    map.put("fileUrl",fileUrl);
                     msg.setMsg("成功");
                     msg.setRecode(0);
-                    msg.setData(userMobileService.updPhone(user,phone));
+                    msg.setData(map);
                 }else {
                     msg.setRecode(2);
                     msg.setMsg("验证码失效");
@@ -496,8 +576,11 @@ public class UserMobileController extends BaseController {
             User user = userMobileRepository.findByIdAndUserNologinAndUserCancel(userId,0,0);
             if (user!=null){
                 if (!user.getUserOpenId().equals(openId)){
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("user",userMobileService.updWeChat(user,openId,uid));
+                    map.put("fileUrl",fileUrl);
                     msg.setRecode(0);
-                    msg.setData(userMobileService.updWeChat(user,openId,uid));
+                    msg.setData(map);
                 }else{
                     msg.setRecode(3);
                     msg.setMsg("已绑定该微信");

@@ -12,6 +12,7 @@ import com.memory.gwzz.service.CourseCommentMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,6 +39,9 @@ public class CourseCommentMobileController extends BaseController {
 
     @Autowired
     private CourseMobileRepository courseMobileRepository;
+
+    @Value(value = "${fileUrl}")
+    private String fileUrl;
 
 
     /**
@@ -68,6 +72,7 @@ public class CourseCommentMobileController extends BaseController {
                 }else {
 
                     Map<String,Object> returnMap = courseCommentMobileService.add(courseId,user,commentType,commentParentId, Utils.filterEmoji(content),Utils.filterEmoji(content_replace));
+                    returnMap.put("fileUrl",fileUrl);
                     msg.setRecode(0);
                     msg.setData(returnMap);
                 }
@@ -99,6 +104,7 @@ public class CourseCommentMobileController extends BaseController {
                 msg.setRecode(0);
                 msg.setMsg("成功");
                 Map<String, Object> returnMap = courseCommentMobileService.listComByCid(courseId, start, limit,uid);
+                returnMap.put("fileUrl",fileUrl);
                 msg.setData(returnMap);
             }else{
                 msg.setRecode(2);
@@ -132,6 +138,7 @@ public class CourseCommentMobileController extends BaseController {
                 msg.setMsg("无此课程");
             }else{
                 Map<String,Object> map = courseCommentMobileService.listCouComByRid(commentId, uid,start, limit);
+                map.put("fileUrl",fileUrl);
                 if (map.values()!=null){
                     msg.setRecode(0);
                     msg.setMsg("成功");

@@ -9,6 +9,7 @@ import com.memory.gwzz.service.HomePageMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +34,9 @@ public class HomePageMobileController extends BaseController {
     @Autowired
     private BannerMobileRepository bannerMobileRepository;
 
+    @Value(value = "${fileUrl}")
+    private String fileUrl;
+
     /**
      * 首页查询
      * URL:192.168.1.185:8081/gwzz/homePage/mobile/homePageOne
@@ -46,6 +50,7 @@ public class HomePageMobileController extends BaseController {
         try {
             msg = Message.success();
             Map<String,Object> returnMap = homePageMobileService.HomePageOne();
+            returnMap.put("fileUrl",fileUrl);
             msg.setData(returnMap);
             msg.setRecode(0);
             msg.setMsg("查询成功");
@@ -103,6 +108,7 @@ public class HomePageMobileController extends BaseController {
                 msg.setMsg("该轮播不存在");
             }else {
                 Map<String,Object> returnMap = homePageMobileService.getAdvertiseById(banner, userId,openId, terminal,os);
+                returnMap.put("fileUrl",fileUrl);
                 msg.setRecode(0);
                 msg.setData(returnMap);
                 msg.setMsg("成功");

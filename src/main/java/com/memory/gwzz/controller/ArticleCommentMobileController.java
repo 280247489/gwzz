@@ -12,6 +12,7 @@ import com.memory.gwzz.service.ArticleCommentMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +43,9 @@ public class  ArticleCommentMobileController extends BaseController {
     @Autowired
     private DaoUtils daoUtils;
 
+    @Value(value = "${fileUrl}")
+    private String fileUrl;
+
     /**
      * 添加文章评论接口
      * URL：192.168.1.185:8081/gwzz/articleComment/mobile/add
@@ -64,6 +68,7 @@ public class  ArticleCommentMobileController extends BaseController {
                 if (user!=null){
                     msg.setRecode(0);
                     Map<String,Object> returnMap = articleCommentMobileService.add(articleId,user,commentType,commentParentId, Utils.filterEmoji(content),Utils.filterEmoji(content_replace));
+                    returnMap.put("fileUrl",fileUrl);
                     msg.setData(returnMap);
                 }else {
                     msg.setRecode(2);
@@ -97,6 +102,7 @@ public class  ArticleCommentMobileController extends BaseController {
             Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
             if (article!=null){
                 Map<String,Object> returnMap = articleCommentMobileService.listArtComByAid(articleId, uid, start, limit);
+                returnMap.put("fileUrl",fileUrl);
                 msg.setRecode(0);
                 msg.setMsg("成功");
                 msg.setData(returnMap);
@@ -132,6 +138,7 @@ public class  ArticleCommentMobileController extends BaseController {
                 msg.setMsg("无此文章");
             }else{
                 Map<String,Object> map = articleCommentMobileService.listArtComByRid(commentId, uid, start, limit);
+                map.put("fileUrl",fileUrl);
                 if (map.values()==null){
                     msg.setRecode(3);
                     msg.setMsg("无此评论");

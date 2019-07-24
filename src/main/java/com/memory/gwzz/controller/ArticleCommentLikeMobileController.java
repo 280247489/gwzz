@@ -2,7 +2,6 @@ package com.memory.gwzz.controller;
 
 import com.memory.common.controller.BaseController;
 import com.memory.common.utils.Message;
-import com.memory.entity.jpa.ArticleCommentLike;
 import com.memory.gwzz.service.ArticleCommentLikeMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "articleCommentLike/mobile")
-public class ArticleCommentLikemobileController extends BaseController {
+public class ArticleCommentLikeMobileController extends BaseController {
 
-    private final static Logger logger = LoggerFactory.getLogger(ArticleCommentLikemobileController.class);
+    private final static Logger logger = LoggerFactory.getLogger(ArticleCommentLikeMobileController.class);
 
     @Autowired
     private ArticleCommentLikeMobileService articleCommentLikeMobileService;

@@ -19,6 +19,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.memory.redis.CacheConstantConfig.USER_SMS_SUM;
+
 
 /**
  * @ClassName UserMobileServiceImpl
@@ -146,7 +148,7 @@ public class UserMobileServiceImpl implements UserMobileService {
     public String getSMSCode(String userPhone){
         String msgId = daoUtils.sendSMSCode(164674,userPhone);
         if (!"".equals(msgId)){
-            redisUtil.incr(CacheConstantConfig.USER_SMS_SUM+":"+userPhone,1,RedisUtil.CACHE_TIME_D_1);
+            redisUtil.incr(USER_SMS_SUM+userPhone,1,RedisUtil.CACHE_TIME_D_1);
         }
         return msgId;
     }
