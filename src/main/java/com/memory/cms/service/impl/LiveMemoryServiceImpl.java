@@ -43,6 +43,8 @@ public class LiveMemoryServiceImpl implements LiveMemoryService {
 
             }
 
+             liveRedisCmsService.syncLive2App();
+
     }
 
     public void clearAll(){
@@ -61,6 +63,8 @@ public class LiveMemoryServiceImpl implements LiveMemoryService {
             }
 
             LIVEMAP.clear();
+
+            liveRedisCmsService.syncLive2App();
 
     }
 
@@ -88,6 +92,7 @@ public class LiveMemoryServiceImpl implements LiveMemoryService {
             initMemoryLoad(masterId, keyHash, returnMap);
         }
 
+        liveRedisCmsService.syncLive2App();
 
 
 

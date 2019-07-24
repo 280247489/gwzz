@@ -187,12 +187,16 @@ public class LiveMasterCmsServiceImpl implements LiveMasterCmsService {
 
     @Override
     public void syncOnline2Redis( String id, int online) {
+
+
         if(online == 0){
             liveRedisCmsService.live2RedisNotExist(id);
         }else{
             //上线状态，同步db2redis
             upgradeLiveDb2Redis(id);
         }
+
+        liveRedisCmsService.syncLive2App();
     }
 
     public void  upgradeLiveDb2Redis(String masterId){

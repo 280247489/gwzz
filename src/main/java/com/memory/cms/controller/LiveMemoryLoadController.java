@@ -5,6 +5,7 @@ import com.memory.cms.service.LiveMasterCmsService;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.entity.jpa.LiveMemoryLoad;
+import com.memory.redis.pub.RedisPubUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +29,9 @@ public class LiveMemoryLoadController {
 
     @Autowired
     private LiveMasterCmsService liveMasterCmsService;
+
+    @Autowired
+    private RedisPubUtils redisPubUtils;
 
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
     public Result findAll(){
@@ -56,6 +60,22 @@ public class LiveMemoryLoadController {
 
             }
             result = ResultUtil.success(returnMap);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    @RequestMapping("redisPubTest")
+    public Result redisPubTest(){
+        Result result = new Result();
+        try {
+
+            redisPubUtils.publish("syncLive","liuty","sync live memory ...");
+
+
+            result = ResultUtil.success();
         }catch (Exception e){
             e.printStackTrace();
         }

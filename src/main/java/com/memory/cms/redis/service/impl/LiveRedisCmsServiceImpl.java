@@ -3,6 +3,7 @@ import com.alibaba.fastjson.JSON;
 import com.memory.cms.redis.service.LiveRedisCmsService;
 import com.memory.common.utils.Utils;
 import com.memory.redis.config.RedisUtil;
+import com.memory.redis.pub.RedisPubUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,10 @@ public class LiveRedisCmsServiceImpl implements LiveRedisCmsService {
 
     @Autowired
     private RedisUtil redisUtil;
+
+
+    @Autowired
+    private RedisPubUtils redisPubUtils;
 
 
     @Override
@@ -126,4 +131,10 @@ public class LiveRedisCmsServiceImpl implements LiveRedisCmsService {
         return (List<Object>) redisUtil.getMulti(finalKeys);
     }
 
+    @Override
+    public void syncLive2App() {
+
+        redisPubUtils.publish("syncLive","sysAdmin","sync live memory ...");
+
+    }
 }

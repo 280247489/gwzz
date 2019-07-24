@@ -74,6 +74,7 @@ public class CourseCmsController {
                         str = "下线";
                         liveMemoryService.clear(id);
 
+
                         //将redis中的数据赋值为notExist状态.
                         //  String keyHash = SHARECOURSECONTENT + id;
                         //   redisUtil.hset(keyHash, "course", "notExist");
@@ -89,6 +90,8 @@ public class CourseCmsController {
                     master.setLiveMasterUpdateTime(new Date());
                     LiveMaster returnLiveMaster =liveMasterCmsService.update(master);
                     if(Utils.isNotNull(returnLiveMaster)){
+
+                        liveRedisCmsService.syncLive2App();
                         //根据上下线状态同步redis数据
                         liveMasterCmsService.syncOnline2Redis(master.getId(), online);
                     }

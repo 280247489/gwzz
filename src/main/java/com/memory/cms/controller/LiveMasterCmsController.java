@@ -718,6 +718,8 @@ public class LiveMasterCmsController {
 
         }
 
+        liveRedisCmsService.syncLive2App();
+
         return slaveList;
     }
 
@@ -774,7 +776,7 @@ public class LiveMasterCmsController {
                     //path 会返回 文件的路径或 Fail 如果是Fail 代表文件转换失败, 需手动上传
                     String path = cmdExceAmr2Mp3Shell(localPath +"/"+audioUrl );
                     path = path.trim().replace("/r/n","").replace("/r","");
-                    audioUrl=  path.substring(path.indexOf("/cms"),path.length());
+                    audioUrl=  path.substring(path.indexOf("cms"),path.length());
                 }
 
         return audioUrl;

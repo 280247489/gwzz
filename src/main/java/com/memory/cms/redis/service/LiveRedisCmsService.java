@@ -35,6 +35,9 @@ public interface LiveRedisCmsService {
     //获取直播点赞量
     Integer getLiveRedisLikeTotal(String uuid);
 
+    //redis消息发布同步app live
+    void syncLive2App();
+
 
 
 }
