@@ -9,6 +9,7 @@ import com.memory.gwzz.service.ArticleMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,9 +34,11 @@ public class ArticleMobileController extends BaseController {
     @Autowired
     private ArticleMobileRepository articleMobileRepository;
 
-
     @Autowired
     private ArticleRedisMobileService articleRedisMobileService;
+
+    @Value(value = "${fileUrl}")
+    private String fileUrl;
 
     /**
      * 查询文章列表
@@ -48,6 +51,9 @@ public class ArticleMobileController extends BaseController {
     @RequestMapping(value = "findArticleByKey",method = RequestMethod.POST)
     public Message findArticleByKey(@RequestParam Integer start, @RequestParam Integer limit, @RequestParam String key){
         try {
+//            Map<String,Object> returnMap = new HashMap<>();
+//            returnMap.put("articleList",articleMobileService.findArticleByKey(start, limit, key));
+//            returnMap.put("fileUrl",fileUrl);
             msg = Message.success();
             msg.setMsg("查询成功");
             msg.setData(articleMobileService.findArticleByKey(start, limit, key));
@@ -88,6 +94,7 @@ public class ArticleMobileController extends BaseController {
                 returnMap.put("isLike",articleRedisMobileService.isLike(articleId, userId));
 
                 returnMap.put("article",article);
+                returnMap.put("fileUrl",fileUrl);
                 msg.setMsg("查询成功");
                 msg.setData(returnMap);
             }else {
@@ -121,9 +128,54 @@ public class ArticleMobileController extends BaseController {
             if (!"".equals(strKey)){
                 articleRedisMobileService.searchArticle(userId,strKey);
             }
+//            Map<String,Object> returnMap = new HashMap<>();
+//            returnMap.put("articleList",articleMobileService.listArticleByKey(start, limit, strKey));
+//            returnMap.put("fileUrl",fileUrl);
             Map<String,Object> returnMap = articleMobileService.listArticleByKey(start, limit, strKey);
             msg.setMsg("查询成功");
             msg.setData(returnMap);
+        }catch (Exception e){
+            e.printStackTrace();
+            msg = Message.error();
+            logger.error("异常信息");
+        }
+        return msg;
+    }
+
+    /**
+     * 根据Id查询详情分享
+     * URL:192.168.1.185:8081/gwzz/article/mobile/shareArticleById
+     * @param articleId String 文章id
+     * @param os 操作系统 0 ios， 1 android
+     * @return
+     */
+    @RequestMapping(value = "shareArticleById",method = RequestMethod.POST)
+    public Message shareArticleById(@RequestParam  String articleId,@RequestParam Integer os){
+        try {
+            msg = Message.success();
+            String userId = "wx";
+            Integer terminal = 1;
+            Map<String,Object> returnMap = new HashMap<>();
+            Article article = articleMobileRepository.findByIdAndArticleOnline(articleId,1);
+            if (article!=null){
+                //添加文章阅读量
+                articleRedisMobileService.articleView(articleId, userId, os,terminal);
+                String label = article.getArticleLabel();
+                String[] labels = label.split(",");
+                article.setArticleLabel(labels[0]);
+                //重写文章阅读量、点赞量、分享量
+                article.setArticleTotalView(articleRedisMobileService.getArticleView(articleId));
+                article.setArticleTotalLike(articleRedisMobileService.getArticleLike(articleId));
+                article.setArticleTotalShare(articleRedisMobileService.getArticleShare(articleId));
+
+                returnMap.put("article",article);
+                returnMap.put("fileUrl",fileUrl);
+                msg.setMsg("查询成功");
+                msg.setData(returnMap);
+            }else {
+                msg.setMsg("无此数据");
+                msg.setRecode(1);
+            }
         }catch (Exception e){
             e.printStackTrace();
             msg = Message.error();

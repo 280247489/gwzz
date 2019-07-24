@@ -2,6 +2,9 @@ package com.memory;
 
 import com.memory.common.utils.BadWordUtil;
 import com.memory.common.yml.MyRedisConfig;
+import com.memory.entity.jpa.LiveMemoryLoad;
+import com.memory.gwzz.service.LiveMemoryLoadMobileService;
+import com.memory.gwzz.service.LiveMemoryMobileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,6 +12,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @SpringBootApplication
 public class MainApplication extends SpringBootServletInitializer {
@@ -16,11 +20,12 @@ public class MainApplication extends SpringBootServletInitializer {
     @Autowired
     private MyRedisConfig myRedisConfig;
 
-//    @Autowired
-//    private CourseMemoryLoadService courseMemoryLoadService;
+    @Autowired
+    private LiveMemoryLoadMobileService liveMemoryLoadMobileService;
 
-//    @Autowired
-//    private CourseMemoryService courseMemoryService;
+    @Autowired
+    private LiveMemoryMobileService LiveMemoryMobileService;
+
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
@@ -35,7 +40,7 @@ public class MainApplication extends SpringBootServletInitializer {
 
     @PostConstruct
     public void init(){
-//        load_course_memory();
+        load_live_memory();
         load_illegalWord_2_memory();
     }
     /**
@@ -56,6 +61,18 @@ public class MainApplication extends SpringBootServletInitializer {
      */
     public void load_illegalWord_2_memory(){
         BadWordUtil.initWords();
+    }
+
+    /**
+     * 重启服务，内存加载并发缓存课程
+     */
+    public void load_live_memory(){
+        //获取数据加载状态为0的课程
+        List<LiveMemoryLoad> loadList = liveMemoryLoadMobileService.queryAllLiveMemoryLoadByLoadStatus(0);
+        for (LiveMemoryLoad courseMemoryLoad : loadList) {
+            String master_id = courseMemoryLoad.getId();
+            LiveMemoryMobileService.addLiveMemory(master_id);
+        }
     }
 
 }

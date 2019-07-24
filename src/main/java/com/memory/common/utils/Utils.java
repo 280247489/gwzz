@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -162,6 +163,32 @@ public class Utils {
                 return buf.toString();
             }
         }
+    }
+
+    public static Boolean isNotNull(String str){
+        return  str!=null && str.length()>0;
+    }
+
+    public static Boolean isNotNull(Integer str){
+        return  str!=null ;
+    }
+
+    public static Boolean isNotNull(Boolean str){
+        return  str!=null ;
+    }
+
+    public static Boolean isNotNull(MultipartFile file){
+        return file!=null && !file.isEmpty();
+    }
+
+    public static Boolean isNotNull(Object file){
+        return file!=null;
+    }
+
+    public static Boolean isNotNull(List<?> list){ return list!=null && list.size()>0; }
+
+    public static Integer getIntVal(Object obj){
+        return (Utils.isNotNull(obj)&&!("null").equals(obj))?(Integer.valueOf(obj.toString())):0;
     }
 
 

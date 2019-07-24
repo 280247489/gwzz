@@ -2,6 +2,9 @@ package com.memory.gwzz.repository;
 
 import com.memory.entity.jpa.LiveMaster;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 /**
  * @ClassName LiveMasterMobileRepository
@@ -12,4 +15,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface LiveMasterMobileRepository extends JpaRepository<LiveMaster,String> {
     LiveMaster findByCourseIdAndLiveMasterIsOnline(String cid,Integer isOnline);
     LiveMaster findByCourseId(String cid);
+
+    @Query(value = "select  new com.memory.gwzz.model.LiveMaster(l.id,l.liveMasterName ) " +
+            "from LiveMaster l  where 1=1 ")
+    List<com.memory.gwzz.model.LiveMaster> queryLiveMasterOptions();
 }

@@ -7,11 +7,11 @@ import com.memory.entity.jpa.LiveMaster;
 import com.memory.gwzz.redis.service.CourseRedisMobileService;
 import com.memory.gwzz.repository.CourseMobileRepository;
 import com.memory.gwzz.repository.LiveMasterMobileRepository;
-import com.memory.gwzz.service.CourseLikeMobileService;
 import com.memory.gwzz.service.CourseMobileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +30,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "course/mobile")
 public class CourseMobileController extends BaseController {
+
     private final static Logger logger = LoggerFactory.getLogger(CourseMobileController.class);
 
     @Autowired
@@ -41,10 +42,12 @@ public class CourseMobileController extends BaseController {
     private LiveMasterMobileRepository liveMasterMobileRepository;
 
     @Autowired
-    private CourseLikeMobileService courseLikeMobileService;
-
-    @Autowired
     private CourseRedisMobileService courseRedisMobileService;
+
+    @Value(value = "${fileUrl}")
+    private String fileUrl;
+
+
 
 
     /**
@@ -81,6 +84,7 @@ public class CourseMobileController extends BaseController {
                 returnMap.put("courselist",courseList);
                 returnMap.put("isLive",isLive);
                 returnMap.put("isLike",isCourseLike);
+                returnMap.put("fileUrl",fileUrl);
                 msg.setRecode(0);
                 msg.setMsg("成功");
                 msg.setData(returnMap);
@@ -97,7 +101,7 @@ public class CourseMobileController extends BaseController {
     }
 
     /**
-     * 根据关键字查询专辑下的文章
+     * 根据关键字查询专辑下的课程
      * URL:192.168.1.185:8081/gwzz/course/mobile/listCourseByKey
      * @param start
      * @param limit
@@ -117,8 +121,52 @@ public class CourseMobileController extends BaseController {
                 courseRedisMobileService.searchCourse(userId,strKey);
             }
             Map<String,Object> returnMap = courseMobileService.fandCourseByKey(albumId, start, limit, strKey);
+//            Map<String,Object> returnMap = new HashMap<>();
+//            returnMap.put("courseList",courseMobileService.fandCourseByKey(albumId, start, limit, strKey));
+//            returnMap.put("fileUrl",fileUrl);
+
             msg.setMsg("查询成功");
             msg.setData(returnMap);
+        }catch (Exception e){
+            e.printStackTrace();
+            msg = Message.error();
+            logger.error("异常信息");
+        }
+        return msg;
+    }
+
+    /**
+     * 根据Id查询课程详情分享
+     * URL:192.168.1.185:8081/gwzz/course/mobile/shareCourseById
+     * @param cid String 唯一标识ID
+     * @param os 操作系统 0 ios， 1 android
+     * @return
+     */
+    @RequestMapping(value = "shareCourseById",method = RequestMethod.POST)
+    public Message shareCourseById(@RequestParam String cid,@RequestParam Integer os){
+        try {
+            String uid = "wx";
+            Integer terminal = 1;
+            msg = Message.success();
+            Course course = courseMobileRepository.findByIdAndCourseOnline(cid,1);
+            if (course!=null){
+                courseRedisMobileService.courseView(cid,uid,os,terminal);
+                //重写课程阅读量、点赞量、分享量
+                String id = course.getId();
+                course.setCourseTotalView(courseRedisMobileService.getCourseView(id));
+                course.setCourseTotalLike(courseRedisMobileService.getCourseLike(id));
+                course.setCourseTotalShare(courseRedisMobileService.getCourseShare(id));
+
+                Map<String,Object> returnMap = new HashMap<>();
+                returnMap.put("course",course);
+                returnMap.put("fileUrl",fileUrl);
+                msg.setRecode(0);
+                msg.setMsg("成功");
+                msg.setData(returnMap);
+            }else {
+                msg.setRecode(2);
+                msg.setMsg("无此数据或课程已被下线！");
+            }
         }catch (Exception e){
             e.printStackTrace();
             msg = Message.error();

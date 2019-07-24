@@ -67,8 +67,8 @@ public class CourseCommentMobileServiceImpl implements CourseCommentMobileServic
             courseComment.setCommentCreateTime(date);
             courseComment.setCommentTotalLike(0);
 
-//            course.setCourseTotalComment(course.getCourseTotalComment()+1);
-            course.setCourseTotalComment(this.getCommentCount(courseId));
+            course.setCourseTotalComment(course.getCourseTotalComment()+1);
+//            course.setCourseTotalComment(this.getCommentCount(courseId));
         }
 
         daoUtils.save(course);

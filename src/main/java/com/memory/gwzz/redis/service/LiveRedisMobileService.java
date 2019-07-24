@@ -22,5 +22,14 @@ public interface LiveRedisMobileService {
 
     int getLiveShare(String liveMasterId);
 
+
+    //获取live:comment:的key
+    String getKey(String uuid);
+
+    //获取redis hash key slave 的值
     Object getSlaveById(String uuid);
+
+    //获取redis hash key master 的值
+    Object getMasterNameById(String uuid);
+
 }

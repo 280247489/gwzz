@@ -64,7 +64,7 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
             articleComment.setCommentCreateTime(new Date());
             articleComment.setCommentTotalLike(0);
 
-            article.setArticleTotalComment(articleCommentMobileRepository.countAllByArticleId(articleId));
+            article.setArticleTotalComment(article.getArticleTotalComment()+1);
         }
 
         daoUtils.save(article);

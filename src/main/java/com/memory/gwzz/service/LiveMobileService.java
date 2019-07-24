@@ -1,5 +1,6 @@
 package com.memory.gwzz.service;
 
+import com.memory.entity.jpa.LiveMaster;
 import com.memory.gwzz.model.LiveSlave;
 
 import java.util.List;
@@ -12,4 +13,8 @@ import java.util.List;
  */
 public interface LiveMobileService {
     List<LiveSlave> queryLiveSlaveList(String id);
+
+    LiveMaster getLiveMasterById(String id);
+
+    List<com.memory.gwzz.model.LiveMaster> queryLiveMasterOptions();
 }

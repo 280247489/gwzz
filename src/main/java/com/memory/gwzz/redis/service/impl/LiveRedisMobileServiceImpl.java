@@ -221,4 +221,15 @@ public class LiveRedisMobileServiceImpl implements LiveRedisMobileService {
         return redisUtil.hget(keyHash,"slave");
     }
 
+    @Override
+    public Object getMasterNameById(String uuid) {
+        String keyHash = getKey(uuid);
+        return redisUtil.hget(keyHash,"master");
+    }
+
+    @Override
+    public String getKey(String uuid){
+        return  LIVECOMMENT + uuid;
+    }
+
 }

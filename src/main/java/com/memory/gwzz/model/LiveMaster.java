@@ -100,4 +100,10 @@ public class LiveMaster {
         this.liveMasterStarttime = liveMasterStarttime;
         this.liveNumber = liveNumber;
     }
+
+
+    public LiveMaster(String id, String liveMasterName) {
+        this.id = id;
+        this.liveMasterName = liveMasterName;
+    }
 }

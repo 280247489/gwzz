@@ -168,7 +168,7 @@ public class CourseRedisMobileServiceImpl implements CourseRedisMobileService {
         Object v3 = null;
         try {
             v1 = redisUtil.get(COURSEVIEW + courseId);
-            v2 = redisUtil.get(ALBUMVIEWMANAGER + courseId);
+            v2 = redisUtil.get(COURSEVIEWMANAGER + courseId);
             if (v1==null){
                 Course course = (Course) daoUtils.getById("Course",courseId);
                 redisUtil.set(COURSEVIEW + courseId,course.getCourseTotalView()+"");
