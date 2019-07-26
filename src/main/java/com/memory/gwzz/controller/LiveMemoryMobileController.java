@@ -1,12 +1,16 @@
 package com.memory.gwzz.controller;
 
 
+import com.memory.common.controller.BaseController;
+import com.memory.common.utils.Message;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.common.utils.Utils;
 import com.memory.entity.jpa.LiveMaster;
 import com.memory.gwzz.service.LiveMemoryMobileService;
 import com.memory.gwzz.service.LiveMobileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value="courseMemory/mobile")
-public class LiveMemoryMobileController {
+public class LiveMemoryMobileController extends BaseController {
+    private final static Logger logger = LoggerFactory.getLogger(LiveMemoryMobileController.class);
 
     @Autowired
     private LiveMemoryMobileService liveMemoryMobileService;
@@ -29,84 +34,84 @@ public class LiveMemoryMobileController {
 
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Result addMemory(String masterId){
-        Result result = new Result();
+    public Message addMemory(String masterId){
         try{
-
+            msg = Message.success();
             LiveMaster master = liveMobileService.getLiveMasterById(masterId);
             if(Utils.isNotNull(master)){
                 liveMemoryMobileService.addLiveMemory(masterId);
-                result = ResultUtil.success( "课程缓存成功!");
+                msg.setRecode(0);
+                msg.setMsg("课程缓存成功!");
             }else {
-                result = ResultUtil.error(-1,"非法直播!" );
+                msg.setRecode(1);
+                msg.setMsg("非法直播!");
             }
-
-
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
         }
-        return result;
+        return msg;
     }
 
     @RequestMapping(value = "/get", method = RequestMethod.POST)
-    public Result getCourseExtById(String courseId){
-        Result result = new Result();
+    public Message getCourseExtById(String courseId){
         try {
-            result = ResultUtil.success( liveMemoryMobileService.getLiveSlaveById(courseId));
-
+            msg = Message.success();
+            msg.setData(liveMemoryMobileService.getLiveSlaveById(courseId));
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
         }
-        return result;
+        return msg;
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public Result clear(String masterId){
-        Result result = new Result();
+    public Message clear(String masterId){
         try {
+            msg = Message.success();
             if(Utils.isNotNull(masterId)){
                 liveMemoryMobileService.clear(masterId);
-                result = ResultUtil.success( "移除"+masterId+"缓存成功");
+                msg.setRecode(0);
+                msg.setMsg("移除"+masterId+"缓存成功");
             }else{
-                result = ResultUtil.error(-1,"非法id");
+                msg.setRecode(1);
+                msg.setMsg("非法id");
             }
 
-
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
         }
-        return result;
+        return msg;
     }
 
     @RequestMapping(value = "/clearAll", method = RequestMethod.POST)
-    public Result clearAll(){
-        Result result = new Result();
+    public Message clearAll(){
         try {
+            msg = Message.success();
             liveMemoryMobileService.clearAll();
-            result = ResultUtil.success( "移除全部缓存成功");
+            msg.setRecode(0);
+            msg.setMsg("移除全部缓存成功");
 
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
         }
-        return result;
+        return msg;
     }
 
 
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
-    public Result findAll(){
-        Result result = new Result();
+    public Message findAll(){
         try{
-            result = ResultUtil.success(liveMemoryMobileService.findAll());
+            msg = Message.success();
+            msg.setRecode(0);
+            msg.setData(liveMemoryMobileService.findAll());
         }catch (Exception e){
+            msg= Message.error();
             e.printStackTrace();
         }
-        return result;
+        return msg;
     }
-
-
-
-
-
-
 
 }

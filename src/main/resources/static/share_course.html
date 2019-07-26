@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title></title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="icon" href="images/favicon.ico" type="image/png" />
+    <link rel="stylesheet" href="css/APlayer.min.css">
+    <link rel="stylesheet" href="css/course.css">
+    <script src="js/jquery.min.js" type="text/javascript"></script>
+    <script src="js/APlayer.min.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            var $_GET = (function () {
+                var url = window.document.location.href.toString();
+                var u = url.split("?");
+                if (typeof (u[1]) == "string") {
+                    u = u[1].split("&");
+                    var get = {};
+                    for (var i in u) {
+                        var j = u[i].split("=");
+                        get[j[0]] = j[1];
+                    }
+                    return get;
+                } else {
+                    return {};
+                }
+            })();
+
+            document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+                WeixinJSBridge.call('hideOptionMenu');
+            });
+            var _id = $_GET['id'];
+            if (_id == '' || _id == null || _id == undefined) {
+                alert('链接有误！');
+                WeixinJSBridge.call('closeWindow');
+            }
+            var _os = '1';
+            var api = 'http://39.97.232.184:18081/gwzzapp/course/mobile/shareCourseById';
+            var _server = '';
+            var u = navigator.userAgent;
+            var _title = '';
+            var _author = '李老师';
+            var _audio = 'http://image.houaihome.com/course/audio/201811/731d360e6cbf4342ab157b90e668fb06.mp3';
+            if (u.match(/MicroMessenger/i) != 'MicroMessenger') {
+            	window.location.href =
+            		"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbf553fc8992a2e86&redirect_uri=http%3A%2F%2Ftmanager.houaihome.com";
+            	return false;
+            }
+            if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+                var device = 'http://android.myapp.com/myapp/detail.htm?apkName=com.zjst.houai&ADTAG=mobile'
+            } else if (u.indexOf('iPhone') > -1) {
+                var device = 'https://itunes.apple.com/cn/app/zhong-jing-sheng-tian/id1288452365?mt=8'
+                _os = '0';
+            } else if (u.indexOf('Windows Phone') > -1) {
+                var device = 'javascript:alert("不支持的系统！")';
+            } else {
+                var device = 'javascript:alert("不支持的系统！")';
+            }
+
+            var arr_api = {
+                cid: _id,
+                os: _os
+            }
+
+            $.ajax({
+                url: api,
+                type: 'POST',
+                data: arr_api,
+                async: false,
+                cache: false,
+                dataType: "json",
+                timeout: 50000,
+                beforeSend: function () {},
+                success: function (data) {
+                    console.log(data);
+                    if (data.recode == '0') {
+                        var _ado_url;
+                        if (data.data.course.courseAudioUrl == undefined) {} else {
+                            _ado_url = data.data.course.courseAudioUrl.substr(0, 4);
+                        }
+                        if (_ado_url == 'http') {
+                            _audio = data.data.course.courseAudioUrl;
+                        } else {
+                            _audio = data.data.fileUrl + data.data.course.courseAudioUrl
+                        }
+                        _title = data.data.course.courseTitle;
+                        $('.header h1').html(_title);
+                        $('.content').html(data.data.course.courseContent);
+                        $('.view').html(data.data.course.courseTotalView + '&nbsp;阅读');
+                        $('.time').html('发布于&nbsp;' + data.data.course.courseReleaseTime);
+                    } else {
+                        console.log(data);
+                        console.log('出错了');
+                    }
+                },
+                complete: function (data) {},
+                error: function (data) {
+                    console.log(data);
+                    console.log('出错了!');
+                }
+            }, "json");
+            var ap = new APlayer({
+                element: document.getElementById('player'),
+                autoplay: false,
+                music: {
+                    title: _title,
+                    author: _author,
+                    url: _audio,
+                    pic: 'images/play.png'
+                }
+            });
+            ap.init();
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1></h1>
+            <h3></h3>
+            <img class="bf" src="images/bf.png" />
+        </div>
+        <div class="statistics">
+            <span class="view"></span>
+            <span class="time"></span>
+        </div>
+        <div id="player" class="aplayer">
+            <div class="aplayer-pic"><img src="images/play.png">
+                <div class="aplayer-button aplayer-pause aplayer-hide"><i class="demo-icon aplayer-icon-pause"></i>
+                </div>
+                <div class="aplayer-button aplayer-play"><i class="demo-icon aplayer-icon-play"></i></div>
+            </div>
+            <div class="aplayer-info">
+                <div class="aplayer-music"><span class="aplayer-title"></span><span class="aplayer-author"> - </span>
+                </div>
+                <div class="aplayer-lrc">
+                    <div class="aplayer-lrc-contents" style="transform: translateY(0);"></div>
+                </div>
+                <div class="aplayer-controller">
+                    <div class="aplayer-bar-wrap">
+                        <div class="aplayer-bar">
+                            <div class="aplayer-loaded" style="width: 13.8748%;"></div>
+                            <div class="aplayer-played" style="width: 0"><span class="aplayer-thumb"></span></div>
+                        </div>
+                    </div>
+                    <div class="aplayer-time"> - <span class="aplayer-ptime">00:00</span> / <span
+                            class="aplayer-dtime">00:59</span>
+                        <div class="aplayer-volume-wrap"><i class="demo-icon aplayer-icon-volume-down"></i>
+                            <div class="aplayer-volume-bar-wrap">
+                                <div class="aplayer-volume-bar">
+                                    <div class="aplayer-volume" style="height: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+        </div>
+    </div>
+
+</body>
+
+</html>

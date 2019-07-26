@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title></title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="icon" href="images/favicon.ico" type="image/png" />
+    <link rel="stylesheet" href="css/article.css">
+    <script src="js/jquery.min.js" type="text/javascript"></script>
+    <script>
+        jQuery(document).ready(function () {
+            var $_GET = (function () {
+                var url = window.document.location.href.toString();
+                var u = url.split("?");
+                if (typeof (u[1]) == "string") {
+                    u = u[1].split("&");
+                    var get = {};
+                    for (var i in u) {
+                        var j = u[i].split("=");
+                        get[j[0]] = j[1];
+                    }
+                    return get;
+                } else {
+                    return {};
+                }
+            })();
+
+            document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+                WeixinJSBridge.call('hideOptionMenu');
+            });
+            var _id = $_GET['id'];
+            if (_id == '' || _id == null || _id == undefined) {
+                alert('链接有误！');
+                WeixinJSBridge.call('closeWindow');
+            }
+            var _os = '1';
+            var api = 'http://39.97.232.184:18081/gwzzapp/mobile/shareArticleById';
+            var _server = '';
+            var u = navigator.userAgent;
+            if (u.match(/MicroMessenger/i) != 'MicroMessenger') {
+            	window.location.href =
+            		"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbf553fc8992a2e86&redirect_uri=http%3A%2F%2Ftmanager.houaihome.com";
+            	return false;
+            }
+            if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+                var device = 'http://android.myapp.com/myapp/detail.htm?apkName=com.zjst.houai&ADTAG=mobile'
+            } else if (u.indexOf('iPhone') > -1) {
+                var device = 'https://itunes.apple.com/cn/app/zhong-jing-sheng-tian/id1288452365?mt=8'
+                _os = '0';
+            } else if (u.indexOf('Windows Phone') > -1) {
+                var device = 'javascript:alert("不支持的系统！")';
+            } else {
+                var device = 'javascript:alert("不支持的系统！")';
+            }
+
+            var arr_api = {
+                articleId: _id,
+                os: _os
+            }
+
+            $.ajax({
+                url: api,
+                type: 'POST',
+                data: arr_api,
+                async: false,
+                cache: false,
+                dataType: "json",
+                timeout: 50000,
+                beforeSend: function () {},
+                success: function (data) {
+                    console.log(data);
+                    if (data.recode == '0') {
+                        _title = data.data.article.articleTitle;
+                        $('.header h1').html(_title);
+                        $('.content').html(data.data.article.articleContent);
+                        $('.view').html(data.data.article.articleTotalView + '&nbsp;阅读');
+                        $('.time').html('发布于&nbsp;' + data.data.article.articleReleaseTime);
+                    } else {
+                        console.log(data);
+                        console.log('出错了');
+                    }
+                },
+                complete: function (data) {},
+                error: function (data) {
+                    console.log(data);
+                    console.log('出错了!');
+                }
+            }, "json");
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1></h1>
+            <h3></h3>
+        </div>
+        <div class="statistics">
+            <span class="view"></span>
+            <span class="time"></span>
+        </div>
+        <div class="content">
+
+        </div>
+    </div>
+
+</body>
+
+</html>

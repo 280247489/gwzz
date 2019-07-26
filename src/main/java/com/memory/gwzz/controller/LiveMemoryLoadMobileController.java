@@ -1,11 +1,15 @@
 package com.memory.gwzz.controller;
 
 
+import com.memory.common.controller.BaseController;
+import com.memory.common.utils.Message;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.entity.jpa.LiveMemoryLoad;
 import com.memory.gwzz.service.LiveMemoryLoadMobileService;
 import com.memory.gwzz.service.LiveMobileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,9 +26,8 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value="liveMemoryLoad/mobile")
-public class LiveMemoryLoadMobileController {
-    
-
+public class LiveMemoryLoadMobileController extends BaseController {
+    private final static Logger logger = LoggerFactory.getLogger(LiveMemoryLoadMobileController.class);
 
     @Autowired
     private LiveMemoryLoadMobileService liveMemoryLoadMobileService;
@@ -33,9 +36,9 @@ public class LiveMemoryLoadMobileController {
     private LiveMobileService liveMobileService;
 
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
-    public Result findAll(){
-        Result result = new Result();
+    public Message findAll(){
         try {
+            msg = Message.success();
             List<Map<String,Object>> returnMap = new ArrayList<Map<String,Object>>();
             Map<String ,Object> mapper = new HashMap<String ,Object>();
             //List<LiveMaster> options = liveMobileService.queryListMasterOptions();
@@ -58,15 +61,13 @@ public class LiveMemoryLoadMobileController {
                 returnMap.add(map);
 
             }
-            result = ResultUtil.success(returnMap);
+            msg.setRecode(0);
+            msg.setData(returnMap);
         }catch (Exception e){
+            msg = Message.error();
             e.printStackTrace();
         }
-        return result;
+        return msg;
     }
-
-
-
-
 
 }

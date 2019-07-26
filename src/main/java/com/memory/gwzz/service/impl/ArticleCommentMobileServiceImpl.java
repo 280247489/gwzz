@@ -56,7 +56,7 @@ public class ArticleCommentMobileServiceImpl implements ArticleCommentMobileServ
                 ArticleComment articleComment1 = this.getByPid(commentParentId);
                 articleComment.setCommentRootId(articleComment1.getCommentRootId());
                 articleComment.setCommentParentId(commentParentId);
-                articleComment.setCommentParentUserName("@"+articleComment.getUserName());
+                articleComment.setCommentParentUserName("@"+articleComment1.getUserName());
                 articleComment.setCommentParentContent(articleComment1.getCommentContentReplace());
             }
             articleComment.setCommentContent(content);

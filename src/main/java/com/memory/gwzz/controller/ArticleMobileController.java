@@ -51,8 +51,7 @@ public class ArticleMobileController extends BaseController {
     @RequestMapping(value = "findArticleByKey",method = RequestMethod.POST)
     public Message findArticleByKey(@RequestParam Integer start, @RequestParam Integer limit, @RequestParam String key){
         try {
-            Map<String,Object> returnMap = new HashMap<>();
-            returnMap.put("articleList",articleMobileService.findArticleByKey(start, limit, key));
+            Map<String,Object> returnMap = articleMobileService.findArticleByKey(start, limit, key);
             returnMap.put("fileUrl",fileUrl);
             msg = Message.success();
             msg.setMsg("查询成功");

@@ -49,7 +49,7 @@ public class UserMobileController extends BaseController {
     private UserMobileRepository userMobileRepository;
 
     /**
-     * 获取短信验证码
+     * 获取短信验证码 注册
      * URL:192.168.1.185:8081/gwzz/user/mobile/getSMSCodeByRegister
      * @param phone
      * @return
@@ -70,7 +70,7 @@ public class UserMobileController extends BaseController {
                     Integer smsSum = Integer.valueOf(object.toString());
                     if (smsSum>=5){
                         msg.setRecode(1);
-                        msg.setMsg("获取次数超出");
+                        msg.setMsg("获取次数超出！");
                     }else {
                         String msgId = userMobileService.getSMSCode(phone);
                         msg.setRecode(0);
@@ -92,7 +92,7 @@ public class UserMobileController extends BaseController {
     }
 
     /**
-     * 获取短信验证码
+     * 获取短信验证码 忘记密码
      * URL:192.168.1.185:8081/gwzz/user/mobile/getSMSCodeByUpdPwd
      * @param phone
      * @return

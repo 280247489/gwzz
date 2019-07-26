@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<title></title>
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="icon" href="images/favicon.ico" type="image/png" />
+	<script src="js/jquery.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/live.css">
+	<style>
+		.bg {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			background: url(./images/bg.png) 0 0 repeat;
+			z-index: 22
+		}
+	</style>
+	<script type="text/javascript">
+		jQuery(document).ready(function () {
+			var $_GET = (function () {
+				var url = window.document.location.href.toString();
+				var u = url.split("?");
+				if (typeof (u[1]) == "string") {
+					u = u[1].split("&");
+					var get = {};
+					for (var i in u) {
+						var j = u[i].split("=");
+						get[j[0]] = j[1];
+					}
+					return get;
+				} else {
+					return {};
+				}
+			})();
+			document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+				WeixinJSBridge.call('hideOptionMenu');
+			});
+			var _id = $_GET['id'];
+			if (_id == '' || _id == null || _id == undefined) {
+				alert('链接有误！');
+				WeixinJSBridge.call('closeWindow');
+			}
+			var _os = '1';
+			var api = 'http://39.97.232.184:18081/gwzzapp/live/mobile/getLiveById';
+			var _server = '';
+			var u = navigator.userAgent;
+			if (u.match(/MicroMessenger/i) != 'MicroMessenger') {
+				window.location.href =
+					"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbf553fc8992a2e86&redirect_uri=http%3A%2F%2Ftmanager.houaihome.com";
+				return false;
+			}
+			if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+				var device = 'http://android.myapp.com/myapp/detail.htm?apkName=com.zjst.houai&ADTAG=mobile'
+			} else if (u.indexOf('iPhone') > -1) {
+				var device = 'https://itunes.apple.com/cn/app/zhong-jing-sheng-tian/id1288452365?mt=8'
+				_os = '0';
+			} else if (u.indexOf('Windows Phone') > -1) {
+				var device = 'javascript:alert("不支持的系统！")';
+			} else {
+				var device = 'javascript:alert("不支持的系统！")';
+			}
+
+			var ht = document.documentElement.clientHeight;
+			$('.popupimg').css('max-height', ht);
+			topage();
+			function _change() {
+				sessionStorage.setItem("view", "1");
+				$('.bg').animate({
+					marginTop: "-240%"
+				}, 2048);
+			}
+			function topage() {
+				var arr_api = {
+					id: _id,
+					openId: 'wx',
+					terminal: '1',
+					os: _os
+				}
+				$.ajax({
+					url: api,
+					type: 'POST',
+					data: arr_api,
+					async: false,
+					cache: false,
+					dataType: "json",
+					timeout: 50000,
+					beforeSend: function () {},
+					success: function (data) {
+						console.log(data);
+						if (data.recode == '0') {
+							if (data.data !== '' && data.data !== 'notExist' && data.data !==
+								null) {
+								$('title').html(data.data.master);
+								var _content = data.data.slave;
+								$.each(_content, function (i, n) {
+									if (n.logo == '') {
+										var avatar = 'images/avatar.png';
+									} else {
+										var avatar = n.logo;
+									}
+									var _img_url;
+									var _ado_url;
+									if (n.img == undefined) {} else {
+										_img_url = n.img.substr(0, 4);
+									}
+									if (_img_url == 'http') {
+										var this_img_url = n
+											.img;
+									} else {
+										var this_img_url = _server + n
+											.img;
+									}
+									if (n.audio == undefined) {} else {
+										_ado_url = n.audio.substr(0, 4);
+									}
+									if (_ado_url == 'http') {
+										var this_ado_url = n.audio;
+									} else {
+										var this_ado_url = _server + n
+											.audio;
+									}
+									if (n.type == '1') {
+										$('.content').append(
+											'<div  class="msg mw"><div class="h"><img src="' +
+											avatar +
+											'" /></div><div class="fl"><h3 class="n">' +
+											n.nickName +
+											'</h3><div class="c w">' + n
+											.words +
+											'<span class="t"></span></div></div></div>'
+										);
+									} else if (n.type == '2') {
+										var block = n.audioTime * 2;
+										$('.content').append(
+											'<div  class="msg ma"><div class="h"><img src="' +
+											avatar +
+											'" /></div><div class="fl"><h3 class="n">' +
+											n.nickName +
+											'</h3><div class="c a"><audio><source src="' +
+											this_ado_url +
+											'" type="audio/mp3"></audio><div class="audio-left"><img src="./images/sd.png" class="audioPlayer" /></div><div class="audio-right"><span class="audio_times">' +
+											n.audioTime +
+											' "</span><span class="time_block" style="width:' +
+											block +
+											'px"></span></div><span class="t"></span></div><span class="r p"></span></div></div>'
+										);
+									} else if (n.type == '3') {
+										$('.content').append(
+											'<div class="msg mi "><div class="h"><img src="' +
+											avatar +
+											'" /></div><div class="fl"><h3 class="n">' +
+											n.nickName +
+											'</h3><div class="c i"><a href="javascript:void(0);" rel="popuprel"  title="" class="popup"><img class="" src="' +
+											this_img_url +
+											'" ></a><span class="t"></span></div></div></div>'
+										);
+									} else {}
+								});
+							} else {
+								alert('直播已关闭！');
+								WeixinJSBridge.call('closeWindow');
+								return false;
+							}
+						} else {
+							console.log(data);
+							console.log('出错了');
+						}
+					},
+					complete: function (data) {
+						var _view = sessionStorage.getItem('view');
+						if (_view == null || _view == '' || _view == undefined) {
+							setTimeout(_change, 888);
+						} else if (_view == '1') {
+							$('.bg').hide();
+						} else {
+							$('.bg').hide();
+						}
+					},
+					error: function (data) {
+						console.log(data);
+						console.log('出错了!');
+					}
+				}, "json");
+			}
+		});
+	</script>
+</head>
+
+<body>
+	<div class="bg"></div>
+	<div class="header">
+		<div class="dl">
+			<a href="http://down.houaihome.com/download/"></a>
+		</div>
+	</div>
+	<div class="content" data-open-id=''>
+	</div>
+	<div class="bottom"></div>
+	<div class="popupbox" id="popuprel">
+		<img class="popupimg" src="">
+	</div>
+	<div id="fade"></div>
+	<script type="text/javascript">
+		jQuery(document).ready(function () {
+			$('.content').on('click', '.ma .a', function () {
+				audio = $(this).find('audio');
+				initAudioEvent(audio);
+			});
+
+			function initAudioEvent(curr_audio) {
+				var this_offset = curr_audio.parent().parent().parent().offset().top;
+				var this_scroll = $(window).scrollTop();
+				var this_ht = $(window).height()
+				audio = curr_audio.get(0);
+				var curr = $('audio').index(audio); //当前序号
+				if (this_scroll + this_ht < this_offset + 76) {
+					var _offset = this_offset + 246 - this_ht;
+					$('body,html').animate({
+						scrollTop: _offset
+					}, 300);
+				} else if (this_scroll > this_offset) {
+					console.log('在屏幕上方');
+				}
+				var total = $('.content').find('audio').length;
+
+				function play_next(curr) {
+					if (curr >= total - 1) {
+						console.log('没了');
+						return false;
+					} else {
+						next = $('.content').find('audio').eq(curr + 1);
+						next_audio = next.get(0);
+						initAudioEvent(next);
+					}
+				}
+
+				$('.content').find('audio').not(curr_audio).each(function () {
+					var _audio = $(this).get(0);
+					_audio.currentTime = 0;
+					if (_audio.paused) {} else {
+						_audio.pause();
+						$(this).parent().find('.audioPlayer').attr('src', './images/sd.png');
+					}
+				});
+
+				if (audio.paused) {
+					WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
+						audio.play();
+					});
+				} else {
+					audio.pause();
+					audio.currentTime = 0;
+					curr_audio.parent().find('.audioPlayer').attr('src', './images/sd.png');
+				}
+
+
+				// 监听播放完成事件
+				audio.addEventListener('ended', function () {
+					audio.currentTime = 0;
+					$(audio).parent().find('.audioPlayer').attr('src', './images/sd.png');
+					play_next(curr);
+				}, false);
+				audio.addEventListener('error', function () {
+					WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
+						audio.pause();
+						audio.currentTime = 0;
+						audio.load();
+						audio.play();
+					});
+				}, false);
+
+
+				audio.addEventListener("waiting", function () {
+					$(audio).parent().find('.audioPlayer').attr('src', './images/load.gif');
+					curr_audio.parent().parent().find('.p').removeClass('r');
+				});
+				audio.addEventListener("playing", function () {
+					$(audio).parent().find('.audioPlayer').attr('src', './images/sd.gif');
+					curr_audio.parent().parent().find('.p').removeClass('r');
+				});
+			}
+			$('.content').on('click', 'a.popup', function () {
+				var popupid = $(this).attr('rel');
+				var img = $(this).find('img').attr('src');
+				$('.popupimg').attr("src", img);
+				$('#' + popupid).fadeIn();
+				$('#fade').css({
+					'filter': 'alpha(opacity=70)'
+				}).fadeIn(100);
+				var popuptopmargin = ($('#' + popupid).height()) / 2;
+				var popupleftmargin = ($('#' + popupid).width()) / 2;
+				$('#' + popupid).css({
+					'margin-top': -popuptopmargin,
+					'margin-left': -popupleftmargin
+				});
+			});
+			$('#fade, #popuprel').click(function () {
+				$('#fade , #popuprel , #popuprel2 , #popuprel3').fadeOut(100);
+				return false;
+			});
+		});
+	</script>
+</body>
+
+</html>

@@ -66,8 +66,11 @@ public class LiveMobileController extends BaseController {
             String keyCourseViewComment = LIVECOMMENT + id;
             //内存
             if(LIVEMAP.containsKey(keyCourseViewComment)){
-                System.out.println("内存==============================="+keyCourseViewComment);
-                msg.setData(LIVEMAP.get(keyCourseViewComment));
+                System.out.println("内存=============================="+keyCourseViewComment);
+                Map<String,Object> map = (Map<String, Object>) LIVEMAP.get(keyCourseViewComment);
+                map.put("fileUrl",fileUrl);
+//                LIVEMAP.get(keyCourseViewComment);
+                msg.setData(map);
             }else {
                 Object object = liveRedisMobileService.getSlaveById(id);
                 //判断redis中是否含有此次课程数据
@@ -79,7 +82,7 @@ public class LiveMobileController extends BaseController {
                         map.put("slave", JSON.parse(object.toString()));
                         map.put("fileUrl",fileUrl);
                         liveRedisMobileService.liveView(id, openId, terminal, os);
-                        System.out.println("redis==============================="+keyCourseViewComment);
+                        System.out.println("redis=============================="+keyCourseViewComment);
                         msg.setData(map);
                     }else {
                         msg.setRecode(1);
@@ -91,7 +94,7 @@ public class LiveMobileController extends BaseController {
                     if(master!=null){
                         //上线
                         if(master.getLiveMasterIsOnline() ==1){
-                            System.out.println("redis没有课程数据，数据库中有课程数据，数据库的课程是上线状态,同步db2redis=============================="+keyCourseViewComment);
+                            System.out.println("redis没有课程数据，数据库中有课程数据，数据库的课程是上线状态,同步db2redis============================="+keyCourseViewComment);
                             List<LiveSlave> list = liveMobileService.queryLiveSlaveList(id);
                             com.memory.gwzz.model.LiveSlave liveSlave = new    com.memory.gwzz.model.LiveSlave();
                             List<Map<String,Object>> showList = liveSlave.refactorData(list);
@@ -107,7 +110,7 @@ public class LiveMobileController extends BaseController {
                             msg.setData(map);
                             //下线
                         }else {
-                            System.out.println("redis没有课程数据，数据库中有数据，但是课程是下线状态=============================="+keyCourseViewComment);
+                            System.out.println("redis没有课程数据，数据库中有数据，但是课程是下线状态============================="+keyCourseViewComment);
                             redisUtil.hset(keyCourseViewComment,"master","notExist");
                             redisUtil.hset(keyCourseViewComment,"slave",JSON.toJSONString("notExist"));
                             msg.setRecode(1);
@@ -144,8 +147,10 @@ public class LiveMobileController extends BaseController {
             String keyCourseViewComment = LIVECOMMENT + id;
             //内存
             if(LIVEMAP.containsKey(keyCourseViewComment)){
-                System.out.println("内存==============================="+keyCourseViewComment);
-                msg.setData(LIVEMAP.get(keyCourseViewComment));
+                System.out.println("内存==========================="+keyCourseViewComment);
+                Map<String,Object> map = (Map<String, Object>) LIVEMAP.get(keyCourseViewComment);
+                map.put("fileUrl",fileUrl);
+                msg.setData(map);
             }else {
                 Object object = liveRedisMobileService.getSlaveById(id);
                 //判断redis中是否含有此次课程数据
