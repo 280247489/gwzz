@@ -269,7 +269,7 @@ public class ArticleCmsController {
     private String getLogo( MultipartFile titleFile, String uuid, String article_logo, String prefix) {
         if (!titleFile.isEmpty()) {
             String fileName = FileUtils.getImgFileName(prefix);
-            String customCmsPath = FileUtils.getCustomCmsPath("live",uuid);
+            String customCmsPath = FileUtils.getCustomCmsPath("article",uuid);
             //上传标题图
             article_logo =   FileUtils.upload(titleFile,FileUtils.getLocalPath(),customCmsPath,fileName);
 

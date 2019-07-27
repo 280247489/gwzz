@@ -621,6 +621,8 @@ public class CourseCmsController {
 
             if(Utils.isNotNull(course)){
                 courseRedisCmsService.setCourseRedisViewTotal(courseId,changeNum);
+                //获取专辑总的阅读数 同时 同步 到redis中 (课程修改管理阅读数，直播阅读数发生改变，需要同步)
+                albumRedisCmsService.getAlbumAllViewTotal(course.getAlbumId());
 
                 result = ResultUtil.success(changeNum);
             }else {

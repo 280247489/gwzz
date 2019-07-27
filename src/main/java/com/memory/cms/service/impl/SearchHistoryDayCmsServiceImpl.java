@@ -47,4 +47,30 @@ public class SearchHistoryDayCmsServiceImpl implements SearchHistoryDayCmsServic
         return  daoUtils.findBySQL(sb.toString(),map,page,null);
     }
 
+
+
+    @Override
+    public int querySearchHistoryDayCountByQue(String startTime, String endTime, String searchType) {
+        StringBuffer sb = new StringBuffer();
+        Map<String,Object> map = new HashMap<String, Object>();
+        sb.append("select count(*) from ( ");
+        sb.append(" select count(*),sum(s.sums) as total_sum from search_history_day  s  where 1=1 ");
+
+        if(Utils.isNotNull(searchType)){
+            sb.append(" AND s.search_type = :searchType");
+            map.put("searchType",searchType);
+        }
+
+        sb.append(" AND s.time between :startTime and :endTime ");
+        map.put("startTime",startTime);
+        map.put("endTime",endTime);
+
+        sb.append(" GROUP BY s.key_word");
+        sb.append(" ) T");
+        System.out.println("sql ============="+sb.toString());
+
+        return  daoUtils.getTotalBySQL(sb.toString(),map);
+    }
+
+
 }

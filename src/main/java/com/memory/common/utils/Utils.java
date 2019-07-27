@@ -41,6 +41,10 @@ public class Utils {
     }
 
 
+    public static void main(String[] args) {
+        System.out.println(generateUUIDs());
+    }
+
     public static String getShortUUID() {
         StringBuffer shortBuffer = new StringBuffer();
         String uuid = UUID.randomUUID().toString().replace("-", "");

@@ -15,4 +15,5 @@ public interface SearchHistoryDayCmsService {
 
      List querySearchHistoryDayByQue(int pageIndex, int limit, String startTime, String endTime, String searchType);
 
+    int querySearchHistoryDayCountByQue(String startTime, String endTime, String searchType);
 }

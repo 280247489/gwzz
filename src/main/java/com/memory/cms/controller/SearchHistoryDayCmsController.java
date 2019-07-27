@@ -1,6 +1,7 @@
 package com.memory.cms.controller;
 
 import com.memory.cms.service.SearchHistoryDayCmsService;
+import com.memory.common.utils.PageResult;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import org.slf4j.Logger;
@@ -28,13 +29,15 @@ public class SearchHistoryDayCmsController {
 
 
     @RequestMapping("list")
-    public Result list(@RequestParam(defaultValue = "0") Integer pageIndex, @RequestParam(defaultValue = "10") Integer limit,
+    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer limit,
                        @RequestParam String startTime,@RequestParam String endTime,@RequestParam String searchType){
         Result result = new Result();
         try {
             List<com.memory.entity.bean.SearchHistoryDay> resultList = new ArrayList<com.memory.entity.bean.SearchHistoryDay>();
+            int pageIndex =page +1;
 
             List list = searchHistoryDayCmsService.querySearchHistoryDayByQue(pageIndex,limit,startTime,endTime,searchType);
+            int totalElements = searchHistoryDayCmsService.querySearchHistoryDayCountByQue(startTime, endTime, searchType);
             Object [] obj = list.toArray();
             for (int i =0;i<obj.length;i++){
                 Object [] obj1 = (Object[]) obj[i];
@@ -44,7 +47,10 @@ public class SearchHistoryDayCmsController {
                 historyDay.setTotal(Long.valueOf(obj1[2].toString()));
                 resultList.add(historyDay);
             }
-            result = ResultUtil.success(resultList);
+
+            PageResult pageResult = PageResult.getPageResult(page, limit, list, totalElements);
+            result = ResultUtil.success(pageResult);
+
         }catch (Exception e){
             e.printStackTrace();
             log.error("route",e.getMessage());
