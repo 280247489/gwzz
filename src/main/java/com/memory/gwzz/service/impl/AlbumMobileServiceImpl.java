@@ -74,8 +74,8 @@ public class AlbumMobileServiceImpl implements AlbumMobileService {
         album.setAlbumTotalView(albumRedisMobileService.getAlbumView(albumId));
         if (album!=null){
             StringBuffer sbCourse = new StringBuffer( "SELECT NEW com.memory.gwzz.model.Course( id, courseNumber,courseTitle, courseLogo, courseLabel,courseOnline,courseTotalComment,courseTotalView,courseReleaseTime) " +
-                    " FROM Course WHERE  albumId=:albumId AND courseOnline=1 ORDER BY courseNumber ASC");
-            StringBuffer stringBuffer = new StringBuffer("SELECT course_number FROM course where album_id=:albumId AND course_online=1 ORDER BY course_number ASC");
+                    " FROM Course WHERE  albumId=:albumId AND courseOnline=1 ORDER BY courseNumber DESC");
+            StringBuffer stringBuffer = new StringBuffer("SELECT course_number FROM course where album_id=:albumId AND course_online=1 ORDER BY course_number DESC");
             Map<String,Object> map = new HashMap<>();
             map.put("albumId", albumId);
             DaoUtils.Page page = new DaoUtils.Page();

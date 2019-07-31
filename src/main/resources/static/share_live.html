@@ -13,7 +13,7 @@
 		.bg {
 			width: 100%;
 			height: 100%;
-			position: absolute;
+			position: fixed;
 			top: 0;
 			left: 0;
 			background: url(./images/bg.png) 0 0 repeat;
@@ -45,9 +45,11 @@
 				alert('链接有误！');
 				WeixinJSBridge.call('closeWindow');
 			}
+			var _title = $_GET['title'];
+			_title = decodeURI(_title);
+			$('.bg ._title').html(_title);
 			var _os = '1';
 			var api = 'http://39.97.232.184:18081/gwzzapp/live/mobile/getLiveById';
-			var _server = '';
 			var u = navigator.userAgent;
 			if (u.match(/MicroMessenger/i) != 'MicroMessenger') {
 				window.location.href =
@@ -68,12 +70,14 @@
 			var ht = document.documentElement.clientHeight;
 			$('.popupimg').css('max-height', ht);
 			topage();
+
 			function _change() {
 				sessionStorage.setItem("view", "1");
 				$('.bg').animate({
 					marginTop: "-240%"
 				}, 2048);
 			}
+
 			function topage() {
 				var arr_api = {
 					id: _id,
@@ -112,7 +116,7 @@
 										var this_img_url = n
 											.img;
 									} else {
-										var this_img_url = _server + n
+										var this_img_url = data.data.fileUrl + n
 											.img;
 									}
 									if (n.audio == undefined) {} else {
@@ -121,7 +125,7 @@
 									if (_ado_url == 'http') {
 										var this_ado_url = n.audio;
 									} else {
-										var this_ado_url = _server + n
+										var this_ado_url = data.data.fileUrl + n
 											.audio;
 									}
 									if (n.type == '1') {
@@ -192,7 +196,9 @@
 </head>
 
 <body>
-	<div class="bg"></div>
+	<div class="bg">
+		<span class="_title"></span>
+	</div>
 	<div class="header">
 		<div class="dl">
 			<a href="http://down.houaihome.com/download/"></a>

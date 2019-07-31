@@ -26,7 +26,6 @@ public class MessageReceiver {
 
     /**接收消息的方法*/
     public void receiveMessage(String message){
-
         this.load_live_memory();
         System.out.println("==============接收消息=============");
         System.out.println(message);

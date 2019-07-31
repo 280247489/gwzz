@@ -78,7 +78,18 @@
                     console.log(data);
                     if (data.recode == '0') {
                         var _ado_url;
-                        if (data.data.course.courseAudioUrl == undefined) {} else {
+                        var _ado_img;
+
+                        if (data.data.course.courseLogo == undefined || data.data.course.courseLogo == '') {
+                        } else {
+                            _ado_img = data.data.course.courseLogo.substr(0, 4);
+                        }
+                        if (_ado_img == 'http') {
+                            _logo = data.data.course.courseLogo;
+                        } else {
+                            _logo = data.data.fileUrl + data.data.course.courseLogo
+                        }
+                        if (data.data.course.courseAudioUrl == undefined || data.data.course.courseAudioUrl == '') {} else {
                             _ado_url = data.data.course.courseAudioUrl.substr(0, 4);
                         }
                         if (_ado_url == 'http') {
@@ -91,6 +102,7 @@
                         $('.content').html(data.data.course.courseContent);
                         $('.view').html(data.data.course.courseTotalView + '&nbsp;阅读');
                         $('.time').html('发布于&nbsp;' + data.data.course.courseReleaseTime);
+                        $('.bf').attr('src',_logo);
                     } else {
                         console.log(data);
                         console.log('出错了');

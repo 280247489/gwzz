@@ -98,4 +98,20 @@ table { border-collapse:collapse; }
 }
 
 
+._title{
+	width: 24px;
+	height:80%;
+	display: block;
+	margin: 20% auto 10%;
+	overflow: inherit;
+	line-height:26px;
+	writing-mode:horizontal-tb;
+	font-size:24px;
+	word-wrap:break-word;
+	text-align: center;
+	color: #fbf2b3;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 /**/

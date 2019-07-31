@@ -34,7 +34,7 @@ public class CourseMobileServiceImpl  implements CourseMobileService {
      */
     public List<Course> getCourseById(String albumId){
         StringBuffer sbCourse = new StringBuffer( " SELECT NEW com.memory.gwzz.model.Course( id, courseNumber,courseTitle, courseLogo, courseLabel,courseOnline,courseTotalComment,courseTotalView,courseReleaseTime) " +
-                "FROM Course WHERE  albumId=:albumId AND courseOnline=1 ORDER BY courseReleaseTime DESC");
+                "FROM Course WHERE  albumId=:albumId AND courseOnline=1 ORDER BY courseNumber DESC");
 //        StringBuffer sbCourse = new StringBuffer( " FROM Course WHERE  albumId=:albumId AND courseOnline=1 ORDER BY courseReleaseTime DESC");
         Map<String,Object> map = new HashMap<>();
         map.put("albumId", albumId);
