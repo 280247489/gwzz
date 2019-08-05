@@ -330,9 +330,11 @@ jQuery(document).ready(function () {
                                 pageScroll: true,
                                 width: 300,
                                 maskClose: true,
-                                callBack: function () {}
+                                callBack: function () {
+                                    window.location.reload();
+                                }
                             });
-                            _tr.remove();
+                            return false;
                         } else {
                             console.log(data);
                             _alert_warning(data.msg);
@@ -345,7 +347,13 @@ jQuery(document).ready(function () {
             }
         });
     });
-
+    $('.search_text').focus(function () {
+        $(document).keyup(function (event) {
+            if (event.keyCode == 13) {
+                $(".search_submit").trigger("click");
+            }
+        });
+    });
     function _alert_warning(msg) {
         $modal({
             type: 'alert',

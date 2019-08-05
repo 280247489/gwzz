@@ -29,16 +29,16 @@ jQuery(document).ready(function () {
     user = JSON.parse(user);
     var action = $_GET['action'];
     var id = $_GET['id'];
-    var article_type_select = '<option value="">--文章分类--</option>';
-    var article_type = sessionStorage.getItem('article_type');
-    article_type = JSON.parse(article_type);
+    // var article_type_select = '<option value="">--文章分类--</option>';
+    // var article_type = sessionStorage.getItem('article_type');
+    // article_type = JSON.parse(article_type);
+    // $.each(article_type, function (i, n) {
+    //     article_type_select += '<option value="' + n.id + '">' + n.typeName + '</option>';
+    // });
+    // $('.course_type_id').html(article_type_select);
 
 
 
-    $.each(article_type, function (i, n) {
-        article_type_select += '<option value="' + n.id + '">' + n.typeName + '</option>';
-    });
-    $('.course_type_id').html(article_type_select);
     $('.has-switch').click(function () {
         vl = $(this).find('.switch-animate');
         if (vl.hasClass('switch-on')) {
@@ -84,6 +84,7 @@ jQuery(document).ready(function () {
         to_page(id);
 
         function to_page(id) {
+            loading();
             var arr_single = {
                 id: id
             }
@@ -97,7 +98,8 @@ jQuery(document).ready(function () {
                     $('.course_key_words').val(content.articleKeyWords);
                     $('.course_label').val(content.articleLabel);
                     $('.article_release_time').val(content.articleReleaseTime);
-                    $('.course_type_id').val(content.typeId);
+                    //$('.course_type_id').val(content.typeId);
+                    $('.course_type_id').val('tYmvO0Ub1558922279863');
                     if (content.articleOnline == '1') {
                         $('.switch-online').attr('data-value', content.articleOnline);
                         $('.switch-online').find('.switch-animate').removeClass('switch-off').addClass('switch-on');
@@ -160,6 +162,7 @@ jQuery(document).ready(function () {
                 } else {
                     console.log('错误');
                 }
+                loading_end();
             });
         }
 
@@ -186,7 +189,7 @@ jQuery(document).ready(function () {
                     beforeSend: function () {
                         var article_title = $.trim($('.course_title').val());
                         var article_describe = $.trim($('.course_describe').val());
-                        var article_release_time =$('.article_release_time').val();
+                        var article_release_time = $('.article_release_time').val();
                         var article_type_id = $('.course_type_id').val();
                         var article_logo_img1 = $('.article_logo_img1 img').attr('src');
                         var article_logo_img2 = $('.article_logo_img2 img').attr('src');
@@ -236,7 +239,7 @@ jQuery(document).ready(function () {
                         } else if (article_release_time == '') {
                             _alert_warning('请选择发布时间！');
                             return false;
-                        }  else if (article_type_id == '') {
+                        } else if (article_type_id == '') {
                             _alert_warning('请选择课程分类！');
                             return false;
                         } else if (article_logo1 == '' && titleFile1 == '') {

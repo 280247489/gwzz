@@ -6,7 +6,6 @@ var close_modal = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAAB
 var question_modal = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADlUlEQVRYR72XXWhUVxDHf7MJpYlCjdWkUloLVWmgvhSCUigUffADioqyIuapJd5NUwQxxra2Nf1AaQWp4EfWbygWTH0RQhUUNWqhhbRNihhEUjWCDZiEpCGka7I75dw9m+xudu+9m9Se1/Of//zPnDlzZoSAS/dTQimrgI3AQoTnUSqABEIf0AvcRjjHP/woW4kFoRY/kJ5kLqPsQdmMUOKHt/vDKN8xxifygSsu78orQBsp5gW2I3wKzAjoOBs2BHzOXxyQRsZyceQUoIcpo4gW4M0pOs40U34lzjqp42E23yQBGuVVlMsIr/wnzidIBhHWyBZa03kzBGiUOSjtCC/6Olc6EAZcnLq5sThAjvRTzGJ5j0cp/nEBbpbP4CbwRl7nygjCV4RokRr+SMdpM88wQDXKfuA5jwP8BiwVh1GDmRAQ5WugwcN5H0UsSzl2k3QelShxhLspQj3OAuL8Asz24PpYIuwdF6BHKCfEA+BZD+XLxOGqG/EjhAkRBWZZ/CBQLw7H3f0mViJc8BDwN8LL4jDoRkCjNAGOh0GbRKiy2NeAW0DRJLyyViKct7iffF7RPnFoEPfu+hnwSaDPxOFLe7ofEDbkEdsqDm9bAd8AOzwi2k8Z5aJHWYFy0SfrT6J8j9AB7lWV5sQrPRJhnhWwG2j05BVWi0Y5CNT5PrsgAOWKRFhuI2UEb/I0U06INnEVSYZtmmuIEEukhk49xEyK6fEt4co1E4FOwCTWdNZjEqyQWn63pz+LEPYlVO4aAaaaeRUOP55uwDzRLut8H0K9n5G7r4yYKxhCmBnIYDKonzhV8j5/2sQzVXBbYC4lZiJwB1gU2CgdmKBaajlT8MknOLqmk4TDlDFbwjzRo7yLcmIKh2g1ETgM1BZsnPnkriO8VTAHnDIR8K7b+ViVMxKh2oa/G+GlggUIG4KW4lzc7ZCs+ygNAXqBbI4nDDMr9RmZn21LwSeYjoHSLBE2JgUco4IE932+42x39wBTA0wEKhHKA+tRYsRZaHrE9IbENAgfBiaBXeKwx+aAf91PJ1a+kAjms0rriIK0ZJnqpiogd0tmK9kcoA2Y7xsJ5QrCDXsF6xFe97WB/E1pytjt6ca49FTa8hDvSI0VbR3+X4PJz8QJBxpMxiOR7Hp3Ah/5/uv5Y58czcr4VsLEc8Ge3nAKpxll95SH02y14+O5aTSURe54DiZpzepF3Sk4OZ7HuBB0PP8X+s83WFbJv84AAAAASUVORK5CYII=';
 
 function $modal(data) {
-    $('.null').focus().trigger('click').blur();
     if (data === undefined) {
         data = {}
     }
@@ -308,7 +307,7 @@ function $modal(data) {
         $('.' + idText + 'body').css({
             padding: '0 ' + (titleSize + 10) + 'px'
         })
-        $('.' + idText + 'centerBox').append('<div class="' + idText + 'footer"><button  class="button_s_model ' + idText + '_confirm">' + data.confirmText + '</button><button class="button_s_model ' + idText + '_cancel">' + data.cancelText + '</button><div class="clearBoth"></div></div>')
+        $('.' + idText + 'centerBox').append('<div class="' + idText + 'footer"><button  class="button_s_model ' + idText + '_confirm">' + data.confirmText + '</button><button class="button_s_model ' + idText + '_cancel">' + data.cancelText + '</button><div class="clearBoth"><a href="javascript:void(0);" class="null"></a></div></div>')
         $('.' + idText + 'footer').css({
             paddingTop: '20px'
         })
@@ -363,6 +362,7 @@ function $modal(data) {
         $('.clearBoth').css({
             clear: 'both'
         })
+        $('.null').focus().trigger('click').blur();
 
         function close() {
             $('.' + idText + 'centerBox').animate({

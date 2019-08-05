@@ -1,8 +1,8 @@
 $(document).ready(function () {
     var api_back = sessionStorage.getItem('api_back');
     var server_course = sessionStorage.getItem('server_course');
-    var url_options = api_back + '/course/cms/options';
-    var url_findAll = api_back + '/courseMemoryLoad/findAll';
+    var url_options = api_back + '/liveMaster/cms/options';
+    var url_findAll = api_back + '/liveMemoryLoad/findAll';
     var url_add = api_back + '/courseMemory/add';
     var url_remove = api_back + '/courseMemory/remove';
     var lk = 0;
@@ -31,34 +31,20 @@ $(document).ready(function () {
             setTimeout(function () {}, 100);
             course_options = sessionStorage.getItem('course_options');
             course_options = JSON.parse(course_options);
+            console.log(course_options);
             if (course_options == '' || course_options == null || course_options == undefined) {
                 // alert('获取不到列表');
-                console.log('sdf');
+                console.log('获取不到列表');
             } else {
                 var _option = '<option value="">请选择</option>';
                 $.each(course_options, function (k, v) {
-                    _option += '<option data-value=' + v.courseTitle + ' value="' + v.id + '">' + v.courseTitle + '</option>';
+                    _option += '<option data-value=' + v.liveMasterName + ' value="' + v.id + '">' + v.liveMasterName + '</option>';
                 });
                 $('.new_memory_title').html(_option);
             }
         },
         error: function (data) {
-            $modal({
-                type: 'alert',
-                icon: 'error',
-                timeout: 3000,
-                title: '错误',
-                content: data.msg,
-                top: 300,
-                center: true,
-                transition: 300,
-                closable: true,
-                mask: true,
-                pageScroll: true,
-                width: 300,
-                maskClose: true,
-                callBack: function () {}
-            });
+            _alert_warning(data.msg);
         }
     }, "json");
 
@@ -68,7 +54,7 @@ $(document).ready(function () {
             var this_no;
             var tr;
             var this_title;
-            //console.log(data);
+            console.log(data);
             if (data.code == '0') {
                 var content = data.data;
                 if (content['0'] == '' || content['0'] == undefined) {
@@ -81,7 +67,7 @@ $(document).ready(function () {
                         } else {
                             this_title = n.titleName
                         }
-                        tr += '<tr data-id="' + n.courseId + '"><td>' + this_no + '</td><td>' + this_title + '</td><td><a data-id="' + n.courseId + '" href="javascript:void(0);" class="courseMemoryRemove"><i class="fa fa-trash"></i></a></td></tr>';
+                        tr += '<tr data-id="' + n.liveId + '"><td>' + this_no + '</td><td>' + this_title + '</td><td><a data-id="' + n.liveId + '" href="javascript:void(0);" class="courseMemoryRemove"><i class="fa fa-trash"></i></a></td></tr>';
                     });
                 }
                 $('.course_memory_list tbody').html(tr);
@@ -101,40 +87,24 @@ $(document).ready(function () {
         var option = '';
         if (key_words !== '') {
             $.each(course_options, function (k, v) {
-                if (reg.test(v.courseTitle)) {
-                    option += '<option data-value=' + v.courseTitle + ' value="' + v.id + '">' + v.courseTitle + '</option>';
+                if (reg.test(v.liveMasterName)) {
+                    option += '<option data-value=' + v.liveMasterName + ' value="' + v.id + '">' + v.liveMasterName + '</option>';
                 }
             });
         } else {
             $.each(course_options, function (k, v) {
-                option += '<option data-value=' + v.courseTitle + ' value="' + v.id + '">' + v.courseTitle + '</option>';
+                option += '<option data-value=' + v.liveMasterName + ' value="' + v.id + '">' + v.liveMasterName + '</option>';
             });
         }
         $('.new_memory_title').html(option);
     });
     $('.new_memory_add').click(function () {
         if ($('.new_memory_title').val() == '' || $('.new_memory_title').val() == null) {
-            $modal({
-                type: 'alert',
-                icon: 'warning',
-                timeout: 3000,
-                title: '警告',
-                content: '请选择正确的文章',
-                top: 300,
-                center: true,
-                transition: 300,
-                closable: true,
-                mask: true,
-                pageScroll: true,
-                width: 300,
-                maskClose: true,
-                callBack: function () {}
-            });
-
+            _alert_warning('请选择正确的文章');
         } else {
             console.log($('.new_memory_title').val());
             var arr_add = {
-                courseId: $('.new_memory_title').val()
+                masterId: $('.new_memory_title').val()
             }
             $.post(url_add, arr_add, function (data) {
                 if (data.code == '0') {
@@ -157,22 +127,7 @@ $(document).ready(function () {
                         }
                     });
                 } else {
-                    $modal({
-                        type: 'alert',
-                        icon: 'error',
-                        timeout: 3000,
-                        title: '错误',
-                        content: data.msg,
-                        top: 300,
-                        center: true,
-                        transition: 300,
-                        closable: true,
-                        mask: true,
-                        pageScroll: true,
-                        width: 300,
-                        maskClose: true,
-                        callBack: function () {}
-                    });
+                    _alert_warning(data.msg);
                 }
             });
             $('.memory_add').hide();
@@ -201,9 +156,11 @@ $(document).ready(function () {
             },
             confirm: function (close) {
                 var arr_remove = {
-                    courseId: tr.attr('data-id')
+                    masterId: tr.attr('data-id')
                 }
+                console.log(arr_remove);
                 $.post(url_remove, arr_remove, function (data) {
+                    console.log(data);
                     if (data.code == '0') {
                         close();
                         $modal({
@@ -226,22 +183,7 @@ $(document).ready(function () {
                         });
                     } else {
                         close();
-                        $modal({
-                            type: 'alert',
-                            icon: 'error',
-                            timeout: 3000,
-                            title: '错误',
-                            content: data.msg,
-                            top: 300,
-                            center: true,
-                            transition: 300,
-                            closable: true,
-                            mask: true,
-                            pageScroll: true,
-                            width: 300,
-                            maskClose: true,
-                            callBack: function () {}
-                        });
+                        _alert_warning(data.msg);
                     }
                 });
             }

@@ -718,7 +718,7 @@ public class LiveMasterCmsController {
 
         }
 
-        liveRedisCmsService.syncLive2App();
+
 
         return slaveList;
     }

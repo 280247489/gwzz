@@ -1,5 +1,6 @@
 package com.memory.cms.controller;
 
+import com.memory.cms.redis.service.LiveRedisCmsService;
 import com.memory.cms.service.LiveMasterCmsService;
 import com.memory.cms.service.LiveMemoryService;
 import com.memory.common.utils.Result;
@@ -27,6 +28,9 @@ public class LiveMemoryController {
     @Autowired
     private LiveMasterCmsService liveMasterCmsService;
 
+    @Autowired
+    private LiveRedisCmsService liveRedisCmsService;
+
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Result addMemory(String masterId){
@@ -36,6 +40,7 @@ public class LiveMemoryController {
             LiveMaster master = liveMasterCmsService.getLiveMasterById(masterId);
             if(Utils.isNotNull(master)){
                 LIveMemoryService.addLiveMemory(masterId);
+                liveRedisCmsService.syncLive2App();
                 result = ResultUtil.success( "课程缓存成功!");
             }else {
                 result = ResultUtil.error(-1,"非法直播!" );

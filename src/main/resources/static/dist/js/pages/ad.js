@@ -159,7 +159,7 @@ jQuery(document).ready(function () {
                     tr += '<tr data-id="' + n.id + '">' +
                         '<td>' + this_no + '</td>' +
                         '<td class="_ad_type" data-val="' + n.advertiseType + '">' + _type + '</td>' +
-                        '<td class="_ad_preview"><img src="' + server_course + n.advertiseLogo + '" class="article_thumb" ></td>' +
+                        '<td class="_ad_preview"><img src="' + server_course + n.advertiseLogo + '" class="article_thumb img_prev" ></td>' +
                         '<td class="_ad_title" data-val="' + n.advertiseH5Url + '">' + n.advertiseName + '</td>' +
                         '<td class="_ad_H5type" data-val="' + n.advertiseH5Type + '">' + _H5Type + '</td>' +
                         '<td class="_ad_online  ' + _style + '" data-val="' + n.advertiseOnline + '">' + _online + '</td>' +
@@ -222,7 +222,7 @@ jQuery(document).ready(function () {
                     tr += '<tr data-id="' + n.id + '">' +
                         '<td>' + this_no + '</td>' +
                         '<td class="_ad_type" data-val="' + n.advertiseType + '">' + _type + '</td>' +
-                        '<td class="_ad_preview"><img src="' + server_course + n.advertiseLogo + '" class="article_thumb" ></td>' +
+                        '<td class="_ad_preview"><img src="' + server_course + n.advertiseLogo + '" class="article_thumb img_prev" ></td>' +
                         '<td class="_ad_title" data-val="' + n.advertiseH5Url + '">' + n.advertiseName + '</td>' +
                         '<td class="_ad_H5type" data-val="' + n.advertiseH5Type + '">' + _H5Type + '</td>' +
                         '<td class="_ad_online  ' + _style + '" data-val="' + n.advertiseOnline + '">' + _online + '</td>' +
@@ -568,7 +568,6 @@ jQuery(document).ready(function () {
             }, "json");
         }
     });
-
     $('.ajax_search').keyup(function () {
         var _div = $(this).parents('.type_choose');
         var reg = new RegExp($(this).val());
@@ -586,12 +585,6 @@ jQuery(document).ready(function () {
         }
         _div.find('.ajax_search_list').html(_new_option);
     });
-
-
-
-
-
-
     $('.new_ad_cancel').click(function () {
         cancel();
     });

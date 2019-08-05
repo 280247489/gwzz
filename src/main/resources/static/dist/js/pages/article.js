@@ -18,6 +18,7 @@ jQuery(document).ready(function () {
     var server_course = sessionStorage.getItem('server_course');
     var url = api_back + '/article/cms/list';
     var url_online = api_back + '/article/cms/online';
+    var url_managerView = api_back + '/article/cms/managerView';
     var lk = 0;
     var creater = '<option value="">选择更新人</option>';
     var type_option = '<option value="">选择分类</option>';
@@ -39,11 +40,8 @@ jQuery(document).ready(function () {
     $('#article_search_type_id').html(type_option);
 
 
-    var page = parseInt($_GET['page']);
+    var page = 1;
     var per_page = '30';
-    if (page == '' || page == undefined || isNaN(page)) {
-        page = 1;
-    } else {}
     arr = {
         page: page - 1,
         size: per_page,
@@ -53,6 +51,7 @@ jQuery(document).ready(function () {
         sort_status: 'desc',
         type_id: ''
     }
+    loading();
     $.post(url, arr, function (data) {
         console.log(data);
         this_page(data, page);
@@ -78,9 +77,9 @@ jQuery(document).ready(function () {
                 $.post(url, arr, function (data) {
                     this_page(data, page);
                 });
-
             }
         });
+        loading_end();
     });
 
     $('.article_search_submit').click(function () {
@@ -101,6 +100,7 @@ jQuery(document).ready(function () {
         if (lk > 0) {
             return false;
         } else {
+            loading();
             lk = 1;
             $('.article_search_submit').removeClass('btn-primary').addClass('btn-default');
             setTimeout(function () {
@@ -109,6 +109,7 @@ jQuery(document).ready(function () {
             }, 2000);
             $.post(url, arr_search, function (data) {
                 this_page_search(data, page);
+                console.log(data);
                 new Page({
                     id: 'pagination',
                     pageTotal: data.data.totalPages, //必填,总页数
@@ -135,6 +136,7 @@ jQuery(document).ready(function () {
                     }
                 });
             });
+            loading_end();
         }
     });
 
@@ -152,7 +154,7 @@ jQuery(document).ready(function () {
         var arr_status = {
             id: $(this).parent().parent().attr('data-id'),
             online: status,
-            operator_id:user.id
+            operator_id: user.id
         }
         $.post(url_online, arr_status, function (data) {
             console.log(data);
@@ -180,7 +182,9 @@ jQuery(document).ready(function () {
             var content = data.data.data;
             if (content['0'] == '' || content['0'] == undefined) {
                 tr += '<tr><td colspan="10">暂无数据</td></tr>';
+                $('#pagination').hide();
             } else {
+                $('#pagination').show();
                 this_page_start = per_page * (page - 1);
                 $.each(content, function (i, n) {
                     this_no = this_page_start + i + 1;
@@ -218,19 +222,19 @@ jQuery(document).ready(function () {
                         _is_online = '<span class="text-gray">下线</span>';
                         is_online_btn = '<a href="javascript:void(0);" data-type="' + n.articleOnline + '" class="btn btn-default btn-sm is_online">上线</a>';
                     }
-                    
+
                     tr +=
                         '<tr data-id="' + n.id + '">' +
                         '<td>' + this_no + '</td>' +
-                        '<td><img class="article_thumb" src="' + this_img_url1 + '"/></td>' +
-                        '<td>' + n.articleTitle + '</td>' +
-                        '<td>' + n.articleReleaseTime + '</td>' +
+                        '<td><img class="article_thumb img_prev" src="' + this_img_url1 + '"/></td>' +
+                        '<td class="list_title">' + n.articleTitle + '</td>' +
+                        '<td class="list_time">' + n.articleReleaseTime + '</td>' +
                         // '<td>推荐</td>' +
-                        '<td>' + n.articleUpdateTime + '</td>' +
+                        '<td class="list_time">' + n.articleUpdateTime + '</td>' +
                         '<td>' + u_name + '</td>' +
-                        '<td class="articleHealth_count"><span>浏览：' + n.articleTotalView + '</span><span>点赞：' + n.articleTotalLike + '</span><span>回复：' + n.articleTotalComment + '</span></td>' +
+                        '<td class="articleHealth_count"><span>浏览：' + n.articleTotalView + '</span><span>点赞：' + n.articleTotalLike + '</span><span>回复：' + n.articleTotalComment + '</span><span class="view_add"><a href="javascript:void(0);" data-val="' + n.articleTotalManagerView + '">增加：' + n.articleTotalManagerView + '</a></span></td>' +
                         '<td class="article_isonline">' + _is_online + '</td>' +
-                        '<td><a data-id="' + n.id + '" class="articleHealth_edit btn btn-primary btn-sm" href="javascript:void(0);">编辑</a>&nbsp;' + '<a class="article_this_view btn btn-sm btn-primary" href="./commentArticle.html?action=view&id=' + n.id + '">评论</a>&nbsp;'+ is_online_btn + '</td>' +
+                        '<td><a data-id="' + n.id + '" class="articleHealth_edit btn btn-primary btn-sm" href="javascript:void(0);">编辑</a>&nbsp;' + '<a class="article_this_view btn btn-sm btn-primary" href="./commentArticle.html?action=view&id=' + n.id + '">评论</a>&nbsp;' + is_online_btn + '</td>' +
                         '</tr>';
                 });
             }
@@ -247,7 +251,9 @@ jQuery(document).ready(function () {
             var content = data.data.data;
             if (content['0'] == '' || content['0'] == undefined) {
                 tr_search += '<tr><td colspan="10">暂无数据</td></tr>';
+                $('#pagination').hide();
             } else {
+                $('#pagination').show();
 
                 this_page_start = per_page * (page - 1);
                 $.each(content, function (i, n) {
@@ -289,15 +295,15 @@ jQuery(document).ready(function () {
                     tr_search +=
                         '<tr data-id="' + n.id + '">' +
                         '<td>' + this_no + '</td>' +
-                        '<td><img class="article_thumb" src="' + this_img_url1 + '"/></td>' +
-                        '<td>' + n.articleTitle + '</td>' +
-                        '<td>' + n.articleReleaseTime + '</td>' +
+                        '<td><img class="article_thumb img_prev" src="' + this_img_url1 + '"/></td>' +
+                        '<td class="list_title">' + n.articleTitle + '</td>' +
+                        '<td class="list_time">' + n.articleReleaseTime + '</td>' +
                         // '<td>推荐</td>' +
-                        '<td>' + n.articleUpdateTime + '</td>' +
+                        '<td class="list_time">' + n.articleUpdateTime + '</td>' +
                         '<td>' + u_name + '</td>' +
-                        '<td class="articleHealth_count"><span>浏览：' + n.articleTotalView + '</span><span>点赞：' + n.articleTotalLike + '</span><span>回复：' + n.articleTotalComment + '</span></td>' +
+                        '<td class="articleHealth_count"><span>浏览：' + n.articleTotalView + '</span><span>点赞：' + n.articleTotalLike + '</span><span>回复：' + n.articleTotalComment + '</span><span class="view_add"><a href="javascript:void(0);" data-val="' + n.articleTotalManagerView + '">增加：' + n.articleTotalManagerView + '</a></span></td>' +
                         '<td class="article_isonline">' + _is_online + '</td>' +
-                        '<td><a data-id="' + n.id + '" class="articleHealth_edit btn btn-primary btn-sm" href="javascript:void(0);">编辑</a>&nbsp;'+ '<a class="article_this_view btn btn-sm btn-primary" href="./commentArticle.html?action=view&id=' + n.id + '">评论</a>&nbsp;' + is_online_btn + '</td>' +
+                        '<td><a data-id="' + n.id + '" class="articleHealth_edit btn btn-primary btn-sm" href="javascript:void(0);">编辑</a>&nbsp;' + '<a class="article_this_view btn btn-sm btn-primary" href="./commentArticle.html?action=view&id=' + n.id + '">评论</a>&nbsp;' + is_online_btn + '</td>' +
                         '</tr>';
                 });
             }
@@ -310,7 +316,76 @@ jQuery(document).ready(function () {
         var id = $(this).attr('data-id');
         window.location.href = "./articleAdd.html?action=edit&id=" + id;
     });
+    //修改阅读量
+    var _tr
+    $('.course_list').on('click', '.view_add a', function () {
+        var _num = $(this).attr('data-val');
+        _tr = $(this).parents('tr');
+        $('.managerView').show();
+        $('.managerView_edit_id').val(_tr.attr('data-id'));
+        $('.managerView_num').val(_num);
+    });
+    $('.managerView_submit').click(function () {
+        if ($('.managerView_num').val().trim() == '' || $('.managerView_num').val().trim() == null) {
+            var _changeNum = 0
+        } else {
+            var _changeNum = $('.managerView_num').val().trim();
+        }
+        //url_managerView
+        var arr_managerView = {
+            articleId: $('.managerView_edit_id').val(),
+            changeNum: _changeNum
+        }
+        $.ajax({
+            url: url_managerView,
+            type: 'POST',
+            data: arr_managerView,
+            async: false,
+            cache: false,
+            dataType: "json",
+            timeout: 50000,
+            beforeSend: function (data) {},
+            success: function (data) {
+                console.log(data);
+                //console.log(data.data);
+                if (data.code == '0') {
+                    _cancel();
+                    _tr.find('.view_add a').attr('data-val',data.data).html('增加：'+data.data);
+                    $modal({
+                        type: 'alert',
+                        icon: 'success',
+                        timeout: 3000,
+                        title: '成功',
+                        content: '修改成功',
+                        top: 300,
+                        center: true,
+                        transition: 300,
+                        closable: true,
+                        mask: true,
+                        pageScroll: true,
+                        width: 300,
+                        maskClose: true,
+                        callBack: function () {
 
+                        }
+                    });
+                } else {
+                    _alert_warning(data.msg);
+                }
+            },
+            complete: function () {},
+            error: function (data) {
+                _alert_warning(data.msg);
+            }
+        }, "json");
+    });
+    $('.managerView_cancel').click(function () {
+        _cancel();
+    });
 
-
+    function _cancel() {
+        $('.managerView').hide();
+        $('.managerView_edit_id').val('');
+        $('.managerView_num').val('');
+    }
 });

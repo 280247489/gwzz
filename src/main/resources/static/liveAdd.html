@@ -23,6 +23,7 @@
 	<link rel="stylesheet" href="dist/css/style.css">
 	<!-- jQuery 3 -->
 	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="dist/js/default.js"></script>
 	<script type="text/javascript" src="dist/js/sessionStorage.js"></script>
 	<script type="text/javascript" src="dist/js/confirm.js"></script>
 	<script type="text/javascript" src="dist/js/xlsx.core.min.js"></script>
@@ -32,43 +33,11 @@
 
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" data-bar="sidebar_live" data-tag="">
 	<!-- Site wrapper -->
 	<div class="wrapper">
 
 		<header class="main-header">
-			<!-- Logo -->
-			<a href="./index.html" class="logo">
-				<!-- mini logo for sidebar mini 50x50 pixels -->
-				<span class="logo-mini"><i class="icon-ha2"></i></span>
-				<!-- logo for regular state and mobile devices -->
-				<span class="logo-lg"><b><i class="icon-hou"></i>&nbsp;<i class="icon-ai"></i></b>&nbsp;听会儿中医</span>
-			</a>
-			<!-- Header Navbar: style can be found in header.less -->
-			<nav class="navbar navbar-static-top">
-				<!-- Sidebar toggle button-->
-				<a href="javascript:void(0);" class="sidebar-toggle" data-toggle="push-menu" role="button">
-					<span class="sr-only">导航栏</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</a>
-
-				<div class="navbar-custom-menu">
-					<ul class="nav navbar-nav">
-						<!-- Messages: style can be found in dropdown.less-->
-						<li class="messages-menu">
-							<a href="javascript:void(0);" class="dropdown-toggle" id="logout" data-toggle="dropdown">
-								<i class="icon-power-off"></i>
-							</a>
-						</li>
-						<!-- Control Sidebar Toggle Button -->
-						<li>
-							<a href="javascript:void(0);" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-						</li>
-					</ul>
-				</div>
-			</nav>
 		</header>
 
 		<!-- =============================================== -->
@@ -77,108 +46,6 @@
 		<aside class="main-sidebar">
 			<!-- sidebar: style can be found in sidebar.less -->
 			<section class="sidebar">
-				<!-- Sidebar user panel -->
-				<div class="user-panel">
-					<div class="pull-left image">
-						<img src="dist/img/avatar.jpg" class="img-circle" alt="User Image">
-					</div>
-					<div class="pull-left info">
-						<p>管理员</p>
-						<a href="javascript:void(0);"><i class="fa fa-circle text-success"></i> 写点啥</a>
-					</div>
-				</div>
-				<!-- sidebar menu: : style can be found in sidebar.less -->
-				<ul class="sidebar-menu" data-widget="tree">
-					<li class="header"><a href="javascript:void(0);" class="null">&nbsp;</a></li>
-					<li><a href="index.html"><i class="fa fa-book"></i> <span>首页</span></a></li>
-					<li>
-						<a href="album.html">
-							<i class="fa fa-folder-open"></i> <span>专辑管理</span>
-						</a>
-					</li>
-					<li class="treeview">
-						<a href="javascript:void(0);">
-							<i class="fa fa-file"></i>
-							<span>课程管理</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="course.html"><i class="fa fa-circle-o"></i> 课程列表</a></li>
-							<li><a href="commentCourse.html"><i class="fa fa-circle-o"></i> 课程评论</a></li>
-						</ul>
-					</li>
-					<li class="treeview active">
-						<a href="javascript:void(0);">
-							<i class="fa fa-play-circle-o"></i>
-							<span>直播管理</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="liveList.html"><i class="fa fa-circle-o"></i> 直播列表</a></li>
-							<li class="active"><a href="liveAdd.html"><i class="fa fa-circle-o"></i> 添加直播</a></li>
-							<li><a href="memory.html"><i class="fa fa-circle-o"></i> 并发管理</a></li>
-						</ul>
-					</li>
-					<li class="treeview">
-						<a href="javascript:void(0);">
-							<i class="fa fa-files-o"></i>
-							<span>文章管理</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="article.html"><i class="fa fa-circle-o"></i> 文章列表</a></li>
-							<li><a href="articleAdd.html"><i class="fa fa-circle-o"></i> 发布文章</a></li>
-							<!-- <li><a href="type.html?action=article"><i class="fa fa-circle-o"></i> 文章分类</a></li> -->
-							<li><a href="commentArticle.html"><i class="fa fa-circle-o"></i> 文章评论</a></li>
-						</ul>
-					</li>
-					<li class="treeview">
-						<a href="javascript:void(0);">
-							<i class="fa fa-flag"></i>
-							<span>活动管理</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="slider.html"><i class="fa fa-circle-o"></i> 轮播管理</a></li>
-							<li><a href="ad.html"><i class="fa fa-circle-o"></i> 广告管理</a></li>
-
-						</ul>
-					</li>
-					<li class="treeview">
-						<a href="javascript:void(0);">
-							<i class="fa fa-tag"></i>
-							<span>帮助&反馈</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="help.html"><i class="fa fa-circle-o"></i> 帮助中心</a></li>
-							<li><a href="opinion.html"><i class="fa fa-circle-o"></i> 意见反馈</a></li>
-
-						</ul>
-					</li>
-					<li class="treeview">
-						<a href="javascript:void(0);">
-							<i class="fa fa-shopping-cart"></i>
-							<span>商城管理</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="mall.html"><i class="fa fa-circle-o"></i> 商城管理</a></li>
-						</ul>
-					</li>
-				</ul>
 			</section>
 			<!-- /.sidebar -->
 		</aside>
@@ -215,6 +82,15 @@
 									<input type="hidden" name="liveMaster.id" class="live_id" value="">
 									<input type="hidden" name="liveMaster.operatorId" class="live_updater" value="">
 									<div class="col-md-12 col-lg-12">
+										<div class="form-group">
+											<label class="col-sm-2 col-md-2 control-label"><span class="text-danger">*
+												</span>期数：</label>
+											<div class="col-sm-2 col-md-2">
+												<input type="number" class="form-control live_number"
+													name="liveMaster.liveNumber">
+											</div>
+											<div class="col-sm-8 col-md-8"></div>
+										</div>
 										<div class="form-group">
 											<label class="col-sm-2 col-md-2 control-label"><span class="text-danger">*
 												</span>标题：</label>
@@ -271,14 +147,18 @@
 												<ul class="exceltitle">
 													<li>
 														<div>发言人</div>
+														<div>头像</div>
 														<div>类型</div>
 														<div>内容</div>
+														<div>时长</div>
 														<div>操作</div>
 													</li>
 												</ul>
 												<ol class="load_table">
 												</ol>
 											</div>
+										</div>
+										<div class="hide list_remove">
 										</div>
 										<div class="form-group text-left clear">
 											<div class="col-md-2 col-lg-2">
@@ -322,6 +202,12 @@
 							<label class="col-sm-3 col-md-3 control-label">发言人：</label>
 							<div class="col-md-9 col-lg-9">
 								<input type="text" name="new_msg_speaker" class="new_msg_speaker form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 col-md-3 control-label">头像：</label>
+							<div class="col-md-9 col-lg-9">
+								<input type="text" name="new_msg_logo" class="new_msg_logo form-control">
 							</div>
 						</div>
 						<div class="form-group">
@@ -405,14 +291,7 @@
 				</form>
 			</div>
 		</div>
-
-
-
 		<footer class="main-footer">
-			<div class="pull-right hidden-xs">
-				<b>Version</b> 0.0.1
-			</div>
-			<strong>Copyright &copy; 吉林省后爱电子商务有限公司
 		</footer>
 
 		<!-- Control Sidebar -->
@@ -446,7 +325,6 @@
 	<script src="dist/js/demo.js"></script>
 	<script>
 		$(document).ready(function () {
-			$('.sidebar-menu').tree();
 			$('#excel-file').change(function (e) {
 				var files = e.target.files;
 				var file_name = $(this).val();
@@ -494,30 +372,40 @@
 							ii++
 							if (ii == 1) {
 								_tmp +=
-									'<div><input type="hidden" class="courseId" value="" name=""><input type="text" class="speaker form-control" value="' +
+									'<div class="l_a"><input type="hidden" class="courseId" value="" name=""><input type="text" class="speaker form-control" value="' +
 									arr[i] + '" name="name"></div>';
 							}
 							if (ii == 2) {
-								_tmp += '<div>' + arr[i] + '</div>';
+								_tmp += '<div class="l_b"><img class="img_prev" src="' + arr[i] + '" /><input type="hidden" class="l_logo_url" value="' + arr[i] + '" name="" ></div>';
 							}
 							if (ii == 3) {
+								_tmp += '<div class="l_c">' + arr[i] + '</div>';
+							}
+							if (ii == 4) {
 								var this_val = arr[i];
 								var this_type = '1';
 								var point = this_val.lastIndexOf(".");
 								var type = this_val.substr(point);
+								var number_curr = '';
 								//console.log(type);
 								if (type == ".jpg" || type == ".gif" || type == ".JPG" || type ==
 									".GIF" ||
 									type == ".PNG" || type == ".png") {
-									this_val = '<img class="img_in_table" src="' + arr[i] +
-										'" /><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
+									this_val = '<img class="img_in_table img_prev" src="' + arr[i] +
+										'" />' + '<span class="file_name">' + getFileName1(this_val) +
+										'</span>' +
+										'<a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
 									this_type = '3';
 								} else if (type == ".mp3" || type == ".MP3" || type == ".wav" || type ==
 									".WAV" ||
-									type == ".WMA" || type == ".wma") {
+									type == ".WMA" || type == ".wma" || type == ".amr" || type == ".AMR"
+								) {
 									this_val = '<audio src="' + arr[i] +
-										'" class="audio_36" controls="controls">浏览器不支持audio标签</audio><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
+										'" class="audio_36" controls="controls">浏览器不支持audio标签</audio>' +
+										'<span class="file_name">' + getFileName1(this_val) + '</span>' +
+										'<a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
 									this_type = '2';
+									number_curr = '0';
 								} else {
 									this_val = '<p>' + arr[i] + '</p>';
 								}
@@ -529,12 +417,28 @@
 						}
 						li +=
 							"<li data-order='' class='excelcontent'>" + _tmp +
-							"<div><button type='button' class='delete btn btn-primary' href='javascript:void(0);'>删除</button><input class='audio_times' type='hidden' value='0' name='times' /></div></li>";
+							"<div class='l_e'><input class='audio_times form-control' type='number' value='' name='times' /></div>" +
+							"<div class='l_f'><button type='button' class='delete btn btn-primary' href='javascript:void(0);'>删除</button></div></li>";
 					}
 					$(".load_table").append(li);
+					$('.load_table').find('audio').each(function () {
+						var _li = $(this).parents('li');
+						var _audio = $(this).get(0);
+						_audio.addEventListener("canplay", function () {
+							time = Math.round(_audio.duration);
+							if (!isNaN(time)) {
+								_li.find('.audio_times').val(time);
+							}
+						});
+					});
 				};
 				fileReader.readAsBinaryString(files[0]);
 			});
+
+			function getFileName1(o) {
+				var pos = o.lastIndexOf("/");
+				return o.substring(pos + 1);
+			}
 			$(function () {
 				$("ol.load_table").sortable();
 			});

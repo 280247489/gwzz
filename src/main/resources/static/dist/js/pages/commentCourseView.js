@@ -169,10 +169,10 @@ jQuery(document).ready(function () {
                 this_page_start = per_page * (page - 1);
                 $.each(content, function (i, n) {
                     this_no = this_page_start + i + 1;
-                    if(n.commentParentUserName == ''){
+                    if (n.commentParentUserName == '') {
                         _content = n.commentContent
-                    }else{
-                        _content = n.commentContent + '<span class="text-light-blue">&nbsp;//'+ n.commentParentUserName +'：</span>' + n.commentParentContent;
+                    } else {
+                        _content = n.commentContent + '<span class="text-light-blue">&nbsp;//' + n.commentParentUserName + '：</span>' + n.commentParentContent;
                     }
                     tr += '<tr data-id="' + n.id + '" data-pid="' + n.commentParentId + '">' +
                         '<td>' + this_no + '</td>' +
@@ -323,9 +323,11 @@ jQuery(document).ready(function () {
                                 pageScroll: true,
                                 width: 300,
                                 maskClose: true,
-                                callBack: function () {}
+                                callBack: function () {
+                                    window.location.reload();
+                                }
                             });
-                            _tr.remove();
+                            return false;
                         } else {
                             console.log(data);
                             _alert_error(data.msg);
@@ -335,6 +337,13 @@ jQuery(document).ready(function () {
                         _alert_error(data.msg);
                     }
                 }, "json");
+            }
+        });
+    });
+    $('.search_text').focus(function () {
+        $(document).keyup(function (event) {
+            if (event.keyCode == 13) {
+                $(".search_submit").trigger("click");
             }
         });
     });

@@ -103,14 +103,14 @@ jQuery(document).ready(function () {
                     });
                     tr += '<tr data-id="' + n.id + '">' +
                         '<td>' + this_no + '</td>' +
-                        '<td class="_slide_preview"><img src="' + server_course + n.bannerLogo + '" class="article_thumb" ></td>' +
+                        '<td class="_slide_preview"><img src="' + server_course + n.bannerLogo + '" class="article_thumb img_prev" ></td>' +
                         '<td class="_slide_sort" data-val="' + n.bannerSort + '">' + n.bannerSort + '</td>' +
                         '<td class="_slide_title" data-val="' + n.typeTableId + '">' + n.bannerName + '</td>' +
                         '<td class="_slide_typeTable" data-val="' + n.typeTable + '">' + _typeTableId + '</td>' +
                         '<td class="_slide_online  ' + _style + '" data-val="' + n.bannerOnline + '">' + _online + '</td>' +
                         '<td>' + u_name + '</td>' +
                         '<td>' + n.bannerUpdateTime + '</td>' +
-                        '<td><a href="javascript:void(0);" class="btn btn-sm btn-primary slide_edit">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;' + change_online + '&nbsp;&nbsp;&nbsp;&nbsp;<ahref="javascript:void(0);" class="btn btn-sm btn-primary slide_del"><i class="fa fa-trash"></i></a></td>' +
+                        '<td><a href="javascript:void(0);" class="btn btn-sm btn-primary slide_edit">编辑</a>&nbsp;' + change_online + '&nbsp;<ahref="javascript:void(0);" class="btn btn-sm btn-primary slide_del"><i class="fa fa-trash"></i></a></td>' +
                         '</tr>'
                 });
             }
@@ -168,6 +168,8 @@ jQuery(document).ready(function () {
     $('.slide_list').on('click', '.slide_edit', function () {
         var _tr = $(this).parents('tr');
         img_cache = _tr.find('.article_thumb').attr('src');
+        var _title_val = _tr.find('._slide_title').attr('data-val');
+        console.log(_title_val);
         $('#slide_add_choose').attr('data-action', 'edit');
         $('.new_slide_add').html('提交');
         $('.slide_add_box_title').html('轮播图编辑');
@@ -177,7 +179,7 @@ jQuery(document).ready(function () {
         $('.slide_preview').attr('src', _tr.find('._slide_preview img').attr('src'));
         $('.type_' + $(".slide_type_radio[name='typeTable'][value='" + _tr.find('._slide_typeTable').attr('data-val') + "']").index()).attr('data-val', _tr.attr('data-id'));
         $(".slide_type_radio[name='typeTable'][value='" + _tr.find('._slide_typeTable').attr('data-val') + "']").trigger('click');
-
+        $(".typeTableId[name='typeTableId']").val(_title_val);
         $(".bannerSort").val(_tr.find('._slide_sort').attr('data-val'));
         $('.slide_add').fadeIn();
     });
@@ -218,12 +220,7 @@ jQuery(document).ready(function () {
                 });
             }
         });
-
-
-
     });
-
-
     $('.slide_type_radio').change(function () {
         var _eq = $(this).index();
         $('.type_choose').hide();

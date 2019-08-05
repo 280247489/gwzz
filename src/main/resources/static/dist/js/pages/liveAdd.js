@@ -42,10 +42,12 @@ jQuery(document).ready(function () {
                 id: id
             }
             var li = '';
+            loading();
             $.post(url_detail, arr_detail, function (data) {
                 if (data.code == '0') {
                     console.log(data);
                     $('.live_id').val(id);
+                    $('.live_number').val(data.data.master.liveNumber);
                     $('.live_title').val(data.data.master.liveMasterName);
                     $('.live_describe').val(data.data.master.liveMasterDescribe);
                     $('.live_time_start').val(data.data.master.liveMasterStarttime);
@@ -55,56 +57,82 @@ jQuery(document).ready(function () {
                     var _content;
                     $.each(content, function (i, n) {
                         var prew = '';
+                        var _time = '';
+                        var _readonly = 'readonly="readonly"';
+                        var _logo = '';
                         if (n.liveSlaveType == '1') {
                             _content = n.liveSlaveWords;
                             _type = '文字';
                             prew = '<p>' + n.liveSlaveWords + '</p>';
                         } else if (n.liveSlaveType == '2') {
+                            _readonly = '';
                             var http = n.liveSlaveAudio.substr(0, 4);
+                            var _title = getFileName1(n.liveSlaveAudio);
                             if (http == 'http') {
-                                prew = '<audio src="' + n.liveSlaveAudio + '" class="audio_36" controls="controls">浏览器不支持audio标签</audio><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
+                                prew = '<audio src="' + n.liveSlaveAudio + '" title="' + _title + '" class="audio_36" controls="controls">浏览器不支持audio标签</audio><span class="file_name">' + _title + '</span><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
                             } else {
-                                prew = '<audio src="' + server_course + n.liveSlaveAudio + '" class="audio_36" controls="controls">浏览器不支持audio标签</audio><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
+                                prew = '<audio src="' + server_course + n.liveSlaveAudio + '" title="' + _title + '" class="audio_36" controls="controls">浏览器不支持audio标签</audio><span class="file_name" title>' + _title + '</span><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
                             }
                             _type = '音频';
                             _content = n.liveSlaveAudio;
+                            _time = n.liveSlaveAudioTime;
                         } else if (n.liveSlaveType == '3') {
                             var http = n.liveSlaveImgurl.substr(0, 4);
+                            var _title = getFileName1(n.liveSlaveImgurl);
                             if (http == 'http') {
-                                prew = '<img class="img_in_table" src="' + n.liveSlaveImgurl + '"><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
+                                prew = '<img class="img_in_table img_prev" src="' + n.liveSlaveImgurl + '" title="' + _title + '"><span class="file_name">' + _title + '</span><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
                             } else {
-                                prew = '<img class="img_in_table" src="' + server_course + n.liveSlaveImgurl + '"><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
+                                prew = '<img class="img_in_table img_prev" src="' + server_course + n.liveSlaveImgurl + '" title="' + _title + '"><span class="file_name">' + _title + '</span><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>';
                             }
                             _type = '图片';
                             _content = n.liveSlaveImgurl;
                         }
-                        li += '<li data-order="" class="excelcontent">' +
-                            '<div>' +
+
+                        // if(n.liveSlaveLogo == '' || n.liveSlaveLogo == null){
+                        //     _logo = api_back + '/dist/img/avatar.jpg';
+                        // }else{
+                        //     _logo = n.liveSlaveLogo;
+                        // }
+                        li += '<li data-order="" data-id="' + n.id + '" class="excelcontent">' +
+                            '<div class="l_a">' +
                             '<input type="hidden" class="courseId" value="" name="">' +
                             '<input type="text" class="speaker form-control" value="' + n.liveSlaveNickname + '" name="name">' +
                             '</div>' +
-                            '<div  data-type="' + n.liveSlaveType + '">' + _type + '</div>' +
+                            '<div class="l_b"><img class="l_logo img_prev" src="'+ n.liveSlaveLogo +'" ><input type="hidden" class="l_logo_url" value="' + n.liveSlaveLogo + '" name="" ></div>' +
+                            '<div class="l_c"  data-type="' + n.liveSlaveType + '">' + _type + '</div>' +
                             '<div class="l_d" data-type="' + n.liveSlaveType + '">' + prew +
                             '<div class="hide">' +
                             '<input class="this_type" type="hidden" value="" name="">' +
                             '<input class="this_value" type="hidden" value="' + _content + '" name="">' +
-                            '</div>' +
-                            '</div>' +
-                            '<div>' +
+                            '</div></div>' +
+                            '<div class="l_e"><input class="audio_times form-control" type="number" value="' + _time + '" name="times" ' + _readonly + '></div>' +
+                            '<div class="l_f">' +
                             '<button type="button" class="delete btn btn-primary" href="javascript:void(0);">删除</button>' +
-                            '<input class="audio_times" type="hidden" value="0" name="times">' +
                             '</div>' +
                             '</li>';
                     });
                     $('.load_table').html(li);
+                    $('.load_table').find('audio').each(function () {
+                        var _li = $(this).parents('li');
+                        var _audio = $(this).get(0);
+                        _audio.addEventListener("canplay", function () {
+                            time = Math.round(_audio.duration);
+                            if (!isNaN(time)) {
+                                _li.find('.audio_times').val(time);
+                            }
+                        });
+                    });
+
                 } else {
                     _alert_warning(data.msg);
                 }
+                loading_end();
             });
         }
     } else {
         $('.course_create_id').val(user.id);
     }
+
 
     $('#zhibo_submit').click(function () {
         if (action == 'edit') {
@@ -118,35 +146,35 @@ jQuery(document).ready(function () {
             var this_no = $(this).index();
             $(this).attr('data-order', this_no);
             var this_id = $('#courseId').val();
-            var this_type = $(this).find('div:nth-child(3)').attr('data-type');
-            $(this).find('div:nth-child(1) select').attr('name', 'extList[' + this_no + '].name');
-            $(this).find('div:nth-child(1) input').attr('name', 'extList[' + this_no + '].name');
-            $(this).find('div:nth-child(1) .courseId').attr('name', 'extList[' + this_no + '].courseId').val(this_id);
+            var this_type = $(this).find('.l_d').attr('data-type');
+            $(this).find('.l_a select').attr('name', 'extList[' + this_no + '].name');
+            $(this).find('.l_a input').attr('name', 'extList[' + this_no + '].name');
+            $(this).find('.l_a .courseId').attr('name', 'extList[' + this_no + '].courseId').val(this_id);
+            $(this).find('.l_b input').attr('name', 'extList[' + this_no + '].userLogo');
             $(this).find('div.l_d input.this_type').attr('name', 'extList[' + this_no + '].type').val(this_type);
             if (this_type == '1') {
                 tm = 'words';
             } else if (this_type == '2') {
-                var _audio = $(this).find('audio').get(0);
-                time = Math.round(_audio.duration);
                 $(this).find('.audio_times').attr('name', 'extList[' + this_no + '].times');
-
-                if (!isNaN(time)) {
-                    $(this).find('.audio_times').val(time);
-                }
-                if ($(this).find('div:nth-child(3) .this_value').attr('type') == 'file') {
+                if ($(this).find('.l_d .this_value').attr('type') == 'file') {
                     tm = 'audioFile';
                 } else {
                     tm = 'audioUrl';
                 }
             } else if (this_type == '3') {
-                if ($(this).find('div:nth-child(3) .this_value').attr('type') == 'file') {
+                if ($(this).find('.l_d .this_value').attr('type') == 'file') {
                     tm = 'imgFile';
                 } else {
                     tm = 'imgUrl';
                 }
             }
-            $(this).find('div:nth-child(3) .this_value').attr('name', 'extList[' + this_no + '].' + tm);
+            $(this).find('.l_d .this_value').attr('name', 'extList[' + this_no + '].' + tm);
         });
+        $('.list_remove .list_remove_single').each(function () {
+            var _this_no = $(this).index();
+            $(this).attr('name', 'removeList[' + _this_no + '].slaveId');
+        });
+        //return false;
         if (lk > 0) {
             return false;
         } else {
@@ -167,7 +195,28 @@ jQuery(document).ready(function () {
                     dataType: "json",
                     timeout: 50000,
                     beforeSend: function () {
-                        if ($('.live_title').val().trim() == '') {
+                        if ($('.live_number').val().trim() == '') {
+                            //_alert_warning('');
+                            $modal({
+                                type: 'alert',
+                                icon: 'warning',
+                                timeout: 3000,
+                                title: '警告',
+                                content: '期数不能为空！',
+                                top: 300,
+                                center: true,
+                                transition: 300,
+                                closable: true,
+                                mask: true,
+                                pageScroll: true,
+                                width: 300,
+                                maskClose: true,
+                                callBack: function () {
+                                    $('.live_number').focus();
+                                }
+                            });
+                            return false;
+                        } else if ($('.live_title').val().trim() == '') {
                             //_alert_warning('');
                             $modal({
                                 type: 'alert',
@@ -253,7 +302,7 @@ jQuery(document).ready(function () {
                                     window.location.href = "liveList.html";
                                 }
                             });
-                        }else{
+                        } else {
                             _alert_warning(data.msg);
                         }
                     },
@@ -273,13 +322,15 @@ jQuery(document).ready(function () {
     });
     $('.new_msg_file').click(function () {
         $('.new_msg_file_url').val('');
-        $(".load_table li:last-child").find('div:nth-child(3) .this_value').attr('type', 'file').trigger('click');
+        $(".load_table li:last-child").find('.l_d .this_value').attr('type', 'file').trigger('click');
     });
     $('.new_msg_file_url').blur(function () {
-        $(".load_table li:last-child").find('div:nth-child(3) .this_value').attr('type', 'hidden');
+        $(".load_table li:last-child").find('.l_d .this_value').attr('type', 'hidden');
     });
     $(".load_table").on('change', '.new_file', function () {
+        var _li = $(this).parents('li');
         var _this = $(this).val();
+        var _this_name = getFileName(_this);
         var suffix_this = _this.substr(_this.lastIndexOf("."));
         var _type = $(this).parent().parent().attr('data-type');
         if ($(".new_file")[0].files[0] !== undefined) {
@@ -288,12 +339,20 @@ jQuery(document).ready(function () {
                     alert('请选择正确格式的音频文件!(mp3、wav、amr)');
                     return false;
                 }
+                _li.find('.audio_times').val('0');
                 $(".new_msg_file").html("<i class='icon-check'></i> 已选择");
                 $(this).parent().parent().find('audio').remove();
                 $(this).parent().parent().find('img').remove();
                 $('.new_file').parent().parent().find('p').remove();
                 $('.new_file').parent().parent().find('a').remove();
-                $(this).parent().parent().append('<audio src="' + URL.createObjectURL($(this)[0].files[0]) + '" class="audio_36" controls="controls">浏览器不支持audio标签</audio><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>');
+                $(this).parent().parent().append('<audio title="' + _this_name + '" src="' + URL.createObjectURL($(this)[0].files[0]) + '" class="audio_36" controls="controls">浏览器不支持audio标签</audio><span class="file_name">' + _this_name + '</span><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>');
+                var _audio = _li.find('audio').get(0);
+                _audio.addEventListener("canplay", function () {
+                    time = Math.round(_audio.duration);
+                    if (!isNaN(time)) {
+                        _li.find('.audio_times').val(time);
+                    }
+                });
             } else if (_type == '3') {
                 if (suffix_this !== '.jpg' && suffix_this !== '.JPG' && suffix_this !== '.jpeg' && suffix_this !== '.JPEG' && suffix_this !== '.png' && suffix_this !== '.PNG' && suffix_this !== '.gif' && suffix_this !== '.GIF') {
                     alert('请选择正确格式的图片文件!(jpg、jpeg、gif、png)');
@@ -304,7 +363,7 @@ jQuery(document).ready(function () {
                 $(this).parent().parent().find('img').remove();
                 $('.new_file').parent().parent().find('p').remove();
                 $('.new_file').parent().parent().find('a').remove();
-                $(this).parent().parent().append('<img class="img_in_table" src="' + URL.createObjectURL($(this)[0].files[0]) + '" /><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>');
+                $(this).parent().parent().append('<img class="img_in_table img_prev" title="' + _this_name + '" src="' + URL.createObjectURL($(this)[0].files[0]) + '" /><span class="file_name">' + _this_name + '</span><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>');
             }
         } else {
             $(".new_msg_file").html("<i class='icon-cloud-upload'></i> 上传文件");
@@ -312,7 +371,16 @@ jQuery(document).ready(function () {
     });
     $('.zhibo_msg_add').click(function () {
         $('.new_msg_word').val('');
-        var li = '<li data-order="" class="excelcontent"><div><input type="hidden" class="courseId" value="" name=""><input type="text" class="speaker form-control" value="李老师" name="name"></div><div class="sec"></div><div class="l_d" data-type="1"><p></p><div class="hide"><input class="this_type" type="hidden" value="1" name="" /><input class="new_file this_value" type="hidden" value="" name=""></div></div><div><button type="button" class="delete btn btn-primary" href="javascript:void(0);">删除</button><input class="audio_times" type="hidden" value="0" name="times"></div></li>';
+        var li = '<li data-order="" class="excelcontent">' +
+            '<div class="l_a"><input type="hidden" class="courseId" value="" name=""><input type="text" class="speaker form-control" value="李老师" name="name"></div>' +
+            '<div class="l_b"><img class="l_logo img_prev" src="" ><input type="hidden" class="l_logo_url" value="" ></div>' +
+            '<div class="sec l_c">文字</div>' +
+            '<div class="l_d" data-type="1"><p></p>' +
+            '<div class="hide"><input class="this_type" type="hidden" value="1" name="" /><input class="new_file this_value" type="hidden" value="" name=""></div>' +
+            '</div>' +
+            '<div class="l_e"><input class="audio_times form-control" type="number" value="" name="times"></div></div>' +
+            '<div class="l_f"><button type="button" class="delete btn btn-primary" href="javascript:void(0);">删除</button>' +
+            '</li>';
         $('.no_msg').remove();
         $(".load_table").append(li);
         $('.new_msg_type:eq(0)').trigger('click');
@@ -327,14 +395,15 @@ jQuery(document).ready(function () {
     });
     $('.new_msg_type').change(function () {
         $('.new_msg_file_url').val('');
-        $(".load_table li:last-child").find('div:nth-child(3) .this_value').val('');
+        $(".load_table li:last-child").find('.l_d .this_value').val('');
         $('.new_msg_word').val('');
         $(".new_msg_file").html("<i class='icon-cloud-upload'></i> 上传文件");
-        $('.load_table li:last-child').find('div:nth-child(3)').attr('data-type', $(this).val());
-        $('.load_table li:last-child').find('div:nth-child(3)').find('audio').remove();
-        $('.load_table li:last-child').find('div:nth-child(3)').find('p').remove();
-        $('.load_table li:last-child').find('div:nth-child(3)').find('img').remove();
-        $('.load_table li:last-child').find('div:nth-child(3)').find('a').remove();
+        $('.load_table li:last-child').find('.l_d').attr('data-type', $(this).val());
+        $('.load_table li:last-child').find('.l_d').find('audio').remove();
+        $('.load_table li:last-child').find('.l_d').find('p').remove();
+        $('.load_table li:last-child').find('.l_d').find('img').remove();
+        $('.load_table li:last-child').find('.l_d').find('a').remove();
+        $('.load_table li:last-child').find('.l_d').find('.file_name').remove();
         if ($(this).val() == '2') {
             $('.new_msg_word_box').hide();
             $('.new_msg_file_box').fadeIn();
@@ -354,26 +423,31 @@ jQuery(document).ready(function () {
     $('.new_msg_speaker').change(function () {
         $(".load_table li:last-child .speaker").val($(this).val());
     });
+    $('.new_msg_logo').change(function () {
+        $(".load_table li:last-child .l_logo").attr('src',$(this).val());
+        $(".load_table li:last-child .l_logo_url").val($(this).val());
+    });
 
     $('.new_msg_file_url').focus(function () {
-        $('.load_table li:last-child').find('div:nth-child(3) .this_value').attr('type', 'hidden');
+        $('.load_table li:last-child').find('.l_d .this_value').attr('type', 'hidden');
     });
     $('.new_msg_file_url').change(function () {
         if ($('.new_file').val() !== '') {} else {
             $('.new_file').val($(this).val());
             var _type = $('.new_msg_type:checked').val();
+
             if (_type == '2') {
                 $('.new_file').parent().parent().find('audio').remove();
                 $('.new_file').parent().parent().find('p').remove();
                 $('.new_file').parent().parent().find('img').remove();
-                $('.new_file').parent().parent().append('<audio src="' + $(this).val() + '" class="audio_36" controls="controls">浏览器不支持audio标签</audio><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>');
+                $('.new_file').parent().parent().append('<audio src="' + $(this).val() + '" class="audio_36" controls="controls">浏览器不支持audio标签</audio><span class="file_name">' + getFileName1($(this).val()) + '</span><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>');
             } else if (_type == '3') {
                 $('.new_file').parent().parent().find('audio').remove();
                 $('.new_file').parent().parent().find('img').remove();
                 $('.new_file').parent().parent().find('p').remove();
-                $('.new_file').parent().parent().append('<img class="img_in_table" src="' + $(this).val() + '" /><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>');
+                $('.new_file').parent().parent().append('<img class="img_in_table img_prev" src="' + $(this).val() + '" /><span class="file_name">' + getFileName1($(this).val()) + '</span><a href="javascript:void(0)" class="url_change"><i class="icon-folder-open"></i></a>');
             }
-            $('.load_table li:last-child').find('div:nth-child(3) .this_value').val($(this).val());
+            $('.load_table li:last-child').find('.l_d .this_value').val($(this).val());
         }
     });
     $('.new_msg_word').change(function () {
@@ -383,15 +457,64 @@ jQuery(document).ready(function () {
         var wd = $('.new_msg_word').val().split("\n").join("<br />");
         $('.new_file').parent().parent().append('<p>' + wd + '</p>');
 
-        $('.load_table li:last-child').find('div:nth-child(3) .this_value').val(wd);
+        $('.load_table li:last-child').find('.l_d .this_value').val(wd);
     });
     $('.new_msg_add').click(function () {
-        $('.sec').removeClass('sec');
-        $('.new_file').removeClass('new_file');
-        $('.single_msg').fadeOut();
+        if($('.new_msg_speaker').val().trim() == ''){
+            $modal({
+                type: 'alert',
+                icon: 'warning',
+                timeout: 3000,
+                title: '警告',
+                content: '请填写发言人',
+                top: 300,
+                center: true,
+                transition: 300,
+                closable: true,
+                mask: true,
+                pageScroll: true,
+                width: 300,
+                maskClose: true,
+                callBack: function () {
+                    $('.new_msg_speaker').focus();
+                }
+            });
+            return false;
+        } else if($('.new_msg_logo').val().trim() == ''){
+            $modal({
+                type: 'alert',
+                icon: 'warning',
+                timeout: 3000,
+                title: '警告',
+                content: '请填写头像地址',
+                top: 300,
+                center: true,
+                transition: 300,
+                closable: true,
+                mask: true,
+                pageScroll: true,
+                width: 300,
+                maskClose: true,
+                callBack: function () {
+                    $('.new_msg_logo').focus();
+                }
+            });
+            return false;
+        }else{
+            $('.sec').removeClass('sec');
+            $('.new_file').removeClass('new_file');
+            $('.single_msg').fadeOut();
+        }
     });
     $(".load_table").on('click', '.delete', function () {
+        var _li = $(this).parents('li');
+        var this_id = _li.attr('data-id');
         if (confirm("确定删除?")) {
+            if (_li.find('.l_d').attr('data-type') == '2') {
+                if (this_id !== '' && this_id !== null && this_id !== undefined) {
+                    $('.list_remove').append('<input type="text" name="" value="' + this_id + '" class="list_remove_single">');
+                }
+            }
             $(this).parent().parent().remove();
         }
     });
@@ -408,11 +531,6 @@ jQuery(document).ready(function () {
         $(this).replaceWith('<p>' + new_val + '</p>');
         div.find('.this_value').val(new_val);
     });
-
-
-
-
-
 
     var this_input, this_li, this_input, this_value;
     $(".load_table").on('click', '.url_change', function () {
@@ -456,12 +574,17 @@ jQuery(document).ready(function () {
             }, 1000);
             this_li.find('.l_d .new').attr('type', 'file').trigger('click');
             $('.edit_msg_file_url').val('');
-
+            if (this_li.find('.l_d').attr('data-type') == '2') {
+                this_li.find('.audio_times').val('0');
+            } else {
+                this_li.find('.audio_times').val('');
+            }
         }
     });
     $(".load_table").on('change', '.new', function () {
         var data_type = this_li.find('.l_d').attr('data-type');
         var _this = $(this).val();
+        var _title = getFileName(_this);
         var _suffix = _this.substr(_this.lastIndexOf("."));
         if (this_li.find('.new')[0].files[0] !== undefined) {
             if (data_type == 2) {
@@ -478,6 +601,7 @@ jQuery(document).ready(function () {
             $('.edit_msg_file').html("<i class='icon-check'></i> 已选择");
             this_li.find('.img_in_table').attr('src', URL.createObjectURL(this_li.find('.new')[0].files[0]));
             this_li.find('.audio_36').attr('src', URL.createObjectURL(this_li.find('.new')[0].files[0]));
+            this_li.find('.file_name').html(_title);
 
         } else {
             $('.edit_msg_file').html("<i class='icon-cloud-upload'></i> 上传文件");
@@ -489,6 +613,7 @@ jQuery(document).ready(function () {
         this_li.find('.new').attr('type', 'hidden').val($(this).val());
         this_li.find('.img_in_table').attr('src', $(this).val());
         this_li.find('.audio_36').attr('src', $(this).val());
+        this_li.find('.file_name').html(getFileName1($(this).val()));
     });
     $('.edit_msg_submit').click(function () {
         if (this_li.find('.new').val() == '') {
@@ -509,11 +634,13 @@ jQuery(document).ready(function () {
             } else {
                 _v = server_course + this_value;
             }
+            this_li.find('.file_name').html(getFileName1(this_value));
             this_li.find('.img_in_table').attr('src', _v);
             this_li.find('.audio_36').attr('src', _v);
         } else if (this_type == 'file') {
             this_li.find('.img_in_table').attr('src', URL.createObjectURL(this_li.find('.this_value')[0].files[0]));
             this_li.find('.audio_36').attr('src', URL.createObjectURL(this_li.find('.this_value')[0].files[0]));
+            this_li.find('.file_name').html(getFileName(this_value));
         }
         $('.single_edit').fadeOut();
     });
@@ -524,25 +651,16 @@ jQuery(document).ready(function () {
             return false;
         }
     });
-
-
-
-    function _alert_warning(msg) {
-        $modal({
-            type: 'alert',
-            icon: 'warning',
-            timeout: 3000,
-            title: '警告',
-            content: msg,
-            top: 300,
-            center: true,
-            transition: 300,
-            closable: true,
-            mask: true,
-            pageScroll: true,
-            width: 300,
-            maskClose: true,
-            callBack: function () {}
-        });
+    $('.load_table').on('mouseover','.file_name',function(){
+        $(this).attr('title', $(this).html());
+    });
+    function getFileName(o) {
+        var pos = o.lastIndexOf("\\");
+        return o.substring(pos + 1);
     }
+    function getFileName1(o) {
+        var pos = o.lastIndexOf("/");
+        return o.substring(pos + 1);
+    }
+
 });

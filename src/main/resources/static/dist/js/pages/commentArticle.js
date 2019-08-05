@@ -231,6 +231,7 @@ jQuery(document).ready(function () {
                             $('.comment_content').focus();
                         }
                     });
+                    console.log($('.comment_content').val().trim());
                     return false;
                 }
             },
@@ -328,9 +329,11 @@ jQuery(document).ready(function () {
                                 pageScroll: true,
                                 width: 300,
                                 maskClose: true,
-                                callBack: function () {}
+                                callBack: function () {
+                                    window.location.reload();
+                                }
                             });
-                            _tr.remove();
+                            return false;
                         } else {
                             console.log(data);
                             _alert_error(data.msg);
@@ -343,7 +346,6 @@ jQuery(document).ready(function () {
             }
         });
     });
-
     function _alert_error(msg) {
         $modal({
             type: 'alert',

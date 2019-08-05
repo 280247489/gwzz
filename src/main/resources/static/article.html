@@ -25,6 +25,7 @@
 
 	<!-- jQuery 3 -->
 	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="dist/js/default.js"></script>
 	<script type="text/javascript" src="dist/js/sessionStorage.js"></script>
 	<script type="text/javascript" src="dist/js/confirm.js"></script>
 	<script type="text/javascript" src="dist/js/page.js"></script>
@@ -32,149 +33,15 @@
 
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" data-bar="sidebar_article" data-tag="tag_article_list">
 	<div class="wrapper">
 
 		<header class="main-header">
-			<!-- Logo -->
-			<a href="./index.html" class="logo">
-				<!-- mini logo for sidebar mini 50x50 pixels -->
-				<span class="logo-mini"><i class="icon-ha2"></i></span>
-				<!-- logo for regular state and mobile devices -->
-				<span class="logo-lg"><b><i class="icon-hou"></i>&nbsp;<i class="icon-ai"></i></b>&nbsp;听会儿中医</span>
-			</a>
-			<!-- Header Navbar: style can be found in header.less -->
-			<nav class="navbar navbar-static-top">
-				<!-- Sidebar toggle button-->
-				<a href="javascript:void(0);" class="sidebar-toggle" data-toggle="push-menu" role="button">
-					<span class="sr-only">导航栏</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</a>
-
-				<div class="navbar-custom-menu">
-					<ul class="nav navbar-nav">
-						<!-- Messages: style can be found in dropdown.less-->
-						<li class="messages-menu">
-							<a href="javascript:void(0);" class="dropdown-toggle" id="logout" data-toggle="dropdown">
-								<i class="icon-power-off"></i>
-							</a>
-						</li>
-						<!-- Control Sidebar Toggle Button -->
-						<li>
-							<a href="javascript:void(0);" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-						</li>
-					</ul>
-				</div>
-			</nav>
 		</header>
 		<!-- Left side column. contains the logo and sidebar -->
 		<aside class="main-sidebar">
 			<!-- sidebar: style can be found in sidebar.less -->
 			<section class="sidebar">
-				<!-- Sidebar user panel -->
-				<div class="user-panel">
-					<div class="pull-left image">
-						<img src="dist/img/avatar.jpg" class="img-circle" alt="User Image">
-					</div>
-					<div class="pull-left info">
-						<p>管理员</p>
-						<a href="javascript:void(0);"><i class="fa fa-circle text-success"></i> 写点啥</a>
-					</div>
-				</div>
-				<!-- sidebar menu: : style can be found in sidebar.less -->
-				<ul class="sidebar-menu" data-widget="tree">
-					<li class="header"><a href="javascript:void(0);" class="null">&nbsp;</a></li>
-					<li><a href="index.html"><i class="fa fa-book"></i> <span>首页</span></a></li>
-					<li>
-						<a href="album.html">
-							<i class="fa fa-folder-open"></i> <span>专辑管理</span>
-						</a>
-					</li>
-					<li class="treeview">
-						<a href="javascript:void(0);">
-							<i class="fa fa-file"></i>
-							<span>课程管理</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="course.html"><i class="fa fa-circle-o"></i> 课程列表</a></li>
-							<li><a href="commentCourse.html"><i class="fa fa-circle-o"></i> 课程评论</a></li>
-						</ul>
-					</li>
-					<li class="treeview">
-						<a href="javascript:void(0);">
-							<i class="fa fa-play-circle-o"></i>
-							<span>直播管理</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="liveList.html"><i class="fa fa-circle-o"></i> 直播列表</a></li>
-							<li><a href="liveAdd.html"><i class="fa fa-circle-o"></i> 添加直播</a></li>
-							<li><a href="memory.html"><i class="fa fa-circle-o"></i> 并发管理</a></li>
-						</ul>
-					</li>
-					<li class="treeview active">
-						<a href="javascript:void(0);">
-							<i class="fa fa-files-o"></i>
-							<span>文章管理</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li class="active"><a href="article.html"><i class="fa fa-circle-o"></i> 文章列表</a></li>
-							<li><a href="articleAdd.html"><i class="fa fa-circle-o"></i> 发布文章</a></li>
-							<li><a href="commentArticle.html"><i class="fa fa-circle-o"></i> 文章评论</a>
-							</li>
-						</ul>
-					</li>
-					<li class="treeview">
-						<a href="javascript:void(0);">
-							<i class="fa fa-flag"></i>
-							<span>活动管理</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="slider.html"><i class="fa fa-circle-o"></i> 轮播管理</a></li>
-							<li><a href="ad.html"><i class="fa fa-circle-o"></i> 广告管理</a></li>
-
-						</ul>
-					</li>
-					<li class="treeview">
-						<a href="javascript:void(0);">
-							<i class="fa fa-tag"></i>
-							<span>帮助&反馈</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="help.html"><i class="fa fa-circle-o"></i> 帮助中心</a></li>
-							<li><a href="opinion.html"><i class="fa fa-circle-o"></i> 意见反馈</a></li>
-
-						</ul>
-					</li>
-					<li class="treeview">
-						<a href="javascript:void(0);">
-							<i class="fa fa-shopping-cart"></i>
-							<span>商城管理</span>
-							<span class="pull-right-container">
-								<i class="fa fa-angle-left pull-right"></i>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							<li><a href="mall.html"><i class="fa fa-circle-o"></i> 商城管理</a></li>
-						</ul>
-					</li>
-				</ul>
 			</section>
 			<!-- /.sidebar -->
 		</aside>
@@ -205,10 +72,15 @@
 							<!-- /.box-header -->
 							<div class="box-body">
 								<div class="article_search">
-									<form role="form">
+									<form role="form" class="search_form">
+										<div class="col-md-2 col-lg-2 form-group">
+											<a href="articleAdd.html" type="button"
+												class="btn btn-primary article_add_btn">添加文章</a>
+										</div>
 										<div class="col-md-3 col-lg-3 form-group">
-											<input type="text" class="form-control" id="article_search_title"
-												placeholder="标题" />
+											<input type="text" class="form-control search_text"
+												id="article_search_title" placeholder="标题" />
+											<input type="text" class="hide">
 										</div>
 										<div class="col-md-2 col-lg-2 form-group">
 											<select data-value="" class="creater form-control"
@@ -216,14 +88,12 @@
 												<option value="">更新人</option>
 											</select>
 										</div>
-										<!-- <div class="col-md-2 col-lg-2 form-group">
+										<div class="col-md-2 col-lg-2 form-group hide">
 											<select data-value="" class="isOnline form-control"
 												id="article_search_type_id">
 												<option value="">分类</option>
-												<option value="1">sdfsdf</option>
-												<option value="0">下sdfsd线</option>
 											</select>
-										</div> -->
+										</div>
 										<div class="col-md-2 col-lg-2 form-group">
 											<select data-value="" class="isOnline form-control"
 												id="article_search_isOnline">
@@ -242,9 +112,8 @@
 										</div>
 										<div class="col-md-1 col-lg-1 form-group">
 											<button type="button"
-												class="btn btn-primary article_search_submit">搜索</button>
+												class="btn btn-primary article_search_submit search_submit">搜索</button>
 										</div>
-										<div class="col-md-2 col-lg-2 form-group"></div>
 									</form>
 								</div>
 								<table id="course_list"
@@ -278,12 +147,38 @@
 			</section>
 			<!-- /.content -->
 		</div>
+		<div class="managerView">
+			<div class="mask"></div>
+			<div class="managerView_edit box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">阅读量调整</h3>
+				</div>
+				<form id="managerView_edit" data-action="add" enctype="application/x-www-form-urlencoded"
+					class="form-horizontal style-form">
+					<input type="hidden" class="managerView_edit_id" name='courseId' value="">
+					<div class="box-body">
+						<div class="form-group">
+							<label class="col-sm-2 col-md-2 control-label">数量：</label>
+							<div class="col-md-10 col-lg-10">
+								<input type="number" class="managerView_num form-control" name="changeNum" min="0"
+									required="required" />
+							</div>
+						</div>
+					</div>
+					<div class="box-footer">
+						<div class="form-group">
+							<div class="col-md-12 col-lg-12 text-right">
+								<button type="button"
+									class="btn btn-primary managerView_submit">提交</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-default managerView_cancel">取消</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
 		<!-- /.content-wrapper -->
 		<footer class="main-footer">
-			<div class="pull-right hidden-xs">
-				<b>Version</b> 0.0.1
-			</div>
-			<strong>Copyright &copy; 吉林省后爱电子商务有限公司
 		</footer>
 
 		<!-- Control Sidebar -->

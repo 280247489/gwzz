@@ -33,9 +33,9 @@ jQuery(document).ready(function () {
     var page = 1;
     var per_page = '30';
     var course_id;
-    if(action == 'view' && id != ''){
+    if (action == 'view' && id != '') {
         course_id = id;
-    }else{
+    } else {
         course_id = '';
     }
     var arr_Comment_all = {
@@ -50,7 +50,7 @@ jQuery(document).ready(function () {
         query_end_time: '',
         sort_role: '0',
         comment_root_id: '',
-        course_id:course_id,
+        course_id: course_id,
         id: ''
     }
     $.post(url, arr_Comment_all, function (data) {
@@ -78,7 +78,7 @@ jQuery(document).ready(function () {
                     query_end_time: '',
                     sort_role: '0',
                     comment_root_id: '',
-                    course_id:course_id,
+                    course_id: course_id,
                     id: ''
                 }
                 $.post(url, _arr, function (data) {
@@ -108,7 +108,7 @@ jQuery(document).ready(function () {
             query_end_time: query_end_time,
             sort_role: '0',
             comment_root_id: '',
-            course_id:course_id,
+            course_id: course_id,
             id: ''
         }
         $.post(url, arr_search, function (data) {
@@ -135,7 +135,7 @@ jQuery(document).ready(function () {
                         query_end_time: query_end_time,
                         sort_role: '0',
                         comment_root_id: '',
-                        course_id:course_id,
+                        course_id: course_id,
                         id: ''
                     }
                     $.post(url, _arr, function (data) {
@@ -169,10 +169,10 @@ jQuery(document).ready(function () {
                         //_type = '<i class="fa fa-comments text-yellow"></i>';
                         _type = '';
                         _view = '';
-                        if(n.commentParentUserName == ''){
+                        if (n.commentParentUserName == '') {
                             _content = n.commentContent
-                        }else{
-                            _content = n.commentContent + '<span class="text-light-blue">&nbsp;//'+ n.commentParentUserName +'：</span>' + n.commentParentContent;
+                        } else {
+                            _content = n.commentContent + '<span class="text-light-blue">&nbsp;//' + n.commentParentUserName + '：</span>' + n.commentParentContent;
                         }
                     }
                     tr += '<tr data-id="' + n.id + '" data-rid="' + n.commentRootId + '" data-type=' + n.commentType + ' data-pid="' + n.commentParentId + '">' +
@@ -326,9 +326,11 @@ jQuery(document).ready(function () {
                                 pageScroll: true,
                                 width: 300,
                                 maskClose: true,
-                                callBack: function () {}
+                                callBack: function () {
+                                    window.location.reload();
+                                }
                             });
-                            _tr.remove();
+                            return false;
                         } else {
                             console.log(data);
                             _alert_error(data.msg);
@@ -338,6 +340,13 @@ jQuery(document).ready(function () {
                         _alert_error(data.msg);
                     }
                 }, "json");
+            }
+        });
+    });
+    $('.search_text').focus(function () {
+        $(document).keyup(function (event) {
+            if (event.keyCode == 13) {
+                $(".search_submit").trigger("click");
             }
         });
     });

@@ -51,16 +51,15 @@ public class RedisConfig {
     }
 
 
+/*
     @Bean
     public RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter){
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(listenerAdapter, new PatternTopic("/redis/*"));
+        container.addMessageListener(listenerAdapter, new PatternTopic("syncLive"));
         return container;
 
     }
-
-
 
     @Bean
     public MessageListenerAdapter listenerAdapter(MessageReceiver subUtils){
@@ -71,6 +70,7 @@ public class RedisConfig {
         adapter.afterPropertiesSet();
         return adapter;
     }
+*/
 
 
 

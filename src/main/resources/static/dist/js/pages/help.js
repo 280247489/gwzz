@@ -4,7 +4,7 @@ jQuery(document).ready(function () {
     var url_add = api_back + '/userHelp/cms/addUserHelp';
     var url_upd = api_back + '/userHelp/cms/updUserHelp';
     var url_online = api_back + '/userHelp/cms/updUseYn';
-    var url_del = api_back + 'wzz/userHelp/cms/delUserHelp';
+    var url_del = api_back + '/userHelp/cms/delUserHelp';
     var server_course = sessionStorage.getItem('server_course');
     var option_cache;
     var lk = 0;
@@ -120,9 +120,9 @@ jQuery(document).ready(function () {
                         _online = '<span class="text-gray">下线</span>';
                     }
 
-                    if (n.helpType == '1') {
+                    if (n.helpType == '2') {
                         _type = '常见问题';
-                    } else if (n.helpType == '2') {
+                    } else if (n.helpType == '1') {
                         _type = '模块问题';
                     }
                     $.each(user_list, function (k, v) {
@@ -132,16 +132,16 @@ jQuery(document).ready(function () {
                     });
                     tr += '<tr data-id="' + n.id + '">' +
                         '<td>' + this_no + '</td>' +
-                        '<td class="_help_logo_preview"><img src="' + server_course + n.helpLogo + '" class="article_thumb" ></td>' +
+                        '<td class="_help_logo_preview"><img src="' + server_course + n.helpLogo + '" class="article_thumb img_prev" ></td>' +
                         '<td class="_help_sort" data-val="' + n.helpSort + '">' + n.helpSort + '</td>' +
                         '<td class="_help_title">' + n.helpTitle + '</td>' +
                         '<td class="_help_subtitle">' + n.helpSubtitle + '</td>' +
-                        '<td class="_help_content_preview"><img src="' + server_course + n.helpContent + '" class="article_thumb" ></td>' +
+                        '<td class="_help_content_preview"><img src="' + server_course + n.helpContent + '" class="article_thumb img_prev" ></td>' +
                         '<td class="_help_type" data-val="' + n.helpType + '">' + _type + '</td>' +
                         '<td class="_help_online" data-val="' + n.useYn + '">' + _online + '</td>' +
                         '<td class="_help_updater" data-val="' + user.id + '">' + u_name + '</td>' +
                         '<td>' + n.helpUpdateTime + '</td>' +
-                        '<td><a href="javascript:void(0);" class="btn btn-sm btn-primary help_edit">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;' + _change_online + '&nbsp;&nbsp;&nbsp;&nbsp;<ahref="javascript:void(0);" class="btn btn-sm btn-primary help_del"><i class="fa fa-trash"></i></a></td>' +
+                        '<td><a href="javascript:void(0);" class="btn btn-sm btn-primary help_edit">编辑</a>&nbsp;' + _change_online + '&nbsp;<ahref="javascript:void(0);" class="btn btn-sm btn-primary help_del"><i class="fa fa-trash"></i></a></td>' +
                         '</tr>';
                 });
             }
@@ -293,7 +293,59 @@ jQuery(document).ready(function () {
     $('.new_help_cancel').click(function () {
         cancel();
     });
-
+    $('.help_list').on('click', '.help_del', function () {
+        var _tr = $(this).parents('tr');
+        //console.log(_tr.attr('data-id'));
+        var _arr_del = {
+            id: _tr.attr('data-id')
+        }
+        $modal({
+            type: 'confirm',
+            icon: 'info',
+            title: '请小心操作',
+            content: '确认删除？',
+            transition: 300,
+            closable: true,
+            mask: true,
+            top: 400,
+            center: true,
+            pageScroll: false,
+            width: 500,
+            maskClose: false,
+            cancelText: '取消',
+            confirmText: '确认',
+            cancel: function (close) {
+                console.log('取消');
+                close();
+            },
+            confirm: function (close) {
+                close();
+                $.ajax({
+                    url: url_del,
+                    type: 'POST',
+                    data: _arr_del,
+                    async: true,
+                    cache: false,
+                    dataType: "json",
+                    timeout: 50000,
+                    beforeSend: function (data) {
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if (data.recode == '0') {
+                            _tr.remove();
+                        } else {
+                            _alert_warning(data.msg);
+                        }
+                    },
+                    complete: function () {},
+                    error: function (data) {
+                        _alert_warning(data.msg);
+                    }
+                }, "json");
+            }
+        });
+    });
     $('.help_file_btn').click(function () {
         $(this).parent().find('.help_file').trigger('click');
     });
@@ -323,7 +375,6 @@ jQuery(document).ready(function () {
         $("#help_add_choose")[0].reset();
         $('.help_file_btn').html('<i class="fa fa-cloud-upload"></i>&nbsp;上传图片');
     }
-
     function _alert_warning(msg) {
         $modal({
             type: 'alert',

@@ -76,6 +76,9 @@ public class LiveMemoryServiceImpl implements LiveMemoryService {
 
     @Override
     public void addLiveMemory(String masterId) {
+        //清除全部缓存
+        LIVEMAP.clear();
+
         com.memory.entity.bean.LiveSlave liveSlave = new  com.memory.entity.bean.LiveSlave();
         String keyHash = liveRedisCmsService.getKey(masterId);
         Map<String,Object> returnMap = new HashMap<String, Object>();
@@ -92,7 +95,7 @@ public class LiveMemoryServiceImpl implements LiveMemoryService {
             initMemoryLoad(masterId, keyHash, returnMap);
         }
 
-        liveRedisCmsService.syncLive2App();
+        //liveRedisCmsService.syncLive2App();
 
 
 

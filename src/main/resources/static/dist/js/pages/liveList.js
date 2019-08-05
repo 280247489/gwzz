@@ -4,6 +4,7 @@ jQuery(document).ready(function () {
     var url_list = api_back + '/liveMaster/cms/list';
     var url_status = api_back + '/liveMaster/cms/status';
     var url_online = api_back + '/liveMaster/cms/online';
+    var url_master = api_back + '/liveMaster/cms/mergeMp3';
     var lk = 0;
     var user = sessionStorage.getItem('user');
     user = JSON.parse(user);
@@ -29,6 +30,7 @@ jQuery(document).ready(function () {
         operator_id: '',
         status: ''
     }
+    loading();
     $.post(url_list, arr_list, function (data) {
         console.log(data);
         if (data.code == '0') {
@@ -59,6 +61,7 @@ jQuery(document).ready(function () {
         } else {
             _alert_warning(data.msg);
         }
+        loading_end();
     });
 
     $('.live_search_submit').click(function () {
@@ -72,6 +75,7 @@ jQuery(document).ready(function () {
             operator_id: _operator_id,
             status: _status
         }
+        loading();
         $.post(url_list, arr_list_search, function (data) {
             console.log(data);
             if (data.code == '0') {
@@ -102,6 +106,7 @@ jQuery(document).ready(function () {
             } else {
                 _alert_warning(data.msg);
             }
+            loading_end();
         });
     });
 
@@ -117,25 +122,42 @@ jQuery(document).ready(function () {
                     var _status = '';
                     var _online = '';
                     var u_name = '';
-                    var _is_show = '';
+                    var _course_btn = '';
                     this_no = this_page_start + i + 1;
                     if (n.liveMasterStatus == '0') {
-                        _status = '<span class="text-gray">关闭</span>';
-                        _statys_btn = '<a href="javascript:void(0);" class="live_status_edit btn btn-sm btn-default">开启<a>';
+                        _status = '<span class="text-gray">未直播</span>';
+                        _statys_btn = '<a href="javascript:void(0);" class="live_status_edit btn btn-sm btn-default">直播</a>';
                     } else if (n.liveMasterStatus == '1') {
-                        _status = '<span class="text-green">开启</span>';
-                        _statys_btn = '<a href="javascript:void(0);" class="live_status_edit btn btn-sm btn-info">完毕<a>';
+                        _status = '<span class="text-green">直播中</span>';
+                        _statys_btn = '<a href="javascript:void(0);" class="live_status_edit btn btn-sm btn-info">结束</a>';
                     } else if (n.liveMasterStatus == '2') {
-                        _status = '<span class="text-gray">完毕</span>';
-                        _statys_btn = '<a href="javascript:void(0);" class="btn btn-sm disabled btn-default">完毕<a>';
+                        _status = '<span class="text-gray">直播结束</span>';
+                        _statys_btn = '<a href="javascript:void(0);" class="btn btn-sm disabled btn-default">完毕</a>';
                     }
 
                     if (n.liveMasterIsOnline == '0') {
                         _online = '<span class="text-gray">下线</span>';
-                        _online_btn = '<a href="javascript:void(0);" class="live_online_edit btn btn-sm btn-default">上线<a>';
+                        _online_btn = '<a href="javascript:void(0);" class="live_online_edit btn btn-sm btn-default">上线</a>';
                     } else if (n.liveMasterIsOnline == '1') {
                         _online = '<span class="text-green">上线</span>';
-                        _online_btn = '<a href="javascript:void(0);" class="live_online_edit btn btn-sm btn-info">下线<a>';
+                        _online_btn = '<a href="javascript:void(0);" class="live_online_edit btn btn-sm btn-info">下线</a>';
+                    }
+
+                    if (n.courseId !== '') {
+                        _course_btn = '<span class="text-green">已关联</span>';
+                    } else {
+                        _course_btn = '<span class="text-gray">未关联</span>';
+                    }
+                    if (n.liveMasterIsSynthesisAudio == '1') {
+                        _master_btn_type = 'btn-info';
+                    } else {
+                        _master_btn_type = 'btn-default';
+                    }
+
+                    if (n.liveMasterSynthesisAudioUrl == '0') {
+                        _master_dl = '<a href="javascript:void(0);" class="live_master_dl btn btn-sm btn-default">下载</a>';
+                    } else {
+                        _master_dl = '<a href="' + n.liveMasterSynthesisAudioUrl + '" class="live_master_dl btn btn-sm btn-info" target="_blank">下载</a>';
                     }
                     $.each(user_list, function (k, v) {
                         if (n.liveMasterUpdateId == v.id) {
@@ -145,10 +167,14 @@ jQuery(document).ready(function () {
                     tr += '<tr data-id="' + n.id + '">' +
                         '<td>' + this_no + '</td>' +
                         '<td>' + n.liveMasterName + '</td>' +
+                        '<td>' + n.liveNumber + '</td>' +
                         '<td class="live_status" data-val="' + n.liveMasterStatus + '">' + _status + '</td>' +
                         '<td class="live_online" data-val="' + n.liveMasterIsOnline + '">' + _online + '</td>' +
+                        '<td class="live_course" data-val="' + n.courseId + '">' + _course_btn + '</td>' +
                         '<td>' + n.liveMasterUpdateTime + '</td>' +
                         '<td class="live_updater" data-val="' + n.liveMasterUpdateId + '">' + u_name + '</td>' +
+                        '<td class="live_master" data-val="' + n.liveMasterSynthesisAudioUrl + '"><a href="javascript:void(0);" class="live_master_btn btn btn-sm ' + _master_btn_type + '">合成</a></td>' +
+                        '<td>' + _master_dl + '</td>' +
                         '<td><a href="liveAdd.html?action=edit&id=' + n.id + '" class="live_edit btn btn-sm btn-primary">编辑</a>&nbsp;' + _statys_btn + '&nbsp;' + _online_btn + '</td>' +
                         '</tr>';
                 });
@@ -156,6 +182,67 @@ jQuery(document).ready(function () {
             $('.live_list tbody').html(tr);
         }
     }
+    $('.live_list').on('click', '.live_master_btn', function () {
+        if (lk > 0) {
+            return false;
+        } else {
+            lk = 1;
+            setTimeout(function () {
+                lk = 0;
+            }, 3000);
+            var tr = $(this).parents('tr');
+            var arr_master = {
+                master_id: tr.attr('data-id')
+            }
+            $.ajax({
+                url: url_master,
+                type: 'POST',
+                data: arr_master,
+                async: true,
+                cache: false,
+                dataType: "json",
+                timeout: 50000,
+                beforeSend: function (data) {
+                    //console.log(tr.find('.live_master_dl').attr('href'));
+                },
+                success: function (data) {
+                    console.log(data);
+                    //console.log(data.data);
+                    if (data.code == '0') {
+                        tr.find('.live_master_btn').removeClass('btn-default').addClass('btn-info');
+                        tr.find('.live_master_dl').removeClass('btn-default').addClass('btn-info').attr({
+                            'href': data.data,
+                            'target': '_blank'
+                        });
+                        $modal({
+                            type: 'alert',
+                            icon: 'success',
+                            timeout: 3000,
+                            title: '成功',
+                            content: '合成成功',
+                            top: 300,
+                            center: true,
+                            transition: 300,
+                            closable: true,
+                            mask: true,
+                            pageScroll: true,
+                            width: 300,
+                            maskClose: true,
+                            callBack: function () {
+                                //window.location.reload();
+                            }
+                        });
+                    } else {
+                        _alert_warning(data.msg);
+                    }
+                },
+                complete: function () {},
+                error: function (data) {
+                    _alert_warning(data.msg);
+                }
+            }, "json");
+        }
+    });
 
     $('.live_list').on('click', '.live_status_edit', function () {
         var _tr = $(this).parents('tr');
@@ -165,11 +252,6 @@ jQuery(document).ready(function () {
             id: _this_id,
             operator_id: user.id
         }
-        $(document).keyup(function (event) {
-            if (event.keyCode == 13 || event.keyCode == 32) {
-                event.returnValue = false;
-            }
-        });
         $modal({
             type: 'confirm',
             icon: 'info',
@@ -195,26 +277,26 @@ jQuery(document).ready(function () {
                     console.log(data);
                     if (data.code == '0') {
                         if (data.data == '0') {
-                            _tr.find('.live_status_edit').html('关闭').removeClass('btn-info').addClass('btn-default').removeAttr("disabled");
+                            _tr.find('.live_status_edit').html('直播').removeClass('btn-info').addClass('btn-default').removeAttr("disabled");
                             _tr.find('.live_status').attr('data-val', '0');
-                            _tr.find('.live_status span').removeClass('text-green').addClass('text-gray').html('开启');
+                            _tr.find('.live_status span').removeClass('text-green').addClass('text-gray').html('直播中');
                         } else if (data.data == '1') {
                             $('.live_list tr').each(function () {
                                 if ($(this).find('.live_status').attr('data-val') == '1') {
                                     $(this).find('.live_status').attr('data-val', '2');
-                                    $(this).find('.live_status span').removeClass('text-green').addClass('text-gray').html('完毕');
-                                    $(this).find('.live_status_edit').html('完毕').removeClass('btn-info').addClass('btn-default').attr("disabled", true);
+                                    $(this).find('.live_status span').removeClass('text-green').addClass('text-gray').html('直播结束');
+                                    $(this).find('.live_status_edit').html('结束').removeClass('btn-info').addClass('btn-default').attr("disabled", true);
                                 }
                             });
-                            _tr.find('.live_status_edit').html('开启').removeClass('btn-default').addClass('btn-info').removeAttr("disabled");
+                            _tr.find('.live_status_edit').html('结束').removeClass('btn-default').addClass('btn-info').removeAttr("disabled");
                             _tr.find('.live_status').attr('data-val', '1');
-                            _tr.find('.live_status span').removeClass('text-gray').addClass('text-green').html('完毕');
+                            _tr.find('.live_status span').removeClass('text-gray').addClass('text-green').html('直播中');
 
 
                         } else if (data.data == '2') {
                             _tr.find('.live_status_edit').html('完毕').removeClass('btn-info').addClass('btn-default').attr("disabled", true);
                             _tr.find('.live_status').attr('data-val', '2');
-                            _tr.find('.live_status span').removeClass('text-green').addClass('text-gray').html('完毕');
+                            _tr.find('.live_status span').removeClass('text-green').addClass('text-gray').html('直播结束');
                         } else {
                             _alert_warning(data.msg);
                         }
@@ -275,7 +357,6 @@ jQuery(document).ready(function () {
             }
         });
     });
-
 
     function _alert_warning(msg) {
         $modal({

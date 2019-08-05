@@ -21,6 +21,7 @@ jQuery(document).ready(function () {
     var url_update = api_back + '/course/cms/update';
     var url_live_relationList = api_back + '/liveMaster/cms/relationList';
     var url_live_list = api_back + '/liveMaster/cms/list';
+    var url_album_list = api_back + '/album/cms/list';
     var lk = 0;
     var _lock = 0;
     var user_list = sessionStorage.getItem('user_list');
@@ -30,17 +31,53 @@ jQuery(document).ready(function () {
     var action = $_GET['action'];
     var id = $_GET['id'];
     var album = $_GET['album'];
-    var course_type_select = '<option value="">--课程分类--</option>';
-    var course_type = sessionStorage.getItem('course_type');
-    course_type = JSON.parse(course_type);
     var course_live_list = get_live_list();
     var course_live_relationList = get_live_relationList();
     var _option_live = '<option value="">请选择直播</option>';
 
-    $.each(course_type, function (i, n) {
-        course_type_select += '<option value="' + n.id + '">' + n.typeName + '</option>';
-    });
-    $('.course_type_id').html(course_type_select);
+
+
+    var album_list = sessionStorage.getItem('album_list');
+    album_list = JSON.parse(album_list);
+    var _option_album = '<option value="">选择专辑</option>';
+    if (album_list == '' || album_list == null) {
+        var arr_album_list = {
+            page: 0,
+            size: '99999'
+        }
+        loading();
+        $.post(url_album_list, arr_album_list, function (data) {
+            console.log(data);
+            if (data.code == '0') {
+                var content = data.data.data;
+                sessionStorage.setItem('album_list', JSON.stringify(content));
+                if (content['0'] == '' || content['0'] == undefined) {} else {
+                    $.each(content, function (i, n) {
+                        _option_album += '<option value="' + n.id + '">' + n.albumName + '</option>';
+                    });
+                }
+                $('#album_id').html(_option_album);
+            } else {
+                _alert_warning(data.msg);
+            }
+            loading_end();
+        });
+    } else {
+        $.each(album_list, function (i, n) {
+            _option_album += '<option value="' + n.id + '">' + n.albumName + '</option>';
+        });
+        $('#album_id').html(_option_album);
+    }
+
+    // var course_type_select = '<option value="">--课程分类--</option>';
+    // var course_type = sessionStorage.getItem('course_type');
+    // course_type = JSON.parse(course_type);
+    // $.each(course_type, function (i, n) {
+    //     course_type_select += '<option value="' + n.id + '">' + n.typeName + '</option>';
+    // });
+    // $('.course_type_id').html(course_type_select);
+
+
     $('.article_logo_img').click(function () {
         $('.titleFile').trigger('click');
     });
@@ -69,8 +106,8 @@ jQuery(document).ready(function () {
         $('#zhibo_msg_list').attr('data-article-id', id);
         $('#courseId').val(id);
         to_page(id);
-
         function to_page(id) {
+            loading();
             var arr_single = {
                 id: id
             }
@@ -88,6 +125,7 @@ jQuery(document).ready(function () {
                     $('.course_label').val(content.courseLabel);
                     $('.course_release_time').val(content.courseReleaseTime);
                     $('.course_type_id').val(content.courseTypeId);
+                    $('.album_id').val(content.albumId);
                     if (content.courseOnline == '1') {
                         $('.switch-online').attr('data-value', content.courseOnline);
                         $('.switch-online').find('.switch-animate').removeClass('switch-off').addClass('switch-on');
@@ -148,12 +186,13 @@ jQuery(document).ready(function () {
                             $.each(course_live_relationList, function (i, n) {
                                 _option_live += '<option value="' + n.id + '">' + n.name + '</option>';
                             });
-                        } 
+                        }
                         $('.liveId').html(_option_live);
                     }
                 } else {
                     console.log('错误');
                 }
+                loading_end();
             });
         }
         $('.article_submit').click(function () {
@@ -164,6 +203,7 @@ jQuery(document).ready(function () {
                 setTimeout(function () {
                     lk = 0;
                 }, 3000);
+                $('.liveId').attr('disabled', false);
                 var formData = new FormData($("#articleHealthAdd")[0]);
                 $.ajax({
                     url: url_update,
@@ -180,6 +220,7 @@ jQuery(document).ready(function () {
                         var course_title = $.trim($('.course_title').val());
                         var course_describe = $.trim($('.course_describe').val());
                         var course_type_id = $('.course_type_id').val();
+                        var album_id = $('.album_id').val();
                         var course_release_time = $('.course_release_time').val();
                         var article_logo_img = $('.article_logo_img img').attr('src');
                         var radioFile_preview = $('.radioFile_preview').attr('src');
@@ -223,6 +264,9 @@ jQuery(document).ready(function () {
                             return false;
                         } else if (course_release_time == '') {
                             _alert_warning('请选择发布时间！');
+                            return false;
+                        } else if (album_id == '') {
+                            _alert_warning('请选择专辑！');
                             return false;
                         } else if (course_type_id == '') {
                             _alert_warning('请选择课程分类！');
@@ -356,7 +400,7 @@ jQuery(document).ready(function () {
                                     width: 300,
                                     maskClose: true,
                                     callBack: function () {
-                                        window.location.href = "./course.html";
+                                        window.location.href = "./course.html?action=album&id=" + album;
                                     }
                                 });
                             } else {
@@ -424,6 +468,7 @@ jQuery(document).ready(function () {
                         var course_title = $.trim($('.course_title').val());
                         var course_describe = $.trim($('.course_describe').val());
                         var course_type_id = $('.course_type_id').val();
+                        var album_id = $('.album_id').val();
                         var course_release_time = $('.course_release_time').val();
                         var article_logo_img = $('.article_logo_img img').attr('src');
                         var radioFile_preview = $('.radioFile_preview').attr('src');
@@ -467,6 +512,9 @@ jQuery(document).ready(function () {
                             return false;
                         } else if (course_release_time == '') {
                             _alert_warning('请选择发布时间！');
+                            return false;
+                        } else if (album_id == '') {
+                            _alert_warning('请选择专辑！');
                             return false;
                         } else if (course_type_id == '') {
                             _alert_warning('请选择课程分类！');
@@ -515,7 +563,7 @@ jQuery(document).ready(function () {
                                 width: 300,
                                 maskClose: true,
                                 callBack: function () {
-                                    window.location.href = "./course.html";
+                                    window.location.href = "./course.html?action=album&id=" + album;
                                 }
                             });
                         } else {

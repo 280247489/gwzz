@@ -1,19 +1,18 @@
 jQuery(document).ready(function () {
-    var web_shezhen = 'http://localhost:8081/file/';
-    var server_shezhen = 'http://localhost:8081/file/';
+    //var api_back = 'http://192.168.1.200:8081';
     var api_back = 'http://39.97.232.184:18080/gwzz';
     var api_login = api_back + '/sysAdmin/cms/login';
     var api_admin = api_back + '/sysAdmin/cms/options';
     var api_type_course = api_back + '/courseType/cms/list';
     var api_type_article = api_back + '/articleType/cms/list';
+    //var server_course = 'http://192.168.1.200:8091';
     var server_course = 'http://39.97.232.184:18080/testFile/';
     var url_editer = api_back + '/jodit/uploadImg';
     var lk = 0;
 
+    
 
     var user = sessionStorage.getItem('user');
-    sessionStorage.setItem("API_shezhen", web_shezhen);
-    sessionStorage.setItem("server_shezhen", server_shezhen);
     sessionStorage.setItem("api_back", api_back);
     sessionStorage.setItem("server_course", server_course);
     sessionStorage.setItem("url_editer", url_editer);

@@ -52,7 +52,7 @@ jQuery(document).ready(function () {
                     }
                     tr += '<tr data-id="' + n.id + '">' +
                         '<td>' + this_no + '</td>' +
-                        '<td><img class="article_thumb" src="' + server_course + n.albumLogo + '"/></td>' +
+                        '<td><img class="article_thumb img_prev" src="' + server_course + n.albumLogo + '"/></td>' +
                         '<td class="albumSort" data-val="' + n.albumSort + '"><span>' + n.albumSort + '</span></td>' +
                         '<td>' + n.albumName + '</td>' +
                         '<td>' + n.albumCourseSum + '</td>' +
