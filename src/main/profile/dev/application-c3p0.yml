@@ -7,7 +7,7 @@ spring:
   datasource:
     c3p0:
       driverClass: com.mysql.cj.jdbc.Driver
-      jdbcUrl: jdbc:mysql://192.168.1.186:3306/gwzz_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
+      jdbcUrl: jdbc:mysql://39.97.232.184:13306/gwzz_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
       user: gwzz
       password: gwzz
       minPoolSize: 10
@@ -15,7 +15,7 @@ spring:
       initialPoolSize: 15
       #当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default：3(规范值：5，无特殊情况不建议修改)
       acquireIncrement: 5
-      #连接的最大空闲时间，单位秒，如果超过这个时间，某个数据库连接还没有被使用，则会断开掉这个连接。如果为0，则永远不会断开连接，即回收此连接。Default：0(规范值：120，无特殊情况不建议修改)
+      #连接的最大空闲时间，单位秒，如果超过这个时间，某个数据库连接还没 有被使用，则会断开掉这个连接。如果为0，则永远不会断开连接，即回收此连接。Default：0(规范值：120，无特殊情况不建议修改)
       maxIdleTime: 120
       #连接池为数据源缓存的PreparedStatement的总数。default: 0
       maxStatements: 1000

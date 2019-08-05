@@ -1,10 +1,10 @@
 file:
-  upload_local_path: G:/upload/
-  show_url:  http://192.168.1.119:8091/file/
+  upload_local_path: /test.jlgwzz.com/
+  show_url:  http://39.97.232.184:18080/testFile/
   cms_path: cms
   gwzz_path: gwzz
   jodit:
-    path: G:/upload/jodit/course
-    base_url: http://192.168.1.119:8091/file/jodit/course
-    path_article: G:/upload/jodit/article
-    base_url_article: http://192.168.1.119:8091/file/jodit/article
+    path: /test.jlgwzz.com/jodit/
+    base_url: http://39.97.232.184:18080/testFile/jodit/
+    path_article: /test.jlgwzz.com/jodit/article
+    base_url_article: http://39.97.232.184:18080/testFile/jodit/article

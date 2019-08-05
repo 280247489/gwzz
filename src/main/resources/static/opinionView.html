@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>听会儿中医APP 后台管理系统</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<!-- Bootstrap 3.3.7 -->
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="bower_components/font/ico.css">
+	<link rel="Shortcut Icon" href="dist/img/favicon.ico">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+	<!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+	<link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+	<link rel="stylesheet" href="dist/css/style.css">
+	<!-- jQuery 3 -->
+	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="dist/js/default.js"></script>
+	<script type="text/javascript" src="dist/js/sessionStorage.js"></script>
+	<script type="text/javascript" src="dist/js/confirm.js"></script>
+	<script type="text/javascript" src="dist/js/pages/opinionView.js"></script>
+
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini" data-bar="sidebar_help" data-tag="">
+	<!-- Site wrapper -->
+	<div class="wrapper">
+
+		<header class="main-header">
+		</header>
+
+		<!-- =============================================== -->
+
+		<!-- Left side column. contains the sidebar -->
+		<aside class="main-sidebar">
+			<!-- sidebar: style can be found in sidebar.less -->
+			<section class="sidebar">
+			</section>
+			<!-- /.sidebar -->
+		</aside>
+
+		<!-- =============================================== -->
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<h1>
+					<a class="btn btn-primary" href="javascript:void(0);" onclick="window.history.back(-1); "> <i
+							class="fa fa-backward"></i>&nbsp;&nbsp;返回</a>
+				</h1>
+				<ol class="breadcrumb">
+					<li><a href="index.html"><i class="fa fa-book"></i> 首页</a></li>
+					<li class="active">帮助&反馈</li>
+					<li class="active">意见反馈</li>
+				</ol>
+			</section>
+
+			<!-- Main content -->
+			<section class="content">
+				<div class="box box-primary">
+					<!-- <div class="box-header">
+						<h3 class="box-title"></h3>
+					</div> -->
+					<!-- /.box-header -->
+					<div class="box-body">
+						<div class="col-md-3 col-lg-3 opinion_user">
+							<dl>
+								<dt class="col-sm-12 col-md-12">
+									<label class="col-sm-5 col-md-5 control-label">昵称：</label>
+									<div class="col-sm-7 col-md-7"><span class="nickName"></span></div>
+								</dt>
+								<dd class="col-sm-12 col-md-12">
+									<label class="col-sm-5 col-md-5 control-label">联系人：</label>
+									<div class="col-sm-7 col-md-7"><span class="feedbackName"></span></div>
+								</dd>
+								<dd class="col-sm-12 col-md-12">
+									<label class="col-sm-5 col-md-5 control-label">联系方式：</label>
+									<div class="col-sm-7 col-md-7"><span class="feedbackContactUs"></span>
+									</div>
+								</dd>
+								<dd class="col-sm-12 col-md-12">
+									<label class="col-sm-5 col-md-5 control-label">问题类型：</label>
+									<div class="col-sm-7 col-md-7"><span class="feedbackType"></span></div>
+								</dd>
+								<dd class="col-sm-12 col-md-12">
+									<label class="col-sm-5 col-md-5 control-label">留言时间：</label>
+									<div class="col-sm-7 col-md-7"><span class="feedbackCreateTime"></span></div>
+								</dd>
+								<dd class="col-sm-12 col-md-12">
+									<label class="col-sm-5 col-md-5 control-label">设备信息：</label>
+									<div class="col-sm-7 col-md-7"><span class="">小米9-4G网络-Android8.1</span></div>
+								</dd>
+							</dl>
+						</div>
+						<div class="col-md-9 col-lg-9 opinion_content">
+							<div class="col-md-1 col-lg-1"></div>
+							<div class="col-md-10 col-lg-10">
+								<div class="_content col-md-12 col-lg-12">
+									<p class="feedbackContent">
+										棉布莱卡的出现，不过使内衣面料又多了一种选择与表现。最舒适的面料仍当数棉布，今天的女性依然偏爱棉质内衣，这因为棉布本身独一无二的透气性和天然性，使穿着感受绝不同于其他面料。从美感来说，平织棉布的印花效果和针织棉布的染色效果，都有一种天然纯朴和青春气息，为其他面料所难取代。
+										丝绒比棉布更久远，但用于内衣较晚的是丝绒。丝绒又具有棉布所没有的典雅华贵。丝绒的天然滑爽感，也是莱卡所缺少的。 化纤原料
+										涤纶、尼龙、氨纶类化纤原料，虽在弹性方面较莱卡差些，但仍各自具有吸湿性、不变形、伸缩性等特点，为莱卡所不能取代。</p>
+								</div>
+								<div class="opinion_img col-md-12 col-lg-12"></div>
+							</div>
+							<div class="col-md-1 col-lg-1"></div>
+						</div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<!-- /.box -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		<footer class="main-footer">
+		</footer>
+
+		<!-- Control Sidebar -->
+		<aside class="control-sidebar control-sidebar-dark">
+			<!-- Create the tabs -->
+			<ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+			</ul>
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<!-- Home tab content -->
+				<div class="tab-pane" id="control-sidebar-home-tab">
+				</div>
+			</div>
+		</aside>
+		<!-- /.control-sidebar -->
+		<!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+		<div class="control-sidebar-bg"></div>
+	</div>
+	<!-- ./wrapper -->
+
+	<!-- Bootstrap 3.3.7 -->
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<!-- SlimScroll -->
+	<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+	<!-- FastClick -->
+	<script src="bower_components/fastclick/lib/fastclick.js"></script>
+	<!-- AdminLTE App -->
+	<script src="dist/js/adminlte.min.js"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script src="dist/js/demo.js"></script>
+	<script>
+	</script>
+</body>
+
+</html>
