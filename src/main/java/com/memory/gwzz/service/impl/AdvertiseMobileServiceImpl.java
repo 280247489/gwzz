@@ -105,7 +105,7 @@ public class AdvertiseMobileServiceImpl implements AdvertiseMobileService {
         } else if ( "Live".equals(type)) {
             LiveMaster liveMaster1 = liveMasterMobileRepository.findByCourseIdAndLiveMasterIsOnline(typeId, 1);
             if (liveMaster1 != null) {
-                String keyCourseViewComment = SHARELIVECONTENT + typeId;
+                String keyCourseViewComment = LIVECOMMENT + typeId;
 
                 if (LIVEMAP.containsKey(keyCourseViewComment)) {
                     liveRedisMobileService.liveView(typeId,userId,terminal,os);

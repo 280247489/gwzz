@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.memory.redis.CacheConstantConfig.LIVEMAP;
+
 /**
  * @author INS6+
  * @date 2019/7/24 11:29
@@ -35,6 +37,8 @@ public class MessageReceiver {
         //获取数据加载状态为0的课程
         System.out.println("+++++++++同步内存+++++++++");
         List<LiveMemoryLoad> loadList = liveMemoryLoadMobileService.queryAllLiveMemoryLoadByLoadStatus(0);
+        //清除内存
+        LIVEMAP.clear();
         for (LiveMemoryLoad courseMemoryLoad : loadList) {
             String master_id = courseMemoryLoad.getId();
             liveMemoryMobileService.addLiveMemory(master_id);

@@ -71,10 +71,9 @@ public class LiveMemoryMobileServiceImpl implements LiveMemoryMobileService {
 
     @Override
     public void addLiveMemory(String masterId) {
-        //清除内存
-        LIVEMAP.clear();
 
-        com.memory.gwzz.model.LiveSlave liveSlave = new   com.memory.gwzz.model.LiveSlave();
+        System.out.println("LiveMap"+JSON.toJSONString(LIVEMAP));
+        com.memory.gwzz.model.LiveSlave liveSlave = new com.memory.gwzz.model.LiveSlave();
         String keyHash = liveRedisMobileService.getKey(masterId);
         Map<String,Object> returnMap = new HashMap<String, Object>();
 

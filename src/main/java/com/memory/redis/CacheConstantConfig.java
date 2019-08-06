@@ -14,8 +14,8 @@ public class CacheConstantConfig {
      * 课程直播 redis 键值存储规范 start========
      */
 
-    //课程直播内容信息
-    public static final String SHARELIVECONTENT ="share:course:content:";
+//    //课程直播内容信息
+//    public static final String SHARELIVECONTENT ="share:course:content:";
 
     //课程直播内存信息
     public static Map<String,Object> LIVEMAP = new HashMap<String,Object>();

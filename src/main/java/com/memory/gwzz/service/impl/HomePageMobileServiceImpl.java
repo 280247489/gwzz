@@ -191,7 +191,7 @@ public class HomePageMobileServiceImpl implements HomePageMobileService {
             com.memory.entity.jpa.LiveMaster liveMaster1 = liveMasterMobileRepository.findByCourseIdAndLiveMasterIsOnline(typeId, 1);
             if (liveMaster1 != null) {
                 String liveId = liveMaster1.getId();
-                String keyCourseViewComment = SHARELIVECONTENT + liveId;
+                String keyCourseViewComment = LIVECOMMENT + liveId;
                 if (LIVEMAP.containsKey(keyCourseViewComment)) {
                     liveRedisMobileService.liveView(liveId,userId,terminal,os);
                 } else {

@@ -35,7 +35,7 @@ public class LiveRedisMobileServiceImpl implements LiveRedisMobileService {
      */
     @Override
     public void liveRedisNotExist(String liveMasterId) {
-        String keyHash = SHARELIVECONTENT + liveMasterId;
+        String keyHash = LIVECOMMENT + liveMasterId;
         try {
             redisUtil.hset(keyHash, "master", "notExist");
             redisUtil.hset(keyHash, "slave", JSON.toJSONString("notExist"));
@@ -52,7 +52,7 @@ public class LiveRedisMobileServiceImpl implements LiveRedisMobileService {
      */
     @Override
     public void liveRedis(String liveMasterId, String title, List<Map<String, Object>> slave) {
-        String keyHash = SHARELIVECONTENT + liveMasterId;
+        String keyHash = LIVECOMMENT + liveMasterId;
         try {
             redisUtil.hset(keyHash, "master", title);
             redisUtil.hset(keyHash, "slave", JSON.toJSONString(slave));
@@ -217,7 +217,7 @@ public class LiveRedisMobileServiceImpl implements LiveRedisMobileService {
      */
     @Override
     public Object getSlaveById(String uuid) {
-        String keyHash = SHARELIVECONTENT + uuid;
+        String keyHash = LIVECOMMENT + uuid;
         return redisUtil.hget(keyHash,"slave");
     }
 
