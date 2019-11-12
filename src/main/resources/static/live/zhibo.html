@@ -175,168 +175,168 @@
                                 desc: '点击链接进入课程',
                                 imgUrl: 'http://tmanager.houaihome.com/live/images/logo_share.png',
                                 link: 'http://tmanager.houaihome.com/live/zhibo.html?state=' +
-                                state,
-                                type: 'link'
-                            });
-                            wx.onMenuShareTimeline({
-                                title: _title, // 分享标题
-                                desc: '点击链接进入课程', // 分享描述
-                                imgUrl: 'http://tmanager.houaihome.com/live/images/logo_share.png',
-                                link: 'http://tmanager.houaihome.com/live/zhibo.html?state=' +
-                                state,
-                                type: 'link'
-                            });
+            state,
+            type: 'link'
+            });
+            wx.onMenuShareTimeline({
+            title: _title, // 分享标题
+            desc: '点击链接进入课程', // 分享描述
+            imgUrl: 'http://tmanager.houaihome.com/live/images/logo_share.png',
+            link: 'http://tmanager.houaihome.com/live/zhibo.html?state=' +
+            state,
+            type: 'link'
+            });
 
-                            wx.checkJsApi({
-                                jsApiList: [
-                                    'onMenuShareAppMessage',
-                                    'onMenuShareTimeline'
-                                ],
-                                success: function (data) {
-                                    //alert(res.errMsg);  
-                                    WeixinJSBridge.call(
-                                        'showOptionMenu');
-                                }
-                            });
-                        });
-                        wx.error(function (data) {
-                            alert('错误');
-                        });
-                    }, 300);
-                },
-                error: function () {
-                    alert('网络错误！');
-                }
+            wx.checkJsApi({
+            jsApiList: [
+            'onMenuShareAppMessage',
+            'onMenuShareTimeline'
+            ],
+            success: function (data) {
+            //alert(res.errMsg);
+            WeixinJSBridge.call(
+            'showOptionMenu');
+            }
+            });
+            });
+            wx.error(function (data) {
+            alert('错误');
+            });
+            }, 300);
+            },
+            error: function () {
+            alert('网络错误！');
+            }
             });
 
             function topage(_openid) {
-                var arr_api = {
-                    courseId: state,
-                    openId: _openid
-                }
-                $.ajax({
-                    url: api,
-                    type: 'POST',
-                    data: arr_api,
-                    async: false,
-                    cache: false,
-                    dataType: "json",
-                    timeout: 50000,
-                    beforeSend: function () {},
-                    success: function (data) {
-                        console.log(data);
-                        if (data.recode == '0') {
-                            if (data.data !== '' && data.data !== 'notExist' && data.data !==
-                                null) {
-                                $('.block h3').html(data.data.course);
-                                _title = data.data.course;
-                                sessionStorage.setItem("title", data.data.course);
-                                $('title').html(data.data.course);
-                                var _content = data.data.courseExt;
-                                var avatar = './images/logo_new.png';
-                                //var int_first = 1;
-                                $.each(_content, function (i, n) {
-                                    var _img_url;
-                                    var _ado_url;
-                                    if (n.courseExtImgUrl == undefined) {} else {
-                                        _img_url = n.courseExtImgUrl.substr(0, 4);
-                                    }
-                                    if (_img_url == 'http') {
-                                        var this_img_url = n
-                                            .courseExtImgUrl;
-                                    } else {
-                                        var this_img_url = server_course + n
-                                            .courseExtImgUrl;
-                                    }
-                                    if (n.courseExtAudio == undefined) {} else {
-                                        _ado_url = n.courseExtAudio.substr(0, 4);
-                                    }
-                                    if (_ado_url == 'http') {
-                                        var this_ado_url = n.courseExtAudio;
-                                    } else {
-                                        var this_ado_url = server_course + n
-                                            .courseExtAudio;
-                                    }
-                                    var block = n.courseExtAudioTimes * 2;
-                                    if (n.courseExtType == '1') {
-                                        $('.content').append(
-                                            '<div  class="msg mw"><div class="h"><img src="' +
+            var arr_api = {
+            courseId: state,
+            openId: _openid
+            }
+            $.ajax({
+            url: api,
+            type: 'POST',
+            data: arr_api,
+            async: false,
+            cache: false,
+            dataType: "json",
+            timeout: 50000,
+            beforeSend: function () {},
+            success: function (data) {
+            if (data.recode == '0') {
+            if (data.data !== '' && data.data !== 'notExist' && data.data !==
+            null) {
+            $('.block h3').html(data.data.course);
+            _title = data.data.course;
+            sessionStorage.setItem("title", data.data.course);
+            $('title').html(data.data.course);
+            var _content = data.data.courseExt;
+            var avatar = './images/logo_new.png';
+            //var int_first = 1;
+            $.each(_content, function (i, n) {
+            var _img_url;
+            var _ado_url;
+            if (n.courseExtImgUrl == undefined) {} else {
+            _img_url = n.courseExtImgUrl.substr(0, 4);
+            }
+            if (_img_url == 'http') {
+            var this_img_url = n
+            .courseExtImgUrl;
+            } else {
+            var this_img_url = server_course + n
+            .courseExtImgUrl;
+            }
+            if (n.courseExtAudio == undefined) {} else {
+            _ado_url = n.courseExtAudio.substr(0, 4);
+            }
+            if (_ado_url == 'http') {
+            var this_ado_url = n.courseExtAudio;
+            } else {
+            var this_ado_url = server_course + n
+            .courseExtAudio;
+            }
+            var block = n.courseExtAudioTimes * 2;
+            if (n.courseExtType == '1') {
+            $('.content').append(
+            '<div  class="msg mw"><div class="h"><img src="' +
                                             avatar +
                                             '" /></div><div class="fl"><h3 class="n">' +
-                                            n.courseExtNickname +
-                                            '</h3><div class="c w">' + n
-                                            .courseExtWords +
-                                            '<span class="t"></span></div></div></div>'
-                                        );
-                                    } else if (n.courseExtType == '2') {
-                                        $('.content').append(
-                                            '<div  class="msg ma"><div class="h"><img src="' +
+            n.courseExtNickname +
+            '</h3><div class="c w">' + n
+            .courseExtWords +
+            '<span class="t"></span></div></div></div>'
+            );
+            } else if (n.courseExtType == '2') {
+            $('.content').append(
+            '<div  class="msg ma"><div class="h"><img src="' +
                                             avatar +
                                             '" /></div><div class="fl"><h3 class="n">' +
-                                            n.courseExtNickname +
-                                            '</h3><div class="c a"><audio><source src="' +
+            n.courseExtNickname +
+            '</h3><div class="c a"><audio id="html_audio_'+i+'" sourceindex="'+i+'"><source id="html_source_'+i+'" src="' +
                                             this_ado_url +
                                             '" type="audio/mp3"></audio><div class="audio-left"><img src="./images/sd.png" class="audioPlayer" /></div><div class="audio-right"><span class="audio_times">' +
                                             n.courseExtAudioTimes +
                                             ' "</span><span class="time_block" style="width:' +
                                             block +
                                             'px"></span></div><span class="t"></span></div><span class="r p"></span></div></div>'
-                                        );
-                                    } else if (n.courseExtType == '3') {
-                                        $('.content').append(
-                                            '<div class="msg mi "><div class="h"><img src="' +
+            );
+            } else if (n.courseExtType == '3') {
+            $('.content').append(
+            '<div class="msg mi "><div class="h"><img src="' +
                                             avatar +
                                             '" /></div><div class="fl"><h3 class="n">' +
-                                            n.courseExtNickname +
-                                            '</h3><div class="c i"><a href="javascript:void(0);" rel="popuprel"  title="" class="popup"><img class="" src="' +
+            n.courseExtNickname +
+            '</h3><div class="c i"><a href="javascript:void(0);" rel="popuprel"  title="" class="popup"><img class="" src="' +
                                             this_img_url +
                                             '" ></a><span class="t"></span></div></div></div>'
-                                        );
-                                    } else {}
-                                });
-                            } else {
-                                alert('直播已关闭！');
-                                WeixinJSBridge.call('closeWindow');
-                                return false;
-                            }
-                        } else {
-                            console.log(data);
-                            console.log('出错了');
-                        }
-                    },
-                    complete: function (data) {
-                        //console.log(view);
-                        var view = sessionStorage.getItem('view');
-                        if (view == null || view == '' || view == undefined) {
-                            setTimeout(_change, 666);
-                        } else if (_openid == '1') {
-                            $('.bg').hide();
-                        } else {
-                            $('.bg').hide();
-                        }
-                    },
-                    error: function (data) {
-                        console.log(data);
-                        console.log('出错了!');
-                    }
-                }, "json");
+            );
+            } else {}
+            });
+            } else {
+            alert('直播已关闭！');
+            WeixinJSBridge.call('closeWindow');
+            return false;
             }
-        });
-    </script>
-    <title>直播分享</title>
-</head>
+            } else {
+            console.log('出错了');
+            }
+            },
+            complete: function (data) {
+            //console.log(view);
+            var view = sessionStorage.getItem('view');
+            if (view == null || view == '' || view == undefined) {
+            setTimeout(_change, 666);
+            } else if (_openid == '1') {
+            $('.bg').hide();
+            } else {
+            $('.bg').hide();
+            }
+            },
+            error: function (data) {
+            console.log('出错了!');
+            }
+            }, "json");
+            }
+            });
+            </script>
+            <title>直播分享</title>
+            </head>
 
-<body>
-    <div class="mask">
-        <div class="bd"></div>
-    </div>
-    <div class="bg"></div>
-    <div class="header">
-        <div class="block">
-            <h3>&nbsp;</h3>
+            <body>
+            <div class="mask">
+                <div class="bd"></div>
+                </div>
+                <div class="bg"></div>
+                <div class="header">
+                <div class="block">
+                <h3>&nbsp;</h3>
         </div>
         <div class="dl">
             <a href="http://down.houaihome.com/download/"></a>
+            <audio id="g_audio">
+            	<source id="g_source" src="" type="audio/mp3">
+            </audio>
         </div>
     </div>
     <div class="content" data-open-id=''>
@@ -348,88 +348,22 @@
     <div id="fade"></div>
 
     <script type="text/javascript">
-        jQuery(document).ready(function () {
-            $('.content').on('click', '.ma .a', function () {
-                audio = $(this).find('audio');
-                initAudioEvent(audio);
+    	var g_audio, g_audio_obj, g_audio_id;
+    	var mobile_type = "", total = 0;
+    	//页面加载
+    	$(function(){
+    		//获取手机类型，同步mobile_type字段，ios/android
+    		getMobileType();
+    		initAudio();
+    		//音频播放点击事件
+    		$('.content').on('click', '.ma .a', function () {
+    			var audios= $('.content').find('audio');
+				total = audios.length;
+    			//初始化音频
+    			audio = $(this).find('audio');
+                playAudio(audio);
             });
-
-            function initAudioEvent(curr_audio) {
-                var this_offset = curr_audio.parent().parent().parent().offset().top;
-                var this_scroll = $(window).scrollTop();
-                var this_ht = $(window).height()
-                audio = curr_audio.get(0);
-                var curr = $('audio').index(audio); //当前序号
-
-
-
-
-                if (this_scroll + this_ht < this_offset + 76) {
-                    var _offset = this_offset + 246 - this_ht;
-                    $('body,html').animate({
-                        scrollTop: _offset
-                    }, 300);
-                } else if (this_scroll > this_offset) {
-                    console.log('在屏幕上方');
-                }
-                var total = $('.content').find('audio').length;
-
-                function play_next(curr) {
-                    if (curr >= total - 1) {
-                        console.log('没了');
-                        return false;
-                    } else {
-                        next = $('.content').find('audio').eq(curr + 1);
-                        next_audio = next.get(0);
-                        initAudioEvent(next);
-                    }
-                }
-
-                $('.content').find('audio').not(curr_audio).each(function () {
-                    var _audio = $(this).get(0);
-                    _audio.currentTime = 0;
-                    if (_audio.paused) {} else {
-                        _audio.pause();
-                        $(this).parent().find('.audioPlayer').attr('src', './images/sd.png');
-                    }
-                });
-
-                if (audio.paused) {
-                    WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
-                        audio.play();
-                    });
-                } else {
-                    audio.pause();
-                    audio.currentTime = 0;
-                    curr_audio.parent().find('.audioPlayer').attr('src', './images/sd.png');
-                }
-
-
-                // 监听播放完成事件
-                audio.addEventListener('ended', function () {
-                    audio.currentTime = 0;
-                    $(audio).parent().find('.audioPlayer').attr('src', './images/sd.png');
-                    play_next(curr);
-                }, false);
-                audio.addEventListener('error', function () {
-                    WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
-                        audio.pause();
-                        audio.currentTime = 0;
-                        audio.load();
-                        audio.play();
-                    });
-                }, false);
-
-
-                audio.addEventListener("waiting", function () {
-                    $(audio).parent().find('.audioPlayer').attr('src', './images/load.gif');
-                    curr_audio.parent().parent().find('.p').removeClass('r');
-                });
-                audio.addEventListener("playing", function () {
-                    $(audio).parent().find('.audioPlayer').attr('src', './images/sd.gif');
-                    curr_audio.parent().parent().find('.p').removeClass('r');
-                });
-            }
+            //图片点击事件
             $('.content').on('click', 'a.popup', function () {
                 var popupid = $(this).attr('rel');
                 var img = $(this).find('img').attr('src');
@@ -445,11 +379,113 @@
                     'margin-left': -popupleftmargin
                 });
             });
+            //关闭图片事件
             $('#fade, #popuprel').click(function () {
                 $('#fade , #popuprel , #popuprel2 , #popuprel3').fadeOut(100);
                 return false;
             });
-        });
+    	});
+    	//=================================================================================================
+    	function getMobileType(){
+    		var u = navigator.userAgent;
+            if (u.indexOf('Android') > -1 || u.indexOf('Linux') > -1) {
+                var device = 'http://android.myapp.com/myapp/detail.htm?apkName=com.zjst.houai&ADTAG=mobile'
+                mobile_type="android";
+            } else if (u.indexOf('iPhone') > -1) {
+                var device = 'https://itunes.apple.com/cn/app/zhong-jing-sheng-tian/id1288452365?mt=8'
+                mobile_type="ios";
+            } else if (u.indexOf('Windows Phone') > -1) {
+                var device = 'javascript:alert("不支持的系统！")';
+            } else {
+                var device = 'javascript:alert("不支持的系统！")';
+            }
+    	}
+    	//初始化音频方法
+    	function initAudio() {
+			g_audio = $("#g_audio");
+			g_audio_obj = g_audio.get(0)
+			//=======================绑定监听事件
+            g_audio_obj.addEventListener("waiting", audio_waiting);
+            //播放事件监听
+            g_audio_obj.addEventListener("playing", audio_playing);
+            //播放完成事件监听
+            g_audio_obj.addEventListener('ended', audio_ended, false);
+        }
+    	//监听事件方法==========================================================================
+    	function audio_waiting(e) {
+            $('#'+g_audio_id).parent().find('.audioPlayer').attr('src', './images/load.gif');
+            $('#'+g_audio_id).parent().parent().find('.p').removeClass('r');
+        }
+    	function audio_playing(e) {
+            $('#'+g_audio_id).parent().find('.audioPlayer').attr('src', './images/sd.gif');
+            $('#'+g_audio_id).parent().parent().find('.p').removeClass('r');
+        }
+        function audio_ended(e) {
+            $('#'+g_audio_id).currentTime = 0;
+            $('#'+g_audio_id).parent().find('.audioPlayer').attr('src', './images/sd.png');
+            //自动播放下一条
+            
+            autoNext();
+        }
+        //播放音频方法
+    	function playAudio(current_audio){
+            //设置播放音频，scroll位置
+			var this_offset = current_audio.parent().parent().parent().offset().top;
+            var this_scroll = $(window).scrollTop();
+            var this_ht = $(window).height()
+            if (this_scroll + this_ht < this_offset + 76) {
+                var _offset = this_offset + 246 - this_ht;
+                $('body,html').animate({
+                    scrollTop: _offset
+                }, 300);
+            } else if (this_scroll > this_offset) {
+                console.log('在屏幕上方');
+            }
+            //设置除当前播放audio外，其它audio时间归零，更换图片
+    		$('.content').find('audio').not(current_audio).each(function () {
+	            $(this).parent().find('.audioPlayer').attr('src', './images/sd.png');
+            });
+			//========================================================================
+			if(!g_audio_obj.paused){
+				$('#'+g_audio_id).parent().find('.audioPlayer').attr('src', './images/sd.png');
+				g_audio_obj.pause();
+				g_audio_obj.currentTime = 0;
+			}
+			if(current_audio.attr("id")==g_audio_id){
+				g_audio_id = "";
+			}else{
+				//设置播放音频src
+				g_audio_id = current_audio.attr("id");
+				var sourceindex = current_audio.attr("sourceindex");
+				// alert("a: "+current_audio.get(0).currentSrc);
+				// alert("b: "+$('#html_source_'+sourceindex).attr("src"));
+	    		//$('#g_source').attr("src", current_audio.get(0).currentSrc);
+	    		$('#g_source').attr("src", $('#html_source_'+sourceindex).attr("src"));
+				g_audio_obj.load();
+				g_audio_obj.play();
+				// if(mobile_type=="ios"){
+	   //          	WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
+	   //          		g_audio_obj.play();
+	   //             });
+	   //          }else if(mobile_type=="android"){
+	   //          	g_audio_obj.play();
+	   //          }else{
+	   //          	g_audio_obj.play();
+	   //          }
+			}
+			
+    	}
+    	//传入当前播放的音频，自动检测播放下一条
+    	function autoNext(){
+    		var current_audio = $('#'+g_audio_id)
+    		// audio = current_audio.get(0);
+    		
+			var current_index = $('.content').find('audio').index(current_audio); //当前序号
+			if(current_index < total){
+				var next_audio = $('.content').find('audio').eq(current_index+1);
+                playAudio(next_audio);
+			}
+    	}
     </script>
 </body>
 
